@@ -1,0 +1,246 @@
+{
+	"appsUsed":["storage_by_unifyapps"],
+	"createdTime":1752175033771,
+	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1752175034552,
+		"deployedBy":34,
+		"deployedDefinitionId":"687011ba5cb5f65ed07fcba7",
+		"status":"DEPLOYED",
+		"version":3,
+		"workflowVersion":13
+	},
+	"edges":[
+		{
+			"fromNodeId":"c0gAQ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"VPPbt",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"VPPbt",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"Iqoeb",
+			"type":"next"
+		}
+	],
+	"id":"66ed1b016d04095e3efd9dca",
+	"lastModifiedBy":-1,
+	"lcName":"dnt_callable_table",
+	"modifiedTime":1755496339540,
+	"name":"dnt_callable_table",
+	"nodes":[
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":49,
+				"resourceName":"callables_from_automation"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"cjZWp-1",
+			"id":"c0gAQ",
+			"index":0,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"properties":{
+						"objects":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"properties":{
+										"type":"object",
+										"properties":{
+											"gender":{
+												"type":"string",
+												"title":"gender"
+											},
+											"last_name":{
+												"type":"string",
+												"title":"last_name"
+											},
+											"id":{
+												"type":"integer",
+												"title":"id"
+											},
+											"ip_address":{
+												"type":"string",
+												"title":"ip_address"
+											},
+											"first_name":{
+												"type":"string",
+												"title":"first_name"
+											},
+											"email":{
+												"type":"string",
+												"title":"email"
+											}
+										},
+										"title":"properties",
+										"additionalProperties":false
+									}
+								},
+								"additionalProperties":false
+							},
+							"title":"Objects"
+						}
+					},
+					"additionalProperties":false,
+					"required":[
+						
+					]
+				},
+				"setup":{
+					"type":"object",
+					"properties":{
+						"filter":{
+							"type":"object",
+							"properties":{
+								
+							},
+							"additionalProperties":false,
+							"title":"Filter"
+						},
+						"Sort":{
+							"type":"string",
+							"title":"Sort"
+						},
+						"offset":{
+							"type":"string",
+							"title":"Offset"
+						},
+						"pageSize":{
+							"type":"string",
+							"title":"Page Size"
+						},
+						"searchQuery":{
+							"type":"string",
+							"title":"Search Query"
+						}
+					},
+					"additionalProperties":false,
+					"required":[
+						
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Trigger from automation",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":1738,
+				"resourceName":"storage_by_unifyapps_fetch_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"cjZWp-1",
+			"id":"VPPbt",
+			"index":0,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"resolvedFilter":{
+								"filter":"{{ c0gAQ.outputs.filter }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"searchField":{
+					"fields":[
+						"properties_last_name",
+						"properties_email",
+						"properties_first_name",
+						"properties_gender",
+						"properties_ip_address"
+					],
+					"expression":"{{ c0gAQ.outputs.searchQuery }}"
+				},
+				"object_type":"table_qa_dummy_data",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"sortBy":[
+					{
+						"additionalSorts":"{{ c0gAQ.outputs.Sort }}"
+					}
+				],
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":"{{ c0gAQ.outputs.pageSize }}",
+					"offset":"{{ c0gAQ.outputs.offset }}"
+				},
+				"numberOfRecordsToFetch":"MULTIPLE",
+				"includeTotalCount":false
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch records",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":45,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"cjZWp-1",
+			"id":"Iqoeb",
+			"index":0,
+			"inputs":{
+				"result":{
+					"objects":{
+						"items":{
+							"properties":{
+								"gender":"{{ VPPbt.outputs.objects[0].properties.gender }}",
+								"last_name":"{{ VPPbt.outputs.objects[0].properties.last_name }}",
+								"id":"{{ VPPbt.outputs.objects[0].properties.id }}",
+								"ip_address":"{{ VPPbt.outputs.objects[0].properties.ip_address }}",
+								"first_name":"{{ VPPbt.outputs.objects[0].properties.first_name }}",
+								"email":"{{ VPPbt.outputs.objects[0].properties.email }}"
+							}
+						},
+						"ua:type":"mappedArray",
+						"source":"{{ VPPbt.outputs.objects }}"
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		}
+	],
+	"ownerUserId":34,
+	"schemaReferences":[],
+	"settings":{
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
+		"route":{
+			"default":false,
+			"tierName":"global"
+		}
+	},
+	"standard":false,
+	"tags":[],
+	"version":21
+}
