@@ -1,0 +1,252 @@
+{
+	"appsUsed":["gmail"],
+	"createdTime":1735823142622,
+	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1735823164584,
+		"deployedBy":34,
+		"deployedDefinitionId":"67768f3c29fc4d15e7f2a074",
+		"status":"DEPLOYED",
+		"version":2,
+		"workflowVersion":87
+	},
+	"edges":[
+		{
+			"fromNodeId":"_3KG8Y",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_JiNSi",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_JiNSi",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_L7sHk",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_L7sHk",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_TQ3CY",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_TQ3CY",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_l26aS",
+			"type":"next"
+		}
+	],
+	"id":"6735c01b6cd1603e3edf8ce5",
+	"lastModifiedBy":-1,
+	"lcName":"reset password( do not edit)",
+	"modifiedTime":1755496339843,
+	"name":"Reset Password( DO NOT EDIT)",
+	"nodes":[
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":69,
+				"resourceName":"callables_from_interface"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_SbWYb-1",
+			"id":"_3KG8Y",
+			"index":0,
+			"inputs":{
+				"result":{
+					"ua:modal":{
+						"field_type":"STRING",
+						"is_optional":true
+					},
+					"properties":{
+						"email":{
+							"type":"string",
+							"title":"Email"
+						}
+					},
+					"required":[
+						
+					]
+				},
+				"callableInterfaceId":"__ua__call_reset_password_interface",
+				"setup":{
+					"ua:modal":{
+						"field_type":"STRING",
+						"is_optional":true
+					},
+					"properties":{
+						"domain":{
+							"title":"Domain",
+							"type":"string"
+						},
+						"sessionId":{
+							"title":"Session Id",
+							"type":"string"
+						},
+						"userId":{
+							"title":"User Id",
+							"type":"string"
+						}
+					},
+					"required":[
+						
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Trigger interface",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"standard_entities",
+				"resourceVersion":88,
+				"resourceName":"standard_entities_fetch_user",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_SbWYb-1",
+			"id":"_JiNSi",
+			"index":0,
+			"inputs":{
+				"fetchBy":"id",
+				"applicationId":"",
+				"user":"{{ _3KG8Y.outputs.userId }}"
+			},
+			"skip":false,
+			"subTitle":"Standard entities by UnifyApps",
+			"title":"Fetch User",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":208,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_SbWYb-1",
+			"id":"_L7sHk",
+			"index":0,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{
+					
+				},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"userName":{
+							"type":"string",
+							"title":"User Name"
+						}
+					},
+					"required":[
+						
+					]
+				}
+			},
+			"inputs":{
+				"userName":"= PROPER({{ _JiNSi.outputs.name }})"
+			},
+			"outputSchema":{
+				"type":"SCHEMA",
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"userName":{
+							"type":"string",
+							"title":"User Name"
+						}
+					},
+					"required":[
+						
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"gmail",
+				"resourceVersion":2373,
+				"connectionId":"6765612069957014b3f2940f",
+				"resourceName":"gmail_send_email",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_SbWYb-1",
+			"id":"_TQ3CY",
+			"index":0,
+			"inputs":{
+				"email_type":"html",
+				"subject":"Reset Password",
+				"to":[
+					"{{ _JiNSi.outputs.contactDetails.email }}"
+				],
+				"message":"<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Corrected HTML</title>\n<style>\nbody {\nmargin-left:56px;\nmargin-top:46px;\nfont-family: Arial, sans-serif;\n}\n</style>\n</head>\n<body>Dear {{ _L7sHk.outputs.userName }},</p><p></p><p style=\"margin:0;\">We've received a reset password request. If this was you, click below to reset your password:</p><a href=\"https://{{ _3KG8Y.outputs.domain }}/reset-password?pageInputs={%22sessionId%22:%22{{ _3KG8Y.outputs.sessionId }}%22}\" style=\"color:white;background-color:#5c37eb;font-size:14px;padding:8px 20px;border-radius:5px;text-decoration:none;display:inline-block;margin-top:18px;margin-bottom:18px;\">Reset Password</a><p style=\"margin:0 0;color:gray;font-size:13px\">Reset password link will expire in 5 minutes. Please reset your password promptly.</p><p>If you didn't make this request, please email us at <a href=\"mailto:support@unifyapps.com\" style=\"color:blue;text-decoration:none;\">support@unifyapps.com</a>.</p><p style=\"margin-bottom:0;\">Thanks,<br>The UnifyApps team</p><p style=\"font-size:14px;margin-top:20px;color:#475467;\">\n<!-- Logo at the bottom, aligned with text -->\n<img src=\"https://assets.unifyapps.com/images/app-icons/unify-logo.png\": alt=\"UnifyApps Logo\" style=\"width:110px;height:30px;text-align:left\">\n</body>\n</html>"
+			},
+			"skip":false,
+			"subTitle":"Gmail",
+			"title":"Send email",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":65,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_SbWYb-1",
+			"id":"_l26aS",
+			"index":0,
+			"inputs":{
+				"result":{
+					"email":"{{ _JiNSi.outputs.contactDetails.email }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		}
+	],
+	"ownerUserId":34,
+	"schemaReferences":[],
+	"settings":{
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true
+	},
+	"standard":false,
+	"tags":[],
+	"version":94
+}
