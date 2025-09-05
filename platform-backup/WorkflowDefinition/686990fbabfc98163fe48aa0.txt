@@ -1,0 +1,155 @@
+{
+	"appsUsed":[],
+	"createdTime":1751748859364,
+	"deleted":true,
+	"deploymentState":{
+		"deployedAt":1751748887670,
+		"deployedBy":34,
+		"deployedDefinitionId":"68699117abfc98163fe48afb",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":1
+	},
+	"description":"description",
+	"edges":[
+		{
+			"fromNodeId":"n_WKGTr",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_NKE7p",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_NKE7p",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_cjEbe",
+			"type":"next"
+		}
+	],
+	"id":"686990fbabfc98163fe48aa0",
+	"lastModifiedBy":34,
+	"lcName":"streambyunifyapps_publish event to stream at_117517441748060",
+	"modifiedTime":1754310314180,
+	"name":"StreamByUnifyApps_Publish event to stream at_117517441748060",
+	"nodes":[
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":618,
+				"resourceName":"callables_from_automation"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_eQF07-1",
+			"id":"n_WKGTr",
+			"index":0,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"properties":{
+						"Output":{
+							"type":"string",
+							"title":"Output"
+						}
+					},
+					"additionalProperties":false,
+					"required":[
+						"Output"
+					]
+				},
+				"setup":{
+					"type":"object",
+					"properties":{
+						"Name":{
+							"type":"string",
+							"title":"Name"
+						},
+						"Age":{
+							"type":"integer",
+							"title":"Age"
+						},
+						"Profession":{
+							"type":"string",
+							"title":"Profession"
+						},
+						"Datetime":{
+							"type":"string",
+							"title":"Datetime"
+						}
+					},
+					"additionalProperties":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":5675,
+				"resourceName":"streams_by_unifyapps_publish_event_at",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_eQF07-1",
+			"id":"n_NKE7p",
+			"index":0,
+			"inputs":{
+				"publishTime":"{{ n_WKGTr.outputs.Datetime }}",
+				"streamId":"e_686990cbd94de757368e7156",
+				"event":{
+					"Name":"{{ n_WKGTr.outputs.Name }}",
+					"Age":"{{ n_WKGTr.outputs.Age }}",
+					"Profession":"{{ n_WKGTr.outputs.Profession }}",
+					"Datetime":"{{ n_WKGTr.outputs.Datetime }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Streams by UnifyApps",
+			"title":"Publish event to stream at",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":661,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_eQF07-1",
+			"id":"n_cjEbe",
+			"index":0,
+			"inputs":{
+				"result":{
+					"Output":"{{ n_NKE7p.outputs.success }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		}
+	],
+	"ownerUserId":34,
+	"schemaReferences":[],
+	"settings":{
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true
+	},
+	"standard":false,
+	"tags":[],
+	"version":2
+}
