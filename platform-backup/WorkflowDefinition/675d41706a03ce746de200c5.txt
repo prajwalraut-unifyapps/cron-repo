@@ -1,0 +1,698 @@
+{
+	"appsUsed":["storage_by_unifyapps"],
+	"createdTime":1738131929365,
+	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1755437824234,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68a1db009d7d8d3f50462628",
+		"status":"DEPLOYED",
+		"version":4,
+		"workflowVersion":37
+	},
+	"edges":[
+		{
+			"fromNodeId":"_jZN2z",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_1wIc4",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_1wIc4",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_oWDDl",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_oWDDl",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_hA9bH",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_hA9bH",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_XyC9s",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_XyC9s",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_wAv6R",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_wAv6R",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_BRrsJ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_BRrsJ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_UZHE1",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_UZHE1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_3mdM1",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_3mdM1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_tAUpN",
+			"type":"next"
+		}
+	],
+	"grants":{
+		"configs":[
+			{
+				"permissions":["V"],
+				"principalType":"GLOBAL"
+			}
+		]
+	},
+	"id":"675d41706a03ce746de200c5",
+	"lastModifiedBy":-1,
+	"lcName":"ai agent executor",
+	"modifiedTime":1755496334664,
+	"name":"AI Agent Executor",
+	"nodes":[
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":10,
+				"resourceName":"callables_from_automation"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_zFU8O-1",
+			"id":"_jZN2z",
+			"index":0,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"properties":{
+						"role":{
+							"type":"string",
+							"title":"Role"
+						},
+						"content":{
+							"type":"object",
+							"properties":{
+								"text":{
+									"type":"string",
+									"title":"Text"
+								}
+							},
+							"additionalProperties":false,
+							"title":"Content"
+						},
+						"success":{
+							"type":"string",
+							"title":"Success"
+						}
+					},
+					"additionalProperties":false,
+					"required":[
+						"success"
+					]
+				},
+				"setup":{
+					"type":"object",
+					"properties":{
+						"query":{
+							"type":"string",
+							"title":"Query"
+						},
+						"aiAgentId":{
+							"type":"string",
+							"title":"Ai Agent Id"
+						},
+						"caseId":{
+							"type":"string",
+							"title":"Case Id"
+						},
+						"agentName":{
+							"type":"string",
+							"title":"Agent Name"
+						}
+					},
+					"additionalProperties":false,
+					"required":[
+						"query",
+						"aiAgentId",
+						"caseId",
+						"agentName"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":10,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_zFU8O-1",
+			"id":"_1wIc4",
+			"index":0,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"properties":{
+						"message":{
+							"type":"string",
+							"title":"Message"
+						}
+					},
+					"additionalProperties":false,
+					"required":[
+						"message"
+					]
+				},
+				"input":{
+					"type":"object",
+					"properties":{
+						"agentName":{
+							"type":"string",
+							"title":"Agent Name"
+						}
+					},
+					"additionalProperties":false,
+					"required":[
+						"agentName"
+					]
+				},
+				"compile_static":false,
+				"code":"import java.util.Random\n\n// Function to get a random message with the agent's name\ndef getRandomMessage(agentName) {\n    // List of messages with placeholder for agent name\n    def messages = [\n        \"🤝 Passing this to ${agentName} for you. One moment!\",\n        \"⏳ Hold on! ${agentName} is on it.\",\n        \"🔍 Let me check with ${agentName} real quick!\",\n        \"🚀 ${agentName} is stepping in to assist. Hang tight!\",\n        \"🔗 Looping in ${agentName} now. Just a sec!\",\n        \"🤔 ${agentName} is reviewing this. Be right back!\",\n        \"🛠️ Calling in ${agentName} for support. Hang on!\",\n        \"💬 ${agentName} is in the loop now. Hold tight!\",\n        \"🚦 Connecting you with ${agentName} now. Sit tight!\",\n        \"🌟 ${agentName} is taking a look. Back in a moment!\"\n    ]\n    \n    // Randomly select a message\n    def randomMessage = messages[new Random().nextInt(messages.size())]\n    \n    // Return the selected message\n    return randomMessage.toString()\n}\n\nreturn ['message': getRandomMessage(agentName)]",
+				"parameters":{
+					"agentName":"{{ _jZN2z.outputs.agentName }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"conv_ai_by_unifyapps",
+				"resourceVersion":10,
+				"resourceName":"conv_ai_by_unifyapps_publish_response",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_zFU8O-1",
+			"id":"_oWDDl",
+			"index":0,
+			"inputs":{
+				"callableInterfaceId":"__ua__publish_response_interface",
+				"parameters":{
+					"responses":[
+						{
+							"language":"en",
+							"content":"{{ _1wIc4.outputs.result.message }}"
+						}
+					],
+					"endConversation":false,
+					"caseId":"{{ _jZN2z.outputs.caseId }}",
+					"temporaryMessage":true,
+					"publishToEndUser":true
+				}
+			},
+			"skip":false,
+			"subTitle":"Conversation AI by UnifyApps",
+			"title":"Publish Response",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":9,
+				"resourceName":"storage_by_unifyapps_fetch_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_zFU8O-1",
+			"id":"_hA9bH",
+			"index":0,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"properties_caseId",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"{{ _jZN2z.outputs.caseId }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"object_type":"e_ai_agent_conversation_state",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":20
+				},
+				"numberOfRecordsToFetch":"SINGLE",
+				"includeTotalCount":false
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch records",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":9,
+				"resourceName":"storage_by_unifyapps_update_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_zFU8O-1",
+			"id":"_XyC9s",
+			"index":0,
+			"inputs":{
+				"numberOfRecordsToUpdate":"SINGLE",
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"properties_caseId",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"{{ _jZN2z.outputs.caseId }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"object_type":"e_ai_agent_conversation_state",
+				"updateFields":[
+					{
+						"fieldName":"properties.triggerDetails.triggeredByAgentDetails.waitingInstanceId",
+						"actionType":"SET",
+						"setValue":"{{ __RUN__.outputs.executionId }}"
+					},
+					{
+						"fieldName":"properties.availableTopics",
+						"actionType":"UNSET",
+						"setValue":"\""
+					},
+					{
+						"fieldName":"properties.availableFlows",
+						"actionType":"UNSET",
+						"setValue":"\""
+					},
+					{
+						"fieldName":"properties.activeFlowStack",
+						"actionType":"UNSET",
+						"setValue":"\""
+					},
+					{
+						"fieldName":"properties.activeFlowVsSlots",
+						"actionType":"UNSET",
+						"setValue":"\""
+					},
+					{
+						"fieldName":"properties.availableAgents",
+						"actionType":"UNSET",
+						"setValue":"\""
+					},
+					{
+						"fieldName":"properties.availableKnowledges",
+						"actionType":"UNSET",
+						"setValue":"\""
+					},
+					{
+						"fieldName":"properties.currentTopic",
+						"actionType":"UNSET",
+						"setValue":"\""
+					},
+					{
+						"fieldName":"properties.currentFlow",
+						"actionType":"UNSET",
+						"setValue":"\""
+					},
+					{
+						"fieldName":"properties.currentTopicInstructions",
+						"actionType":"UNSET",
+						"setValue":"\""
+					},
+					{
+						"fieldName":"properties.currentAIAgentId",
+						"actionType":"SET",
+						"setValue":"{{ _jZN2z.outputs.aiAgentId }}"
+					},
+					{
+						"fieldName":"properties.triggerDetails.triggeredByAgentDetails.waitingInstanceRunTimeType",
+						"actionType":"SET",
+						"setValue":"{{ __RUN__.outputs.workflowRunTimeType }}"
+					}
+				],
+				"skipIfEmpty":false,
+				"page":{
+					"offset":0,
+					"limit":20
+				}
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Update records by query",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":10,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_zFU8O-1",
+			"id":"_wAv6R",
+			"index":0,
+			"inputs":{
+				"automationId":"66aca7d451e0b07a0d213c93",
+				"runtimeConnections":{
+					
+				},
+				"synchronous":true,
+				"parameters":{
+					"userQuery":"{{ _jZN2z.outputs.query }}",
+					"aiAgentId":"{{ _jZN2z.outputs.aiAgentId }}",
+					"caseId":"{{ _jZN2z.outputs.caseId }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Trigger Agent Topics",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"signals_by_unifyapps",
+				"resourceVersion":10,
+				"resourceName":"signals_by_unifyapps_wait_for_signal",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_zFU8O-1",
+			"id":"_BRrsJ",
+			"index":0,
+			"inputs":{
+				"duration":2,
+				"unit":"HOURS",
+				"signal_payload":{
+					"type":"object",
+					"properties":{
+						"response":{
+							"type":"string",
+							"title":"Response"
+						}
+					},
+					"additionalProperties":false,
+					"required":[
+						"response"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Signals by UnifyApps",
+			"title":"Wait for signal",
+			"type":"ACTION"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.record.availableFlows.items.name",
+					"root.record.availableFlows.items.desc",
+					"root.record.availableFlows.items.id",
+					"root.record.availableFlows.items.slots.items.name",
+					"root.record.availableFlows.items.slots.items.description",
+					"root.record.availableFlows.items.slots.items.mandatory",
+					"root.record.availableFlows.items.slots.items.additional",
+					"root.record.availableTopics.items.name",
+					"root.record.availableTopics.items.description",
+					"root.record.availableTopics.items.flows.items.name",
+					"root.record.availableTopics.items.flows.items.description",
+					"root.record.availableTopics.items.id",
+					"root.record.currentTopicInstructions.items",
+					"root.record.triggerDetails.triggerDeploymentId",
+					"root.record.triggerDetails.triggerInput",
+					"root.record.triggerDetails.triggeredByUserEmail",
+					"root.record.availableKnowledges.items",
+					"root.record.triggerDetails.triggeredByAgentDetails.waitingInstanceId",
+					"root.record.triggerDetails.triggeredByAgentDetails.waitingInstanceRunTimeType",
+					"root.record.availableAgents.items.id",
+					"root.record.availableAgents.items.name",
+					"root.record.availableAgents.items.description"
+				]
+			},
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":9,
+				"resourceName":"storage_by_unifyapps_update_record_by_id",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_zFU8O-1",
+			"id":"_UZHE1",
+			"index":0,
+			"inputs":{
+				"recordId":"{{ _hA9bH.outputs.id }}",
+				"object_type":"e_ai_agent_conversation_state",
+				"record":{
+					"availableFlows":{
+						"source":"{{ _hA9bH.outputs.properties.availableFlows }}",
+						"ua:type":"mappedArray",
+						"items":{
+							"name":"{{ _hA9bH.outputs.properties.availableFlows[0].name }}",
+							"desc":"{{ _hA9bH.outputs.properties.availableFlows[0].desc }}",
+							"id":"{{ _hA9bH.outputs.properties.availableFlows[0].id }}",
+							"slots":{
+								"source":"{{ _hA9bH.outputs.properties.availableFlows[0].slots }}",
+								"ua:type":"mappedArray",
+								"items":{
+									"name":"{{ _hA9bH.outputs.properties.availableFlows[0].slots[0].name }}",
+									"description":"{{ _hA9bH.outputs.properties.availableFlows[0].slots[0].description }}",
+									"mandatory":"{{ _hA9bH.outputs.properties.availableFlows[0].slots[0].mandatory }}"
+								}
+							}
+						}
+					},
+					"caseId":"{{ _hA9bH.outputs.properties.caseId }}",
+					"currentFlow":"{{ _hA9bH.outputs.properties.currentFlow }}",
+					"waitingInstanceId":"{{ _hA9bH.outputs.properties.waitingInstanceId }}",
+					"triggeringInstanceId":"{{ _hA9bH.outputs.properties.triggeringInstanceId }}",
+					"currentAIAgentId":"{{ _hA9bH.outputs.properties.currentAIAgentId }}",
+					"status":"{{ _hA9bH.outputs.properties.status }}",
+					"activeFlowStack":"{{ _hA9bH.outputs.properties.activeFlowStack }}",
+					"currentSlot":"{{ _hA9bH.outputs.properties.currentSlot }}",
+					"currentSlotDescription":"{{ _hA9bH.outputs.properties.currentSlotDescription }}",
+					"responseGeneratorId":"{{ _hA9bH.outputs.properties.responseGeneratorId }}",
+					"availableTopics":{
+						"source":"{{ _hA9bH.outputs.properties.availableTopics }}",
+						"ua:type":"mappedArray",
+						"items":{
+							"name":"{{ _hA9bH.outputs.properties.availableTopics[0].name }}",
+							"description":"{{ _hA9bH.outputs.properties.availableTopics[0].description }}",
+							"flows":{
+								"source":"{{ _hA9bH.outputs.properties.availableTopics[0].flows }}",
+								"ua:type":"mappedArray",
+								"items":{
+									"name":"{{ _hA9bH.outputs.properties.availableTopics[0].flows[0].name }}",
+									"description":"{{ _hA9bH.outputs.properties.availableTopics[0].flows[0].description }}"
+								}
+							},
+							"id":"{{ _hA9bH.outputs.properties.availableTopics[0].id }}"
+						}
+					},
+					"currentTopic":"{{ _hA9bH.outputs.properties.currentTopic }}",
+					"waitingInstanceRunTimeType":"{{ _hA9bH.outputs.properties.waitingInstanceRunTimeType }}",
+					"considerMessagesAfter":"{{ _hA9bH.outputs.properties.considerMessagesAfter }}",
+					"topicStack":"{{ _hA9bH.outputs.properties.topicStack }}",
+					"currentSlotAllowedVal":"{{ _hA9bH.outputs.properties.currentSlotAllowedVal }}",
+					"triggerDetails":{
+						"triggerDeploymentId":"{{ _hA9bH.outputs.properties.triggerDetails.triggerDeploymentId }}",
+						"triggeredByUserEmail":"{{ _hA9bH.outputs.properties.triggerDetails.triggeredByUserEmail }}",
+						"triggerInput":"{{ _hA9bH.outputs.properties.triggerDetails.triggerInput }}"
+					},
+					"nextAction":"{{ _hA9bH.outputs.properties.nextAction }}",
+					"activeFlowVsSlots":"{{ _hA9bH.outputs.properties.activeFlowVsSlots }}",
+					"currentTopicInstructions":{
+						"source":"{{ _hA9bH.outputs.properties.currentTopicInstructions }}",
+						"ua:type":"mappedArray",
+						"items":"{{ _hA9bH.outputs.properties.currentTopicInstructions[0] }}"
+					},
+					"flowVsExecutionDetails":"{{ _hA9bH.outputs.properties.flowVsExecutionDetails }}",
+					"availableKnowledges":{
+						"source":"{{ _hA9bH.outputs.properties.availableKnowledges }}",
+						"ua:type":"mappedArray",
+						"items":"{{ _hA9bH.outputs.properties.availableKnowledges[0] }}"
+					},
+					"availableAgents":{
+						"source":"{{ _hA9bH.outputs.properties.availableAgents }}",
+						"ua:type":"mappedArray",
+						"items":{
+							"id":"{{ _hA9bH.outputs.properties.availableAgents[0].id }}",
+							"name":"{{ _hA9bH.outputs.properties.availableAgents[0].name }}",
+							"description":"{{ _hA9bH.outputs.properties.availableAgents[0].description }}"
+						}
+					}
+				},
+				"upsert":false
+			},
+			"options":{
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false
+				},
+				"logConfig":{
+					"enabled":false
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"captureRetries":false,
+					"count":2,
+					"enabled":true
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Update an existing record",
+			"type":"ACTION"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.record.content.text"
+				]
+			},
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":10,
+				"resourceName":"storage_by_unifyapps_create_record",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_zFU8O-1",
+			"id":"_3mdM1",
+			"index":0,
+			"inputs":{
+				"object_type":"ai_agent_internal_context",
+				"record":{
+					"caseId":"{{ _jZN2z.outputs.caseId }}",
+					"role":"assistant",
+					"aiAgentId":"{{ _hA9bH.outputs.properties.currentAIAgentId }}",
+					"content":{
+						"text":"{{ _jZN2z.outputs.agentName }} has fetched some context : {{ _BRrsJ.outputs.signal_payload.response }}"
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Create record",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":10,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_zFU8O-1",
+			"id":"_tAUpN",
+			"index":0,
+			"inputs":{
+				"result":{
+					"role":"{{ _3mdM1.outputs.properties.role }}",
+					"content":{
+						"text":"{{ _3mdM1.outputs.properties.content.text }}"
+					},
+					"success":"true"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		}
+	],
+	"ownerUserId":34,
+	"schemaReferences":[],
+	"settings":{
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
+		"route":{
+			"default":false,
+			"tierName":"global"
+		}
+	},
+	"standard":true,
+	"tags":["AI Agent","Internal"],
+	"version":44
+}
