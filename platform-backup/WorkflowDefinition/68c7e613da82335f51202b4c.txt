@@ -7,46 +7,142 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_fyJnR",
+			"fromNodeId":"n_ZvOS6",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_oo41P",
+			"toNodeId":"n_MhaMj",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_MhaMj",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_b2BVc",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_b2BVc",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_aOXuO",
 			"type":"next"
 		}
 	],
 	"id":"68c7e613da82335f51202b4c",
 	"lastModifiedBy":34,
 	"lcName":"filesbyunifyapps_uploaddocxfileandgeneratepublicurl_117579292093360",
-	"modifiedTime":1757931027462,
+	"modifiedTime":1757931055703,
 	"name":"FilesByUnifyApps_UploadDocxFileAndGeneratePublicURL_117579292093360",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":620,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_fyJnR-1",
-			"id":"_fyJnR",
-			"index":0,
+			"id":"n_ZvOS6",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"Result"
+					],
+					"properties":{
+						"Result":{
+							"type":"string",
+							"title":"Result"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"files_by_unifyapps",
+				"resourceVersion":613,
+				"resourceName":"files_by_unifyapps_upload_file",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_fyJnR-1",
-			"id":"_oo41P",
-			"index":0,
+			"id":"n_MhaMj",
+			"index":2,
+			"inputs":{
+				"fileName":"sampleFile",
+				"mimeType":"docx",
+				"url":"https://msopenspecs.azureedge.net/files/MS-DOCX/%5bMS-DOCX%5d-240820.docx",
+				"option":"url"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Files by UnifyApps",
+			"title":"Upload file",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":596,
+				"resourceName":"utility_by_unifyapps_generate_public_url",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_fyJnR-1",
+			"id":"n_b2BVc",
+			"index":3,
+			"inputs":{
+				"file":"{{ n_MhaMj.outputs.fileDetails }}",
+				"expiryTime":1
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Generate public file URL",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":663,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_fyJnR-1",
+			"id":"n_aOXuO",
+			"index":4,
+			"inputs":{
+				"result":{
+					"Result":"{{ n_b2BVc.outputs.url }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":34,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +156,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
