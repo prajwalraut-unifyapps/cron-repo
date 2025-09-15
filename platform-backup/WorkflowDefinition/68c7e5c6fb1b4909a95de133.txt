@@ -7,46 +7,166 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_gVJdp",
+			"fromNodeId":"n_dKq0j",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_QxMx0",
+			"toNodeId":"n_HsC7E",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_HsC7E",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_sMZYS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_sMZYS",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_e5qBG",
 			"type":"next"
 		}
 	],
 	"id":"68c7e5c6fb1b4909a95de133",
 	"lastModifiedBy":34,
 	"lcName":"csvbyunifyapps_writer_dynamicheadersbardimiliter_117579292093360",
-	"modifiedTime":1757930950785,
+	"modifiedTime":1757930977789,
 	"name":"CSVByUnifyApps_Writer_DynamicHeadersBarDimiliter_117579292093360",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":630,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_gVJdp-1",
-			"id":"_gVJdp",
-			"index":0,
+			"id":"n_dKq0j",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":621,
+				"resourceName":"code_by_unifyapps_python",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_gVJdp-1",
-			"id":"_QxMx0",
-			"index":0,
+			"id":"n_HsC7E",
+			"index":2,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"headers",
+						"values"
+					],
+					"properties":{
+						"headers":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"headers"
+						},
+						"values":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"values"
+						}
+					}
+				},
+				"configurationMode":"DEFAULT",
+				"code":"result={\r\n  \"headers\": [\r\n  \"Employee_ID\",\r\n  \"Employee_Name\",\r\n  \"Department\",\r\n  \"Position\",\r\n  \"Salary\"\r\n  ],\r\n  \"values\": [\r\n  {\r\n  \"Employee_ID\": \"E001\",\r\n  \"Employee_Name\": \"Alice Johnson\",\r\n  \"Department\": \"Sales\",\r\n  \"Position\": \"Sales Manager\",\r\n  \"Salary\": \"85000\"\r\n  },\r\n  {\r\n  \"Employee_ID\": \"E002\",\r\n  \"Employee_Name\": \"David Lee\",\r\n  \"Department\": \"IT\",\r\n  \"Position\": \"Software Engineer\",\r\n  \"Salary\": \"95000\"\r\n  },\r\n  {\r\n  \"Employee_ID\": \"E003\",\r\n  \"Employee_Name\": \"Emily Davis\",\r\n  \"Department\": \"HR\",\r\n  \"Position\": \"HR Specialist\",\r\n  \"Salary\": \"78000\"\r\n  }\r\n  ]\r\n  \r\n}",
+				"isAsync":false,
+				"python_version":"3.12",
+				"captureStdOutput":false
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Python script",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"csv_by_unifyapps",
+				"resourceVersion":597,
+				"resourceName":"csv_by_unifyapps_list_to_csv_file",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_gVJdp-1",
+			"id":"n_sMZYS",
+			"index":3,
+			"inputs":{
+				"delimiter":",",
+				"skipHeaderRow":false,
+				"headerType":"DYNAMIC",
+				"encoding":"UTF-8",
+				"keepExactFileName":false,
+				"dataSource":"{{ n_HsC7E.outputs.result.values }}",
+				"fileType":"csv",
+				"dynamicHeaders":{
+					"source":"{{ n_HsC7E.outputs.result.headers }}",
+					"ua:type":"mappedArray",
+					"items":"{{ n_HsC7E.outputs.result.values }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"CSV by UnifyApps",
+			"title":"Write data to CSV file",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":596,
+				"resourceName":"utility_by_unifyapps_generate_public_url",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_gVJdp-1",
+			"id":"n_e5qBG",
+			"index":4,
+			"inputs":{
+				"file":"{{ n_sMZYS.outputs.fileDetails }}",
+				"expiryTime":1
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Generate public file URL",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":34,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +180,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
