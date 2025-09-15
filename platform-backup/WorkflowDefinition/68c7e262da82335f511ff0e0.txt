@@ -7,46 +7,172 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_aOnnY",
+			"fromNodeId":"n_T5w5Q",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_GQa0n",
+			"toNodeId":"n_jo0Uu",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_jo0Uu",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_NdXxn",
 			"type":"next"
 		}
 	],
 	"id":"68c7e262da82335f511ff0e0",
 	"lastModifiedBy":34,
 	"lcName":"analytics_node_with_distinct_count_group_functions_with_same_two_filters_sort_117579292093360",
-	"modifiedTime":1757930082994,
+	"modifiedTime":1757930105699,
 	"name":"Analytics_Node_With_Distinct_Count_Group_Functions_With_Same_Two_Filters_Sort_117579292093360",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":620,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_aOnnY-1",
-			"id":"_aOnnY",
-			"index":0,
+			"id":"n_T5w5Q",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"output",
+						"total",
+						"hasmore"
+					],
+					"properties":{
+						"output":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"output"
+						},
+						"total":{
+							"type":"integer",
+							"title":"total"
+						},
+						"hasmore":{
+							"type":"boolean",
+							"title":"hasmore"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":658,
+				"resourceName":"analytics_by_unifyapps_query_reports",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_aOnnY-1",
-			"id":"_GQa0n",
-			"index":0,
+			"id":"n_jo0Uu",
+			"index":2,
+			"inputs":{
+				"projections":[
+					{
+						"name":"ENTITY_analytics_node_testcases_imp=::=city",
+						"aggregationFunction":"GROUP",
+						"alias":"City",
+						"includePercentageChange":false
+					},
+					{
+						"name":"ENTITY_analytics_node_testcases_imp=::=department",
+						"aggregationFunction":"DISTINCT_COUNT",
+						"alias":"DistinctDeptCount",
+						"includePercentageChange":false
+					}
+				],
+				"filter":{
+					"filters":[
+						{
+							"property":"ENTITY_analytics_node_testcases_imp=::=city",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"Hyd"
+							}
+						},
+						{
+							"property":"ENTITY_analytics_node_testcases_imp=::=married",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"false"
+							}
+						},
+						{
+							"property":"ENTITY_analytics_node_testcases_imp=::=city",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"Delhi"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"entityType":"ENTITY_analytics_node_testcases_imp",
+				"includeTotalHits":true,
+				"sorts":[
+					{
+						"field":"DistinctDeptCount",
+						"order":"DESC"
+					}
+				],
+				"group":"ENTITY_REPORTING"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Analytics by UnifyApps",
+			"title":"Analytics Query",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":663,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_aOnnY-1",
+			"id":"n_NdXxn",
+			"index":3,
+			"inputs":{
+				"result":{
+					"output":"{{ n_jo0Uu.outputs.objects }}",
+					"total":"{{ n_jo0Uu.outputs.total }}",
+					"hasmore":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":34,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +186,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
