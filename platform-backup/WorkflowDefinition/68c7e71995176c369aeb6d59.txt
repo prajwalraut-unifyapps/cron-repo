@@ -7,46 +7,138 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_JAQML",
+			"fromNodeId":"n_9WcTG",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_BDJTW",
+			"toNodeId":"n_4xsmE",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_4xsmE",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8u9If",
 			"type":"next"
 		}
 	],
 	"id":"68c7e71995176c369aeb6d59",
 	"lastModifiedBy":34,
 	"lcName":"streambyunifyapps_publish event to stream_117579292093360",
-	"modifiedTime":1757931289155,
+	"modifiedTime":1757931311250,
 	"name":"StreamByUnifyApps_Publish event to stream_117579292093360",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":620,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_JAQML-1",
-			"id":"_JAQML",
-			"index":0,
+			"id":"n_9WcTG",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"Output"
+					],
+					"properties":{
+						"Output":{
+							"type":"string",
+							"title":"Output"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"Name":{
+							"type":"string",
+							"title":"Name"
+						},
+						"Age":{
+							"type":"integer",
+							"title":"Age"
+						},
+						"Profession":{
+							"type":"string",
+							"title":"Profession"
+						},
+						"Datetime":{
+							"type":"string",
+							"title":"Datetime"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":15810,
+				"resourceName":"streams_by_unifyapps_publish_event",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_JAQML-1",
-			"id":"_BDJTW",
-			"index":0,
+			"id":"n_4xsmE",
+			"index":2,
+			"inputs":{
+				"streamId":"e_68c7e71008b9442908e86463",
+				"event":{
+					"Profession":"{{ n_9WcTG.outputs.Profession }}",
+					"Age":"{{ n_9WcTG.outputs.Age }}",
+					"Name":"{{ n_9WcTG.outputs.Name }}",
+					"Datetime":"{{ n_9WcTG.outputs.Datetime }}"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Streams by UnifyApps",
+			"title":"Publish event to stream",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":663,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_JAQML-1",
+			"id":"n_8u9If",
+			"index":3,
+			"inputs":{
+				"result":{
+					"Output":"{{ n_4xsmE.outputs.success }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":34,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +152,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
