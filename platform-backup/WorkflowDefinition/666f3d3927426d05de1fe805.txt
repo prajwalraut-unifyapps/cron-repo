@@ -1,0 +1,120 @@
+{
+	"appsUsed":[
+		
+	],
+	"createdTime":1718566201879,
+	"deleted":true,
+	"deploymentState":{
+		"deployedAt":1718566339449,
+		"deployedBy":174,
+		"deployedDefinitionId":"666f3dc327426d05de1fe826",
+		"status":"DEPLOYED",
+		"version":2,
+		"workflowVersion":2
+	},
+	"description":"",
+	"edges":[
+		{
+			"fromNodeId":"B3FxW",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"MjdtU",
+			"type":"next"
+		}
+	],
+	"id":"666f3d3927426d05de1fe805",
+	"lastModifiedBy":174,
+	"lcName":"csm | new usage record",
+	"modifiedTime":1718703043449,
+	"name":"CSM | New Usage Record",
+	"nodes":[
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":33,
+				"resourceName":"storage_by_unifyapps_on_create_record"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ghSjx-1",
+			"id":"B3FxW",
+			"index":0,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"",
+							"filter":{
+								"operator":"EQUAL",
+								"value":""
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"object_type":"csmUsage"
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"On new record",
+			"trigger":{
+				"type":"EVENT"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":35,
+				"resourceName":"storage_by_unifyapps_update_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ghSjx-1",
+			"id":"MjdtU",
+			"index":0,
+			"inputs":{
+				"numberOfRecordsToUpdate":"SINGLE",
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"properties_usageId",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"{{ B3FxW.outputs.properties.usageId }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"object_type":"csmUsage",
+				"updateFields":[
+					{
+						"fieldName":"properties.countDate",
+						"actionType":"SET",
+						"setValue":"=TEXT({{ B3FxW.outputs.properties.countDate }},\"yyyy-MM-dd\")"
+					}
+				],
+				"page":{
+					"offset":0,
+					"limit":20
+				}
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Update records by query",
+			"type":"ACTION"
+		}
+	],
+	"ownerUserId":174,
+	"settings":{
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true
+	},
+	"standard":false,
+	"version":3
+}
