@@ -1,0 +1,363 @@
+{
+	"appsUsed":[
+		"freshdesk"
+	],
+	"createdTime":1718011786200,
+	"deleted":true,
+	"description":"",
+	"edges":[
+		{
+			"fromNodeId":"GKfT0",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"PWky6",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"PWky6",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"urhFL",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"urhFL",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"ONknE",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"ONknE",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"k9hRH",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"ONknE",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"PeV5M",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"k9hRH",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"pPr67",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"PeV5M",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"pPr67",
+			"type":"next"
+		}
+	],
+	"grants":{
+		"configs":[
+			{
+				"permissions":[
+					"A",
+					"EXPORT_AS_TEMPLATE",
+					"C",
+					"D",
+					"E",
+					"VIEW_RUNS",
+					"TEST",
+					"V",
+					"DEP"
+				],
+				"principalType":"GLOBAL"
+			}
+		]
+	},
+	"id":"6666c78a043c9f541c7c9e34",
+	"lastModifiedBy":174,
+	"lcName":"freshdesk_create_company (do not change)",
+	"modifiedTime":1718012064243,
+	"name":"Freshdesk_Create_Company (Do not change)",
+	"nodes":[
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":34,
+				"resourceName":"callables_from_automation"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"GKfT0-1",
+			"id":"GKfT0",
+			"index":0,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"properties":{
+						"result":{
+							"type":"boolean",
+							"title":"Result"
+						}
+					},
+					"required":[]
+				},
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"",
+							"filter":{
+								"operator":"EQUAL",
+								"value":""
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"setup":{
+					"type":"object",
+					"properties":{
+						"email":{
+							"type":"string",
+							"title":"Email"
+						},
+						"language":{
+							"type":"string",
+							"title":"Language"
+						},
+						"time_zone":{
+							"type":"string",
+							"title":"Time Zone"
+						},
+						"ticket_scope":{
+							"type":"string",
+							"title":"Ticket Scope"
+						},
+						"occasional":{
+							"type":"boolean",
+							"title":"Occasional"
+						},
+						"signature":{
+							"type":"string",
+							"title":"Signature"
+						},
+						"agent_type":{
+							"type":"string",
+							"title":"Agent Type"
+						},
+						"focus_mode":{
+							"type":"boolean",
+							"title":"Focus Mode"
+						}
+					},
+					"required":[
+						"email",
+						"ticket_scope"
+					]
+				}
+			},
+			"skip":false,
+			"title":"Trigger from automation",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":1,
+				"connectionId":"66559af53dcbce288a1aea1f",
+				"resourceName":"freshdesk_create_agent",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"GKfT0-1",
+			"id":"PWky6",
+			"index":0,
+			"inputs":{
+				"agent_type":"{{ GKfT0.outputs.agent_type }}",
+				"signature":"{{ GKfT0.outputs.signature }}",
+				"ticket_scope":"{{ GKfT0.outputs.ticket_scope }}",
+				"occasional":"{{ GKfT0.outputs.occasional }}",
+				"language":"{{ GKfT0.outputs.language }}",
+				"time_zone":"{{ GKfT0.outputs.time_zone }}",
+				"focus_mode":"{{ GKfT0.outputs.focus_mode }}",
+				"email":"{{ GKfT0.outputs.email }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Create agent",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":1,
+				"connectionId":"66559af53dcbce288a1aea1f",
+				"resourceName":"freshdesk_get_agent",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"GKfT0-1",
+			"id":"urhFL",
+			"index":0,
+			"inputs":{
+				"id":"{{ PWky6.outputs.id }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get agent",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":32,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"GKfT0-1",
+			"id":"ONknE",
+			"index":0,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ GKfT0.outputs.email }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"{{ PWky6.outputs.contact.email }}"
+						}
+					},
+					{
+						"property":"{{ GKfT0.outputs.language }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"{{ PWky6.outputs.contact.language }}"
+						}
+					},
+					{
+						"property":"{{ GKfT0.outputs.time_zone }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"{{ PWky6.outputs.contact.time_zone }}"
+						}
+					},
+					{
+						"property":"{{ GKfT0.outputs.ticket_scope }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"{{ PWky6.outputs.ticket_scope }}"
+						}
+					},
+					{
+						"property":"{{ GKfT0.outputs.occasional }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"{{ PWky6.outputs.occasional }}"
+						}
+					},
+					{
+						"property":"{{ GKfT0.outputs.signature }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"{{ urhFL.outputs.signature }}"
+						}
+					},
+					{
+						"property":"{{ GKfT0.outputs.focus_mode }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"{{ PWky6.outputs.focus_mode }}"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":30,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ONknE@GKfT0-1@y",
+			"id":"k9hRH",
+			"index":0,
+			"inputs":{
+				"result":{
+					"jhvgyuj":true,
+					"result":true
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Return data to automation",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":30,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ONknE@GKfT0-1@n",
+			"id":"PeV5M",
+			"index":0,
+			"inputs":{
+				"result":{
+					"result":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Return data to automation",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"GKfT0-1",
+			"id":"pPr67",
+			"index":0,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
+		}
+	],
+	"ownerUserId":174,
+	"settings":{
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true
+	},
+	"standard":false,
+	"version":2
+}
