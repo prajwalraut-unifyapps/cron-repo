@@ -5,12 +5,12 @@
 	"createdTime":1758277001891,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758277002078,
+		"deployedAt":1758536820805,
 		"deployedBy":76193,
-		"deployedDefinitionId":"68cd2d893eb9d85ad885cf0e",
+		"deployedDefinitionId":"68d124748a00a723d01808e4",
 		"status":"DEPLOYED",
-		"version":1,
-		"workflowVersion":113
+		"version":2,
+		"workflowVersion":114
 	},
 	"edges":[
 		{
@@ -160,7 +160,7 @@
 	"id":"68595194fa54b64c8cc4b365",
 	"lastModifiedBy":76193,
 	"lcName":"virtusa poc | project summary | get projects by numbers/email",
-	"modifiedTime":1758536819763,
+	"modifiedTime":1758537752036,
 	"name":"Virtusa POC | Project Summary | Get projects by Numbers/Email",
 	"nodes":[
 		{
@@ -546,7 +546,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_4BwGu-1",
 			"id":"n_Elm4U",
@@ -613,7 +613,7 @@
 					]
 				}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Callable",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
@@ -626,7 +626,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_4BwGu-1",
 			"id":"n_StsRc",
@@ -634,6 +634,10 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"subscriptionKey"
+					],
 					"properties":{
 						"subscriptionKey":{
 							"type":"string",
@@ -655,29 +659,26 @@
 							"type":"string",
 							"title":"Client Secret"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"subscriptionKey"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"input"
+					],
 					"properties":{
 						"input":{
 							"type":"string",
 							"title":"Input"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"input"
-					]
+					}
 				},
-				"compile_static":false,
 				"code":"def jsonText = input\r\n\r\n// Use regex to find all name-value pairs\r\ndef pattern = /\"name\"\\s*:\\s*\"([^\"]+)\"\\s*,\\s*\"value\"\\s*:\\s*\"([^\"]+)\"/\r\ndef matcher = (jsonText =~ pattern)\r\n\r\n// Build map of name -> value\r\ndef resultMap = [:]\r\nmatcher.each { match ->\r\n    def name = match[1]\r\n    def value = match[2]\r\n    resultMap[name] = value\r\n}\r\n\r\n// Return values as specific keys\r\nreturn [\r\n    'subscriptionKey': resultMap['Virtusa-Projects-Subscription-Key'],\r\n    fusionUsername : resultMap['fusionUserName'],\r\n    fusionPassword : resultMap['fusionPassword'],\r\n    clientID       : resultMap['virtuIntegrationAppClientID'],\r\n    clientSecret   : resultMap['virtuIntegrationAppSecret']\r\n]\r\n",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
-					"input":"{{ n_Elm4U.outputs.Secrets }}"
+					"input":"[{\\\"name\\\":\\\"virtuIntegrationAppAudiance\\\",\\\"value\\\":\\\"fb37e32e-cf16-434b-93e6-3420f7bc11f9\\\"},{\\\"name\\\":\\\"virtuIntegrationAppSecret\\\",\\\"value\\\":\\\"NDs8Q~QHYF7lHLNCcqs8iFFlFO3A0gain8YykdAu\\\"},{\\\"name\\\":\\\"virtuIntegrationAppClientID\\\",\\\"value\\\":\\\"fb37e32e-cf16-434b-93e6-3420f7bc11f9\\\"},{\\\"name\\\":\\\"fusionPassword\\\",\\\"value\\\":\\\"Welcome@123\\\"},{\\\"name\\\":\\\"fusionUserName\\\",\\\"value\\\":\\\"fusionmwuser\\\"},{\\\"name\\\":\\\"Virtusa-Projects-Subscription-Key\\\",\\\"value\\\":\\\"d6f3f63f50854c0990cd61dbd7e64057\\\"},{\\\"name\\\":\\\"Virtu-Business-Public-sub-key\\\",\\\"value\\\":\\\"2f43f7d7982b42298a17bc98a8e77d4c\\\"}]"
 				}
 			},
 			"skip":false,
@@ -1957,5 +1958,5 @@
 	"tags":[
 		"Low Code"
 	],
-	"version":114
+	"version":115
 }
