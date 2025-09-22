@@ -1,0 +1,207 @@
+{
+	"appsUsed":[
+		
+	],
+	"createdTime":1744354449914,
+	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1757441905762,
+		"deployedBy":0,
+		"deployedDefinitionId":"68c06f716bc3be145d794421",
+		"status":"DEPLOYED",
+		"version":49,
+		"workflowVersion":68
+	},
+	"edges":[
+		{
+			"fromNodeId":"OSYbw",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"xWFAJ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"xWFAJ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"p9E8N",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"p9E8N",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"EFBfw",
+			"type":"next"
+		}
+	],
+	"grants":{
+		"configs":[
+			{
+				"permissions":[
+					"V"
+				],
+				"principalType":"GLOBAL"
+			}
+		]
+	},
+	"id":"67f8b9e584efea167932f811",
+	"lastModifiedBy":-1,
+	"lcName":"capture connection",
+	"modifiedTime":1758530345373,
+	"name":"Capture Connection",
+	"nodes":[
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":187,
+				"resourceName":"callables_from_automation"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"AyNJE-1",
+			"id":"OSYbw",
+			"index":0,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"properties":{
+						"success":{
+							"type":"boolean",
+							"title":"Success"
+						}
+					},
+					"additionalProperties":false,
+					"required":[]
+				},
+				"setup":{
+					"type":"object",
+					"properties":{
+						"connectionId":{
+							"type":"string",
+							"title":"Connection Id"
+						},
+						"caseId":{
+							"type":"string",
+							"title":"Case Id"
+						},
+						"appName":{
+							"type":"string",
+							"title":"App Name"
+						}
+					},
+					"additionalProperties":false,
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":187,
+				"resourceName":"storage_by_unifyapps_get_record_by_id",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"AyNJE-1",
+			"id":"xWFAJ",
+			"index":0,
+			"inputs":{
+				"object_type":"e_ai_agent_conversation_state",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"id":"{{ OSYbw.outputs.caseId }}",
+				"readThroughSessionVariables":false
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch records",
+			"type":"ACTION"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.record.caseId",
+					"root.record.appName"
+				]
+			},
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":187,
+				"resourceName":"storage_by_unifyapps_create_record",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"AyNJE-1",
+			"id":"p9E8N",
+			"index":0,
+			"inputs":{
+				"object_type":"run_time_connection_store",
+				"record":{
+					"caseId":"{{ OSYbw.outputs.caseId }}",
+					"appName":"{{ OSYbw.outputs.appName }}",
+					"aiAgentId":"{{ xWFAJ.outputs.properties.currentAIAgentId }}",
+					"userId":"=CONCATENATE({{ __RUN__.outputs.userId }},\"\")",
+					"connectionId":"=IF(ISBLANK({{ OSYbw.outputs.connectionId }}), \"67613c02304e8347393330e0\", {{ OSYbw.outputs.connectionId }})"
+				}
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Create record",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":190,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"AyNJE-1",
+			"id":"EFBfw",
+			"index":0,
+			"inputs":{
+				"result":{
+					"success":true
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		}
+	],
+	"ownerUserId":1866,
+	"schemaReferences":[
+		
+	],
+	"settings":{
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
+		"route":{
+			"default":false,
+			"tierName":"global"
+		}
+	},
+	"standard":true,
+	"tags":[
+		"AI Agent"
+	],
+	"version":71
+}
