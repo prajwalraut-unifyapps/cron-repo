@@ -1,0 +1,265 @@
+{
+	"appsUsed":[
+		
+	],
+	"createdTime":1748758079769,
+	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1757961522977,
+		"deployedBy":45771,
+		"deployedDefinitionId":"68c85d325baa5c1e834914a3",
+		"status":"DEPLOYED",
+		"version":60,
+		"workflowVersion":71
+	},
+	"edges":[
+		{
+			"fromNodeId":"9nNaS",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"2QgP9",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"2QgP9",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"Ltj9G",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"Ltj9G",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"ugPlh",
+			"type":"next"
+		}
+	],
+	"grants":{
+		"configs":[
+			{
+				"permissions":[
+					"V"
+				],
+				"principalType":"GLOBAL"
+			}
+		]
+	},
+	"id":"683bec009a3289636f25372e",
+	"lastModifiedBy":-1,
+	"lcName":"ai eval | metrics | bert score",
+	"modifiedTime":1758530351048,
+	"name":"AI Eval | Metrics | BERT Score",
+	"nodes":[
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":380,
+				"resourceName":"callables_from_interface"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"e0x7J-1",
+			"id":"9nNaS",
+			"index":0,
+			"inputs":{
+				"result":{
+					"ua:modal":{
+						"field_type":"STRING",
+						"is_optional":true
+					},
+					"properties":{
+						"score":{
+							"type":"number",
+							"title":"Score"
+						},
+						"reason":{
+							"type":"string",
+							"title":"Reason"
+						},
+						"cost":{
+							"type":"number",
+							"title":"Cost"
+						},
+						"latency":{
+							"type":"number",
+							"title":"Latency"
+						},
+						"tokensUsed":{
+							"type":"number",
+							"title":"Tokens Used"
+						}
+					},
+					"required":[]
+				},
+				"callableInterfaceId":"67e2b5d9e1d4f12ce20011f0",
+				"setup":{
+					"ua:modal":{
+						"field_type":"STRING",
+						"is_optional":true
+					},
+					"properties":{
+						"criteria":{
+							"type":"string",
+							"title":"Evaluation Criteria"
+						},
+						"evaluationSteps":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Evaluation Steps"
+						},
+						"model":{
+							"type":"string",
+							"title":"Model"
+						},
+						"evaluationParameters":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Evaluation Parameters"
+						},
+						"testCase":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Test Case"
+						},
+						"scoreRange":{
+							"type":"string",
+							"title":"Scoring Range"
+						},
+						"testCaseId":{
+							"type":"string",
+							"title":"Test Case Id"
+						}
+					},
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Trigger interface",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":565,
+				"resourceName":"utility_by_unifyapps_to_json_object",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"e0x7J-1",
+			"id":"2QgP9",
+			"index":0,
+			"inputs":{
+				"jsonSchema":{
+					"type":"object",
+					"properties":{
+						"testCases":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"EXPECTED_OUTPUT":{
+										"type":"string",
+										"title":"EXPECTED OUTPUT"
+									},
+									"ACTUAL_OUTPUT":{
+										"type":"string",
+										"title":"ACTUAL OUTPUT"
+									}
+								},
+								"additionalProperties":false,
+								"required":[]
+							},
+							"title":"Test Cases"
+						}
+					},
+					"additionalProperties":false,
+					"required":[]
+				},
+				"jsonString":"{{ 9nNaS.outputs.testCase }}"
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Deserialise string to JSON object",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":403,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"e0x7J-1",
+			"id":"Ltj9G",
+			"index":0,
+			"inputs":{
+				"automationId":"683be69635a762577e428072",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"referenceText":"{{ 2QgP9.outputs.result.testCases[0].EXPECTED_OUTPUT }}",
+					"candidateText":"{{ 2QgP9.outputs.result.testCases[0].ACTUAL_OUTPUT }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":395,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"e0x7J-1",
+			"id":"ugPlh",
+			"index":0,
+			"inputs":{
+				"result":{
+					"score":"{{ Ltj9G.outputs.score }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		}
+	],
+	"ownerUserId":49915,
+	"schemaReferences":[
+		
+	],
+	"settings":{
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
+		"route":{
+			"default":false,
+			"tierName":"global"
+		}
+	},
+	"standard":true,
+	"version":73
+}
