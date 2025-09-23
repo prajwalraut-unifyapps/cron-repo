@@ -6,46 +6,300 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_OCqgn",
+			"fromNodeId":"n_5neeo",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_VSkLT",
+			"toNodeId":"_uVnN9",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_uVnN9",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_CFbQK",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_CFbQK",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_1Ky61",
 			"type":"next"
 		}
 	],
 	"id":"68d23b241c652930596db2e0",
 	"lastModifiedBy":46209,
 	"lcName":"testtt",
-	"modifiedTime":1758608164052,
+	"modifiedTime":1758608251134,
 	"name":"testtt",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":948,
+				"resourceName":"callables_from_api"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_OCqgn-1",
-			"id":"_OCqgn",
-			"index":0,
+			"id":"n_5neeo",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"eventStreamId":{
+								"type":"string",
+								"title":"eventStreamId"
+							},
+							"payload":{
+								"type":"object",
+								"properties":{
+									"event":{
+										"type":"object",
+										"properties":{
+											"arrayValue":{
+												"type":"array",
+												"items":{
+													"type":"object",
+													"properties":{
+														"id":{
+															"type":"integer",
+															"title":"id"
+														},
+														"name":{
+															"type":"string",
+															"title":"name"
+														}
+													},
+													"additionalProperties":false
+												},
+												"title":"arrayValue"
+											},
+											"booleanValue":{
+												"type":"boolean",
+												"title":"booleanValue"
+											},
+											"dateTimeValue":{
+												"type":"string",
+												"title":"dateTimeValue"
+											},
+											"dateValue":{
+												"type":"string",
+												"title":"dateValue"
+											},
+											"fileValue":{
+												"type":"object",
+												"properties":{
+													"url":{
+														"type":"string",
+														"title":"url"
+													}
+												},
+												"title":"fileValue",
+												"additionalProperties":false
+											},
+											"integerValue":{
+												"type":"integer",
+												"title":"integerValue"
+											},
+											"multiSelectDropdown":{
+												"type":"array",
+												"items":{
+													"type":"string"
+												},
+												"title":"multiSelectDropdown"
+											},
+											"numberValue":{
+												"type":"number",
+												"title":"numberValue"
+											},
+											"objectValue":{
+												"type":"object",
+												"properties":{
+													"field1":{
+														"type":"string",
+														"title":"field1"
+													},
+													"field2":{
+														"type":"integer",
+														"title":"field2"
+													}
+												},
+												"title":"objectValue",
+												"additionalProperties":false
+											},
+											"singleSelectDropdown":{
+												"type":"string",
+												"title":"singleSelectDropdown"
+											},
+											"stringValue":{
+												"type":"string",
+												"title":"stringValue"
+											}
+										},
+										"title":"event",
+										"additionalProperties":false
+									},
+									"queryParams":{
+										"type":"object",
+										"title":"queryParams"
+									}
+								},
+								"title":"payload",
+								"additionalProperties":false
+							}
+						},
+						"additionalProperties":false
+					}
+				},
+				"endpointType":"REST",
+				"response":[
+					{
+						"status":200,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						}
+					}
+				],
+				"streamingResponse":false
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via API",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":81,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_OCqgn-1",
-			"id":"_VSkLT",
-			"index":0,
+			"id":"_uVnN9",
+			"index":2,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"context",
+						"input"
+					],
+					"properties":{
+						"context":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Context"
+						},
+						"input":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Input"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"event",
+						"streamId"
+					],
+					"properties":{
+						"event":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Event"
+						},
+						"streamId":{
+							"type":"string",
+							"title":"Stream Id"
+						},
+						"key":{
+							"type":"string",
+							"title":"Key"
+						}
+					}
+				},
+				"code":"def context = [\n  \"appName\": \"streams_by_unifyapps\",\n  \"resourceName\": \"streams_by_unifyapps_publish_event\",\n  \"type\": \"APPLICATION\"\n]\n\ndef input = [\n  \"streamId\": streamId,\n  \"event\": event\n]\n\nif (binding.hasVariable('key') && key != null) {\n  input.put(\"key\", key)\n}\n\nreturn [\"context\":context, \"input\"\n: input]",
+				"compile_static":false,
+				"isAsync":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"event":"{{ n_5neeo.outputs.body.payload.event }}",
+					"streamId":"{{ n_5neeo.outputs.body.eventStreamId }}"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"custom_application",
+				"resourceVersion":15,
+				"resourceName":"custom_application_execute",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_OCqgn-1",
+			"id":"_CFbQK",
+			"index":3,
+			"inputs":{
+				"input":"{{ _uVnN9.outputs.result.input }}",
+				"context":"{{ _uVnN9.outputs.result.context }}"
+			},
+			"skip":false,
+			"subTitle":"Custom Application",
+			"title":"Execute Custom Application Request",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":583,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_OCqgn-1",
+			"id":"n_1Ky61",
+			"index":4,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_undefined",
+				"status":200
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":46209,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +313,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
