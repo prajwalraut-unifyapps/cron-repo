@@ -1,43 +1,20 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1740748553401,
+	"createdTime":1740110511471,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1755437802426,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68a1daea9d7d8d3f50462572",
+		"deployedAt":1758646555584,
+		"deployedBy":0,
+		"deployedDefinitionId":"68d2d11bbd00df618e363d30",
 		"status":"DEPLOYED",
-		"version":3,
-		"workflowVersion":14
+		"version":56,
+		"workflowVersion":90
 	},
 	"edges":[
 		{
 			"fromNodeId":"xntkq",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"SOBHN",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"SOBHN",
-			"name":"yes",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"ACNZP",
-			"type":"if"
-		},
-		{
-			"fromNodeId":"ACNZP",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"lsmJu",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"SOBHN",
-			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"lsmJu",
@@ -191,9 +168,9 @@
 		]
 	},
 	"id":"67a50fa773283e4881c0bac0",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"remove knowledge embeddings",
-	"modifiedTime":1758530907625,
+	"modifiedTime":1758655377160,
 	"name":"Remove Knowledge Embeddings",
 	"nodes":[
 		{
@@ -211,19 +188,21 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"response"
+					],
 					"properties":{
 						"response":{
 							"type":"string",
 							"title":"Response"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"response"
-					]
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"knowledgeId":{
 							"type":"string",
@@ -236,10 +215,14 @@
 						"uniqueEntityId":{
 							"type":"string",
 							"title":"Unique Entity Id"
+						},
+						"filter":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Filter"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -249,58 +232,6 @@
 				"type":"CALLABLE"
 			},
 			"type":"START"
-		},
-		{
-			"context":{
-				"appName":"if_else",
-				"resourceVersion":71,
-				"resourceName":"if_else_condition",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"gNOd2-1",
-			"id":"SOBHN",
-			"index":2,
-			"inputs":{
-				"filters":[
-					{
-						"property":"{{ xntkq.outputs.readVersion }}",
-						"filter":{
-							"operator":"MISSING"
-						}
-					}
-				],
-				"operator":"OR"
-			},
-			"skip":false,
-			"subTitle":"Temp check for version",
-			"title":"Condition",
-			"type":"IF_ELSE"
-		},
-		{
-			"context":{
-				"appName":"callables",
-				"resourceVersion":73,
-				"resourceName":"callables_return_to_automation",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"SOBHN@gNOd2-1@y",
-			"id":"ACNZP",
-			"index":3,
-			"inputs":{
-				"result":{
-					"response":"true"
-				}
-			},
-			"skip":false,
-			"subTitle":"Callable",
-			"title":"Respond to automation",
-			"type":"STOP"
 		},
 		{
 			"context":{
@@ -314,10 +245,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"gNOd2-1",
 			"id":"lsmJu",
-			"index":4,
+			"index":2,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"filter":{
 							"type":"object",
@@ -325,12 +258,12 @@
 							"additionalProperties":false,
 							"title":"Filter"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"uniqueEntityId":{
 							"type":"string",
@@ -343,17 +276,23 @@
 						"knowledgeId":{
 							"type":"string",
 							"title":"Knowledge Id"
+						},
+						"additionalFilter":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Additional Filter"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"def combinedFilter = [\n    op: 'AND',\n    values: []\n]\n\ndef knowledgeIdFilter = null\nif (binding.hasVariable('knowledgeId')) {\n      knowledgeIdFilter = [\n        field: 'properties.knowledgeId',\n        op: 'EQUAL',\n        values: [knowledgeId]\n    ]    \n    combinedFilter['values'].add(knowledgeIdFilter)\n}\n\ndef versionFilter = null\nif (binding.hasVariable('knowledgeVersion')) {\n      versionFilter = [\n        field: 'properties.knowledgeVersion',\n        op: 'EQUAL',\n        values: [knowledgeVersion]\n    ]    \n    combinedFilter['values'].add(versionFilter)\n}\n\ndef uniqueEntityIdFilter = null\nif (binding.hasVariable('uniqueEntityId')) {\n      uniqueEntityIdFilter = [\n        field: 'properties.uniqueEntityId',\n        op: 'EQUAL',\n        values: [uniqueEntityId]\n    ]    \n    combinedFilter['values'].add(uniqueEntityIdFilter)\n}\n\nif (binding.hasVariable(\"additionalfilter\")) {   \n    combinedFilter['values'].add(additionalfilter)\n}\n\nreturn ['filter': combinedFilter['values'].size() > 0 ? combinedFilter : null]\n",
 				"compile_static":false,
-				"code":"def combinedFilter = [\n    op: 'AND',\n    values: []\n]\n\ndef knowledgeIdFilter = null\nif (binding.hasVariable('knowledgeId')) {\n      knowledgeIdFilter = [\n        field: 'properties.knowledgeId',\n        op: 'EQUAL',\n        values: [knowledgeId]\n    ]    \n    combinedFilter['values'].add(knowledgeIdFilter)\n}\n\ndef versionFilter = null\nif (binding.hasVariable('knowledgeVersion')) {\n      versionFilter = [\n        field: 'properties.knowledgeVersion',\n        op: 'EQUAL',\n        values: [knowledgeVersion]\n    ]    \n    combinedFilter['values'].add(versionFilter)\n}\n\ndef uniqueEntityIdFilter = null\nif (binding.hasVariable('uniqueEntityId')) {\n      uniqueEntityIdFilter = [\n        field: 'properties.uniqueEntityId',\n        op: 'EQUAL',\n        values: [uniqueEntityId]\n    ]    \n    combinedFilter['values'].add(uniqueEntityIdFilter)\n}\n\nreturn ['filter': combinedFilter['values'].size() > 0 ? combinedFilter : null]\n",
+				"captureStdOutput":false,
 				"parameters":{
 					"uniqueEntityId":"{{ xntkq.outputs.uniqueEntityId }}",
 					"knowledgeVersion":"{{ xntkq.outputs.readVersion }}",
-					"knowledgeId":"{{ xntkq.outputs.knowledgeId }}"
+					"knowledgeId":"{{ xntkq.outputs.knowledgeId }}",
+					"additionalFilter":"{{ xntkq.outputs.filter }}"
 				}
 			},
 			"skip":false,
@@ -373,7 +312,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gNOd2-1",
 			"id":"BD5z1",
-			"index":5,
+			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -394,7 +333,6 @@
 				"count":0
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -425,7 +363,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gNOd2-1",
 			"id":"jZ0Vn",
-			"index":6,
+			"index":4,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -456,7 +394,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gNOd2-1",
 			"id":"1FzVs",
-			"index":7,
+			"index":5,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -489,7 +427,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"1FzVs@gNOd2-1@l",
 			"id":"1dFUs",
-			"index":8,
+			"index":6,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -505,7 +443,7 @@
 				"object_type":"knowledge_vector_store",
 				"numberOfRecordsToDelete":"MULTIPLE",
 				"page":{
-					"limit":8,
+					"limit":1000,
 					"offset":"{{ BD5z1.outputs.count }}"
 				}
 			},
@@ -576,12 +514,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"1FzVs@gNOd2-1@l",
 			"id":"14nwi",
-			"index":9,
+			"index":7,
 			"inputs":{
 				"variables":[
 					{
 						"source":"{{ BD5z1.outputs.count }}",
-						"value":"= {{ BD5z1.outputs.count }} + 8"
+						"value":"=({{ BD5z1.outputs.count }}+{{ 1dFUs.outputs.count }})"
 					}
 				]
 			},
@@ -602,12 +540,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"gNOd2-1",
 			"id":"puYM2",
-			"index":10,
+			"index":8,
 			"inputs":{
 				"variables":[
 					{
 						"source":"{{ BD5z1.outputs.count }}",
-						"value":"={{ BD5z1.outputs.count }} + 8"
+						"value":0
 					}
 				]
 			},
@@ -628,7 +566,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gNOd2-1",
 			"id":"dfhps",
-			"index":11,
+			"index":9,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -659,7 +597,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gNOd2-1",
 			"id":"M14sA",
-			"index":12,
+			"index":10,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -692,7 +630,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"M14sA@gNOd2-1@l",
 			"id":"n4A2w",
-			"index":13,
+			"index":11,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -708,7 +646,7 @@
 				"object_type":"knowledge_vector_store_open_ai",
 				"numberOfRecordsToDelete":"MULTIPLE",
 				"page":{
-					"limit":8,
+					"limit":1000,
 					"offset":"{{ BD5z1.outputs.count }}"
 				}
 			},
@@ -779,12 +717,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"M14sA@gNOd2-1@l",
 			"id":"1EpP7",
-			"index":14,
+			"index":12,
 			"inputs":{
 				"variables":[
 					{
 						"source":"{{ BD5z1.outputs.count }}",
-						"value":"= {{ BD5z1.outputs.count }} + 8"
+						"value":"=({{ BD5z1.outputs.count }}+{{ n4A2w.outputs.count }})"
 					}
 				]
 			},
@@ -805,7 +743,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gNOd2-1",
 			"id":"7XjoB",
-			"index":15,
+			"index":13,
 			"inputs":{
 				"variables":[
 					{
@@ -831,7 +769,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gNOd2-1",
 			"id":"PSTue",
-			"index":16,
+			"index":14,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -862,7 +800,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gNOd2-1",
 			"id":"FmHu4",
-			"index":17,
+			"index":15,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -895,7 +833,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"FmHu4@gNOd2-1@l",
 			"id":"VXTJw",
-			"index":18,
+			"index":16,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -911,7 +849,7 @@
 				"object_type":"knowledge_vector_store_open_ai_3072",
 				"numberOfRecordsToDelete":"MULTIPLE",
 				"page":{
-					"limit":8,
+					"limit":1000,
 					"offset":"{{ BD5z1.outputs.count }}"
 				}
 			},
@@ -982,12 +920,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"FmHu4@gNOd2-1@l",
 			"id":"3uhpb",
-			"index":19,
+			"index":17,
 			"inputs":{
 				"variables":[
 					{
 						"source":"{{ BD5z1.outputs.count }}",
-						"value":"={{ BD5z1.outputs.count }} + 8"
+						"value":"=({{ BD5z1.outputs.count }}+{{ VXTJw.outputs.count }})"
 					}
 				]
 			},
@@ -1008,7 +946,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gNOd2-1",
 			"id":"OhEHs",
-			"index":20,
+			"index":18,
 			"inputs":{
 				"result":{
 					"response":"success"
@@ -1020,7 +958,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":1866,
 	"schemaReferences":[
 		
 	],
@@ -1037,5 +975,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":22
+	"version":91
 }
