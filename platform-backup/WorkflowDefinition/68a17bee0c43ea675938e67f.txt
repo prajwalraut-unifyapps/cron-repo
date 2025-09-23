@@ -2,8 +2,16 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1758530475061,
+	"createdTime":1756795874057,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1758646552004,
+		"deployedBy":0,
+		"deployedDefinitionId":"68d2d1179f85565fb8fa5dca",
+		"status":"DEPLOYED",
+		"version":12,
+		"workflowVersion":32
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_KOJ6p",
@@ -73,9 +81,9 @@
 		]
 	},
 	"id":"68a17bee0c43ea675938e67f",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"metering | enterprise search | department usage",
-	"modifiedTime":1758530900574,
+	"modifiedTime":1758655373318,
 	"name":"Metering | Enterprise Search | Department usage",
 	"nodes":[
 		{
@@ -522,7 +530,6 @@
 				"ua:list_type":"STRING"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -834,7 +841,6 @@
 				"ua:list_type":"STRING"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -1022,8 +1028,8 @@
 						}
 					}
 				},
-				"code":"def getDepartmentCounts(userIdVsCount, userIdVsEmail, emailVsDepartment) {\n    // Normalize inputs to empty lists if null\n    userIdVsCount = userIdVsCount ?: []\n    userIdVsEmail = userIdVsEmail ?: []\n    emailVsDepartment = emailVsDepartment ?: []\n\n    // Create lookup maps\n    def emailByUser = userIdVsEmail.collectEntries { rec ->\n        [(rec?.userId?.toString() ?: \"\"): (rec?.emailId ?: \"\")]\n    }\n    def deptByEmail = emailVsDepartment.collectEntries { rec ->\n        [(rec?.emailId ?: \"\"): (rec?.department ?: \"Uncategorized\")]\n    }\n\n    def deptCounts = [:].withDefault { 0 }\n\n    userIdVsCount.each { rec ->\n        def email = emailByUser[rec?.userId?.toString() ?: \"\"] ?: \"\"\n        def dept = deptByEmail[email] ?: \"Uncategorized\"\n        deptCounts[dept] += (rec?.count ?: 0)\n    }\n\n    // Convert map back to list of maps\n    deptCounts.collect { dept, cnt -> [departmentName: dept, count: cnt] }\n}\n\n// Always run safely\ndef result = getDepartmentCounts(\n    binding.hasVariable('userIdVsCount') ? userIdVsCount : null,\n    binding.hasVariable('userIdVsEmail') ? userIdVsEmail : null,\n    binding.hasVariable('emailVsDepartment') ? emailVsDepartment : null\n)\n\nreturn [departmentVsCount: result]",
 				"compile_static":false,
+				"code":"def getDepartmentCounts(userIdVsCount, userIdVsEmail, emailVsDepartment) {\n    // Normalize inputs to empty lists if null\n    userIdVsCount = userIdVsCount ?: []\n    userIdVsEmail = userIdVsEmail ?: []\n    emailVsDepartment = emailVsDepartment ?: []\n\n    // Create lookup maps\n    def emailByUser = userIdVsEmail.collectEntries { rec ->\n        [(rec?.userId?.toString() ?: \"\"): (rec?.emailId ?: \"\")]\n    }\n    def deptByEmail = emailVsDepartment.collectEntries { rec ->\n        [(rec?.emailId ?: \"\"): (rec?.department ?: \"Uncategorized\")]\n    }\n\n    def deptCounts = [:].withDefault { 0 }\n\n    userIdVsCount.each { rec ->\n        def email = emailByUser[rec?.userId?.toString() ?: \"\"] ?: \"\"\n        def dept = deptByEmail[email] ?: \"Uncategorized\"\n        deptCounts[dept] += (rec?.count ?: 0)\n    }\n\n    // Convert map back to list of maps and sort by count ascending\n    def result = deptCounts.collect { dept, cnt -> \n        [departmentName: dept, count: cnt] \n    }.sort { it.count }\n\n    return result\n}\n\n// Always run safely\ndef result = getDepartmentCounts(\n    binding.hasVariable('userIdVsCount') ? userIdVsCount : null,\n    binding.hasVariable('userIdVsEmail') ? userIdVsEmail : null,\n    binding.hasVariable('emailVsDepartment') ? emailVsDepartment : null\n)\n\nreturn [departmentVsCount: result]",
 				"parameters":{
 					"userIdVsCount":{
 						"ua:type":"mappedArray",
@@ -1089,7 +1095,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":33860,
 	"schemaReferences":[
 		
 	],
@@ -1106,5 +1112,5 @@
 	"tags":[
 		
 	],
-	"version":18
+	"version":33
 }
