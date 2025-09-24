@@ -1,9 +1,17 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1758530477355,
+	"createdTime":1751469745184,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1758661326297,
+		"deployedBy":635,
+		"deployedDefinitionId":"68d30acece91012b188dcff9",
+		"status":"DEPLOYED",
+		"version":41,
+		"workflowVersion":67
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_4RHx6",
@@ -102,6 +110,20 @@
 			"type":"next"
 		},
 		{
+			"fromNodeId":"_q3dDF",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_1j8gK",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_XfYCk",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_1j8gK",
+			"type":"next"
+		},
+		{
 			"fromNodeId":"n_P7RG5",
 			"name":"2",
 			"priority":0,
@@ -142,6 +164,13 @@
 		},
 		{
 			"fromNodeId":"n_P7RG5@3",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_zXTU1",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_zXTU1",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"BQ9Zl",
@@ -207,14 +236,6 @@
 			"type":"if"
 		},
 		{
-			"fromNodeId":"n_Tn5qH",
-			"name":"no",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"_GgFMt",
-			"type":"next"
-		},
-		{
 			"fromNodeId":"_ZOsMH",
 			"priority":0,
 			"skip":false,
@@ -222,10 +243,11 @@
 			"type":"next"
 		},
 		{
-			"fromNodeId":"_GgFMt",
+			"fromNodeId":"n_Tn5qH",
+			"name":"no",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"ZODQr",
+			"toNodeId":"_GgFMt",
 			"type":"next"
 		},
 		{
@@ -237,14 +259,7 @@
 			"type":"branch"
 		},
 		{
-			"fromNodeId":"_q3dDF",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"lwJc1",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"_XfYCk",
+			"fromNodeId":"n_1j8gK",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"lwJc1",
@@ -266,6 +281,13 @@
 		},
 		{
 			"fromNodeId":"ZODQr",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"lwJc1",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_GgFMt",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"lwJc1",
@@ -304,9 +326,9 @@
 		]
 	},
 	"id":"6859d4e214b92d4d229075bd",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":635,
 	"lcName":"update knowledge status & version",
-	"modifiedTime":1758530912829,
+	"modifiedTime":1758708580979,
 	"name":"Update Knowledge Status & Version",
 	"nodes":[
 		{
@@ -347,7 +369,9 @@
 							"title":"Knowledge Id"
 						},
 						"errorDetails":{
-							"type":"string",
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
 							"title":"Error Details"
 						},
 						"grabberType":{
@@ -438,28 +462,33 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"indexingVersion":{
 							"type":"integer",
 							"title":"Indexing Version"
+						},
+						"lastSyncTime":{
+							"type":"integer",
+							"title":"Last Sync Time"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"indexingVersion":{
 							"type":"integer",
 							"title":"Indexing Version"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"return [\n  \"indexingVersion\": binding.hasVariable(\"indexingVersion\") ? indexingVersion : 0,\n  \"lastSyncTime\": System.currentTimeMillis()\n  ]",
 				"compile_static":false,
-				"code":"return [\"indexingVersion\": binding.hasVariable(\"indexingVersion\") ? indexingVersion : 0 ]",
+				"captureStdOutput":false,
 				"parameters":{
 					"indexingVersion":"{{ n_h1jGP.outputs.properties.indexingVersion }}"
 				}
@@ -611,7 +640,6 @@
 				"syncMode":"{{ n_jLobJ.outputs.syncMode }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -676,6 +704,7 @@
 				"object_type":"knowledge_source",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"id":"{{ n_h1jGP.outputs.properties.applicationInfo.context.resourceName }}",
 				"readThroughSessionVariables":true
 			},
@@ -768,6 +797,7 @@
 					"operator":"AND"
 				},
 				"object_type":"knowledge",
+				"skipIfBlank":false,
 				"updateFields":[
 					{
 						"fieldName":"properties.status",
@@ -778,13 +808,19 @@
 						"fieldName":"properties.readVersion",
 						"actionType":"SET",
 						"setValue":"{{ n_MPQJl.outputs.result.indexingVersion }}"
+					},
+					{
+						"fieldName":"properties.lastSyncTime",
+						"actionType":"SET",
+						"setValue":"{{ n_MPQJl.outputs.result.lastSyncTime }}"
 					}
 				],
 				"skipIfEmpty":false,
 				"page":{
 					"offset":0,
 					"limit":20
-				}
+				},
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"Update status+version",
@@ -819,23 +855,58 @@
 					"operator":"AND"
 				},
 				"object_type":"knowledge",
+				"skipIfBlank":false,
 				"updateFields":[
 					{
 						"fieldName":"properties.status",
 						"actionType":"SET",
 						"setValue":"{{ n_4RHx6.outputs.status }}"
+					},
+					{
+						"fieldName":"properties.lastSyncTime",
+						"actionType":"SET",
+						"setValue":"{{ n_MPQJl.outputs.result.lastSyncTime }}"
 					}
 				],
 				"skipIfEmpty":false,
 				"page":{
 					"offset":0,
 					"limit":20
-				}
+				},
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"Update status",
 			"title":"Update records by query",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":467,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_P7RG5@_1Rq5g-1@1",
+			"id":"n_1j8gK",
+			"index":14,
+			"inputs":{
+				"automationId":"68cafae45ccba45545e21015",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"knowledgeId":"{{ n_4RHx6.outputs.knowledgeId }}",
+					"version":"{{ n_h1jGP.outputs.properties.indexingVersion }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
 		},
 		{
 			"context":{
@@ -849,7 +920,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_P7RG5@_1Rq5g-1@2",
 			"id":"n_P7RG5@2",
-			"index":14,
+			"index":15,
 			"inputs":{
 				"name":"status = SYNCING",
 				"conditions":{
@@ -881,7 +952,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_P7RG5@_1Rq5g-1@2",
 			"id":"n_UnXuk",
-			"index":15,
+			"index":16,
 			"inputs":{
 				"filters":[
 					{
@@ -911,7 +982,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_UnXuk@n_P7RG5@_1Rq5g-1@2@y",
 			"id":"_veqZQ",
-			"index":16,
+			"index":17,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
@@ -962,7 +1033,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_UnXuk@n_P7RG5@_1Rq5g-1@2@n",
 			"id":"_ldNzJ",
-			"index":17,
+			"index":18,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
@@ -1018,7 +1089,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_P7RG5@_1Rq5g-1@3",
 			"id":"n_P7RG5@3",
-			"index":18,
+			"index":19,
 			"inputs":{
 				"name":"status = FAILED",
 				"conditions":{
@@ -1040,6 +1111,58 @@
 		},
 		{
 			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":478,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_P7RG5@_1Rq5g-1@3",
+			"id":"n_zXTU1",
+			"index":20,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"errorDetails":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Error Details"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"errorDetails":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Error Details"
+						}
+					}
+				},
+				"code":"if(binding.hasVariable(\"errorDetails\")){\n  return [\"errorDetails\" : errorDetails]\n}\n\nreturn [\n  \"errorDetails\" : [\n    \"message\" : \"Something went wrong while processing the knowledge. Please try again.\"\n  ]\n]",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"errorDetails":"{{ n_4RHx6.outputs.errorDetails }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"get ErrorDetails",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"template_by_unifyapps",
 				"resourceVersion":158,
 				"resourceName":"template_by_unifyapps_compile_template",
@@ -1050,10 +1173,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_P7RG5@_1Rq5g-1@3",
 			"id":"BQ9Zl",
-			"index":19,
+			"index":21,
 			"inputs":{
 				"input_schema":{
-					"errorMessage":"{{ n_4RHx6.outputs.errorDetails }}"
+					"errorMessage":"{{ n_zXTU1.outputs.result.errorDetails }}"
 				},
 				"template_id":"e_67e3ca241d834e4ff68ab50f"
 			},
@@ -1074,7 +1197,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_P7RG5@_1Rq5g-1@3",
 			"id":"7lkc5",
-			"index":20,
+			"index":22,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1093,7 +1216,6 @@
 			},
 			"inputs":{},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -1124,7 +1246,7 @@
 			"fallbackMode":"MANUAL",
 			"groupId":"n_P7RG5@_1Rq5g-1@3",
 			"id":"GphSu",
-			"index":21,
+			"index":23,
 			"inputs":{
 				"automationId":"66dfd76eb70dad256986b784",
 				"runtimeConnections":{},
@@ -1186,7 +1308,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"GphSu@n_P7RG5@_1Rq5g-1@3@success",
 			"id":"T8kex",
-			"index":22,
+			"index":24,
 			"inputs":{
 				"variables":[
 					{
@@ -1212,9 +1334,9 @@
 			"fallbackMode":"STOP",
 			"groupId":"GphSu@n_P7RG5@_1Rq5g-1@3@error",
 			"id":"n_C3wfP",
-			"index":23,
+			"index":25,
 			"inputs":{
-				"object":"{{ n_4RHx6.outputs.errorDetails }}"
+				"object":"{{ n_zXTU1.outputs.result.errorDetails }}"
 			},
 			"skip":false,
 			"subTitle":"error details",
@@ -1233,7 +1355,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"GphSu@n_P7RG5@_1Rq5g-1@3@error",
 			"id":"_T9r7F",
-			"index":24,
+			"index":26,
 			"inputs":{
 				"variables":[
 					{
@@ -1259,7 +1381,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_P7RG5@_1Rq5g-1@3",
 			"id":"n_Tn5qH",
-			"index":25,
+			"index":27,
 			"inputs":{
 				"filters":[
 					{
@@ -1289,7 +1411,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Tn5qH@n_P7RG5@_1Rq5g-1@3@y",
 			"id":"_ZOsMH",
-			"index":26,
+			"index":28,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
@@ -1322,59 +1444,8 @@
 				"page":{
 					"offset":0,
 					"limit":20
-				}
-			},
-			"skip":false,
-			"subTitle":"FAILED",
-			"title":"Update records by query",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"storage_by_unifyapps",
-				"resourceVersion":1773,
-				"resourceName":"storage_by_unifyapps_update_records",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_Tn5qH@n_P7RG5@_1Rq5g-1@3@n",
-			"id":"_GgFMt",
-			"index":27,
-			"inputs":{
-				"numberOfRecordsToUpdate":"SINGLE",
-				"triggerInputCondition":{
-					"filters":[
-						{
-							"property":"id",
-							"filter":{
-								"operator":"EQUAL",
-								"value":"{{ n_4RHx6.outputs.knowledgeId }}"
-							}
-						}
-					],
-					"operator":"AND"
 				},
-				"object_type":"knowledge",
-				"skipIfBlank":false,
-				"updateFields":[
-					{
-						"fieldName":"properties.refreshDetails.lastRefreshStatus",
-						"actionType":"SET",
-						"setValue":"FAILED"
-					},
-					{
-						"fieldName":"properties.errorDetails.errorMessage",
-						"actionType":"SET",
-						"setValue":"{{ 7lkc5.outputs.errorMessage }}"
-					}
-				],
-				"skipIfEmpty":false,
-				"page":{
-					"offset":0,
-					"limit":20
-				}
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"FAILED",
@@ -1391,9 +1462,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"CONTINUE",
-			"groupId":"n_P7RG5@_1Rq5g-1@3",
+			"groupId":"n_Tn5qH@n_P7RG5@_1Rq5g-1@3@y",
 			"id":"ZODQr",
-			"index":28,
+			"index":29,
 			"inputs":{
 				"automationId":"67a50fa773283e4881c0bac0",
 				"runtimeConnections":{},
@@ -1401,7 +1472,7 @@
 				"version":"-1",
 				"parameters":{
 					"knowledgeId":"{{ n_4RHx6.outputs.knowledgeId }}",
-					"readVersion":"=({{ n_h1jGP.outputs.properties.readVersion }}+1)"
+					"readVersion":"{{ n_h1jGP.outputs.properties.indexingVersion }}"
 				}
 			},
 			"options":{
@@ -1460,6 +1531,59 @@
 		{
 			"context":{
 				"appName":"storage_by_unifyapps",
+				"resourceVersion":1773,
+				"resourceName":"storage_by_unifyapps_update_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_Tn5qH@n_P7RG5@_1Rq5g-1@3@n",
+			"id":"_GgFMt",
+			"index":30,
+			"inputs":{
+				"numberOfRecordsToUpdate":"SINGLE",
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"id",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"{{ n_4RHx6.outputs.knowledgeId }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"object_type":"knowledge",
+				"skipIfBlank":false,
+				"updateFields":[
+					{
+						"fieldName":"properties.refreshDetails.lastRefreshStatus",
+						"actionType":"SET",
+						"setValue":"FAILED"
+					},
+					{
+						"fieldName":"properties.errorDetails.errorMessage",
+						"actionType":"SET",
+						"setValue":"{{ 7lkc5.outputs.errorMessage }}"
+					}
+				],
+				"skipIfEmpty":false,
+				"page":{
+					"offset":0,
+					"limit":20
+				},
+				"unsetIfNull":false
+			},
+			"skip":false,
+			"subTitle":"FAILED",
+			"title":"Update records by query",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
 				"resourceVersion":449,
 				"resourceName":"storage_by_unifyapps_update_records",
 				"type":"APPLICATION"
@@ -1469,7 +1593,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_P7RG5@_1Rq5g-1@default",
 			"id":"_lYt3D",
-			"index":29,
+			"index":31,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
@@ -1516,7 +1640,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_1Rq5g-1",
 			"id":"lwJc1",
-			"index":30,
+			"index":32,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1567,7 +1691,6 @@
 				"userId":"=CONCATENATE({{ n_h1jGP.outputs.lastModifiedBy }},\"\")"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -1622,7 +1745,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"_1Rq5g-1",
 			"id":"_NhxQD",
-			"index":31,
+			"index":33,
 			"inputs":{
 				"payload":{
 					"additional":"{{ lwJc1.outputs.additional }}"
@@ -1696,7 +1819,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_1Rq5g-1",
 			"id":"n_aqrcs",
-			"index":32,
+			"index":34,
 			"inputs":{
 				"result":{
 					"success":true
@@ -1708,7 +1831,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":148386,
 	"schemaReferences":[
 		
 	],
@@ -1721,9 +1844,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
+	"standard":false,
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":24
+	"version":68
 }
