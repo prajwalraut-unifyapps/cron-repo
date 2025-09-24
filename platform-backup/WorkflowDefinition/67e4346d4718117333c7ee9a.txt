@@ -2,26 +2,19 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1750164307351,
+	"createdTime":1747000718360,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1755437782750,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68a1dad69d7d8d3f504624a2",
+		"deployedAt":1758700899884,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d3a563d2a7c4429e39cf31",
 		"status":"DEPLOYED",
-		"version":2,
-		"workflowVersion":19
+		"version":75,
+		"workflowVersion":85
 	},
 	"edges":[
 		{
 			"fromNodeId":"CfdAH",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"t4nNA",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"t4nNA",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"U3IHx",
@@ -82,25 +75,11 @@
 			"fromNodeId":"n_MtZhU",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_jJ3Wg",
+			"toNodeId":"BmjZ2",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"_i9Czi",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_jJ3Wg",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_jJ3Wg",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"b66uk",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"b66uk",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"BmjZ2",
@@ -120,7 +99,7 @@
 	"id":"67e4346d4718117333c7ee9a",
 	"lastModifiedBy":-1,
 	"lcName":"execute tool wrapper",
-	"modifiedTime":1758530884675,
+	"modifiedTime":1758731868603,
 	"name":"Execute Tool Wrapper",
 	"nodes":[
 		{
@@ -210,41 +189,6 @@
 		},
 		{
 			"context":{
-				"appName":"code_by_unifyapps",
-				"resourceVersion":300,
-				"resourceName":"code_by_unifyapps_groovy",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"JgxVN-1",
-			"id":"t4nNA",
-			"index":2,
-			"inputs":{
-				"output":{
-					"type":"object",
-					"properties":{
-						"now":{
-							"type":"integer",
-							"title":"Now"
-						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"now"
-					]
-				},
-				"compile_static":false,
-				"code":"return ['now': System.currentTimeMillis()]"
-			},
-			"skip":false,
-			"subTitle":"startTime",
-			"title":"Execute Groovy code",
-			"type":"ACTION"
-		},
-		{
-			"context":{
 				"appName":"variable_by_unifyapps",
 				"resourceVersion":299,
 				"resourceName":"variable_by_unifyapps_get_session_variables",
@@ -255,7 +199,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"JgxVN-1",
 			"id":"U3IHx",
-			"index":3,
+			"index":2,
 			"inputs":{
 				"variableSchema":{
 					"type":"object",
@@ -290,7 +234,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"JgxVN-1",
 			"id":"n_RLVvG",
-			"index":4,
+			"index":3,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -338,6 +282,7 @@
 				},
 				"code":"def actionId = binding.hasVariable(\"actionId\")?binding.getVariable(\"actionId\"):\"\"\ndef toolName = binding.hasVariable(\"toolName\")?binding.getVariable(\"toolName\"):\"\"\ndef toolInputs = binding.hasVariable(\"toolInputs\")?binding.getVariable(\"toolInputs\"):[:]\ndef additional = binding.hasVariable(\"additional\")?binding.getVariable(\"additional\"):[:]\n\nif(additional?.isTopic){\n  actionId = \"setTopic\"\n  toolName = \"SetTopic\"\n  toolInputs = [\n    \"topicName\": additional?.topicName\n  ]\n}\n\n\nif(additional?.isInvokeAgentTool && additional?.agentName){\n  actionId = \"InvokeAgent\"\n  toolName = \"InvokeAgent\"\n  toolInputs << [\"agentName\":additional?.agentName]\n}\n\nreturn [\n  \"updatedActionId\": actionId,\n  \"updatedToolName\": toolName,\n  \"updatedToolInputs\": toolInputs,\n  \"updatedAdditional\": additional\n]",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"actionId":"{{ CfdAH.outputs.actionId }}",
 					"toolName":"{{ CfdAH.outputs.toolName }}",
@@ -369,7 +314,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"JgxVN-1",
 			"id":"smN7C",
-			"index":5,
+			"index":4,
 			"inputs":{
 				"callableInterfaceId":"679484ef9c8ab5620dca9609",
 				"runtimeConnections":{},
@@ -704,6 +649,36 @@
 							],
 							"operator":"AND"
 						}
+					},
+					{
+						"workflowId":"68cece0b869e3f78bf2a0611",
+						"filter":{
+							"filters":[
+								{
+									"property":"{{ n_RLVvG.outputs.result.updatedToolName }}",
+									"filter":{
+										"operator":"EQUAL",
+										"value":"generate_and_publish_pdf_file"
+									}
+								}
+							],
+							"operator":"AND"
+						}
+					},
+					{
+						"workflowId":"6773a33f30af2b4a0ee758dc",
+						"filter":{
+							"filters":[
+								{
+									"property":"{{ n_RLVvG.outputs.result.updatedToolName }}",
+									"filter":{
+										"operator":"EQUAL",
+										"value":"generate_and_publish_pptx_file"
+									}
+								}
+							],
+							"operator":"AND"
+						}
 					}
 				],
 				"fallbackWorkflowId":"6794855b9c8ab5620dca972e",
@@ -736,7 +711,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"JgxVN-1",
 			"id":"n_FpmZB",
-			"index":6,
+			"index":5,
 			"inputs":{
 				"automationId":"6878d5575821f42782a179d3",
 				"runtimeConnections":{},
@@ -766,7 +741,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"JgxVN-1",
 			"id":"n_iCv12",
-			"index":7,
+			"index":6,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -787,7 +762,6 @@
 			},
 			"inputs":{},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -820,7 +794,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"JgxVN-1",
 			"id":"n_meupp",
-			"index":8,
+			"index":7,
 			"inputs":{
 				"filters":[
 					{
@@ -850,7 +824,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_meupp@JgxVN-1@y",
 			"id":"n_MtZhU",
-			"index":9,
+			"index":8,
 			"inputs":{
 				"variables":[
 					{
@@ -876,7 +850,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_meupp@JgxVN-1@n",
 			"id":"_i9Czi",
-			"index":10,
+			"index":9,
 			"inputs":{
 				"variables":[
 					{
@@ -892,152 +866,6 @@
 		},
 		{
 			"context":{
-				"appName":"utility_by_unifyapps",
-				"resourceVersion":102,
-				"resourceName":"utility_by_unifyapps_to_json_string",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"JgxVN-1",
-			"id":"n_jJ3Wg",
-			"index":11,
-			"inputs":{
-				"object":"{{ n_iCv12.outputs.output }}"
-			},
-			"skip":false,
-			"subTitle":"Utility by UnifyApps",
-			"title":"Serialise object to JSON string",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"code_by_unifyapps",
-				"resourceVersion":300,
-				"resourceName":"code_by_unifyapps_groovy",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"CONTINUE",
-			"groupId":"JgxVN-1",
-			"id":"b66uk",
-			"index":12,
-			"inputs":{
-				"output":{
-					"type":"object",
-					"properties":{
-						"timeTaken":{
-							"type":"number",
-							"title":"Time Taken"
-						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"timeTaken"
-					]
-				},
-				"input":{
-					"type":"object",
-					"properties":{
-						"caseId":{
-							"type":"string",
-							"title":"caseId"
-						},
-						"messageId":{
-							"type":"string",
-							"title":"messageId"
-						},
-						"step":{
-							"type":"string",
-							"title":"step"
-						},
-						"parent":{
-							"type":"string",
-							"title":"parent"
-						},
-						"input":{
-							"type":"object",
-							"title":"input"
-						},
-						"output":{
-							"type":"object",
-							"title":"output"
-						},
-						"agentId":{
-							"type":"string",
-							"title":"Agent Id"
-						},
-						"startTime":{
-							"type":"integer",
-							"title":"Start Time"
-						},
-						"toolName":{
-							"type":"string",
-							"title":"Tool Name"
-						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"agentId",
-						"startTime"
-					]
-				},
-				"compile_static":false,
-				"code":"def timeTaken = System.currentTimeMillis() - startTime\nreturn ['timeTaken': timeTaken]\n",
-				"parameters":{
-					"step":"Tool",
-					"parent":"Agent Execution",
-					"startTime":"{{ t4nNA.outputs.result.now }}",
-					"messageId":"{{ U3IHx.outputs.messageId }}",
-					"caseId":"{{ CfdAH.outputs.caseId }}",
-					"agentId":"{{ U3IHx.outputs.aiAgentId }}",
-					"input":"{{ CfdAH.outputs.toolInputs }}",
-					"toolName":"{{ CfdAH.outputs.toolName }}",
-					"output":"{{ n_iCv12.outputs.output }}"
-				}
-			},
-			"options":{
-				"businessHoursConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"cacheConfig":{
-					"enabled":false
-				},
-				"circuitBreakerConfig":{
-					"enabled":false
-				},
-				"disableLogging":false,
-				"enabledForReExecution":false,
-				"hookConfig":{
-					"enabled":false
-				},
-				"logConfig":{
-					"enabled":false
-				},
-				"rateLimitConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"retryConfig":{
-					"backOffFactor":null,
-					"captureRetries":false,
-					"enabled":false
-				},
-				"stepError":"CONTINUE",
-				"telemetryConfig":{
-					"enableTelemetry":false
-				}
-			},
-			"skip":true,
-			"subTitle":"Capture Trace",
-			"title":"Execute Groovy code",
-			"type":"ACTION"
-		},
-		{
-			"context":{
 				"appName":"callables",
 				"resourceVersion":164,
 				"resourceName":"callables_return_to_automation",
@@ -1048,7 +876,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"JgxVN-1",
 			"id":"BmjZ2",
-			"index":13,
+			"index":10,
 			"inputs":{
 				"result":{
 					"toolOutput":"{{ smN7C.outputs.toolOutput }}",
@@ -1062,7 +890,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":34,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -1079,5 +907,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":27
+	"version":86
 }
