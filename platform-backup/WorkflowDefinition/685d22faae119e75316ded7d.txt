@@ -2,15 +2,15 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1754459024395,
+	"createdTime":1755437773895,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758700847074,
-		"deployedBy":1,
-		"deployedDefinitionId":"68d3a52ed2a7c4429e39cbd6",
+		"deployedAt":1755437773990,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68a1dacd9d7d8d3f5046243c",
 		"status":"DEPLOYED",
-		"version":63,
-		"workflowVersion":72
+		"version":1,
+		"workflowVersion":2
 	},
 	"edges":[
 		{
@@ -98,6 +98,13 @@
 			"fromNodeId":"zpfOa",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_eQA2v",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_eQA2v",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"qK2EO",
 			"type":"next"
 		},
@@ -122,7 +129,7 @@
 	"id":"685d22faae119e75316ded7d",
 	"lastModifiedBy":-1,
 	"lcName":"website indexer | convert html to markdown and index",
-	"modifiedTime":1758731852658,
+	"modifiedTime":1758530875893,
 	"name":"Website Indexer | Convert HTML to Markdown and Index",
 	"nodes":[
 		{
@@ -139,14 +146,14 @@
 			"inputs":{
 				"result":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"status":{
 							"type":"string",
 							"title":"Status"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
 				"setup":{
 					"required":[],
@@ -173,15 +180,13 @@
 							"type":"string",
 							"title":"Url"
 						},
-						"uniqueEntityId":{
+						"title":{
 							"type":"string",
-							"title":"Unique Entity Id"
+							"title":"Title"
 						},
-						"chunkMetadata":{
-							"type":"object",
-							"properties":{},
-							"additionalProperties":false,
-							"title":"Chunk Metadata"
+						"iconUrl":{
+							"type":"string",
+							"title":"Icon Url"
 						}
 					}
 				}
@@ -225,6 +230,7 @@
 			},
 			"inputs":{},
 			"outputSchema":{
+				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -473,9 +479,13 @@
 			"inputs":{
 				"output":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
+						"chunkMetadata":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Chunk Metadata"
+						},
 						"chunks":{
 							"type":"array",
 							"items":{
@@ -483,12 +493,12 @@
 							},
 							"title":"Chunks"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
 				"input":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"markdownContent":{
 							"type":"string",
@@ -499,21 +509,65 @@
 							"properties":{},
 							"additionalProperties":false,
 							"title":"Website Url"
+						},
+						"iconUrl":{
+							"type":"string",
+							"title":"Icon Url"
+						},
+						"title":{
+							"type":"string",
+							"title":"Title"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
-				"code":"if (binding.hasVariable('markdownContent') && markdownContent.startsWith(\"```markdown\")) {\n    markdownContent = markdownContent.replaceFirst(\"```markdown\\\\n\", \"\")\n}\ndef extractSlugAndApplicationName(url) {\n    try{\n    def path = new URL(url).path\n    def segments = path.split('/').findAll { it }\n\n    if (segments.size() > 1) {\n        def slug = segments[-1] \n        def application_name = segments[-2] \n        return [slug: slug, application_name: application_name]\n    } else if (segments.size() == 1) {\n        def slug = segments[0] \n        return [slug: slug, application_name: null]\n    } else {\n        return [slug: null, application_name: null]\n    }\n} catch(Exception e) {\n    \n}\n}\n\ndef websiteUrl=binding.hasVariable(\"websiteUrl\")?binding.websiteUrl:[:]\nif(websiteUrl instanceof Map)\n{\n    websiteUrl=websiteUrl[\"url\"]\n}\nelse{\n    websiteUrl=websiteUrl\n}\ndef result = extractSlugAndApplicationName(websiteUrl)\ndef slug = result?.slug\ndef application_name = result?.application_name\n\n\ndef formattedString\nif (slug && application_name) {\n   \n    formattedString = \"This Content Belongs to ${slug} under ${application_name} : ${markdownContent}\"\n} else if (slug) {\n     \n    formattedString = \"This Content Belongs to ${slug} : ${markdownContent}\"\n} else {\n    formattedString = \"Content: ${markdownContent}\"\n}\n\nreturn [\n    \"chunks\": [formattedString.toString()]\n]",
 				"compile_static":false,
+				"code":"if (binding.hasVariable('markdownContent') && markdownContent.startsWith(\"```markdown\")) {\n    markdownContent = markdownContent.replaceFirst(\"```markdown\\\\n\", \"\")\n}\ndef extractSlugAndApplicationName(url) {\n    try{\n    def path = new URL(url).path\n    def segments = path.split('/').findAll { it }\n\n    if (segments.size() > 1) {\n        def slug = segments[-1] \n        def application_name = segments[-2] \n        return [slug: slug, application_name: application_name]\n    } else if (segments.size() == 1) {\n        def slug = segments[0] \n        return [slug: slug, application_name: null]\n    } else {\n        return [slug: null, application_name: null]\n    }\n} catch(Exception e) {\n    \n}\n}\n\n\ndef result = extractSlugAndApplicationName(websiteUrl)\ndef slug = result?.slug\ndef application_name = result?.application_name\n\n\ndef formattedString\nif (slug && application_name) {\n   \n    formattedString = \"This Content Belongs to ${slug} under ${application_name} : ${markdownContent}\"\n} else if (slug) {\n     \n    formattedString = \"This Content Belongs to ${slug} : ${markdownContent}\"\n} else {\n    formattedString = \"Content: ${markdownContent}\"\n}\n\ndef chunkMetadata = [:]\ndef websiteUrl=binding.hasVariable(\"websiteUrl\")?binding.websiteUrl:[:]\nif(websiteUrl instanceof Map)\n{\n    websiteUrl=websiteUrl[\"url\"]\n}\nelse{\n    websiteUrl=websiteUrl\n}\ndef iconUrl=binding.hasVariable(\"iconUrl\")?binding.iconUrl:\"\"\ndef title=binding.hasVariable(\"title\")?binding.title:\"\"\nchunkMetadata << (websiteUrl ? [\"websiteUrl\": websiteUrl , \"referenceUrl\": websiteUrl ] : [:])\nchunkMetadata << [\"iconUrl\":iconUrl]\nchunkMetadata << [\"title\": title, \"name\": title]\nreturn [\n    \"chunkMetadata\":chunkMetadata, \n    \"chunks\": [formattedString.toString()]\n]",
 				"isAsync":false,
-				"captureStdOutput":false,
 				"parameters":{
 					"markdownContent":"{{ n_hMgVL.outputs.markdownContent }}",
-					"websiteUrl":"{{ _qmmVS.outputs.url }}"
+					"websiteUrl":"{{ _qmmVS.outputs.url }}",
+					"iconUrl":"{{ _qmmVS.outputs.iconUrl }}",
+					"title":"{{ _qmmVS.outputs.title }}"
 				}
 			},
 			"skip":false,
-			"subTitle":"Get Chunks from MD",
+			"subTitle":"Get Chunks & Metadata from MD",
 			"title":"Execute groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":449,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_bvBRo@5NJaW@O66xp-1@l@l",
+			"id":"n_eQA2v",
+			"index":11,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"properties":{
+						"uniqueId":{
+							"type":"string",
+							"title":"uniqueId"
+						}
+					},
+					"additionalProperties":false,
+					"required":[]
+				},
+				"compile_static":false,
+				"code":"def uuid = UUID.randomUUID().toString()\nreturn [\n  \"uniqueId\": uuid\n]"
+			},
+			"skip":false,
+			"subTitle":"uniqueId",
+			"title":"Execute Groovy code",
 			"type":"ACTION"
 		},
 		{
@@ -528,17 +582,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bvBRo@5NJaW@O66xp-1@l@l",
 			"id":"qK2EO",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"automationId":"66af3ff4cd79b321cb478a37",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"knowledgeId":"{{ _qmmVS.outputs.knowledge_id }}",
-					"chunkMetadata":"{{ _qmmVS.outputs.chunkMetadata }}",
-					"knowledgeVersion":"{{ _qmmVS.outputs.knowledgeVersion }}",
-					"uniqueEntityId":"{{ _qmmVS.outputs.uniqueEntityId }}",
 					"chunks":{
 						"ua:type":"mappedArray",
 						"items":{
@@ -549,7 +599,11 @@
 							"data":"{{ zpfOa.outputs.result.chunks[0] }}"
 						},
 						"source":"{{ zpfOa.outputs.result.chunks }}"
-					}
+					},
+					"chunkMetadata":"{{ zpfOa.outputs.result.chunkMetadata }}",
+					"knowledgeVersion":"{{ _qmmVS.outputs.knowledgeVersion }}",
+					"knowledgeId":"{{ _qmmVS.outputs.knowledge_id }}",
+					"uniqueEntityId":"{{ n_eQA2v.outputs.result.uniqueId }}"
 				}
 			},
 			"skip":false,
@@ -568,7 +622,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bvBRo@5NJaW@O66xp-1@l@l",
 			"id":"_rDpuI",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"result":{
 					"status":"OK"
@@ -580,7 +634,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1,
+	"ownerUserId":-1,
 	"schemaReferences":[
 		
 	],
@@ -594,5 +648,5 @@
 		}
 	},
 	"standard":true,
-	"version":73
+	"version":10
 }
