@@ -1,16 +1,16 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1722934897520,
+	"createdTime":1747000718958,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1757441828505,
-		"deployedBy":0,
-		"deployedDefinitionId":"68c06f2491dbf0016b768857",
+		"deployedAt":1758700920212,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d3a578d2a7c4429e39cff0",
 		"status":"DEPLOYED",
-		"version":81,
-		"workflowVersion":124
+		"version":71,
+		"workflowVersion":128
 	},
 	"edges":[
 		{
@@ -245,7 +245,7 @@
 	"id":"66b1e6711f7c5a2ce6bd2baf",
 	"lastModifiedBy":-1,
 	"lcName":"query rephraser (ai agent)",
-	"modifiedTime":1758530447650,
+	"modifiedTime":1758731860806,
 	"name":"Query Rephraser (AI Agent)",
 	"nodes":[
 		{
@@ -263,6 +263,8 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"rephrased_user_message":{
 							"type":"string",
@@ -275,12 +277,17 @@
 						"chit_chat":{
 							"type":"string",
 							"title":"chit_chat"
+						},
+						"retry_with_context":{
+							"type":"boolean",
+							"title":"retry_with_context"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"messageHistory":{
 							"type":"array",
@@ -308,9 +315,7 @@
 							"type":"string",
 							"title":"Ai Agent Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -872,7 +877,7 @@
 			"id":"n_PtC25",
 			"index":16,
 			"inputs":{
-				"automationId":"682c17038bb4a0449efc9ec9",
+				"automationId":"682c6f948d04422e007feda1",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
@@ -1068,6 +1073,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"message":{
 							"type":"object",
@@ -1075,23 +1082,22 @@
 							"additionalProperties":false,
 							"title":"Message"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"prompt":{
 							"type":"string",
 							"title":"Prompt"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"return [\"message\":[\"type\":\"text\", \"text\":prompt]]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"prompt":"{{ Hjcdr.outputs.resolvedPrompt }}"
 				}
@@ -1163,29 +1169,30 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"jsonInput":{
 							"type":"string",
 							"title":"Json Input"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"jsonInput":{
 							"type":"string",
 							"title":"Json Input"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"def jsonInput = binding.hasVariable('jsonInput') ? jsonInput : \"\"\n\ndef startIndex = jsonInput.indexOf('{')\ndef endIndex = jsonInput.lastIndexOf('}')\n\nif (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {\n    jsonInput = jsonInput.substring(startIndex, endIndex + 1).trim()\n} else {\n    jsonInput = \"\"\n}\nreturn [\"jsonInput\":jsonInput]",
+				"compile_static":false,
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"jsonInput":"{{ rmKs1.outputs.llmResponse }}"
 				}
@@ -1237,6 +1244,8 @@
 			"inputs":{
 				"jsonSchema":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"rephrased_user_message":{
 							"type":"string",
@@ -1249,9 +1258,12 @@
 						"chit_chat":{
 							"type":"string",
 							"title":"chit_chat"
+						},
+						"retry_with_context":{
+							"type":"boolean",
+							"title":"Retry With Context"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
 				"jsonString":"{{ Acxdd.outputs.llmResponse }}"
 			},
@@ -1277,7 +1289,8 @@
 				"result":{
 					"rephrased_user_message":"{{ n7cL3.outputs.result.rephrased_user_message }}",
 					"reply":"{{ n7cL3.outputs.result.reply }}",
-					"chit_chat":"{{ n7cL3.outputs.result.chit_chat }}"
+					"chit_chat":"{{ n7cL3.outputs.result.chit_chat }}",
+					"retry_with_context":"{{ n7cL3.outputs.result.retry_with_context }}"
 				}
 			},
 			"skip":false,
@@ -1286,7 +1299,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":295,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -1303,5 +1316,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":128
+	"version":129
 }
