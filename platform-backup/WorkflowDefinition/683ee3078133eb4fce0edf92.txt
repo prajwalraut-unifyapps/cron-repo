@@ -2,15 +2,15 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1749455163167,
+	"createdTime":1750164599292,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758700675518,
-		"deployedBy":1,
-		"deployedDefinitionId":"68d3a483d2a7c4429e39c580",
+		"deployedAt":1755437785184,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68a1dad99d7d8d3f504624bd",
 		"status":"DEPLOYED",
-		"version":63,
-		"workflowVersion":68
+		"version":2,
+		"workflowVersion":7
 	},
 	"edges":[
 		{
@@ -54,29 +54,6 @@
 			"fromNodeId":"l3Coz",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_7n6gp",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_7n6gp",
-			"name":"yes",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_vLJRs",
-			"type":"if"
-		},
-		{
-			"fromNodeId":"n_vLJRs",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_hvbQr",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_7n6gp",
-			"name":"no",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"kZoRr",
 			"type":"next"
 		},
@@ -99,13 +76,6 @@
 			"priority":0,
 			"skip":false,
 			"toNodeId":"DSrYv",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_hvbQr",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"jqpal",
 			"type":"next"
 		},
 		{
@@ -159,7 +129,7 @@
 	"id":"683ee3078133eb4fce0edf92",
 	"lastModifiedBy":-1,
 	"lcName":"knowledge indexer | zendesk | index organisation specific tickets",
-	"modifiedTime":1758731871832,
+	"modifiedTime":1758530887093,
 	"name":"Knowledge Indexer | Zendesk | Index Organisation Specific Tickets",
 	"nodes":[
 		{
@@ -173,7 +143,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"wMowU-1",
 			"id":"cMVH3",
-			"index":1,
+			"index":0,
 			"inputs":{
 				"result":{
 					"type":"object",
@@ -253,10 +223,6 @@
 						"inputsTimeStamp":{
 							"type":"number",
 							"title":"Inputs Time Stamp"
-						},
-						"isMetadataIndexing":{
-							"type":"boolean",
-							"title":"Is Metadata Indexing"
 						}
 					},
 					"additionalProperties":false,
@@ -290,7 +256,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"wMowU-1",
 			"id":"P5QcG",
-			"index":2,
+			"index":0,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -358,7 +324,7 @@
 					"required":[]
 				},
 				"compile_static":false,
-				"code":"import java.text.SimpleDateFormat\nimport java.util.TimeZone\n\n\ndef date = item['updated_at']\n\ndef DATE_FORMAT =  \"yyyy-MM-dd'T'HH:mm:ss'Z'\"\ndef UNIFY_DATE_FORMAT = \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"\n\ndef allowed = true\n\n// lastSyncTime\nif (binding.hasVariable('lastSyncTime')) {\n    def modifiedTime = date ? getTimestampMillis(date, DATE_FORMAT) : null\n    allowed = allowed && (lastSyncTime < modifiedTime)\n}\n\n//filter on status\nif(binding.hasVariable('status') && status.size() > 0){\n   allowed = allowed && (status.contains(item['status']))\n}\n\n//filter on assignee\nif(binding.hasVariable('assignee') && assignee.size() > 0){\n    allowed = allowed && (assignee.contains(item['assignee_id']))\n}\n\n//filter on tages\nif(binding.hasVariable('tags') && tags.size() > 0){\n    allowed = allowed && (tags.intersect(item['tags']).size() > 0)\n}\n\n\nreturn [\n    'allowed': allowed,\n    'url' : item.url\n]\n\nstatic long getTimestampMillis(String timestamp, String dateFormat) {\n    if (timestamp) {\n        def format = new SimpleDateFormat(dateFormat, Locale.ENGLISH)\n        def date = format.parse(timestamp)\n        return date.getTime()\n    }\n    return 0\n}",
+				"code":"import java.text.SimpleDateFormat\nimport java.util.TimeZone\n\n\ndef date = item['updated_at']\n\ndef DATE_FORMAT =  \"yyyy-MM-dd'T'HH:mm:ss'Z'\"\ndef UNIFY_DATE_FORMAT = \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"\n\ndef allowed = true\n\n// lastSyncTime\nif (binding.hasVariable('lastSyncTime')) {\n    def modifiedTime = date ? getTimestampMillis(date, DATE_FORMAT) : null\n    allowed = allowed && (lastSyncTime < modifiedTime)\n}\n\ndate = item['created_id']\n\nif(!binding.hasVariable('lastSyncTime') && binding.hasVariable('inputTimeStamp')){\n    def modifiedTime = date ? getTimestampMillis(date, DATE_FORMAT) : null\n    allowed = allowed && ((modifiedTime / 1000L) as long >= inputTimeStamp)\n}\n\n//filter on startdate\nif (binding.hasVariable('startDate')){\n     def modifiedTime = date ? getTimestampMillis(date, DATE_FORMAT) : null\n    def startDate = startDate ? getTimestampMillis(startDate,\"yyyy-MM-dd\") : null\n    if (startDate) {\n        allowed = allowed && (modifiedTime && modifiedTime >= startDate)\n    }\n}\n\n//filter on enddate\nif (binding.hasVariable('endDate')){\n     def modifiedTime = date ? getTimestampMillis(date, DATE_FORMAT) : null\n    def endDate = endDate ? getTimestampMillis(endDate,\"yyyy-MM-dd\") : null\n    if (endDate) {\n        allowed = allowed && (modifiedTime && modifiedTime <= endDate)\n    }\n}\n\n//filter on status\nif(binding.hasVariable('status') && status.size() > 0){\n   allowed = allowed && (status.contains(item['status']))\n}\n\n//filter on assignee\nif(binding.hasVariable('assignee') && assignee.size() > 0){\n    allowed = allowed && (assignee.contains(item['assignee_id']))\n}\n\n//filter on tages\nif(binding.hasVariable('tags') && tags.size() > 0){\n    allowed = allowed && (tags.intersect(item['tags']).size() > 0)\n}\n\n\nreturn [\n    'allowed': allowed,\n    'url' : item.url\n]\n\nstatic long getTimestampMillis(String timestamp, String dateFormat) {\n    if (timestamp) {\n        def format = new SimpleDateFormat(dateFormat, Locale.ENGLISH)\n        def date = format.parse(timestamp)\n        return date.getTime()\n    }\n    return 0\n}\n\n",
 				"parameters":{
 					"status":{
 						"ua:type":"mappedArray",
@@ -399,7 +365,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"wMowU-1",
 			"id":"IW4Gz",
-			"index":3,
+			"index":0,
 			"inputs":{
 				"filters":[
 					{
@@ -429,7 +395,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"IW4Gz@wMowU-1@y",
 			"id":"KmPe5",
-			"index":4,
+			"index":0,
 			"inputs":{
 				"result":{
 					"success":true
@@ -452,7 +418,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"wMowU-1",
 			"id":"l3Coz",
-			"index":5,
+			"index":0,
 			"inputs":{
 				"automationId":"67d86515a707ac4c02db0e55",
 				"runtimeConnections":{
@@ -473,210 +439,6 @@
 		},
 		{
 			"context":{
-				"appName":"if_else",
-				"resourceVersion":439,
-				"resourceName":"if_else_condition",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"wMowU-1",
-			"id":"n_7n6gp",
-			"index":6,
-			"inputs":{
-				"filters":[
-					{
-						"property":"{{ cMVH3.outputs.isMetadataIndexing }}",
-						"filter":{
-							"operator":"EQUAL",
-							"value":"true"
-						}
-					}
-				],
-				"operator":"AND"
-			},
-			"skip":false,
-			"subTitle":"Condition",
-			"title":"Condition",
-			"type":"IF_ELSE"
-		},
-		{
-			"context":{
-				"appName":"code_by_unifyapps",
-				"resourceVersion":451,
-				"resourceName":"code_by_unifyapps_groovy",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_7n6gp@wMowU-1@y",
-			"id":"n_vLJRs",
-			"index":7,
-			"inputs":{
-				"output":{
-					"type":"object",
-					"properties":{
-						"assignee_id":{
-							"type":"integer",
-							"title":"assignee_id"
-						},
-						"brand_id":{
-							"type":"integer",
-							"title":"brand_id"
-						},
-						"created_at":{
-							"type":"string",
-							"title":"created_at"
-						},
-						"custom_status_id":{
-							"type":"integer",
-							"title":"custom_status_id"
-						},
-						"description":{
-							"type":"string",
-							"title":"description"
-						},
-						"encoded_id":{
-							"type":"string",
-							"title":"encoded_id"
-						},
-						"generated_timestamp":{
-							"type":"integer",
-							"title":"generated_timestamp"
-						},
-						"group_id":{
-							"type":"integer",
-							"title":"group_id"
-						},
-						"id":{
-							"type":"integer",
-							"title":"id"
-						},
-						"priority":{
-							"type":"string",
-							"title":"priority"
-						},
-						"raw_subject":{
-							"type":"string",
-							"title":"raw_subject"
-						},
-						"requester_id":{
-							"type":"integer",
-							"title":"requester_id"
-						},
-						"status":{
-							"type":"string",
-							"title":"status"
-						},
-						"subject":{
-							"type":"string",
-							"title":"subject"
-						},
-						"submitter_id":{
-							"type":"integer",
-							"title":"submitter_id"
-						},
-						"ticket_form_id":{
-							"type":"integer",
-							"title":"ticket_form_id"
-						},
-						"type":{
-							"type":"string",
-							"title":"type"
-						},
-						"updated_at":{
-							"type":"string",
-							"title":"updated_at"
-						},
-						"url":{
-							"type":"string",
-							"title":"url"
-						},
-						"organization":{
-							"type":"integer",
-							"title":"Organization"
-						}
-					},
-					"additionalProperties":false,
-					"required":[]
-				},
-				"input":{
-					"type":"object",
-					"properties":{
-						"ticket":{
-							"type":"object",
-							"properties":{},
-							"additionalProperties":false,
-							"title":"Ticket"
-						}
-					},
-					"additionalProperties":false,
-					"required":[]
-				},
-				"compile_static":false,
-				"code":"def resultMap = [:]\n\nif(binding.hasVariable('ticket')){\n\n  if (ticket.containsKey('id') && ticket['id'] != null) {\n        resultMap[\"id\"] = ticket['id']\n    }\n    if (ticket.containsKey('created_at') && ticket['created_at'] != null) {\n        resultMap[\"created_at\"] = ticket['created_at']\n    }\n    if (ticket.containsKey('updated_at') && ticket['updated_at'] != null) {\n        resultMap[\"updated_at\"] = ticket['updated_at']\n    }\n    if (ticket.containsKey('due_at') && ticket['due_at'] != null) {\n        resultMap[\"due_at\"] = ticket['due_at']\n    }\n    if (ticket.containsKey('external_id') && ticket['external_id'] != null) {\n        resultMap[\"external_id\"] = ticket['external_id']\n    }\n    if (ticket.containsKey('description') && ticket['description'] != null) {\n        resultMap[\"description\"] = ticket['description']\n    }\n    if (ticket.containsKey('raw_subject') && ticket['raw_subject'] != null) {\n        resultMap[\"raw_subject\"] = ticket['raw_subject']\n    }\n    if (ticket.containsKey('subject') && ticket['subject'] != null) {\n        resultMap[\"subject\"] = ticket['subject']\n    }\n    if (ticket.containsKey('type') && ticket['type'] != null) {\n        resultMap[\"type\"] = ticket['type']\n    }\n    if (ticket.containsKey('priority') && ticket['priority'] != null) {\n        resultMap[\"priority\"] = ticket['priority']\n    }\n    if (ticket.containsKey('status') && ticket['status'] != null) {\n        resultMap[\"status\"] = ticket['status']\n    }\n    if (ticket.containsKey('recipient') && ticket['recipient'] != null) {\n        resultMap[\"recipient\"] = ticket['recipient']\n    }\n    if (ticket.containsKey('requester_id') && ticket['requester_id'] != null) {\n        resultMap[\"requester_id\"] = ticket['requester_id']\n    }\n    if (ticket.containsKey('submitter_id') && ticket['submitter_id'] != null) {\n        resultMap[\"submitter_id\"] = ticket['submitter_id']\n    }\n    if (ticket.containsKey('assignee_id') && ticket['assignee_id'] != null) {\n        resultMap[\"assignee_id\"] = ticket['assignee_id']\n    }\n    if (ticket.containsKey('organization') && ticket['organization'] != null) {\n        resultMap[\"organization\"] = ticket['organization']\n    }\n}\n\nreturn resultMap",
-				"parameters":{
-					"ticket":"{{ cMVH3.outputs.ticket }}"
-				}
-			},
-			"skip":false,
-			"subTitle":"Code by UnifyApps",
-			"title":"Execute Groovy code",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"callables",
-				"resourceVersion":464,
-				"resourceName":"callables_call_automation",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_7n6gp@wMowU-1@y",
-			"id":"n_hvbQr",
-			"index":8,
-			"inputs":{
-				"automationId":"689c7bea2aa3d9a5c15fab9e",
-				"runtimeConnections":{},
-				"synchronous":true,
-				"version":"-1",
-				"parameters":{
-					"ticket":{
-						"assignee_id":"{{ n_vLJRs.outputs.result.assignee_id }}",
-						"brand_id":"{{ n_vLJRs.outputs.result.brand_id }}",
-						"created_at":"{{ n_vLJRs.outputs.result.created_at }}",
-						"custom_status_id":"{{ n_vLJRs.outputs.result.custom_status_id }}",
-						"description":"{{ n_vLJRs.outputs.result.description }}",
-						"encoded_id":"{{ n_vLJRs.outputs.result.encoded_id }}",
-						"generated_timestamp":"{{ n_vLJRs.outputs.result.generated_timestamp }}",
-						"group_id":"{{ n_vLJRs.outputs.result.group_id }}",
-						"id":"{{ n_vLJRs.outputs.result.id }}",
-						"organization_id":"{{ n_vLJRs.outputs.result.organization }}",
-						"priority":"{{ n_vLJRs.outputs.result.priority }}",
-						"raw_subject":"{{ n_vLJRs.outputs.result.raw_subject }}",
-						"requester_id":"{{ n_vLJRs.outputs.result.requester_id }}",
-						"status":"{{ n_vLJRs.outputs.result.status }}",
-						"subject":"{{ n_vLJRs.outputs.result.subject }}",
-						"submitter_id":"{{ n_vLJRs.outputs.result.submitter_id }}",
-						"ticket_form_id":"{{ n_vLJRs.outputs.result.ticket_form_id }}",
-						"type":"{{ n_vLJRs.outputs.result.type }}",
-						"updated_at":"{{ n_vLJRs.outputs.result.updated_at }}",
-						"url":"{{ n_vLJRs.outputs.result.url }}"
-					},
-					"knowledgeId":"{{ cMVH3.outputs.knowledgeId }}"
-				}
-			},
-			"skip":false,
-			"subTitle":"Callable",
-			"title":"Call automation",
-			"type":"CALL_WORKFLOW"
-		},
-		{
-			"context":{
 				"appName":"code_by_unifyapps",
 				"resourceVersion":415,
 				"resourceName":"code_by_unifyapps_groovy",
@@ -685,9 +447,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_7n6gp@wMowU-1@n",
+			"groupId":"wMowU-1",
 			"id":"kZoRr",
-			"index":9,
+			"index":0,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -716,7 +478,7 @@
 					"required":[]
 				},
 				"compile_static":false,
-				"code":"def chunkMetadata = [:]\n\ndef modifiedUrl = item['url']?.replace(\"/api/v2\", \"\")?.replace(\".json\", \"\")\n\nchunkMetadata.put(\"appName\", \"zendesk\")\n\nimport java.text.SimpleDateFormat\nimport java.util.TimeZone\n\nlong toEpochMillis(String isoDate) {\n    def format = new SimpleDateFormat(\"yyyy-MM-dd'T'HH:mm:ssX\")\n    format.setTimeZone(TimeZone.getTimeZone(\"UTC\"))\n    return format.parse(isoDate).getTime()\n}\n\nif (binding.hasVariable('item')) {\n    if (item['created_at']) {\n        chunkMetadata.put(\"createdTime\", toEpochMillis(item['created_at']))\n    }\n    if (item['updated_at']) {\n        chunkMetadata.put(\"modifiedTime\", toEpochMillis(item['updated_at']))\n    }\n    if (item['due_at']) {\n        chunkMetadata.put(\"due_at\", toEpochMillis(item['due_at']))\n    }\n    if (item['generated_timestamp']) {\n        chunkMetadata.put(\"generated_timestamp\", item['generated_timestamp'])\n    }\n    if (item['id']) {\n        chunkMetadata.put(\"ticket_id\", item['id'])\n    }\n    if (item['external_id']) {\n        chunkMetadata.put(\"external_id\", item['external_id'])\n    }\n    if (item['is_public'] != null) {\n        chunkMetadata.put(\"is_public\", item['is_public'])\n    }\n    if (item['priority']) {\n        chunkMetadata.put(\"priority\", item['priority'])\n    }\n    if (item['status']) {\n        chunkMetadata.put(\"status\", item['status'])\n    }\n    if (modifiedUrl) {\n        chunkMetadata.put(\"referenceUrl\", modifiedUrl)\n    }\n    if (item['type']) {\n        chunkMetadata.put(\"type\", item['type'])\n    }\n    if (item['satisfaction_rating'] != null) {\n        chunkMetadata.put(\"satisfaction_rating\", item['satisfaction_rating'])\n    }\n    if (item['raw_subject'] != null) {\n        chunkMetadata.put(\"name\", item['raw_subject'])\n        chunkMetadata.put(\"title\", item['raw_subject'])\n    }\n}\n\nreturn [\"chunkMetadata\": chunkMetadata]\n",
+				"code":"def chunkMetadata = [:]\n\ndef modifiedUrl = item['url']?.replace(\"/api/v2\", \"\")?.replace(\".json\", \"\")\n\nchunkMetadata.put(\"appName\", \"zendesk\")\n\nimport java.text.SimpleDateFormat\nimport java.util.TimeZone\n\nlong toEpochMillis(String isoDate) {\n    def format = new SimpleDateFormat(\"yyyy-MM-dd'T'HH:mm:ssX\")\n    format.setTimeZone(TimeZone.getTimeZone(\"UTC\"))\n    return format.parse(isoDate).getTime()\n}\n\nif (binding.hasVariable('item')) {\n    if (item['created_at']) {\n        chunkMetadata.put(\"createdTime\", toEpochMillis(item['created_at']))\n    }\n    if (item['updated_at']) {\n        chunkMetadata.put(\"modifiedTime\", toEpochMillis(item['updated_at']))\n    }\n    if (item['due_at']) {\n        chunkMetadata.put(\"due_at\", toEpochMillis(item['due_at']))\n    }\n    if (item['generated_timestamp']) {\n        chunkMetadata.put(\"generated_timestamp\", item['generated_timestamp'])\n    }\n    if (item['id']) {\n        chunkMetadata.put(\"ticket_id\", item['id'])\n    }\n    if (item['external_id']) {\n        chunkMetadata.put(\"external_id\", item['external_id'])\n    }\n    if (item['is_public'] != null) {\n        chunkMetadata.put(\"is_public\", item['is_public'])\n    }\n    if (item['priority']) {\n        chunkMetadata.put(\"priority\", item['priority'])\n    }\n    if (item['status']) {\n        chunkMetadata.put(\"status\", item['status'])\n    }\n    if (modifiedUrl) {\n        chunkMetadata.put(\"referenceUrl\", modifiedUrl)\n    }\n    if (item['type']) {\n        chunkMetadata.put(\"type\", item['type'])\n    }\n    if (item['satisfaction_rating'] != null) {\n        chunkMetadata.put(\"satisfaction_rating\", item['satisfaction_rating'])\n    }\n}\n\nreturn [\"chunkMetadata\": chunkMetadata]\n",
 				"parameters":{
 					"item":"{{ cMVH3.outputs.ticket }}"
 				}
@@ -736,9 +498,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_7n6gp@wMowU-1@n",
+			"groupId":"wMowU-1",
 			"id":"ANYyv",
-			"index":10,
+			"index":0,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -792,9 +554,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_7n6gp@wMowU-1@n",
+			"groupId":"wMowU-1",
 			"id":"eXINC",
-			"index":11,
+			"index":0,
 			"inputs":{
 				"automationId":"67091f09c6db330cf5b08ead",
 				"runtimeConnections":{},
@@ -821,9 +583,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_7n6gp@wMowU-1@n",
+			"groupId":"wMowU-1",
 			"id":"DSrYv",
-			"index":12,
+			"index":0,
 			"inputs":{
 				"automationId":"66af3ff4cd79b321cb478a37",
 				"runtimeConnections":{},
@@ -866,7 +628,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"wMowU-1",
 			"id":"jqpal",
-			"index":13,
+			"index":0,
 			"inputs":{
 				"filters":[
 					{
@@ -896,7 +658,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"jqpal@wMowU-1@y",
 			"id":"ib8Q7",
-			"index":14,
+			"index":0,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -949,14 +711,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"jqpal@wMowU-1@y",
 			"id":"c3aSo",
-			"index":15,
+			"index":0,
 			"inputs":{
 				"automationId":"683ef06422c00c3841439163",
 				"runtimeConnections":{
 					"zendesk":"{{ cMVH3.outputs.connectionId }}"
 				},
 				"synchronous":true,
-				"triggerWorkflowWithRuntimeType":"IN_MEMORY",
 				"version":"-1",
 				"parameters":{
 					"id":"{{ ib8Q7.outputs.result.id }}",
@@ -988,7 +749,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"wMowU-1",
 			"id":"Xg1eq",
-			"index":16,
+			"index":0,
 			"inputs":{
 				"result":{
 					"success":true
@@ -1000,7 +761,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1,
+	"ownerUserId":34,
 	"schemaReferences":[
 		
 	],
@@ -1017,5 +778,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":69
+	"version":15
 }
