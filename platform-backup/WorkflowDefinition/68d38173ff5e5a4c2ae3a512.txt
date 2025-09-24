@@ -1,52 +1,182 @@
 {
 	"appsUsed":[
-		
+		"custom_http_application"
 	],
 	"createdTime":1758691699774,
 	"deleted":false,
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_JFQwS",
+			"fromNodeId":"n_lNSfH",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_7Efu1",
+			"toNodeId":"n_KWeoc",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_KWeoc",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_5CFfY",
 			"type":"next"
 		}
 	],
 	"id":"68d38173ff5e5a4c2ae3a512",
 	"lastModifiedBy":1,
 	"lcName":"httpcustomvalueworkflow2_117586910550970",
-	"modifiedTime":1758691699774,
+	"modifiedTime":1758691714082,
 	"name":"HTTPCustomValueWorkflow2_117586910550970",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":112,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_JFQwS-1",
-			"id":"_JFQwS",
-			"index":0,
+			"id":"n_lNSfH",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":778,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_JFQwS-1",
-			"id":"_7Efu1",
-			"index":0,
+			"id":"n_KWeoc",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"Method":{
+							"type":"string",
+							"title":"Method"
+						}
+					},
+					"required":[
+						"Method"
+					]
+				}
+			},
+			"inputs":{
+				"Method":"POST"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"Method":{
+							"type":"string",
+							"title":"Method"
+						}
+					},
+					"required":[
+						"Method"
+					]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"custom_http_application",
+				"resourceVersion":4966,
+				"connectionId":"6878d77aae286a785bd91456",
+				"resourceName":"custom_http_application_execute",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_JFQwS-1",
+			"id":"n_5CFfY",
+			"index":3,
+			"inputs":{
+				"isAsync":false,
+				"requestTimeoutInSecs":-1,
+				"httpMethod":"{{ n_KWeoc.outputs.Method }}",
+				"body":{
+					"input":"random"
+				},
+				"sslVerify":true,
+				"path":"/api-endpoint/anm8k8q/ay3ws4",
+				"responseSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"output"
+					],
+					"properties":{
+						"output":{
+							"type":"string",
+							"title":"output"
+						}
+					}
+				},
+				"httpVersion":"HTTP_2",
+				"bodySchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"input"
+					],
+					"properties":{
+						"input":{
+							"type":"string",
+							"title":"input"
+						}
+					}
+				},
+				"responseContentType":"application/json",
+				"headersList":[
+					{
+						"key":"api-token",
+						"value":"1/68d3816b26959919178415d1"
+					}
+				],
+				"authType":"CUSTOM",
+				"requestContentType":"application/json"
+			},
+			"skip":false,
+			"subTitle":"Custom HTTP Application",
+			"title":"Execute REST Request",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +190,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
