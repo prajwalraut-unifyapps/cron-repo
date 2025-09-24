@@ -1,16 +1,16 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1738131926435,
+	"createdTime":1747000724689,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1755437774555,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68a1dace9d7d8d3f50462442",
+		"deployedAt":1758700819588,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d3a513d2a7c4429e39cae2",
 		"status":"DEPLOYED",
-		"version":5,
-		"workflowVersion":30
+		"version":81,
+		"workflowVersion":216
 	},
 	"edges":[
 		{
@@ -805,21 +805,44 @@
 			"fromNodeId":"mtgMh",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"erBNy",
+			"toNodeId":"_Hs6iS",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"erBNy",
+			"fromNodeId":"_Hs6iS",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_VsDFs",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"_VsDFs",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_qG9UF",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_qG9UF",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_fdxjJ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_Hs6iS",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_fdxjJ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_fdxjJ",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"bFo4u",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"bFo4u",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"b5Sad",
 			"type":"next"
 		},
 		{
@@ -830,7 +853,7 @@
 			"type":"next"
 		},
 		{
-			"fromNodeId":"b5Sad",
+			"fromNodeId":"bFo4u",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"fY8Sz",
@@ -948,7 +971,7 @@
 	"id":"672eefb99d0e461f4f99c3bd",
 	"lastModifiedBy":-1,
 	"lcName":"query on sql based platforms",
-	"modifiedTime":1758530876375,
+	"modifiedTime":1758731853419,
 	"name":"Query On SQL Based Platforms",
 	"nodes":[
 		{
@@ -1027,6 +1050,10 @@
 						"hasMoreData":{
 							"type":"boolean",
 							"title":"hasMoreData"
+						},
+						"passMessageDirectlyToAgent":{
+							"type":"string",
+							"title":"Pass Message Directly To Agent"
 						}
 					}
 				},
@@ -1316,7 +1343,6 @@
 				"fewShotExamples":"{{ _QbuFF.outputs.fewShotExamples }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -3450,7 +3476,6 @@
 				"ua:list_type":"OBJECT"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -3678,7 +3703,6 @@
 				"llm_output":"{{ 9f0mL.outputs.llmResponse }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -3852,8 +3876,8 @@
 			"index":65,
 			"inputs":{
 				"result":{
-					"success":"false",
-					"errorMessage":"There are no relevant columns/metadata present that can answer the user question. Explanation : {{ _bQgHt.outputs.result.explanation }}"
+					"success":"true",
+					"passMessageDirectlyToAgent":"There are no relevant columns/metadata present to generate sql query that can answer the user question. Explanation : {{ _bQgHt.outputs.result.explanation }}"
 				}
 			},
 			"skip":false,
@@ -4159,7 +4183,6 @@
 				"ua:list_type":"OBJECT"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -4231,7 +4254,6 @@
 				"limited_sql":"{{ _bQgHt.outputs.result.sql_query }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -4286,6 +4308,13 @@
 							"operator":"NOT_CONTAINS",
 							"value":"custom_api"
 						}
+					},
+					{
+						"property":"{{ _QbuFF.outputs.platformName }}",
+						"filter":{
+							"operator":"NOT_CONTAINS",
+							"value":"custom_automation_"
+						}
 					}
 				],
 				"operator":"OR"
@@ -4311,6 +4340,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"limited_sql":{
 							"type":"string",
@@ -4320,12 +4351,12 @@
 							"type":"boolean",
 							"title":"userLimits"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"sql_query":{
 							"type":"string",
@@ -4335,12 +4366,11 @@
 							"type":"integer",
 							"title":"Max Row Limit"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"import java.util.regex.Pattern\n\ndef pattern = Pattern.compile(\"\\\\blimit\\\\b\", Pattern.CASE_INSENSITIVE)\ndef matcher = pattern.matcher(sql_query)\ndef userLimits = matcher.find()\n\ndef limit = 50\nif(binding.hasVariable(\"max_row_limit\")){\n    limit = max_row_limit + 5\n}\ndef limit_str = limit.toString()\n\ndef result\nif (userLimits) {\n    result = [\n        limited_sql: (String) sql_query.toString(),\n        userLimits: true\n    ]\n} else {\n    String sql = sql_query.replaceAll(/[ \\t\\n;]+$/, '').toString()\n    result = [\n        limited_sql: (String) \"${sql} LIMIT ${limit_str}\",\n        userLimits: false\n    ]\n}\n\nreturn result",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"sql_query":"{{ _bQgHt.outputs.result.sql_query }}",
 					"max_row_limit":"{{ _QbuFF.outputs.max_row_limit }}"
@@ -4419,7 +4449,6 @@
 				"sql_with_limit":"{{ BWDmq.outputs.limited_sql }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -4480,7 +4509,6 @@
 				"maxiCnt":4
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -4646,9 +4674,10 @@
 			"inputs":{
 				"filters":[
 					{
-						"property":"{{ o9ReY.outputs.err_msg }}",
+						"property":"{{ o9ReY.outputs.status }}",
 						"filter":{
-							"operator":"MISSING"
+							"operator":"EQUAL",
+							"value":"true"
 						}
 					}
 				],
@@ -4675,17 +4704,18 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"finalCache":{
 							"type":"string",
 							"title":"finalCache"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
 					"properties":{
 						"limited":{
 							"type":"string",
@@ -4699,11 +4729,11 @@
 							"type":"string",
 							"title":"originalQuery"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
-				"compile_static":false,
 				"code":"import java.util.regex.*\n\nboolean userLimits = (originalQuery =~ /(?i)\\blimit\\b/).find()\n\ndef result\nif (userLimits) {\n    result = [finalCache: limited]\n} else {\n    // Remove LIMIT clause `[spaces]limit <something>[spaces][optional offset or end]`\n    def pattern = ~/(?i)\\s*limit\\s+\\S+\\s*(?=offset|\\Z|;)/\n    def sql_no_limit = to_cache.replaceAll(pattern, '').replaceAll(/[\\s;]+$/, '')\n    result = [finalCache: sql_no_limit]\n}\nreturn result",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"to_cache":"{{ W8L0o.outputs.sql_to_cache }}",
 					"originalQuery":"{{ _bQgHt.outputs.result.sql_query }}",
@@ -4739,6 +4769,7 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
 					"properties":{
 						"tableUsed":{
 							"type":"array",
@@ -4762,11 +4793,12 @@
 							},
 							"title":"tableUsed"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"sql":{
 							"type":"string",
@@ -4795,12 +4827,11 @@
 							},
 							"title":"Metadata"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"def extractTableNamesFromSQL(String sql) {\n    def normSql = sql\n        .replaceAll('\\\\\\\\n', ' ')\n        .replaceAll('\\\\\\\\r', ' ')\n        .replaceAll('\\\\\\\\t', ' ')\n        .replaceAll('\\\\s+', ' ')\n\n    def matcher = (normSql =~ /\\b(FROM|JOIN)\\s+`?([a-zA-Z0-9_.]+)`?/)\n    def tableNames = [] as Set\n    matcher.each { tableNames << it[2] }\n    return tableNames ? tableNames as List : []\n}\n\ndef tableList = extractTableNamesFromSQL(sql)\n\ndef result = tableList.collect { tbl ->\n    metadata.find { it.tableName.toLowerCase() == tbl.toLowerCase() }\n}.findAll { it }\n\nreturn [tableUsed: result]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"sql":"{{ W8L0o.outputs.sql_to_cache }}",
 					"metadata":{
@@ -4861,10 +4892,9 @@
 			"inputs":{
 				"filters":[
 					{
-						"property":"{{ o9ReY.outputs.err_msg }}",
+						"property":"{{ o9ReY.outputs.passMessageDirectlyToAgent }}",
 						"filter":{
-							"operator":"EQUAL",
-							"value":"Your query is taking some time. So, we will post the result to you when it's ready. You can continue the chat. Would you like to know anything else."
+							"operator":"EXISTS"
 						}
 					}
 				],
@@ -4890,8 +4920,8 @@
 			"index":83,
 			"inputs":{
 				"result":{
-					"success":"false",
-					"errorMessage":"{{ o9ReY.outputs.err_msg }}"
+					"success":"true",
+					"passMessageDirectlyToAgent":"{{ o9ReY.outputs.passMessageDirectlyToAgent }}"
 				}
 			},
 			"skip":false,
@@ -5102,46 +5132,95 @@
 		},
 		{
 			"context":{
-				"appName":"code_by_unifyapps",
-				"resourceVersion":73,
-				"resourceName":"code_by_unifyapps_groovy",
+				"appName":"if_else",
+				"resourceVersion":439,
+				"resourceName":"if_else_condition",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"5WW8f@C3UYq@_NmEen-1@l@n",
-			"id":"erBNy",
+			"id":"_Hs6iS",
 			"index":89,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ _QbuFF.outputs.platformName }}",
+						"filter":{
+							"operator":"NOT_CONTAINS",
+							"value":"oracledb"
+						}
+					},
+					{
+						"property":"{{ _QbuFF.outputs.platformName }}",
+						"filter":{
+							"operator":"NOT_CONTAINS",
+							"value":"custom_api"
+						}
+					},
+					{
+						"property":"{{ _QbuFF.outputs.platformName }}",
+						"filter":{
+							"operator":"NOT_CONTAINS",
+							"value":"custom_automation_"
+						}
+					}
+				],
+				"operator":"OR"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":317,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_Hs6iS@5WW8f@C3UYq@_NmEen-1@l@n@y",
+			"id":"_VsDFs",
+			"index":90,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"limited_sql":{
 							"type":"string",
-							"title":"Limited Sql"
+							"title":"limited_sql"
+						},
+						"userLimits":{
+							"type":"boolean",
+							"title":"userLimits"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"sql_query":{
 							"type":"string",
-							"title":"Sql Query"
+							"title":"sql_query"
 						},
 						"max_row_limit":{
 							"type":"integer",
 							"title":"Max Row Limit"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"import java.util.regex.Pattern\n\ndef pattern = Pattern.compile(\"\\\\blimit\\\\b\", Pattern.CASE_INSENSITIVE)\ndef matcher = pattern.matcher(sql_query)\ndef userLimits = matcher.find()\n\ndef limit = 50\nif(binding.hasVariable(\"max_row_limit\")){\n    limit = max_row_limit + 5\n}\ndef limit_str = limit.toString()\n\ndef result\nif (userLimits) {\n    result = [\n        limited_sql: (String) sql_query.toString(),\n        userLimits: true\n    ]\n} else {\n    String sql = sql_query.replaceAll(/[ \\t\\n;]+$/, '').toString()\n    result = [\n        limited_sql: (String) \"${sql} LIMIT ${limit_str}\",\n        userLimits: false\n    ]\n}\n\nreturn result",
 				"compile_static":false,
-				"code":"import java.util.regex.Pattern\n\n// sql_query is your input\ndef pattern = Pattern.compile(\"\\\\blimit\\\\b\", Pattern.CASE_INSENSITIVE)\ndef matcher = pattern.matcher(sql_query)\ndef userLimits = matcher.find()\n\ndef limit = 50\nif(binding.hasVariable(\"max_row_limit\")){\n    limit = max_row_limit + 5\n}\ndef limit_str = limit.toString()\n\ndef result\nif (userLimits) {\n    result = [\n        limited_sql: sql_query\n    ]\n} else {\n    def sql = sql_query.replaceAll(/[ \\t\\n;]+$/, '')\n    result = [\n        limited_sql: sql + \" LIMIT ${limit_str}\"\n    ]\n}\n\nreturn result",
+				"captureStdOutput":false,
 				"parameters":{
 					"sql_query":"{{ mtgMh.outputs.result.sql_query }}",
 					"max_row_limit":"{{ _QbuFF.outputs.max_row_limit }}"
@@ -5150,6 +5229,58 @@
 			"skip":false,
 			"subTitle":"Code by UnifyApps",
 			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":447,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_Hs6iS@5WW8f@C3UYq@_NmEen-1@l@n@y",
+			"id":"_qG9UF",
+			"index":91,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ BWDmq.outputs.limited_sql }}",
+						"value":"{{ _VsDFs.outputs.result.limited_sql }}"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":448,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"5WW8f@C3UYq@_NmEen-1@l@n",
+			"id":"n_fdxjJ",
+			"index":92,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ W8L0o.outputs.sql_to_cache }}",
+						"value":"{{ mtgMh.outputs.result.sql_query }}"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
 			"type":"ACTION"
 		},
 		{
@@ -5170,7 +5301,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"5WW8f@C3UYq@_NmEen-1@l@n",
 			"id":"bFo4u",
-			"index":90,
+			"index":93,
 			"inputs":{
 				"itemToAdd":{
 					"role":"assistant",
@@ -5193,36 +5324,6 @@
 		},
 		{
 			"context":{
-				"appName":"variable_by_unifyapps",
-				"resourceVersion":16,
-				"resourceName":"variable_by_unifyapps_update_variables",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"5WW8f@C3UYq@_NmEen-1@l@n",
-			"id":"b5Sad",
-			"index":91,
-			"inputs":{
-				"variables":[
-					{
-						"source":"{{ W8L0o.outputs.sql_with_limit }}",
-						"value":"{{ erBNy.outputs.result.limited_sql }}"
-					},
-					{
-						"source":"{{ W8L0o.outputs.sql_to_cache }}",
-						"value":"{{ mtgMh.outputs.result.sql_query }}"
-					}
-				]
-			},
-			"skip":false,
-			"subTitle":"Variable by UnifyApps",
-			"title":"Update variables",
-			"type":"ACTION"
-		},
-		{
-			"context":{
 				"appName":"if_else",
 				"resourceVersion":16,
 				"resourceName":"if_else_condition",
@@ -5233,7 +5334,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"C3UYq@_NmEen-1@l",
 			"id":"fY8Sz",
-			"index":92,
+			"index":94,
 			"inputs":{
 				"filters":[
 					{
@@ -5269,11 +5370,11 @@
 			"fallbackMode":"STOP",
 			"groupId":"fY8Sz@C3UYq@_NmEen-1@l@y",
 			"id":"3jrhS",
-			"index":93,
+			"index":95,
 			"inputs":{
 				"result":{
-					"success":"false",
-					"errorMessage":"Even after multiple retries, SQL Query being formed is not executable."
+					"success":"true",
+					"passMessageDirectlyToAgent":"Even after multiple retries, SQL Query being formed is not executable."
 				}
 			},
 			"skip":false,
@@ -5300,10 +5401,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NmEen-1",
 			"id":"_riX3H",
-			"index":94,
+			"index":96,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"rowData":{
 							"type":"array",
@@ -5322,12 +5425,12 @@
 							"type":"integer",
 							"title":"Max Limit"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"rows":{
 							"type":"array",
@@ -5342,13 +5445,12 @@
 							"type":"integer",
 							"title":"Max Row Limit"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"def limit = 25\nif (binding.hasVariable(\"max_row_limit\")) {\n    limit = max_row_limit\n}\n\nif (binding.hasVariable(\"rows\")) {\n    return [\n        \"countRows\" : rows.size(),\n        \"rowData\"   : rows.take(limit),\n        \"max_limit\" : limit\n    ]\n} else {\n    return [\n        \"countRows\" : 0,\n        \"rowData\"   : [],\n        \"max_limit\" : limit\n    ]\n}",
+				"compile_static":false,
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"rows":{
 						"source":"{{ o9ReY.outputs.rows }}",
@@ -5375,7 +5477,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NmEen-1",
 			"id":"nJq8F",
-			"index":95,
+			"index":97,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -5394,7 +5496,6 @@
 			},
 			"inputs":{},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -5425,7 +5526,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NmEen-1",
 			"id":"3RHvi",
-			"index":96,
+			"index":98,
 			"inputs":{
 				"filters":[
 					{
@@ -5455,7 +5556,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"3RHvi@_NmEen-1@y",
 			"id":"s2ccP",
-			"index":97,
+			"index":99,
 			"inputs":{
 				"variables":[
 					{
@@ -5481,7 +5582,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"3RHvi@_NmEen-1@n",
 			"id":"Ze80q",
-			"index":98,
+			"index":100,
 			"inputs":{
 				"variables":[
 					{
@@ -5507,7 +5608,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NmEen-1",
 			"id":"Fav4q",
-			"index":99,
+			"index":101,
 			"inputs":{
 				"filters":[
 					{
@@ -5537,7 +5638,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Fav4q@_NmEen-1@y",
 			"id":"DS8ol",
-			"index":100,
+			"index":102,
 			"inputs":{
 				"writeThroughSessionVariables":false,
 				"object_type":"message_id_ques_sql",
@@ -5565,7 +5666,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NmEen-1",
 			"id":"_uQU6W",
-			"index":101,
+			"index":103,
 			"inputs":{
 				"result":{
 					"success":"true",
@@ -5599,7 +5700,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":34,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -5613,5 +5714,5 @@
 		}
 	},
 	"standard":true,
-	"version":39
+	"version":217
 }
