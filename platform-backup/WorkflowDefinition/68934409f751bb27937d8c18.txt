@@ -2,8 +2,16 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1758530450665,
+	"createdTime":1757098887564,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1758650349913,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68d2dfed1bf7400a256ce90c",
+		"status":"DEPLOYED",
+		"version":19,
+		"workflowVersion":81
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_iXkFJ",
@@ -82,6 +90,13 @@
 		},
 		{
 			"fromNodeId":"_62oxO",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_EyGtL",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_EyGtL",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"_ptr2s",
@@ -241,11 +256,11 @@
 			"fromNodeId":"_M89KD",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_ZZMrM",
+			"toNodeId":"n_B1PJg",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_ZZMrM",
+			"fromNodeId":"n_B1PJg",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"_RitcW",
@@ -335,21 +350,14 @@
 			"fromNodeId":"n_knqDF@6",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_YmSVh",
+			"toNodeId":"n_qWThp",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"_YmSVh",
+			"fromNodeId":"n_qWThp",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_71NyR",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_71NyR",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_i5FEn",
+			"toNodeId":"n_9psQR",
 			"type":"next"
 		},
 		{
@@ -410,7 +418,7 @@
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_i5FEn",
+			"fromNodeId":"n_9psQR",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_ZPgAK",
@@ -445,7 +453,7 @@
 	"id":"68934409f751bb27937d8c18",
 	"lastModifiedBy":-1,
 	"lcName":"metering | users | actual",
-	"modifiedTime":1758530879900,
+	"modifiedTime":1758731858877,
 	"name":"Metering | Users | Actual",
 	"nodes":[
 		{
@@ -742,7 +750,6 @@
 				"limit":"{{ n_iXkFJ.outputs.limit }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -1035,6 +1042,51 @@
 			"type":"ACTION"
 		},
 		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":468,
+				"resourceName":"analytics_by_unifyapps_query_reports",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_knqDF@_vXQLK-1@1",
+			"id":"n_EyGtL",
+			"index":10,
+			"inputs":{
+				"projections":[
+					{
+						"name":"USER=::=USER_ID",
+						"aggregationFunction":"DISTINCT_COUNT",
+						"alias":"totalUser",
+						"includePercentageChange":false
+					}
+				],
+				"filter":{
+					"filters":[
+						{
+							"resolvedFilter":{
+								"filter":"{{ n_iXkFJ.outputs.filter }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"entityType":"USER",
+				"sorts":[],
+				"timeFilter":{
+					"since":"{{ n_iXkFJ.outputs.startDate }}",
+					"until":"{{ n_iXkFJ.outputs.endDate }}"
+				},
+				"group":"ENTITY_REPORTING"
+			},
+			"skip":false,
+			"subTitle":"Analytics by UnifyApps",
+			"title":"Analytics Query",
+			"type":"ACTION"
+		},
+		{
 			"additional":{
 				"xsdSchemaConfig":{
 					"root":{}
@@ -1051,10 +1103,14 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@1",
 			"id":"_ptr2s",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"result"
+					],
 					"properties":{
 						"result":{
 							"type":"array",
@@ -1078,14 +1134,14 @@
 							},
 							"title":"Result"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"result"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"caseCounts"
+					],
 					"properties":{
 						"caseCounts":{
 							"type":"array",
@@ -1094,14 +1150,11 @@
 							},
 							"title":"Case Counts"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"caseCounts"
-					]
+					}
 				},
-				"compile_static":false,
 				"code":"List<Map<String, Object>> bucketize(List<Integer> input) {\n    def buckets = [\n        \"1\"      : 0,\n        \"2-5\"    : 0,\n        \"6-10\"   : 0,\n        \"11-20\"  : 0,\n        \"21-50\"  : 0,\n        \"51-100\" : 0,\n        \"100+\"   : 0\n    ]\n\n    input.each { num ->\n        if (num == 1) {\n            buckets[\"1\"]++\n        } else if (num >= 2 && num <= 5) {\n            buckets[\"2-5\"]++\n        } else if (num >= 6 && num <= 10) {\n            buckets[\"6-10\"]++\n        } else if (num >= 11 && num <= 20) {\n            buckets[\"11-20\"]++\n        } else if (num >= 21 && num <= 50) {\n            buckets[\"21-50\"]++\n        } else if (num >= 51 && num <= 100) {\n            buckets[\"51-100\"]++\n        } else {\n            buckets[\"100+\"]++\n        }\n    }\n\n    return buckets.collect { key, value ->\n        [bucket: key, count: value]\n    }\n}\n\n// Just return the list directly\nreturn ['result': bucketize(caseCounts)]\n",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"caseCounts":{
 						"source":"{{ _62oxO.outputs.objects }}",
@@ -1127,7 +1180,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@2",
 			"id":"n_knqDF@2",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"name":"Average session"
 			},
@@ -1148,7 +1201,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@2",
 			"id":"n_rheSg",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"projections":[
 					{
@@ -1186,7 +1239,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@2",
 			"id":"n_VWSXA",
-			"index":13,
+			"index":14,
 			"inputs":{
 				"projections":[
 					{
@@ -1220,7 +1273,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@2",
 			"id":"9p1oe",
-			"index":14,
+			"index":15,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1334,7 +1387,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@2",
 			"id":"1q6LI",
-			"index":15,
+			"index":16,
 			"inputs":{
 				"outputSchema":{
 					"type":"object",
@@ -1433,7 +1486,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@2",
 			"id":"_J2puU",
-			"index":16,
+			"index":17,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1490,7 +1543,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@3",
 			"id":"n_knqDF@3",
-			"index":17,
+			"index":18,
 			"inputs":{
 				"name":"Users retention"
 			},
@@ -1510,10 +1563,17 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@3",
 			"id":"n_cEL1x",
-			"index":18,
+			"index":19,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"from",
+						"to",
+						"lastFrom",
+						"lastTo"
+					],
 					"properties":{
 						"from":{
 							"type":"integer",
@@ -1531,17 +1591,11 @@
 							"type":"integer",
 							"title":"Last To"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"from",
-						"to",
-						"lastFrom",
-						"lastTo"
-					]
+					}
 				},
+				"code":"import java.time.*\nimport java.time.format.DateTimeFormatter\n\n// Use UTC zone\nZoneId zone = ZoneOffset.UTC\n\n// Formatter without timezone\nDateTimeFormatter formatter = DateTimeFormatter.ofPattern(\"yyyy-MM-dd'T'HH:mm:ss\")\n\n// Today at 00:00 UTC\nZonedDateTime todayStart = LocalDate.now(zone).atStartOfDay(zone)\n\n// 1 week ago and 2 weeks ago\nZonedDateTime weekAgoStart = todayStart.minusWeeks(1)\nZonedDateTime twoWeekAgoStart = todayStart.minusWeeks(2)\n\n// Format and manually append +00:00\nString to = todayStart.minusSeconds(1).format(formatter) + \"+00:00\"\nString from = weekAgoStart.format(formatter) + \"+00:00\"\nString lastFrom = twoWeekAgoStart.format(formatter) + \"+00:00\"\nString lastTo = weekAgoStart.minusSeconds(1).format(formatter) + \"+00:00\"\n\nreturn ['from': from, 'to': to, 'lastFrom': lastFrom, 'lastTo': lastTo]\n",
 				"compile_static":false,
-				"code":"import java.time.*\nimport java.time.format.DateTimeFormatter\n\n// Use UTC zone\nZoneId zone = ZoneOffset.UTC\n\n// Formatter without timezone\nDateTimeFormatter formatter = DateTimeFormatter.ofPattern(\"yyyy-MM-dd'T'HH:mm:ss\")\n\n// Today at 00:00 UTC\nZonedDateTime todayStart = LocalDate.now(zone).atStartOfDay(zone)\n\n// 1 week ago and 2 weeks ago\nZonedDateTime weekAgoStart = todayStart.minusWeeks(1)\nZonedDateTime twoWeekAgoStart = todayStart.minusWeeks(2)\n\n// Format and manually append +00:00\nString to = todayStart.minusSeconds(1).format(formatter) + \"+00:00\"\nString from = weekAgoStart.format(formatter) + \"+00:00\"\nString lastFrom = twoWeekAgoStart.format(formatter) + \"+00:00\"\nString lastTo = weekAgoStart.minusSeconds(1).format(formatter) + \"+00:00\"\n\nreturn ['from': from, 'to': to, 'lastFrom': lastFrom, 'lastTo': lastTo]\n"
+				"captureStdOutput":false
 			},
 			"skip":false,
 			"subTitle":"Code by UnifyApps",
@@ -1560,7 +1614,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@3",
 			"id":"_sBcrn",
-			"index":19,
+			"index":20,
 			"inputs":{
 				"projections":[
 					{
@@ -1625,7 +1679,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@3",
 			"id":"_ADUIN",
-			"index":20,
+			"index":21,
 			"inputs":{
 				"projections":[
 					{
@@ -1690,7 +1744,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@3",
 			"id":"_VwV9q",
-			"index":21,
+			"index":22,
 			"inputs":{
 				"projections":[
 					{
@@ -1807,7 +1861,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@3",
 			"id":"_bWl6z",
-			"index":22,
+			"index":23,
 			"inputs":{
 				"projections":[
 					{
@@ -1924,7 +1978,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@3",
 			"id":"n_7ApTh",
-			"index":23,
+			"index":24,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -2000,7 +2054,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@4",
 			"id":"n_knqDF@4",
-			"index":24,
+			"index":25,
 			"inputs":{
 				"name":"DAU trend"
 			},
@@ -2020,7 +2074,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@4",
 			"id":"n_fsbnP",
-			"index":25,
+			"index":26,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -2082,7 +2136,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@4",
 			"id":"_4bJ2V",
-			"index":26,
+			"index":27,
 			"inputs":{
 				"projections":[
 					{
@@ -2170,7 +2224,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@4",
 			"id":"n_0LROC",
-			"index":27,
+			"index":28,
 			"inputs":{
 				"projections":[
 					{
@@ -2240,7 +2294,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@4",
 			"id":"n_ws6Lc",
-			"index":28,
+			"index":29,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -2482,7 +2536,6 @@
 				"ua:list_type":"OBJECT"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -2534,7 +2587,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@4",
 			"id":"n_womFq",
-			"index":29,
+			"index":30,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ _4bJ2V.outputs.objects }}",
@@ -2557,7 +2610,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_womFq@n_knqDF@_vXQLK-1@4@l",
 			"id":"n_AP7VQ",
-			"index":30,
+			"index":31,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -2608,7 +2661,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_womFq@n_knqDF@_vXQLK-1@4@l",
 			"id":"_M89KD",
-			"index":31,
+			"index":32,
 			"inputs":{
 				"projections":[
 					{
@@ -2663,7 +2716,7 @@
 		{
 			"context":{
 				"appName":"variable_by_unifyapps",
-				"resourceVersion":102,
+				"resourceVersion":464,
 				"resourceName":"variable_by_unifyapps_add_item_to_list",
 				"type":"APPLICATION"
 			},
@@ -2671,14 +2724,13 @@
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_womFq@n_knqDF@_vXQLK-1@4@l",
-			"id":"n_ZZMrM",
-			"index":32,
+			"id":"n_B1PJg",
+			"index":33,
 			"inputs":{
 				"itemToAdd":{
-					"userCount":"{{ _RitcW.outputs.objects[0].columns.mauCount }}",
 					"time":"{{ n_womFq.outputs.item.columns.time }}",
-					"dauCount":"{{ n_womFq.outputs.item.columns.dauCount }}",
-					"mauCount":"{{ _M89KD.outputs.objects[0].columns.mauCount }}"
+					"mauCount":"{{ _M89KD.outputs.objects[0].columns.mauCount }}",
+					"dauCount":"{{ n_womFq.outputs.item.columns.dauCount }}"
 				},
 				"insertLocation":"END",
 				"listName":"{{ n_ws6Lc.outputs.items[0] }}"
@@ -2700,7 +2752,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_womFq@n_knqDF@_vXQLK-1@4@l",
 			"id":"_RitcW",
-			"index":33,
+			"index":34,
 			"inputs":{
 				"projections":[
 					{
@@ -2768,10 +2820,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@4",
 			"id":"n_3iQkh",
-			"index":34,
+			"index":35,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"mauAndDau":{
 							"type":"array",
@@ -2796,12 +2850,12 @@
 							},
 							"title":"Mau And Dau"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"mauAndDau":{
 							"type":"array",
@@ -2812,12 +2866,11 @@
 							},
 							"title":"Mau And Dau"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"return [\"mauAndDau\":binding.hasVariable(\"mauAndDau\")?mauAndDau:[]]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"mauAndDau":{
 						"source":"{{ n_ws6Lc.outputs.items }}",
@@ -2895,7 +2948,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@5",
 			"id":"n_knqDF@5",
-			"index":35,
+			"index":36,
 			"inputs":{
 				"name":"User Cost Analysis"
 			},
@@ -2915,7 +2968,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@5",
 			"id":"_2aKRT",
-			"index":36,
+			"index":37,
 			"inputs":{
 				"projections":[
 					{
@@ -2997,7 +3050,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@5",
 			"id":"_k2kNM",
-			"index":37,
+			"index":38,
 			"inputs":{
 				"projections":[
 					{
@@ -3079,7 +3132,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@5",
 			"id":"n_XSX6a",
-			"index":38,
+			"index":39,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -3305,7 +3358,6 @@
 				"ua:list_type":"STRING"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -3338,7 +3390,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@5",
 			"id":"n_JRXzG",
-			"index":39,
+			"index":40,
 			"inputs":{
 				"projections":[
 					{
@@ -3396,20 +3448,24 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@5",
 			"id":"_tjY4N",
-			"index":40,
+			"index":41,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
 					"properties":{
 						"sqlQuery":{
 							"type":"string",
 							"title":"sqlQuery"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"userIds"
+					],
 					"properties":{
 						"limit":{
 							"type":"integer",
@@ -3434,18 +3490,15 @@
 							},
 							"title":"User Ids"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"userIds"
-					]
+					}
 				},
+				"code":"\nimport java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\n\ndef toSqlInClauseFormat(List<String> items) {\n    if (!items) return '()'\n    def quoted = items.collect { '\"' + it + '\"' }\n    return '(' + quoted.join(', ') + ')'\n}\n\ndef getEpochMillis(String timestamp) {\n    def zdt = ZonedDateTime.parse(timestamp, DateTimeFormatter.ISO_DATE_TIME)\n    return zdt.toInstant().toEpochMilli()\n}\n\ndef generateQuery(startTime, endTime, userIds) {\n    def userIdClause = toSqlInClauseFormat(userIds)\n\n    def query = new StringBuilder()\n    query.append('SELECT \\n')\n    query.append('    _pr_userId AS UserID,\\n')\n    query.append('    SUM(COALESCE(CAST(_pr_cost AS FLOAT), 0.0)) AS TotalCost,\\n')\n    query.append('    (\\n')\n    query.append('        SUM(COALESCE(CAST(_pr_inputToken AS INT), 0)) +\\n')\n    query.append('        SUM(COALESCE(CAST(_pr_outputToken AS INT), 0))\\n')\n    query.append('    ) AS TotalTokens\\n')\n    query.append('FROM ENTITY_e_traces wne\\n')\n    query.append('WHERE\\n')\n    query.append('    createdTime BETWEEN ').append(startTime).append(' AND ').append(endTime).append('\\n')\n    query.append('    AND (_pr_fromAutomationId = \\'66ac70650f725f5b425d12d8\\' OR _pr_fromAutomationId= \\'6851442f9e30586f552a6d73\\')\\n')\n    query.append('    AND  _pr_userId IN ').append(userIdClause).append('\\n')\n    query.append('GROUP BY _pr_userId\\n')\n    query.append('ORDER BY TotalCost DESC\\n')\n    query.append('LIMIT 20 OFFSET 0;')\n\n    return query.toString()\n}\n\ndef startTime = getEpochMillis(timestampStart)\ndef endTime = getEpochMillis(timestampEnd)\n\ndef sqlQuery = generateQuery(startTime, endTime, userIds)\nreturn [sqlQuery: sqlQuery]\n",
 				"compile_static":false,
-				"code":"\nimport java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\n\ndef toSqlInClauseFormat(List<String> items) {\n    if (!items) return '()'\n    def quoted = items.collect { '\"' + it + '\"' }\n    return '(' + quoted.join(', ') + ')'\n}\n\ndef getEpochMillis(String timestamp) {\n    def zdt = ZonedDateTime.parse(timestamp, DateTimeFormatter.ISO_DATE_TIME)\n    return zdt.toInstant().toEpochMilli()\n}\n\ndef generateQuery(startTime, endTime, userIds) {\n    def userIdClause = toSqlInClauseFormat(userIds)\n\n    def query = new StringBuilder()\n    query.append('SELECT \\n')\n    query.append('    _pr_userId AS UserID,\\n')\n    query.append('    SUM(COALESCE(CAST(_pr_cost AS FLOAT), 0.0)) AS TotalCost,\\n')\n    query.append('    (\\n')\n    query.append('        SUM(COALESCE(CAST(_pr_inputToken AS INT), 0)) +\\n')\n    query.append('        SUM(COALESCE(CAST(_pr_outputToken AS INT), 0))\\n')\n    query.append('    ) AS TotalTokens\\n')\n    query.append('FROM ENTITY_e_traces wne\\n')\n    query.append('WHERE\\n')\n    query.append('    createdTime BETWEEN ').append(startTime).append(' AND ').append(endTime).append('\\n')\n    query.append('    AND _pr_fromAutomationId = \\'66ac70650f725f5b425d12d8\\'\\n')\n    query.append('    AND  _pr_userId IN ').append(userIdClause).append('\\n')\n    query.append('GROUP BY _pr_userId\\n')\n    query.append('ORDER BY TotalCost DESC\\n')\n    query.append('LIMIT 20 OFFSET 0;')\n\n    return query.toString()\n}\n\ndef startTime = getEpochMillis(timestampStart)\ndef endTime = getEpochMillis(timestampEnd)\n\ndef sqlQuery = generateQuery(startTime, endTime, userIds)\nreturn [sqlQuery: sqlQuery]\n",
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
-					"offset":"0",
 					"limit":1000,
+					"offset":"0",
 					"timestampStart":"{{ n_iXkFJ.outputs.startDate }}",
 					"timestampEnd":"{{ n_iXkFJ.outputs.endDate }}",
 					"userIds":{
@@ -3472,7 +3525,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@5",
 			"id":"_seAjO",
-			"index":41,
+			"index":42,
 			"inputs":{
 				"outputSchema":{
 					"type":"object",
@@ -3534,7 +3587,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@5",
 			"id":"n_nx4j5",
-			"index":42,
+			"index":43,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -3752,7 +3805,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@6",
 			"id":"n_knqDF@6",
-			"index":43,
+			"index":44,
 			"inputs":{
 				"name":"Usage Trend"
 			},
@@ -3762,115 +3815,61 @@
 		},
 		{
 			"context":{
-				"appName":"code_by_unifyapps",
-				"resourceVersion":102,
-				"resourceName":"code_by_unifyapps_groovy",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_knqDF@_vXQLK-1@6",
-			"id":"_YmSVh",
-			"index":44,
-			"inputs":{
-				"output":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"sqlQuery"
-					],
-					"properties":{
-						"sqlQuery":{
-							"type":"string",
-							"title":"Sql Query"
-						}
-					}
-				},
-				"input":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"startDate",
-						"endDate"
-					],
-					"properties":{
-						"startDate":{
-							"type":"string",
-							"title":"Start Date"
-						},
-						"endDate":{
-							"type":"string",
-							"title":"End Date"
-						}
-					}
-				},
-				"code":"import java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\n\ndef formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME\n\ndef startEpoch = ZonedDateTime.parse(startDate, formatter).toInstant().toEpochMilli()\ndef endEpoch   = ZonedDateTime.parse(endDate, formatter).toInstant().toEpochMilli()\n\ndef generateSQL(startEpoch, endEpoch) {\n    def regexPattern = \"'^[1-9][0-9]*\\$'\"\n    return \"\"\"\n        SELECT DATE_FORMAT(FROM_UNIXTIME(CAST(createdTime / 1000 AS BIGINT)), '%Y-%m-%d %H:00:00') AS hour_bucket,\n               COUNT(DISTINCT _pr_userId) AS active_users\n        FROM ENTITY_e_traces\n        WHERE _pr_fromAutomationId = '66966960e8797a59f4a46292'\n          AND createdTime >= ${startEpoch}\n          AND createdTime <= ${endEpoch}\n          AND regexp(CAST(_pr_userId AS STRING), ${regexPattern})\n        GROUP BY hour_bucket\n        ORDER BY hour_bucket ASC\n    \"\"\".toString()\n}\n\nreturn [\n    sqlQuery: generateSQL(startEpoch, endEpoch)\n]",
-				"compile_static":false,
-				"parameters":{
-					"startDate":"{{ n_iXkFJ.outputs.startDate }}",
-					"endDate":"{{ n_iXkFJ.outputs.endDate }}"
-				}
-			},
-			"skip":false,
-			"subTitle":"Code by UnifyApps",
-			"title":"Execute Groovy code",
-			"type":"ACTION"
-		},
-		{
-			"context":{
 				"appName":"analytics_by_unifyapps",
 				"resourceVersion":104,
-				"resourceName":"analytics_by_unifyapps_execute_query",
+				"resourceName":"analytics_by_unifyapps_query_reports",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@6",
-			"id":"n_71NyR",
+			"id":"n_qWThp",
 			"index":45,
 			"inputs":{
-				"outputSchema":{
-					"type":"object",
-					"properties":{
-						"columns":{
-							"type":"object",
-							"properties":{
-								"hour_bucket":{
-									"type":"string",
-									"title":"Hour Bucket"
-								},
-								"active_users":{
-									"type":"integer",
-									"title":"Active Users"
-								}
-							},
-							"additionalProperties":false,
-							"title":"Columns",
-							"required":[
-								"hour_bucket",
-								"active_users"
-							]
-						}
+				"projections":[
+					{
+						"name":"ENTITY_e_traces=::=CREATED_TIME",
+						"aggregationFunction":"BUCKET",
+						"alias":"bucket",
+						"includePercentageChange":false,
+						"bucketLength":3600000,
+						"numberOfBuckets":24,
+						"offset":19800000
 					},
-					"additionalProperties":false,
-					"required":[
-						"columns"
-					]
+					{
+						"name":"ENTITY_e_traces=::=userId",
+						"aggregationFunction":"DISTINCT_COUNT",
+						"alias":"user_count",
+						"includePercentageChange":false
+					}
+				],
+				"entityType":"ENTITY_e_traces",
+				"page":{
+					"offset":0,
+					"limit":30
 				},
-				"query":"{{ _YmSVh.outputs.result.sqlQuery }}",
-				"group":"PLATFORM"
+				"sorts":[
+					{
+						"field":"bucket",
+						"order":"ASC"
+					}
+				],
+				"timeFilter":{
+					"since":"{{ n_iXkFJ.outputs.startDate }}",
+					"until":"{{ n_iXkFJ.outputs.endDate }}"
+				},
+				"group":"ENTITY_REPORTING"
 			},
 			"skip":false,
 			"subTitle":"Analytics by UnifyApps",
-			"title":"Execute Analytics SQL Query",
+			"title":"Analytics Query",
 			"type":"ACTION"
 		},
 		{
 			"context":{
 				"appName":"code_by_unifyapps",
-				"resourceVersion":103,
+				"resourceVersion":0,
 				"resourceName":"code_by_unifyapps_groovy",
 				"type":"APPLICATION"
 			},
@@ -3878,94 +3877,79 @@
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_knqDF@_vXQLK-1@6",
-			"id":"n_i5FEn",
+			"id":"n_9psQR",
 			"index":46,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
 					"properties":{
-						"finalUserTrend":{
+						"result":{
 							"type":"array",
 							"items":{
 								"type":"object",
 								"properties":{
-									"active_users":{
-										"type":"integer",
-										"title":"Active Users"
-									},
-									"hour_bucket":{
-										"type":"string",
-										"title":"Hour Bucket"
+									"columns":{
+										"type":"object",
+										"properties":{
+											"time":{
+												"type":"string",
+												"title":"time"
+											},
+											"count":{
+												"type":"integer",
+												"title":"count"
+											}
+										},
+										"title":"columns",
+										"additionalProperties":false
 									}
 								},
-								"additionalProperties":false,
-								"required":[
-									"active_users",
-									"hour_bucket"
-								]
+								"additionalProperties":false
 							},
-							"title":"Final User Trend"
+							"title":"result"
 						},
-						"peakUser":{
-							"type":"integer",
-							"title":"Peak User"
-						},
-						"peakRange":{
+						"timestamp":{
 							"type":"string",
-							"title":"Peak Range"
+							"title":"timestamp"
+						},
+						"usercount":{
+							"type":"integer",
+							"title":"usercount"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"finalUserTrend"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"objects"
+					],
 					"properties":{
-						"userTrendData":{
+						"objects":{
 							"type":"array",
 							"items":{
 								"type":"object",
-								"properties":{
-									"hour_bucket":{
-										"type":"string",
-										"title":"Hour Bucket"
-									},
-									"active_users":{
-										"type":"integer",
-										"title":"Active Users"
-									}
-								},
-								"additionalProperties":false,
-								"required":[
-									"hour_bucket",
-									"active_users"
-								]
+								"properties":{},
+								"additionalProperties":false
 							},
-							"title":"User Trend Data"
+							"title":"Objects"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"userTrendData"
-					]
+					}
 				},
+				"code":"def convertedData = objects.collect { item ->\n    def bucket = item.columns.bucket\n    def count = item.columns.user_count\n    def hour = bucket * 2\n    def timeLabel = String.format(\"%d:00\", hour)\n    \n    return [\n        \"columns\": [\n            \"time\": timeLabel,\n            \"count\": count\n        ]\n    ]\n}\n\ndef maxUserObj = convertedData.max { it.columns.count }\n\n\ndef maxTime = maxUserObj.columns.time\ndef startHour = Integer.parseInt(maxTime.split(\":\")[0])\ndef endHour = startHour + 2\ndef timeRange = String.format(\"%d:00 - %d:00\", startHour, endHour)\n\nreturn [\n    \"result\": convertedData, \n    \"timestamp\": timeRange, \n    \"usercount\": maxUserObj.columns.count\n]",
 				"compile_static":false,
-				"code":"import java.time.LocalDateTime\nimport java.time.format.DateTimeFormatter\n\ndef userTrendData = binding.hasVariable(\"userTrendData\") ? binding.userTrendData : []\ndef formatter = DateTimeFormatter.ofPattern(\"yyyy-MM-dd HH:mm:ss\")\n\n// Group by hour of day (ignore day)\ndef grouped = userTrendData.groupBy { row ->\n    def ldt = LocalDateTime.parse(row.hour_bucket, formatter)\n    return ldt.getHour()\n}\n\n// Build final structure: 0–23 hours\ndef finalUserTrend = (0..23).collect { hour ->\n    def rows = grouped[hour] ?: []\n    def avg = rows ? (rows*.active_users.sum() / rows.size()) : 0\n    [\n        hour_bucket: String.format(\"%02d:00\", hour),\n        active_users: (int) avg  // truncate to integer\n    ]\n}\n\ndef peakBucket = finalUserTrend.max { it.active_users }\ndef peakHour = Integer.parseInt(peakBucket.hour_bucket.split(\":\")[0])\ndef peakRange = String.format(\"%02d-%02d\", peakHour, (peakHour + 1) % 24)\n\nreturn [\"finalUserTrend\": finalUserTrend,\"peakRange\":peakRange,\"peakUser\":peakBucket.active_users]",
+				"captureStdOutput":false,
 				"parameters":{
-					"userTrendData":{
-						"source":"{{ n_71NyR.outputs.objects }}",
+					"objects":{
+						"source":"{{ n_qWThp.outputs.objects }}",
 						"ua:type":"mappedArray",
-						"items":{
-							"hour_bucket":"{{ n_71NyR.outputs.objects[0].columns.hour_bucket }}",
-							"active_users":"{{ n_71NyR.outputs.objects[0].columns.active_users }}"
-						}
+						"items":"{{ n_qWThp.outputs.objects[0] }}"
 					}
 				}
 			},
 			"skip":false,
-			"subTitle":"Avg of all days for each Hour",
+			"subTitle":"Code by UnifyApps",
 			"title":"Execute Groovy code",
 			"type":"ACTION"
 		},
@@ -4104,10 +4088,13 @@
 			"inputs":{
 				"result":{
 					"meteringResult":{
+						"totalUsers":"{{ n_EyGtL.outputs.objects[0].columns.totalUser }}",
 						"weeklyActiveUsers":"{{ n_7ApTh.outputs.result.weeklyActiveUsers }}",
-						"userRetention":"{{ n_7ApTh.outputs.result.userRetention }}",
 						"averageSessionDuration":"{{ _J2puU.outputs.result.result }}",
-						"totalUsers":"{{ _62oxO.outputs.total }}",
+						"userRetention":"{{ n_7ApTh.outputs.result.userRetention }}",
+						"totalUsersCount":"{{ _k2kNM.outputs.total }}",
+						"peakRange":"{{ n_9psQR.outputs.result.timestamp }}",
+						"peak_users":"{{ n_9psQR.outputs.result.usercount }}",
 						"userCostAnalysis":{
 							"ua:type":"mappedArray",
 							"items":{
@@ -4134,10 +4121,10 @@
 						"usageTrend":{
 							"ua:type":"mappedArray",
 							"items":{
-								"timestamp":"{{ n_i5FEn.outputs.result.finalUserTrend[0].hour_bucket }}",
-								"avgUserCount":"{{ n_i5FEn.outputs.result.finalUserTrend[0].active_users }}"
+								"timestamp":"{{ n_9psQR.outputs.result.result[0].columns.time }}",
+								"avgUserCount":"{{ n_9psQR.outputs.result.result[0].columns.count }}"
 							},
-							"source":"{{ n_i5FEn.outputs.result.finalUserTrend }}"
+							"source":"{{ n_9psQR.outputs.result.result }}"
 						},
 						"sessionPerUserDistribution":{
 							"ua:type":"mappedArray",
@@ -4154,10 +4141,7 @@
 								"topicName":"{{ _LXfNh.outputs.objects[0].columns.topicName }}",
 								"count":"{{ _LXfNh.outputs.objects[0].columns.topicCount }}"
 							}
-						},
-						"totalUsersCount":"{{ _k2kNM.outputs.total }}",
-						"peakRange":"{{ n_i5FEn.outputs.result.peakRange }}",
-						"peak_users":"{{ n_i5FEn.outputs.result.peakUser }}"
+						}
 					}
 				}
 			},
@@ -4184,5 +4168,5 @@
 	"tags":[
 		
 	],
-	"version":67
+	"version":82
 }
