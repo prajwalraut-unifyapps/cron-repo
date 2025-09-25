@@ -1,16 +1,16 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1741756716682,
+	"createdTime":1747000719388,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1755437816902,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68a1daf89d7d8d3f504625e7",
+		"deployedAt":1758796419628,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d51a83d7e8855348a8796c",
 		"status":"DEPLOYED",
-		"version":3,
-		"workflowVersion":8
+		"version":73,
+		"workflowVersion":77
 	},
 	"edges":[
 		{
@@ -109,11 +109,73 @@
 			"fromNodeId":"bLByu",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"JDjJY",
+			"toNodeId":"_DiOSl",
 			"type":"next"
 		},
 		{
+			"fromNodeId":"_DiOSl",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_ZwPKS",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"_ZwPKS",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_VOjtS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_DiOSl",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_VOjtS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_VOjtS",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_s2zTx",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"_s2zTx",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_kf9OP",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_VOjtS",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_kf9OP",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_kf9OP",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"JDjJY",
+			"type":"if"
+		},
+		{
 			"fromNodeId":"JDjJY",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"ycolC",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_kf9OP",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"ycolC",
@@ -237,7 +299,7 @@
 	"id":"67ce5eefdd8cc819cebcc949",
 	"lastModifiedBy":-1,
 	"lcName":"add default tools",
-	"modifiedTime":1758530949344,
+	"modifiedTime":1758820914830,
 	"name":"Add Default Tools",
 	"nodes":[
 		{
@@ -656,7 +718,6 @@
 				"ua:list_type":"OBJECT"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -718,6 +779,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"defaultTools":{
 							"type":"array",
@@ -726,12 +789,11 @@
 							},
 							"title":"Default Tools"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"return [\"defaultTools\":[\"utility_by_unifyapps_generate_public_url\"]]",
 				"compile_static":false,
-				"code":"return [\"defaultTools\":[\"utility_by_unifyapps_generate_public_url\"]]"
+				"captureStdOutput":false
 			},
 			"skip":false,
 			"subTitle":"default tools",
@@ -935,6 +997,10 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"analyzeFileToolSchema"
+					],
 					"properties":{
 						"clarifyToolInputSchema":{
 							"type":"object",
@@ -965,26 +1031,29 @@
 							"properties":{},
 							"additionalProperties":false,
 							"title":"Analyze File Tool Schema"
+						},
+						"generateAndPublishPDFFile":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Generate And Publish PDF File"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"analyzeFileToolSchema"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"preferredMarkupLanguage":{
 							"type":"string",
 							"title":"Preferred Markup Language"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"def clarifyQueryInputDescription = \"A string containing the message that requests clarification from the user regarding their query.\"\nif(binding.hasVariable('preferredMarkupLanguage')){\n    clarifyQueryInputDescription += (\" This query can be only in \" + preferredMarkupLanguage + \" Format \")\n}\nreturn [\n        \"clarifyToolInputSchema\": [\n                'type': 'object',\n                'properties': [\n                        'query': [\n                                'type': 'string',\n                                'description':  clarifyQueryInputDescription\n                        ]\n                ],\n                'required': [\n                        'query'\n                ]\n        ],\n        \"answerWithRefToolInputSchema\": [\n                'type': 'object',\n                'properties': [\n                        'chunkIds': [\n                                'type': 'array',\n                                'items': [\n                                        'type': 'integer',\n                                        'description': 'An integer representing a chunk ID from which the final answer is generated.'\n                                ],\n                                'description': 'An array of reference chunk IDs from which answer is generated (Only If you have used `ReferFromKnowledge` tool before)'\n                        ]\n                ],\n                'required': [\n                        'chunkIds'\n                ]\n        ],\n\n        \"generateChartsToolInputSchema\": [\n                'type': 'object',\n                'properties': [\n                        'chartId': [\n                                'type': 'string',\n                                \"description\":\"Id of the Chart that needs to be published , these charts would be from the output of referFromKnowledge tool\"\n                        ],\n                        'chartName': [\n                                'type': 'string',\n                                \"description\":\"Name of the Chart that needs to be published, if not specified choose a suitable name\"\n                        ],\n                        'chartType': [\n                                'type': 'array',\n                                'items': [\n                                        'type': 'string',\n                                        \"description\": \"Type of the Chart that needs to be published , supported formats are TABLE, PIE, BAR, COLUMN, LINE, DUAL_AXES. A TABLE is used when we need to show data as Tables, Stat Card or Key Value without any charts/ trends. A PIE chart can be used to represent data as proportions or percentages of parts to a whole. A BAR chart can be used to compare multiple data sets across different categories, allowing for direct comparison of groups within the same context, additionally there is a groupBy field based on which multiple bars are generated. A COLUMN chart (vertical columns) can be used to visually compare and contrast multiple sets of data across different categories, use groupBy field for an effective side-by-side comparison. A LINE chart displays information as a series of data points joint by straight line segment, primarily to show trends. There is a groupBy field based on which multiple lines are generated. A DUAL_AXES chart can be used whenever two different metrics with different types of values and distinct value ranges or different units and scales, need to be plotted on the same chart, at least 3 columns with one of them being an independent variable is required. Ensure that you use DUAL_AXES when 2 different metrics with different scales need to be plotted against an independent variable (eg. dates). If user requested for different chart type not mentioned in the supported format, politely deny the request.\"\n                                ]\n                        ]\n                        // ,\n                        // \"columnData\": [\n                        //         \"type\": \"array\",\n                        //         \"items\": [\n                        //                 \"type\":\"string\",\n                        //                 \"description\": \"name of the column in the table\"\n                        //         ]\n                        // ],\n                        // \"rowData\": [\n                        //         \"type\": \"array\",\n                        //         \"items\": [\n                        //                 \"type\":\"object\",\n                        //                 \"description\": \"This contains the key value pair for each column name defined in the columnData\"\n                        //         ]\n                        // ]\n                ],\n        ],\n\n        \"ingestKnowledgeToolSchema\": [\n                'type': 'object',\n                'properties': [\n                        'fileDetails': [\n                                'type': 'object',\n                                'description': 'A file details custom object which will have all the required details to access the file',\n                                'properties': [\n                                        'sourceType':['type':'string',\"description\":\"value of this field can be either URL OR CLOUD_STORAGE\"],\n                                        'source': ['type':'string', \"description\":\"if sourceType is URL , then this will be the url of the file or if sourceType is CLOUD_STORAGE then this will be the key in s3\"],\n                                        'name':['type':'string'],\n                                        'fileType':['type':'string', 'description':'mimeType of the file that needs to be ingested'],\n                                        'fileSize':['type':'number']]\n                        ]\n                ],\n                'required': [\n                        'fileDetails'\n                ]\n        ],\n        \"analyzeFileToolSchema\": [\n                'type': 'object',\n                'properties': [\n                        'fileDetails': [\n                                'type': 'array',\n                                'description': 'An array of file detail objects, each containing the required metadata to analyze the file.',\n                                'items': [\n                                        'type': 'object',\n                                        'properties': [\n                                                'sourceType':['type':'string',\"description\":\"value of this field can be either URL OR CLOUD_STORAGE\"],\n                                                'source': ['type':'string', \"description\":\"if sourceType is URL , then this will be the url of the file or if sourceType is CLOUD_STORAGE then this will be the key in s3\"],\n                                                'name':['type':'string'],\n                                                'fileType':['type':'string', 'description':'mimeType of the file that needs to be analyzed'],\n                                                'fileSize':['type':'number']\n                                        ]\n                                ]\n                        ]\n                ],\n                'required': [\n                        'fileDetails'\n                ]\n        ],\n        \"generateAndPublishPDFFile\": [\n                \"type\": \"object\",\n                \"properties\": [\n                        \"htmlContent\": [\n                                \"type\": \"string\",\n                                \"description\": \"Content of the PDF File in HTML format you need to generate and publish to user.\"\n                        ]\n                ]\n        ]\n]",
 				"compile_static":false,
-				"code":"def clarifyQueryInputDescription = \"A string containing the message that requests clarification from the user regarding their query.\"\nif(binding.hasVariable('preferredMarkupLanguage')){\n    clarifyQueryInputDescription += (\" This query can be only in \" + preferredMarkupLanguage + \" Format \")\n}\nreturn [\n        \"clarifyToolInputSchema\": [\n                'type': 'object',\n                'properties': [\n                        'query': [\n                                'type': 'string',\n                                'description':  clarifyQueryInputDescription\n                        ]\n                ],\n                'required': [\n                        'query'\n                ]\n        ],\n        \"answerWithRefToolInputSchema\": [\n                'type': 'object',\n                'properties': [\n                        'chunkIds': [\n                                'type': 'array',\n                                'items': [\n                                        'type': 'integer',\n                                        'description': 'An integer representing a chunk ID from which the final answer is generated.'\n                                ],\n                                'description': 'An array of reference chunk IDs from which answer is generated (Only If you have used `ReferFromKnowledge` tool before)'\n                        ]\n                ],\n                'required': [\n                        'chunkIds'\n                ]\n        ],\n\n        \"generateChartsToolInputSchema\": [\n                'type': 'object',\n                'properties': [\n                        'chartId': [\n                                'type': 'string',\n                                \"description\":\"Id of the Chart that needs to be published , these charts would be from the output of referFromKnowledge tool\"\n                        ],\n                        'chartName': [\n                                'type': 'string',\n                                \"description\":\"Name of the Chart that needs to be published, if not specified choose a suitable name\"\n                        ],\n                        'chartType': [\n                                'type': 'array',\n                                'items': [\n                                        'type': 'string',\n                                        \"description\": \"Type of the Chart that needs to be published , supported formats are TABLE, PIE, BAR, COLUMN, LINE, DUAL_AXES. A TABLE is used when we need to show data as Tables, Stat Card or Key Value without any charts/ trends. A PIE chart can be used to represent data as proportions or percentages of parts to a whole. A BAR chart can be used to compare multiple data sets across different categories, allowing for direct comparison of groups within the same context, additionally there is a groupBy field based on which multiple bars are generated. A COLUMN chart (vertical columns) can be used to visually compare and contrast multiple sets of data across different categories, use groupBy field for an effective side-by-side comparison. A LINE chart displays information as a series of data points joint by straight line segment, primarily to show trends. There is a groupBy field based on which multiple lines are generated. A DUAL_AXES chart can be used whenever two different metrics with different types of values and distinct value ranges or different units and scales, need to be plotted on the same chart, at least 3 columns with one of them being an independent variable is required. Ensure that you use DUAL_AXES when 2 different metrics with different scales need to be plotted against an independent variable (eg. dates). If user requested for different chart type not mentioned in the supported format, politely deny the request.\"\n                                ]\n                        ]\n                        // ,\n                        // \"columnData\": [\n                        //         \"type\": \"array\",\n                        //         \"items\": [\n                        //                 \"type\":\"string\",\n                        //                 \"description\": \"name of the column in the table\"\n                        //         ]\n                        // ],\n                        // \"rowData\": [\n                        //         \"type\": \"array\",\n                        //         \"items\": [\n                        //                 \"type\":\"object\",\n                        //                 \"description\": \"This contains the key value pair for each column name defined in the columnData\"\n                        //         ]\n                        // ]\n                ],\n        ],\n\n        \"ingestKnowledgeToolSchema\": [\n                'type': 'object',\n                'properties': [\n                        'fileDetails': [\n                                'type': 'object',\n                                'description': 'A file details custom object which will have all the required details to access the file',\n                                'properties': [\n                                        'sourceType':['type':'string',\"description\":\"value of this field can be either URL OR CLOUD_STORAGE\"],\n                                        'source': ['type':'string', \"description\":\"if sourceType is URL , then this will be the url of the file or if sourceType is CLOUD_STORAGE then this will be the key in s3\"],\n                                        'name':['type':'string'],\n                                        'fileType':['type':'string', 'description':'mimeType of the file that needs to be ingested'],\n                                        'fileSize':['type':'number']]\n                        ]\n                ],\n                'required': [\n                        'fileDetails'\n                ]\n        ],\n        \"analyzeFileToolSchema\": [\n                'type': 'object',\n                'properties': [\n                        'fileDetails': [\n                                'type': 'array',\n                                'description': 'An array of file detail objects, each containing the required metadata to analyze the file.',\n                                'items': [\n                                        'type': 'object',\n                                        'properties': [\n                                                'sourceType':['type':'string',\"description\":\"value of this field can be either URL OR CLOUD_STORAGE\"],\n                                                'source': ['type':'string', \"description\":\"if sourceType is URL , then this will be the url of the file or if sourceType is CLOUD_STORAGE then this will be the key in s3\"],\n                                                'name':['type':'string'],\n                                                'fileType':['type':'string', 'description':'mimeType of the file that needs to be analyzed'],\n                                                'fileSize':['type':'number']\n                                        ]\n                                ]\n                        ]\n                ],\n                'required': [\n                        'fileDetails'\n                ]\n        ]\n]",
+				"captureStdOutput":false,
 				"parameters":{
 					"preferredMarkupLanguage":"=IF(ISBLANK({{ CVd2b.outputs.properties.triggerDetails.preferredMarkupLanguage }}), \"MARKDOWN\", {{ CVd2b.outputs.properties.triggerDetails.preferredMarkupLanguage }})"
 				}
@@ -1032,6 +1101,42 @@
 			"type":"ACTION"
 		},
 		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":439,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"m6DdW-1",
+			"id":"_DiOSl",
+			"index":14,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_WI3dW.outputs.properties.defaultTools.createPPTX }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					},
+					{
+						"property":"{{ n_WI3dW.outputs.properties.defaultTools.createPPTX }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"true"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Create PPTX?",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
 			"additional":{
 				"visibleOptionalFields":[
 					"root.itemToAdd.toolInputs.items.possibleValues.items",
@@ -1050,14 +1155,160 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"m6DdW-1",
-			"id":"JDjJY",
-			"index":14,
+			"groupId":"_DiOSl@m6DdW-1@y",
+			"id":"_ZwPKS",
+			"index":15,
 			"inputs":{
 				"itemToAdd":{
-					"name":"AnalyseFile",
+					"id":"generate_and_publish_pptx_file",
+					"name":"generate_and_publish_pptx_file",
+					"description":"Call this tool if you user explicitly mentioned to generate / create a PPTX. If this tool return success, It means this tool has also published the file to the user.",
+					"toolInputSchema":"{{ GpwdU.outputs.result.generateAndPublishPDFFile }}"
+				},
+				"insertLocation":"END",
+				"listName":"{{ iNEXV.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Add Create PPTX File as a tool",
+			"title":"Add item to list",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":439,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"m6DdW-1",
+			"id":"_VOjtS",
+			"index":16,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_WI3dW.outputs.properties.defaultTools.createPDF }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					},
+					{
+						"property":"{{ n_WI3dW.outputs.properties.defaultTools.createPDF }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"true"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Create PDF?",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.itemToAdd.toolInputs.items.possibleValues.items",
+					"root.itemToAdd.toolInputs.items.fieldName",
+					"root.itemToAdd.toolInputs.items.fieldDescription",
+					"root.itemToAdd.toolInputs.items.fieldType",
+					"root.itemToAdd.toolInputs.items.mandatory"
+				]
+			},
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":11,
+				"resourceName":"variable_by_unifyapps_add_item_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_VOjtS@m6DdW-1@y",
+			"id":"_s2zTx",
+			"index":17,
+			"inputs":{
+				"itemToAdd":{
+					"id":"generate_and_publish_pdf_file",
+					"name":"generate_and_publish_pdf_file",
+					"description":"Call this tool if you user explicitly mentioned to generate / create a PDF. If this tool return success, It means this tool has also published the file to the user.",
+					"toolInputSchema":"{{ GpwdU.outputs.result.generateAndPublishPDFFile }}"
+				},
+				"insertLocation":"END",
+				"listName":"{{ iNEXV.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Add Create PDF File as a tool",
+			"title":"Add item to list",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":439,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"m6DdW-1",
+			"id":"n_kf9OP",
+			"index":18,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_WI3dW.outputs.properties.defaultTools.analyseFile }}",
+						"filter":{
+							"operator":"MISSING"
+						}
+					},
+					{
+						"property":"{{ n_WI3dW.outputs.properties.defaultTools.analyseFile }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"true"
+						}
+					}
+				],
+				"operator":"OR"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.itemToAdd.toolInputs.items.possibleValues.items",
+					"root.itemToAdd.toolInputs.items.fieldName",
+					"root.itemToAdd.toolInputs.items.fieldDescription",
+					"root.itemToAdd.toolInputs.items.fieldType",
+					"root.itemToAdd.toolInputs.items.mandatory"
+				]
+			},
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":11,
+				"resourceName":"variable_by_unifyapps_add_item_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_kf9OP@m6DdW-1@y",
+			"id":"JDjJY",
+			"index":19,
+			"inputs":{
+				"itemToAdd":{
 					"id":"AnalyseFile",
-					"description":"USE THIS TOOL ONLY FOR ANALYSING NEW NON-IMAGE FILES.\nNEVER use this tool for image files such as PNG, JPG, or any other media - they are STRICTLY NOT SUPPORTED. \nUse \"IngestKnowledge\" tool for such files. \nAlways prefer to use this over Ingest Knowledge, and use Ingest Knowledge only as a fallback if this fails.",
+					"name":"AnalyseFile",
+					"description":"File Analysis Tool - Analyzes uploaded files and extracts their content, metadata, and insights.\nSUPPORTED FILE TYPES:\nDocuments: TXT, RTF, MD (always use tool)\nDocuments: DOCX, PDF (only use tool if file size > 500KB)\nSpreadsheets: XLSX, CSV, XLS, ODS\nPresentations: PPTX, PPT, ODP\nAudio: MP3, WAV, FLAC, AAC\nUSAGE REQUIREMENTS:\nOnly use when complete file metadata is available (name, type, source, sourceType, size)\nFor DOCX and PDF files: Only use tool if file size > 500KB, otherwise analyze directly\nDO NOT guess or hallucinate missing file details\nPrefer this tool over IngestKnowledge for supported file types (when size requirements are met)\nDO NOT USE FOR:\nImage files (PNG, JPG, JPEG, GIF, SVG, etc.) - answer directly without tools\nVideo files - use IngestKnowledge instead\nFiles with incomplete metadata\nDOCX and PDF files ≤ 500KB - analyze directly without tools\nFALLBACK STRATEGY:\nIf this tool fails → use IngestKnowledge\nIf unsupported file type → use IngestKnowledge\nIf image file → no tool needed, analyze directly\nIf DOCX/PDF ≤ 500KB → analyze directly without tools\nEXAMPLE USAGE:\nUser uploads 'report.pdf' (800KB) → Use AnalyseFile\nUser uploads 'document.docx' (300KB) → Analyze directly, no tool\nUser uploads 'data.txt' (any size) → Use AnalyseFile\nUser uploads 'presentation.pptx' (any size) → Use AnalyseFile\nUser uploads 'image.png' → Answer directly, no tool\nUser uploads 'video.mp4' → Use IngestKnowledge\nUser uploads 'presentation.pptx' with complete metadata → Use AnalyseFile \nUser uploads 'audio.wav' with complete metadata → Use AnalyseFile \nUser uploads 'data.xlsx' with complete metadata → Use AnalyseFile",
 					"toolInputSchema":"{{ GpwdU.outputs.result.analyzeFileToolSchema }}"
 				},
 				"insertLocation":"END",
@@ -1080,7 +1331,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"m6DdW-1",
 			"id":"ycolC",
-			"index":15,
+			"index":20,
 			"inputs":{
 				"filters":[
 					{
@@ -1126,7 +1377,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ycolC@m6DdW-1@y",
 			"id":"fGbtb",
-			"index":16,
+			"index":21,
 			"inputs":{
 				"itemToAdd":{
 					"toolInputs":[],
@@ -1155,7 +1406,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"m6DdW-1",
 			"id":"8TlBa",
-			"index":17,
+			"index":22,
 			"inputs":{
 				"variableSchema":{
 					"type":"object",
@@ -1206,7 +1457,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"m6DdW-1",
 			"id":"yTLSW",
-			"index":18,
+			"index":23,
 			"inputs":{
 				"filters":[
 					{
@@ -1243,7 +1494,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"yTLSW@m6DdW-1@y",
 			"id":"D0Iyk",
-			"index":19,
+			"index":24,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1289,7 +1540,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"yTLSW@m6DdW-1@y",
 			"id":"aTor7",
-			"index":20,
+			"index":25,
 			"inputs":{
 				"itemToAdd":{
 					"toolInputSchema":"{{ D0Iyk.outputs.result.toolInputSchema }}",
@@ -1317,7 +1568,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"m6DdW-1",
 			"id":"n_jAtZ5",
-			"index":21,
+			"index":26,
 			"inputs":{
 				"filters":[
 					{
@@ -1354,7 +1605,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_jAtZ5@m6DdW-1@n",
 			"id":"VEbuL",
-			"index":22,
+			"index":27,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1400,7 +1651,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_jAtZ5@m6DdW-1@n",
 			"id":"Tt9tK",
-			"index":23,
+			"index":28,
 			"inputs":{
 				"itemToAdd":{
 					"toolInputSchema":"{{ VEbuL.outputs.result.toolInputSchema }}",
@@ -1437,7 +1688,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"m6DdW-1",
 			"id":"A6B1S",
-			"index":24,
+			"index":29,
 			"inputs":{
 				"itemToAdd":{
 					"name":"ClarifyFromUser",
@@ -1483,7 +1734,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"m6DdW-1",
 			"id":"VrXFO",
-			"index":25,
+			"index":30,
 			"inputs":{
 				"itemToAdd":{
 					"toolInputs":[
@@ -1541,7 +1792,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"m6DdW-1",
 			"id":"Yxde1",
-			"index":26,
+			"index":31,
 			"inputs":{
 				"result":{
 					"tools":{
@@ -1563,7 +1814,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":34,
+	"ownerUserId":1,
 	"schemaReferences":[
 		"entity|e_code_snippet|e_67a48c5cc6ba6e3a57165fee",
 		"entity|e_code_snippet|e_679477888163423f74930eba"
@@ -1581,5 +1832,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":17
+	"version":78
 }
