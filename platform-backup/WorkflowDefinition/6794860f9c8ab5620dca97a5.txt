@@ -1,16 +1,16 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1740748548918,
+	"createdTime":1747000720627,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1755437805304,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68a1daed9d7d8d3f50462588",
+		"deployedAt":1758796398382,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d51a6ed7e8855348a87898",
 		"status":"DEPLOYED",
-		"version":3,
-		"workflowVersion":13
+		"version":71,
+		"workflowVersion":81
 	},
 	"edges":[
 		{
@@ -29,6 +29,13 @@
 		},
 		{
 			"fromNodeId":"Oqpz0",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_4MIkk",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_4MIkk",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"4Db6h",
@@ -159,7 +166,7 @@
 	"id":"6794860f9c8ab5620dca97a5",
 	"lastModifiedBy":-1,
 	"lcName":"topic selection tool",
-	"modifiedTime":1758530919025,
+	"modifiedTime":1758820888181,
 	"name":"Topic Selection Tool",
 	"nodes":[
 		{
@@ -173,7 +180,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CRfhh-1",
 			"id":"5gpHU",
-			"index":0,
+			"index":1,
 			"inputs":{
 				"result":{
 					"additionalProperties":false,
@@ -243,7 +250,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CRfhh-1",
 			"id":"LjRW1",
-			"index":0,
+			"index":2,
 			"inputs":{
 				"variableSchema":{
 					"type":"object",
@@ -282,23 +289,27 @@
 			"fallbackMode":"STOP",
 			"groupId":"CRfhh-1",
 			"id":"Oqpz0",
-			"index":0,
+			"index":3,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"topicName"
+					],
 					"properties":{
 						"topicName":{
 							"type":"string",
 							"title":"Topic Name"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"topicName"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"toolInputs"
+					],
 					"properties":{
 						"toolInputs":{
 							"type":"object",
@@ -306,14 +317,11 @@
 							"additionalProperties":false,
 							"title":"Tool Inputs"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"toolInputs"
-					]
+					}
 				},
-				"compile_static":false,
 				"code":"if(!binding.hasVariable('toolInputs')){\n  return [:]\n}\nreturn [\"topicName\": toolInputs.topicName]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"toolInputs":"{{ 5gpHU.outputs.toolInputs }}"
 				}
@@ -321,6 +329,41 @@
 			"skip":false,
 			"subTitle":"Get Topic Name",
 			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":523,
+				"resourceName":"storage_by_unifyapps_create_record",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"CRfhh-1",
+			"id":"n_4MIkk",
+			"index":4,
+			"inputs":{
+				"writeThroughSessionVariables":false,
+				"object_type":"e_traces",
+				"skipIfBlank":false,
+				"record":{
+					"caseId":"{{ LjRW1.outputs.caseId }}",
+					"aiAgentId":"{{ 5gpHU.outputs.triggeredByAgentId }}",
+					"executionInstanceId":"{{ __RUN__.outputs.executionId }}",
+					"currentType":"Topic Selection",
+					"rootExecutionId":"{{ __RUN__.outputs.rootExecutionId }}",
+					"parentExecutionId":"{{ __RUN__.outputs.parentExecutionId }}",
+					"userId":"{{ __RUN__.outputs.userId }}",
+					"fromAutomationId":"6794860f9c8ab5620dca97a5",
+					"topicName":"{{ Oqpz0.outputs.result.topicName }}",
+					"success":true
+				}
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Create record",
 			"type":"ACTION"
 		},
 		{
@@ -335,7 +378,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CRfhh-1",
 			"id":"4Db6h",
-			"index":0,
+			"index":5,
 			"inputs":{
 				"filters":[
 					{
@@ -364,7 +407,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"4Db6h@CRfhh-1@y",
 			"id":"lu6Dp",
-			"index":0,
+			"index":6,
 			"inputs":{
 				"result":{
 					"success":false
@@ -387,7 +430,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"4Db6h@CRfhh-1@n",
 			"id":"tbtwm",
-			"index":0,
+			"index":7,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
@@ -433,7 +476,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CRfhh-1",
 			"id":"eDQCo",
-			"index":0,
+			"index":8,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -484,7 +527,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CRfhh-1",
 			"id":"Xp0Mt",
-			"index":0,
+			"index":9,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -505,7 +548,6 @@
 				"instructions":"{{ eDQCo.outputs.properties.instructions }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -536,7 +578,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CRfhh-1",
 			"id":"y348z",
-			"index":0,
+			"index":10,
 			"inputs":{
 				"filters":[
 					{
@@ -565,7 +607,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"y348z@CRfhh-1@y",
 			"id":"X2rsz",
-			"index":0,
+			"index":11,
 			"inputs":{
 				"automationId":"{{ eDQCo.outputs.properties.additional.dynamicInstructionsFetcher }}",
 				"runtimeConnections":"",
@@ -590,7 +632,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"y348z@CRfhh-1@y",
 			"id":"xVDnX",
-			"index":0,
+			"index":12,
 			"inputs":{
 				"variables":[
 					{
@@ -616,7 +658,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CRfhh-1",
 			"id":"jiMBP",
-			"index":0,
+			"index":13,
 			"inputs":{
 				"filters":[
 					{
@@ -645,7 +687,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"jiMBP@CRfhh-1@n",
 			"id":"2FqzW",
-			"index":0,
+			"index":14,
 			"inputs":{
 				"result":{
 					"success":false
@@ -668,7 +710,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CRfhh-1",
 			"id":"qoAUV",
-			"index":0,
+			"index":15,
 			"inputs":{
 				"recordId":"{{ LjRW1.outputs.caseId }}",
 				"writeThroughSessionVariables":false,
@@ -699,7 +741,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CRfhh-1",
 			"id":"n_rSBXe",
-			"index":0,
+			"index":16,
 			"inputs":{
 				"input_schema":{
 					"instructions":"{{ Xp0Mt.outputs.instructions }}",
@@ -724,7 +766,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CRfhh-1",
 			"id":"Nvz7R",
-			"index":0,
+			"index":17,
 			"inputs":{
 				"result":{
 					"success":true,
@@ -737,7 +779,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -755,5 +797,5 @@
 		"AI Agent",
 		"Team"
 	],
-	"version":21
+	"version":82
 }
