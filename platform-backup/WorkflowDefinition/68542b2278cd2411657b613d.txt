@@ -2,8 +2,16 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1758530452810,
+	"createdTime":1751469776283,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1758731863968,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68d41e57d78de600a6bd2b50",
+		"status":"DEPLOYED",
+		"version":50,
+		"workflowVersion":74
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_Vw44g",
@@ -30,11 +38,27 @@
 			"fromNodeId":"n_9qsNx",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_XuX8E",
+			"toNodeId":"n_r6kbD",
 			"type":"next"
 		},
 		{
+			"fromNodeId":"n_r6kbD",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_XuX8E",
+			"type":"if"
+		},
+		{
 			"fromNodeId":"_XuX8E",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_K64JW",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_r6kbD",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_K64JW",
@@ -124,8 +148,15 @@
 			"fromNodeId":"n_8Fri4",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_rvDwe",
+			"toNodeId":"n_3g4uD",
 			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_3g4uD",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_rvDwe",
+			"type":"next"
 		},
 		{
 			"fromNodeId":"n_8Fri4",
@@ -146,9 +177,9 @@
 		]
 	},
 	"id":"68542b2278cd2411657b613d",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"knowledge processor",
-	"modifiedTime":1758530882271,
+	"modifiedTime":1758793028358,
 	"name":"Knowledge Processor",
 	"nodes":[
 		{
@@ -302,7 +333,6 @@
 				"syncMode":"{{ n_Vw44g.outputs.syncMode }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -380,6 +410,36 @@
 		},
 		{
 			"context":{
+				"appName":"if_else",
+				"resourceVersion":439,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_wgiv8-1",
+			"id":"n_r6kbD",
+			"index":5,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_Vw44g.outputs.importerParams.knowledge.realtimeIndexingEnabled }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"true"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Realtime Indexing Enabled",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":460,
 				"resourceName":"callables_call_automation",
@@ -388,9 +448,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"_wgiv8-1",
+			"groupId":"n_r6kbD@_wgiv8-1@y",
 			"id":"_XuX8E",
-			"index":5,
+			"index":6,
 			"inputs":{
 				"automationId":"688d1183f1ed61ebd9ce6e09",
 				"runtimeConnections":{},
@@ -421,7 +481,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_wgiv8-1",
 			"id":"n_K64JW",
-			"index":6,
+			"index":7,
 			"inputs":{
 				"automationId":"6870d744db7d45423d3ec64b",
 				"runtimeConnections":{},
@@ -450,21 +510,22 @@
 			"fallbackMode":"STOP",
 			"groupId":"_wgiv8-1",
 			"id":"n_gAgUV",
-			"index":7,
+			"index":8,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"startTimeEpoch":{
 							"type":"integer",
 							"title":"Start Time Epoch"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"return [\"startTimeEpoch\" : System.currentTimeMillis()];",
 				"compile_static":false,
-				"code":"return [\"startTimeEpoch\" : System.currentTimeMillis()];"
+				"captureStdOutput":false
 			},
 			"skip":false,
 			"subTitle":"get Start time epoch",
@@ -483,7 +544,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_wgiv8-1",
 			"id":"n_bGJwl",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"automationId":"6866a8b3009dd56d80fcfbef",
 				"runtimeConnections":{},
@@ -520,7 +581,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_wgiv8-1",
 			"id":"n_A7Cde",
-			"index":9,
+			"index":10,
 			"inputs":{
 				"filters":[
 					{
@@ -550,7 +611,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_A7Cde@_wgiv8-1@y",
 			"id":"n_iQris",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ n_Vw44g.outputs.grabbingFrequency }}",
@@ -573,7 +634,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_iQris@n_A7Cde@_wgiv8-1@y@l",
 			"id":"n_vefRT",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"loop":"n_iQris",
 				"conditions":{
@@ -606,7 +667,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_iQris@n_A7Cde@_wgiv8-1@y@l",
 			"id":"n_mMBhe",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"automationId":"6867ed5ad467b02057cb4ac8",
 				"runtimeConnections":{},
@@ -635,7 +696,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_iQris@n_A7Cde@_wgiv8-1@y@l",
 			"id":"n_T6a7g",
-			"index":13,
+			"index":14,
 			"inputs":{
 				"automation_id":"6866a8b3009dd56d80fcfbef",
 				"start_time":"{{ n_mMBhe.outputs.nextFireTime }}",
@@ -683,7 +744,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_wgiv8-1",
 			"id":"n_8Fri4",
-			"index":14,
+			"index":15,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ n_Vw44g.outputs.indexerAutomations }}",
@@ -697,6 +758,35 @@
 		{
 			"context":{
 				"appName":"callables",
+				"resourceVersion":467,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_8Fri4@_wgiv8-1@l",
+			"id":"n_3g4uD",
+			"index":16,
+			"inputs":{
+				"automationId":"68c736fea7716f74e5d5fb91",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"knowledgeId":"{{ n_Vw44g.outputs.knowledgeId }}",
+					"indexingVersion":"={{ n_Vw44g.outputs.importerParams.knowledge.indexingVersion }}-1",
+					"dataType":"{{ n_8Fri4.outputs.item.type }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Cancel prev scheduled indexer",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"callables",
 				"resourceVersion":459,
 				"resourceName":"callables_call_automation",
 				"type":"APPLICATION"
@@ -706,7 +796,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_8Fri4@_wgiv8-1@l",
 			"id":"n_rvDwe",
-			"index":15,
+			"index":17,
 			"inputs":{
 				"automationId":"68593c745c7a1473d6a4f195",
 				"runtimeConnections":{},
@@ -738,7 +828,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_wgiv8-1",
 			"id":"n_pJ2da",
-			"index":16,
+			"index":18,
 			"inputs":{
 				"result":{
 					"success":true
@@ -750,7 +840,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -767,5 +857,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":79
+	"version":75
 }
