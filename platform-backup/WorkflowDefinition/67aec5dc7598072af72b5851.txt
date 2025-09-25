@@ -1,0 +1,315 @@
+{
+	"appsUsed":[
+		
+	],
+	"createdTime":1747000735912,
+	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1758731958855,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68d41eb6d78de600a6bd2e53",
+		"status":"DEPLOYED",
+		"version":71,
+		"workflowVersion":76
+	},
+	"edges":[
+		{
+			"fromNodeId":"FHVnB",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"QER3R",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"QER3R",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"raKZY",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"raKZY",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"X9qBe",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"X9qBe",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"snmDN",
+			"type":"next"
+		}
+	],
+	"grants":{
+		"configs":[
+			{
+				"permissions":[
+					"V"
+				],
+				"principalType":"GLOBAL"
+			}
+		]
+	},
+	"id":"67aec5dc7598072af72b5851",
+	"lastModifiedBy":0,
+	"lcName":"parallelize data fetch",
+	"modifiedTime":1758793016349,
+	"name":"Parallelize Data Fetch",
+	"nodes":[
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":26,
+				"resourceName":"callables_from_automation"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"gW3W4-1",
+			"id":"FHVnB",
+			"index":0,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"properties":{
+						"success":{
+							"type":"string",
+							"title":"Success"
+						}
+					},
+					"additionalProperties":false,
+					"required":[
+						"success"
+					]
+				},
+				"setup":{
+					"type":"object",
+					"properties":{
+						"waitingInstanceId":{
+							"type":"string",
+							"title":"Waiting Instance Id"
+						},
+						"waitingInstanceRunTimeType":{
+							"type":"string",
+							"title":"Waiting Instance Run Time Type"
+						},
+						"signalId":{
+							"type":"string",
+							"title":"Signal Id"
+						},
+						"file":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"File"
+						},
+						"knowledgeId":{
+							"type":"string",
+							"title":"Knowledge Id"
+						},
+						"mimeType":{
+							"type":"string",
+							"title":"Mime Type"
+						},
+						"chunkMetadata":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"chunkMetadata"
+						},
+						"lastPageNumber":{
+							"type":"integer",
+							"title":"lastPageNumber"
+						},
+						"sharedWithIds":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Shared With Ids"
+						},
+						"knowledgeVersion":{
+							"type":"number",
+							"title":"Knowledge Version"
+						},
+						"authorEmail":{
+							"type":"string",
+							"title":"Author Email"
+						},
+						"uniqueEntityId":{
+							"type":"string",
+							"title":"Unique Entity Id"
+						}
+					},
+					"additionalProperties":false,
+					"required":[
+						"waitingInstanceId",
+						"waitingInstanceRunTimeType",
+						"knowledgeId",
+						"mimeType"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":173,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"gW3W4-1",
+			"id":"QER3R",
+			"index":0,
+			"inputs":{
+				"automationId":"67ae53c27598072af72b54f8",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"file":"{{ FHVnB.outputs.file }}",
+					"knowledgeId":"{{ FHVnB.outputs.knowledgeId }}",
+					"mimeType":"{{ FHVnB.outputs.mimeType }}",
+					"ctr":"{{ FHVnB.outputs.lastPageNumber }}",
+					"chunkMetadata":"{{ FHVnB.outputs.chunkMetadata }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Extract Data from a pdf file",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":173,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"gW3W4-1",
+			"id":"raKZY",
+			"index":0,
+			"inputs":{
+				"automationId":"66af3ff4cd79b321cb478a37",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"chunks":{
+						"source":"{{ QER3R.outputs.chunks }}",
+						"ua:type":"mappedArray",
+						"items":{
+							"data":"{{ QER3R.outputs.chunks[0].text }}",
+							"sharedWithIds":{
+								"ua:type":"mappedArray",
+								"source":"{{ FHVnB.outputs.sharedWithIds }}",
+								"items":"{{ FHVnB.outputs.sharedWithIds[0] }}"
+							},
+							"chunkMetadata":"{{ QER3R.outputs.chunks[0].metadata }}"
+						}
+					},
+					"knowledgeId":"{{ FHVnB.outputs.knowledgeId }}",
+					"chunkMetadata":"{{ FHVnB.outputs.chunkMetadata }}",
+					"knowledgeVersion":"{{ FHVnB.outputs.knowledgeVersion }}",
+					"authorEmail":"{{ FHVnB.outputs.authorEmail }}",
+					"uniqueEntityId":"{{ FHVnB.outputs.uniqueEntityId }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Knowledge Indexer  With RBAC",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.signal_payload.chunks.items.metadata",
+					"root.signal_payload.chunks.items.text"
+				]
+			},
+			"context":{
+				"appName":"signals_by_unifyapps",
+				"resourceVersion":28,
+				"resourceName":"signals_by_unifyapps_emit_signal",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"gW3W4-1",
+			"id":"X9qBe",
+			"index":0,
+			"inputs":{
+				"automation_id":"6708d0a1e5c64343ba9b24c8",
+				"with_signal_id":true,
+				"waitingInstanceRuntimeType":"{{ FHVnB.outputs.waitingInstanceRunTimeType }}",
+				"waitingInstanceId":"{{ FHVnB.outputs.waitingInstanceId }}",
+				"signal_id":"{{ FHVnB.outputs.signalId }}",
+				"signal_payload":{
+					"status":"OK"
+				},
+				"nodeId":"xzTcd"
+			},
+			"skip":false,
+			"subTitle":"Signals by UnifyApps",
+			"title":"Emit signal",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":26,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"gW3W4-1",
+			"id":"snmDN",
+			"index":0,
+			"inputs":{
+				"result":{
+					"success":"true"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		}
+	],
+	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
+	"settings":{
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
+		"route":{
+			"default":false,
+			"tierName":"global"
+		}
+	},
+	"standard":true,
+	"tags":[
+		
+	],
+	"version":77
+}
