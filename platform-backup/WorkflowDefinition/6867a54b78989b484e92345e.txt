@@ -1,12 +1,27 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1758530464936,
+	"createdTime":1754459050713,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1758731884325,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68d41e6cd78de600a6bd2bff",
+		"status":"DEPLOYED",
+		"version":47,
+		"workflowVersion":52
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_mCuz4",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_TUYYX",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_TUYYX",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_0T2xX",
@@ -45,9 +60,9 @@
 		]
 	},
 	"id":"6867a54b78989b484e92345e",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"store knowledge raw data",
-	"modifiedTime":1758530893977,
+	"modifiedTime":1758793014497,
 	"name":"Store Knowledge Raw Data",
 	"nodes":[
 		{
@@ -71,6 +86,10 @@
 						"success":{
 							"type":"boolean",
 							"title":"Success"
+						},
+						"id":{
+							"type":"string",
+							"title":"Id"
 						}
 					}
 				},
@@ -118,6 +137,14 @@
 							"properties":{},
 							"additionalProperties":false,
 							"title":"Metadata"
+						},
+						"authorEmail":{
+							"type":"string",
+							"title":"Author Email"
+						},
+						"isTypeFile":{
+							"type":"boolean",
+							"title":"Is Type File"
 						}
 					}
 				}
@@ -132,6 +159,35 @@
 		},
 		{
 			"context":{
+				"appName":"callables",
+				"resourceVersion":464,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_2TPIG-1",
+			"id":"n_TUYYX",
+			"index":2,
+			"inputs":{
+				"automationId":"6893a55b4a3dd6363af6b6b5",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"chunkMetadata":"{{ n_mCuz4.outputs.metadata }}",
+					"authorEmail":"{{ n_mCuz4.outputs.authorEmail }}",
+					"isTypeFile":"{{ n_mCuz4.outputs.isTypeFile }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Update chunk metadata",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
 				"appName":"variable_by_unifyapps",
 				"resourceVersion":452,
 				"resourceName":"variable_by_unifyapps_create_variables",
@@ -142,7 +198,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_2TPIG-1",
 			"id":"n_0T2xX",
-			"index":2,
+			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -165,7 +221,6 @@
 				"id":"{{ n_mCuz4.outputs.knowledgeId }}_{{ n_mCuz4.outputs.uniqueEntityId }}_{{ n_mCuz4.outputs.knowledgeVersion }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -198,7 +253,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_2TPIG-1",
 			"id":"n_r8lAz",
-			"index":3,
+			"index":4,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -212,7 +267,8 @@
 					}
 				},
 				"code":"return [\n  \"currentTimeEpoch\" : System.currentTimeMillis()\n]",
-				"compile_static":false
+				"compile_static":false,
+				"captureStdOutput":false
 			},
 			"skip":false,
 			"subTitle":"get currentTimeEpoch",
@@ -222,7 +278,9 @@
 		{
 			"additional":{
 				"visibleOptionalFields":[
-					"root.record.sharedWithIds.items"
+					"root.record.sharedWithIds.items",
+					"root.record.additional.mimeType",
+					"root.record.additional.name"
 				]
 			},
 			"context":{
@@ -236,7 +294,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_2TPIG-1",
 			"id":"n_7Clmk",
-			"index":4,
+			"index":5,
 			"inputs":{
 				"recordId":"{{ n_0T2xX.outputs.id }}",
 				"writeThroughSessionVariables":false,
@@ -251,7 +309,11 @@
 					"status":"UNPROCESSED",
 					"retryCount":0,
 					"lastDownloadedTime":"{{ n_r8lAz.outputs.result.currentTimeEpoch }}",
-					"metadata":"{{ n_mCuz4.outputs.metadata }}",
+					"metadata":"{{ n_TUYYX.outputs.chunkMetadata }}",
+					"additional":{
+						"mimeType":"{{ n_TUYYX.outputs.chunkMetadata.mimeType }}",
+						"name":"{{ n_TUYYX.outputs.chunkMetadata.name }}"
+					},
 					"sharedWithIds":{
 						"source":"{{ n_mCuz4.outputs.sharedWithIds }}",
 						"ua:type":"mappedArray",
@@ -277,10 +339,11 @@
 			"fallbackMode":"STOP",
 			"groupId":"_2TPIG-1",
 			"id":"n_vQi9e",
-			"index":5,
+			"index":6,
 			"inputs":{
 				"result":{
-					"success":"{{ n_7Clmk.outputs.success }}"
+					"success":"{{ n_7Clmk.outputs.success }}",
+					"id":"{{ n_7Clmk.outputs.object.properties.id }}"
 				}
 			},
 			"skip":false,
@@ -289,7 +352,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -307,5 +370,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":8
+	"version":53
 }
