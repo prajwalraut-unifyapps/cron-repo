@@ -1,16 +1,16 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1740748536448,
+	"createdTime":1747000732375,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1755437794156,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68a1dae29d7d8d3f50462520",
+		"deployedAt":1758796418655,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d51a82d7e8855348a87962",
 		"status":"DEPLOYED",
-		"version":4,
-		"workflowVersion":44
+		"version":73,
+		"workflowVersion":138
 	},
 	"edges":[
 		{
@@ -416,7 +416,7 @@
 	"id":"6794799d9c8ab5620dca8daf",
 	"lastModifiedBy":-1,
 	"lcName":"agent system prompt generator",
-	"modifiedTime":1758530894578,
+	"modifiedTime":1758820865267,
 	"name":"Agent System Prompt Generator",
 	"nodes":[
 		{
@@ -696,7 +696,6 @@
 				"topicAsTool":"{{ n_i4MC5.outputs.properties.topicExecutionSettings.topicAsTool }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -935,8 +934,9 @@
 						}
 					}
 				},
-				"code":"def systemPromptInstructions = \"\"\n\ndef lang\n\nif (binding.hasVariable(\"localLanguage\")) {\n    lang = localLanguage\n} else if (binding.hasVariable(\"language\")) {\n    lang = language\n} \n\nif (binding.hasVariable(\"responseLanguagePreference\") &&\n    (responseLanguagePreference == \"USER_LOCALE\" || responseLanguagePreference == \"FIXED_LANGUAGE\") &&\n    lang) {\n    \n    systemPromptInstructions += \"Always answer in ${lang} language, no matter what language you encounter in past chats/thoughts.\"\n} else {\n    systemPromptInstructions += \"Always answer in whichever language the last user query was asked.\"\n}\n\ndef toneInstruction = \"\"\ndef styleInstruction = \"\"\ndef formatInstruction = \"\"\n\nif(binding.hasVariable(\"tone\")) {\n    toneInstruction = \" Use a \" + tone.toLowerCase() + \" tone.\"\n}\nif(binding.hasVariable(\"style\")) {\n    styleInstruction = \" Write in a \" + style.toLowerCase() + \" style.\"\n}\n\nif(binding.hasVariable(\"format\")) {\n    formatInstruction = \" Present responses in \" + format.toLowerCase() + \" format.\"\n}\nsystemPromptInstructions += toneInstruction + styleInstruction + formatInstruction\n\nreturn [systemPromptInstructions:systemPromptInstructions]\n",
+				"code":"def systemPromptInstructions = \"\"\n\ndef lang\n\nif (binding.hasVariable(\"localLanguage\")) {\n    lang = localLanguage\n} else if (binding.hasVariable(\"language\")) {\n    lang = language\n} \n\nif (binding.hasVariable(\"responseLanguagePreference\") &&\n    (responseLanguagePreference == \"USER_LOCALE\" || responseLanguagePreference == \"FIXED_LANGUAGE\") &&\n    lang) {\n    \n    systemPromptInstructions += \"Always answer in ${lang} language, no matter what language you encounter in past chats/thoughts.\"\n} else {\n    systemPromptInstructions += \"Respond in the same language as the user's query. If the user writes in English, respond in English. If uncertain about the language, default to English. For single-word queries or ambiguous cases, respond in English unless there are clear linguistic markers indicating another language.\"\n}\n\ndef toneInstruction = \"\"\ndef styleInstruction = \"\"\ndef formatInstruction = \"\"\n\nif(binding.hasVariable(\"tone\")) {\n    toneInstruction = \" Use a \" + tone.toLowerCase() + \" tone.\"\n}\nif(binding.hasVariable(\"style\")) {\n    styleInstruction = \" Write in a \" + style.toLowerCase() + \" style.\"\n}\n\nif(binding.hasVariable(\"format\")) {\n    formatInstruction = \" Present responses in \" + format.toLowerCase() + \" format.\"\n}\nsystemPromptInstructions += toneInstruction + styleInstruction + formatInstruction\n\nreturn [systemPromptInstructions:systemPromptInstructions]\n",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"language":"{{ n_DiY7F.outputs.language }}",
 					"responseLanguagePreference":"{{ n_i4MC5.outputs.properties.responseGenerationSettings.languageSettings.responseLanguagePreference }}",
@@ -984,7 +984,6 @@
 				"systemPromptInstructions":"{{ _tOXww.outputs.result.systemPromptInstructions }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -1232,7 +1231,6 @@
 				"ua:list_type":"OBJECT"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -1308,7 +1306,6 @@
 				"currentTopic":"NONE"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -1903,7 +1900,6 @@
 				"ua:list_type":"OBJECT"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -2064,6 +2060,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"id":{
 							"type":"string",
@@ -2088,12 +2086,12 @@
 							"title":"additionalProperties",
 							"required":[]
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"name":{
 							"type":"string",
@@ -2145,33 +2143,37 @@
 							"properties":{},
 							"additionalProperties":false,
 							"title":"additionalProperties"
+						},
+						"currentTopic":{
+							"type":"string",
+							"title":"Current Topic"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"def sanitize(String input){\n  def cleaned_input = input.replaceAll(' ','_')\n  def words = cleaned_input.tokenize(/[\\W_]+/)\n  def result = words.collect { it.capitalize() }.join('')\n  return result\n}\n\ndef name = binding.hasVariable(\"name\")?binding.getVariable(\"name\"):\"\"\ndef description = binding.hasVariable(\"description\")?binding.getVariable(\"description\"):\"\"\ndef instructions = binding.hasVariable(\"instructions\")?binding.getVariable(\"instructions\"):[]\ndef modelSelectionConfig = binding.hasVariable(\"modelSelectionConfig\")?binding.getVariable(\"modelSelectionConfig\"):[:]\ndef additional = binding.hasVariable(\"additionalProperties\")?binding.getVariable(\"additionalProperties\"):[:]\ndef currentTopic = binding.hasVariable(\"currentTopic\")?binding.getVariable(\"currentTopic\"):null\n\nadditional << [ \"isTopic\" : true ]\nadditional << [ \"topicName\" : name ]\nadditional << [ \"instructions\" : instructions ]\nif(currentTopic != null){\n  String toolName = \"SwitchTo\"+sanitize(name)+\"Topic\"\n}\nelse{\n  String toolName = \"Set\"+sanitize(name)+\"Topic\"\n}\n\nreturn [\n  \"id\":sanitize(name),\n  \"name\":toolName.toString(),\n  \"description\":description,\n  \"additionalProperties\":additional\n]",
 				"compile_static":false,
-				"code":"def sanitize(String input){\n  def cleaned_input = input.replaceAll(' ','_')\n  def words = cleaned_input.tokenize(/[\\W_]+/)\n  def result = words.collect { it.capitalize() }.join('')\n  return result\n}\n\ndef name = binding.hasVariable(\"name\")?binding.getVariable(\"name\"):\"\"\ndef description = binding.hasVariable(\"description\")?binding.getVariable(\"description\"):\"\"\ndef instructions = binding.hasVariable(\"instructions\")?binding.getVariable(\"instructions\"):[]\ndef modelSelectionConfig = binding.hasVariable(\"modelSelectionConfig\")?binding.getVariable(\"modelSelectionConfig\"):[:]\ndef additional = binding.hasVariable(\"additionalProperties\")?binding.getVariable(\"additionalProperties\"):[:]\n\nadditional << [ \"isTopic\" : true ]\nadditional << [ \"topicName\" : name ]\nadditional << [ \"instructions\" : instructions ]\nString toolName = \"Set\"+sanitize(name)+\"Topic\"\n\nreturn [\n  \"id\":sanitize(name),\n  \"name\":toolName,\n  \"description\":description,\n  \"additionalProperties\":additional\n]",
+				"captureStdOutput":false,
 				"parameters":{
 					"name":"{{ n_c3ZqG.outputs.item.properties.name }}",
 					"description":"{{ n_c3ZqG.outputs.item.properties.description }}",
 					"aiAgentId":"{{ n_c3ZqG.outputs.item.properties.aiAgentId }}",
-					"instructions":{
-						"source":"{{ n_c3ZqG.outputs.item.properties.instructions }}",
-						"ua:type":"mappedArray",
-						"items":"{{ n_c3ZqG.outputs.item.properties.instructions[0] }}"
-					},
 					"modelSelectionConfig":{
 						"quality":"{{ n_c3ZqG.outputs.item.properties.modelSelectionConfig.quality }}",
 						"latency":"{{ n_c3ZqG.outputs.item.properties.modelSelectionConfig.latency }}",
 						"cost":"{{ n_c3ZqG.outputs.item.properties.modelSelectionConfig.cost }}"
 					},
+					"additionalProperties":"{{ n_c3ZqG.outputs.item.properties.additional }}",
+					"currentTopic":"{{ 7BeuE.outputs.properties.currentTopic }}",
+					"instructions":{
+						"source":"{{ n_c3ZqG.outputs.item.properties.instructions }}",
+						"ua:type":"mappedArray",
+						"items":"{{ n_c3ZqG.outputs.item.properties.instructions[0] }}"
+					},
 					"associatedAgentIds":{
 						"source":"{{ n_c3ZqG.outputs.item.properties.associatedAgentIds }}",
 						"ua:type":"mappedArray",
 						"items":"{{ n_c3ZqG.outputs.item.properties.associatedAgentIds[0] }}"
-					},
-					"additionalProperties":"{{ n_c3ZqG.outputs.item.properties.additional }}"
+					}
 				}
 			},
 			"skip":false,
@@ -2309,6 +2311,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"toolInputSchema":{
 							"type":"object",
@@ -2316,12 +2320,12 @@
 							"additionalProperties":false,
 							"title":"Tool Input Schema"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"topicNames":{
 							"type":"array",
@@ -2330,12 +2334,11 @@
 							},
 							"title":"Topic Names"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"return [  \n  \"toolInputSchema\": [\n    'type':'object',\n    'properties':[\n      'topicName':[\n        'type':'string',\n        'enum': topicNames\n      ]\n    ],\n    'required':[\n      'topicName'\n    ]\n  ]]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"topicNames":{
 						"source":"{{ fpVQO.outputs.items }}",
@@ -2908,7 +2911,6 @@
 				"taskExecutionModel":"{{ n_i4MC5.outputs.properties.topicExecutionSettings.topicExecutionModel }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -3088,7 +3090,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":1,
 	"schemaReferences":[
 		"entity|e_code_snippet|e_679477888163423f74930eba"
 	],
@@ -3107,5 +3109,5 @@
 		"AI Agent",
 		"Team"
 	],
-	"version":52
+	"version":139
 }
