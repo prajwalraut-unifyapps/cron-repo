@@ -2,15 +2,15 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1740748553886,
+	"createdTime":1747000723517,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1755437773784,
+		"deployedAt":1758731852562,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68a1dacd9d7d8d3f50462439",
+		"deployedDefinitionId":"68d41e4cd78de600a6bd2afb",
 		"status":"DEPLOYED",
-		"version":3,
-		"workflowVersion":26
+		"version":75,
+		"workflowVersion":99
 	},
 	"edges":[
 		{
@@ -242,9 +242,9 @@
 		]
 	},
 	"id":"67af3b753f15ad37494b2ce8",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"agentic chunking pdf",
-	"modifiedTime":1758530447889,
+	"modifiedTime":1758793019151,
 	"name":"Agentic Chunking PDF",
 	"nodes":[
 		{
@@ -267,6 +267,8 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"status":{
 							"type":"string",
@@ -301,12 +303,12 @@
 							"type":"integer",
 							"title":"lastPageNumber"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"filedetails":{
 							"type":"object",
@@ -329,10 +331,12 @@
 						"document_parsing_model":{
 							"type":"string",
 							"title":"document_parsing_model"
+						},
+						"enableDocumentImageExtraction":{
+							"type":"boolean",
+							"title":"Enable Document Image Extraction"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -396,6 +400,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"source":{
 							"type":"string",
@@ -413,12 +419,12 @@
 							"type":"string",
 							"title":"Type"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"fileDetails":{
 							"type":"object",
@@ -426,12 +432,11 @@
 							"additionalProperties":false,
 							"title":"File Details"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"return fileDetails",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"fileDetails":"{{ IstlO.outputs.filedetails }}"
 				}
@@ -463,11 +468,12 @@
 					"file":{
 						"source":"{{ n_MX6Jb.outputs.result.source }}",
 						"sourceType":"{{ n_MX6Jb.outputs.result.sourceType }}",
-						"name":"{{ n_MX6Jb.outputs.result.name }}",
-						"type":"{{ n_MX6Jb.outputs.result.type }}"
+						"type":"{{ n_MX6Jb.outputs.result.type }}",
+						"name":"{{ n_MX6Jb.outputs.result.name }}"
 					},
 					"mimeType":"{{ IstlO.outputs.mimeType }}",
-					"document_parsing_model":"{{ IstlO.outputs.document_parsing_model }}"
+					"document_parsing_model":"{{ IstlO.outputs.document_parsing_model }}",
+					"enableImageExtraction":"{{ IstlO.outputs.enableDocumentImageExtraction }}"
 				}
 			},
 			"skip":false,
@@ -581,10 +587,11 @@
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"mimeType":"application/pdf",
 					"filedetails":"{{ _p0n1W.outputs.fileDetails }}",
+					"mimeType":"application/pdf",
 					"chunkMetadata":"{{ _p0n1W.outputs.metaData }}",
-					"document_parsing_model":"{{ IstlO.outputs.document_parsing_model }}"
+					"document_parsing_model":"{{ IstlO.outputs.document_parsing_model }}",
+					"enableDocumentImageExtraction":"{{ IstlO.outputs.enableDocumentImageExtraction }}"
 				}
 			},
 			"skip":false,
@@ -1228,6 +1235,7 @@
 				"automationId":"67ad91606e8af63ecd1b5565",
 				"runtimeConnections":{},
 				"synchronous":true,
+				"distributeWorkflowLoad":false,
 				"parametersList":{
 					"source":"{{ 9Qh4y.outputs.item }}",
 					"ua:type":"mappedArray",
@@ -1242,7 +1250,8 @@
 						"mimeType":"{{ 9Qh4y.outputs.item[0].mimeType }}",
 						"documentTopic":"{{ 6eZ8G.outputs.document_topic }}",
 						"pageNumber":"={{ IstlO.outputs.lastPageNumber }}+{{ 9Qh4y.outputs.item[0].pageNumber }}",
-						"document_parsing_model":"{{ IstlO.outputs.document_parsing_model }}"
+						"document_parsing_model":"{{ IstlO.outputs.document_parsing_model }}",
+						"enableImageExtraction":"{{ IstlO.outputs.enableDocumentImageExtraction }}"
 					}
 				},
 				"version":"-1"
@@ -1504,7 +1513,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -1522,5 +1531,5 @@
 		"AI Agent",
 		"Internal"
 	],
-	"version":32
+	"version":100
 }
