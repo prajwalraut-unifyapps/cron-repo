@@ -1,16 +1,16 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1750164580261,
+	"createdTime":1747000733961,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1755437801772,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68a1dae99d7d8d3f5046256c",
+		"deployedAt":1758796419377,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d51a83d7e8855348a8796a",
 		"status":"DEPLOYED",
-		"version":2,
-		"workflowVersion":52
+		"version":72,
+		"workflowVersion":99
 	},
 	"edges":[
 		{
@@ -203,7 +203,7 @@
 	"id":"67e26f9c2807cf04c7f860db",
 	"lastModifiedBy":-1,
 	"lcName":"get agent tools and attributes",
-	"modifiedTime":1758530902193,
+	"modifiedTime":1758820881497,
 	"name":"Get Agent Tools and Attributes",
 	"nodes":[
 		{
@@ -226,6 +226,8 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"availableTools":{
 							"type":"array",
@@ -345,18 +347,25 @@
 										}
 									},
 									"additionalProperties":false
+								},
+								"disableInlineCitations":{
+									"type":"boolean",
+									"title":"Disable Inline Citations"
 								}
 							},
 							"additionalProperties":false,
 							"title":"agent_attributes",
 							"required":[]
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"caseId",
+						"agentId"
+					],
 					"properties":{
 						"caseId":{
 							"type":"string",
@@ -366,12 +375,7 @@
 							"type":"string",
 							"title":"Agent Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"caseId",
-						"agentId"
-					]
+					}
 				}
 			},
 			"skip":false,
@@ -703,7 +707,6 @@
 				"ua:list_type":"OBJECT"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -1108,7 +1111,6 @@
 				"modelId":"{{ jgdBf.outputs.executeUsingModel }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -1383,23 +1385,21 @@
 			"index":21,
 			"inputs":{
 				"result":{
-					"availableTools":{
-						"ua:type":"mappedArray",
-						"items":{
-							"description":"{{ iNEXV.outputs.items[0].description }}",
-							"id":"{{ iNEXV.outputs.items[0].id }}",
-							"name":"{{ iNEXV.outputs.items[0].name }}",
-							"toolInputSchema":"{{ iNEXV.outputs.items[0].toolInputSchema }}",
-							"additional":"{{ iNEXV.outputs.items[0].additional }}"
-						},
-						"source":"{{ iNEXV.outputs.items }}"
-					},
 					"agent_attributes":{
 						"roal":"{{ jgdBf.outputs.role }}",
 						"goal":"{{ jgdBf.outputs.goal }}",
 						"background":"{{ jgdBf.outputs.background }}",
+						"modelId":"{{ 2u6lK.outputs.modelId }}",
 						"systemPromptInstructions":"=CONCATENATE({{ jgdBf.outputs.systemPromptInstructions }},{{ eDsrj.outputs.context }})",
 						"agentName":"{{ jgdBf.outputs.agentName }}",
+						"blocked_message":"{{ bvAH5.outputs.objects[0].BlockedMessaging.blockedMessagingForResponses.blockedMessage }}",
+						"currentTopic":"{{ jgdBf.outputs.currentTopic }}",
+						"textToSQLSettings":{
+							"isOnlyTextToSQLAgent":"{{ jgdBf.outputs.textToSQLSettings.isOnlyTextToSQLAgent }}",
+							"topicIdForOnlyText2SQL":"{{ jgdBf.outputs.textToSQLSettings.topicIdForOnlyText2SQL }}",
+							"sqlAndChart1LLMCall_Variant":"{{ jgdBf.outputs.textToSQLSettings.sqlAndChart1LLMCall_Variant }}"
+						},
+						"disableInlineCitations":"{{ n_WI3dW.outputs.properties.responseGenerationSettings.disableInlineCitations }}",
 						"patterns":{
 							"source":"{{ bvAH5.outputs.objects[0].RedactSensitiveInformation.regex.patterns }}",
 							"ua:type":"mappedArray",
@@ -1413,15 +1413,18 @@
 							"source":"{{ bvAH5.outputs.objects[0].customWorldFilter.wordsOrPhrases }}",
 							"ua:type":"mappedArray",
 							"items":"{{ bvAH5.outputs.objects[0].customWorldFilter.wordsOrPhrases[0].name }}"
-						},
-						"blocked_message":"{{ bvAH5.outputs.objects[0].BlockedMessaging.blockedMessagingForResponses.blockedMessage }}",
-						"modelId":"{{ 2u6lK.outputs.modelId }}",
-						"currentTopic":"{{ jgdBf.outputs.currentTopic }}",
-						"textToSQLSettings":{
-							"isOnlyTextToSQLAgent":"{{ jgdBf.outputs.textToSQLSettings.isOnlyTextToSQLAgent }}",
-							"topicIdForOnlyText2SQL":"{{ jgdBf.outputs.textToSQLSettings.topicIdForOnlyText2SQL }}",
-							"sqlAndChart1LLMCall_Variant":"{{ jgdBf.outputs.textToSQLSettings.sqlAndChart1LLMCall_Variant }}"
 						}
+					},
+					"availableTools":{
+						"ua:type":"mappedArray",
+						"items":{
+							"description":"{{ iNEXV.outputs.items[0].description }}",
+							"id":"{{ iNEXV.outputs.items[0].id }}",
+							"name":"{{ iNEXV.outputs.items[0].name }}",
+							"toolInputSchema":"{{ iNEXV.outputs.items[0].toolInputSchema }}",
+							"additional":"{{ iNEXV.outputs.items[0].additional }}"
+						},
+						"source":"{{ iNEXV.outputs.items }}"
 					}
 				}
 			},
@@ -1431,14 +1434,14 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":34,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
+		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
-		"enableVariableLogging":false,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -1449,5 +1452,5 @@
 	"tags":[
 		
 	],
-	"version":60
+	"version":100
 }
