@@ -2,15 +2,15 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1757480394305,
+	"createdTime":1757705869964,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1757528315997,
-		"deployedBy":635,
-		"deployedDefinitionId":"68c1c0fb06bba15e66ee7337",
+		"deployedAt":1758731937717,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68d41ea1d78de600a6bd2db8",
 		"status":"DEPLOYED",
-		"version":3,
-		"workflowVersion":18
+		"version":14,
+		"workflowVersion":31
 	},
 	"edges":[
 		{
@@ -62,7 +62,7 @@
 	"id":"687e026e115f55ade8bf9d39",
 	"lastModifiedBy":-1,
 	"lcName":"knowledge indexer | confluence | blog",
-	"modifiedTime":1758530336090,
+	"modifiedTime":1758820930452,
 	"name":"Knowledge Indexer | Confluence | Blog",
 	"nodes":[
 		{
@@ -79,6 +79,7 @@
 			"index":1,
 			"inputs":{
 				"result":{
+					"required":[],
 					"ua:modal":{
 						"field_type":"STRING",
 						"is_optional":true
@@ -88,11 +89,13 @@
 							"type":"boolean",
 							"title":"Success"
 						}
-					},
-					"required":[]
+					}
 				},
 				"callableInterfaceId":"686e0f90c92a3538c991f984",
 				"setup":{
+					"required":[
+						"uniqueEntityId"
+					],
 					"ua:modal":{
 						"field_type":"STRING",
 						"is_optional":true
@@ -126,11 +129,14 @@
 						"uniqueEntityId":{
 							"type":"string",
 							"title":"Unique Entity Id"
+						},
+						"metadata":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Metadata"
 						}
-					},
-					"required":[
-						"uniqueEntityId"
-					]
+					}
 				}
 			},
 			"skip":false,
@@ -330,6 +336,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"chunk_metadata":{
 							"type":"object",
@@ -341,12 +349,12 @@
 							"type":"string",
 							"title":"Metadata String"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"referenceUrl":{
 							"type":"string",
@@ -372,13 +380,12 @@
 							"type":"string",
 							"title":"Author"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"import java.time.Instant\nimport java.time.ZoneId\nimport java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\n\ndef createdTimeEpoch = \"\"\n\nif(binding.hasVariable('createdTime')){\n  Instant instant = Instant.parse(createdTime);\n  createdTimeEpoch = instant.toEpochMilli()\n}\n\n\n\ndef chunk_metadata = [:]\nchunk_metadata << ['appName':'confluence']\nchunk_metadata << (binding.hasVariable('blogName') && blogName ? [\"name\": blogName] : [:])\nchunk_metadata << (binding.hasVariable('spaceName') && spaceName ? [\"spaceName\": spaceName] : [:])\nchunk_metadata << (binding.hasVariable('referenceUrl') && referenceUrl ? [\"referenceUrl\": referenceUrl] : [:])\nchunk_metadata << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nchunk_metadata << (binding.hasVariable('createdTime') && createdTime ? [\"date\": createdTimeEpoch] : [:])\n\ndef metadataString = \"\";\n\nif(binding.hasVariable('blogId')){\n  metadataString += \" blogId: \" + blogId\n}\n\nif(binding.hasVariable('blogName')){\n  metadataString += \", blogName: \" + blogName\n}\n\n\nif(binding.hasVariable('spaceName')){\n  metadataString += \", spaceName: \" + spaceName\n}\n\nreturn [\"chunk_metadata\":chunk_metadata,\n        \"metadataString\":metadataString]",
 				"compile_static":false,
-				"code":"import java.time.Instant\nimport java.time.ZoneId\nimport java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\n\ndef createdTimeEpoch = \"\"\n\nif(binding.hasVariable('createdTime')){\n  Instant instant = Instant.parse(createdTime);\n  createdTimeEpoch = instant.toEpochMilli()\n}\n\n\n\ndef chunk_metadata = [:]\nchunk_metadata << ['appName':'confluence']\nchunk_metadata << (binding.hasVariable('blogName') && blogName ? [\"name\": blogName] : [:])\nchunk_metadata << (binding.hasVariable('referenceUrl') && referenceUrl ? [\"referenceUrl\": referenceUrl] : [:])\nchunk_metadata << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nchunk_metadata << (binding.hasVariable('createdTime') && createdTime ? [\"date\": createdTimeEpoch] : [:])\n\ndef metadataString = \"\";\n\nif(binding.hasVariable('blogId')){\n  metadataString += \" blogId: \" + blogId\n}\n\nif(binding.hasVariable('blogName')){\n  metadataString += \", blogName: \" + blogName\n}\n\n\nif(binding.hasVariable('spaceName')){\n  metadataString += \", spaceName: \" + spaceName\n}\n\nreturn [\"chunk_metadata\":chunk_metadata,\n        \"metadataString\":metadataString]",
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"referenceUrl":"{{ n_FeUgW.outputs.result.referenceUrl }}",
 					"blogId":"{{ n_FeUgW.outputs.result.response.id }}",
@@ -487,7 +494,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":44103,
+	"ownerUserId":-1,
 	"schemaReferences":[
 		
 	],
@@ -504,5 +511,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":19
+	"version":32
 }
