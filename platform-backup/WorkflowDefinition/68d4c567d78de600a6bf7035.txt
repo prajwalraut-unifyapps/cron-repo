@@ -6,46 +6,183 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_af1ov",
+			"fromNodeId":"n_uOdEr",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_CZmwa",
+			"toNodeId":"n_xQfeW",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_xQfeW",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_wfBwS",
 			"type":"next"
 		}
 	],
 	"id":"68d4c567d78de600a6bf7035",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2oskmqlkunu",
-	"modifiedTime":1758774631343,
+	"modifiedTime":1758774664345,
 	"name":"cacheQA2oskMqLKUnU",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1018,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_af1ov-1",
-			"id":"_af1ov",
-			"index":0,
+			"id":"n_uOdEr",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"companyId":{
+							"type":"string",
+							"title":"companyId"
+						},
+						"contactId":{
+							"type":"string",
+							"title":"contactId"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1019,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_af1ov-1",
-			"id":"_CZmwa",
-			"index":0,
+			"id":"n_xQfeW",
+			"index":2,
+			"inputs":{
+				"automationId":"68d4c51c2a216a5e093bc1ba",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"companyId":"{{ n_uOdEr.outputs.companyId }}"
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":true,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						{
+							"continueOnFailure":false,
+							"parameters":{
+								"contactId":"{{ n_uOdEr.outputs.contactId }}"
+							},
+							"workflowId":"68d4c5412a216a5e093bc1fb"
+						}
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1021,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_af1ov-1",
+			"id":"n_wfBwS",
+			"index":3,
+			"inputs":{
+				"result":{
+					"result":"{{ n_xQfeW.outputs.result }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +196,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
