@@ -1,16 +1,16 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1748544438325,
+	"createdTime":1749468899401,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1757441900254,
-		"deployedBy":0,
-		"deployedDefinitionId":"68c06f6c6bc3be145d79439d",
+		"deployedAt":1758731950988,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68d41eaed78de600a6bd2e16",
 		"status":"DEPLOYED",
-		"version":43,
-		"workflowVersion":51
+		"version":68,
+		"workflowVersion":78
 	},
 	"edges":[
 		{
@@ -118,9 +118,9 @@
 		]
 	},
 	"id":"683210d52872336e3c01a17c",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"generate embedding and index",
-	"modifiedTime":1758530341668,
+	"modifiedTime":1758793037703,
 	"name":"Generate Embedding And Index",
 	"nodes":[
 		{
@@ -718,6 +718,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"modifiedChunk":{
 							"type":"object",
@@ -748,12 +750,12 @@
 								"shared_with_ids"
 							]
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"chunks":{
 							"type":"array",
@@ -795,13 +797,14 @@
 							"type":"integer",
 							"title":"index"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"def chunk = chunks[index]\ndef finalDocMetadata = binding.hasVariable(\"docMetadata\") ? docMetadata : [:];\ndef finalChunkMetadata = [:]\nfinalChunkMetadata.putAll(finalDocMetadata)\nif (chunk.containsKey(\"chunkMetadata\")) {\n    finalChunkMetadata.putAll(chunk.chunkMetadata)\n}\nchunk['chunkMetadata'] = finalChunkMetadata\nreturn [\"modifiedChunk\": chunk]",
 				"compile_static":false,
-				"code":"def chunk = chunks[index]\n\ndef finalChunkMetadata = binding.hasVariable(\"docMetadata\") ? docMetadata : [:]\n\nif (chunk.containsKey(\"chunkMetadata\")) {\n    def currentChunkMetadata = chunk.chunkMetadata\n    currentChunkMetadata.each { k, v ->\n        finalChunkMetadata[k] = v\n    }\n}\n\nchunk['chunkMetadata'] = finalChunkMetadata\n\nreturn [\"modifiedChunk\": chunk]",
+				"captureStdOutput":false,
 				"parameters":{
+					"docMetadata":"{{ mikZG.outputs.chunkMetadata }}",
+					"index":"{{ XnJ3q.outputs.item.index }}",
 					"chunks":{
 						"ua:type":"mappedArray",
 						"items":{
@@ -814,9 +817,7 @@
 							"data":"{{ mikZG.outputs.chunks[0].text }}"
 						},
 						"source":"{{ mikZG.outputs.chunks }}"
-					},
-					"index":"{{ XnJ3q.outputs.item.index }}",
-					"docMetadata":"{{ mikZG.outputs.chunkMetadata }}"
+					}
 				}
 			},
 			"skip":false,
@@ -954,7 +955,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1728,
+	"ownerUserId":4,
 	"schemaReferences":[
 		
 	],
@@ -972,5 +973,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":53
+	"version":79
 }
