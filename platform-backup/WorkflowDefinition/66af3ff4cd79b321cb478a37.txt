@@ -5,12 +5,12 @@
 	"createdTime":1747000725827,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758650399925,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68d2e01f1bf7400a256cea6d",
+		"deployedAt":1758796357681,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d51a45d7e8855348a87718",
 		"status":"DEPLOYED",
-		"version":76,
-		"workflowVersion":255
+		"version":78,
+		"workflowVersion":259
 	},
 	"edges":[
 		{
@@ -430,9 +430,9 @@
 		]
 	},
 	"id":"66af3ff4cd79b321cb478a37",
-	"lastModifiedBy":0,
+	"lastModifiedBy":-1,
 	"lcName":"knowledge indexer  with rbac",
-	"modifiedTime":1758793031439,
+	"modifiedTime":1758820895063,
 	"name":"Knowledge Indexer  With RBAC",
 	"nodes":[
 		{
@@ -1900,8 +1900,6 @@
 			"inputs":{
 				"output":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"graphId":{
 							"type":"string",
@@ -1929,14 +1927,12 @@
 							"type":"string",
 							"title":"domainContext"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
 				"input":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"graphRAGSettings"
-					],
 					"properties":{
 						"graphRAGSettings":{
 							"type":"object",
@@ -1948,13 +1944,17 @@
 							"type":"string",
 							"title":"Default Graph Id"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[
+						"graphRAGSettings"
+					]
 				},
-				"code":"def defaultSettings = [\n    graphId: \"G_test\",\n    entityTypes: [\"Person\", \"Concept\", \"Place\", \"Event\", \"Result\", \"Method\", \"Organization\", \"Object\", \"Dataset\", \"Animal\", \"Activity\"],\n    dedupSimilarityThreshold: 0.975,\n    exampleQueries: [],\n    domainContext: \"\"\n]\n\ndef results = [:]\n\n// Updated logic for graphId, prefer graphRAGSettings?.graphId, then defaultGraphId, then defaultSettings.graphId\nresults.graphId = graphRAGSettings?.graphId ?: (binding.hasVariable('defaultGraphId') ? defaultGraphId : defaultSettings.graphId)\nresults.entityTypes = graphRAGSettings?.entityTypes ?: defaultSettings.entityTypes\nresults.dedupSimilarityThreshold = graphRAGSettings?.dedupSimilarityThreshold ?: defaultSettings.dedupSimilarityThreshold\nresults.exampleQueries = graphRAGSettings?.exampleQueries ?: defaultSettings.exampleQueries\nresults.domainContext = graphRAGSettings?.domainContext ?: defaultSettings.domainContext\n\nreturn results",
 				"compile_static":false,
-				"captureStdOutput":false,
+				"code":"def defaultSettings = [\n    graphId: \"G_test\",\n    entityTypes: [\"Person\", \"Concept\", \"Place\", \"Event\", \"Result\", \"Method\", \"Organization\", \"Object\", \"Dataset\", \"Animal\", \"Activity\"],\n    dedupSimilarityThreshold: 0.975,\n    exampleQueries: [],\n    domainContext: \"\"\n]\n\ndef results = [:]\n\n// Updated logic for graphId, prefer graphRAGSettings?.graphId, then defaultGraphId, then defaultSettings.graphId\nresults.graphId = graphRAGSettings?.graphId ?: (binding.hasVariable('defaultGraphId') ? defaultGraphId : defaultSettings.graphId)\nresults.entityTypes = graphRAGSettings?.entityTypes ?: defaultSettings.entityTypes\nresults.dedupSimilarityThreshold = graphRAGSettings?.dedupSimilarityThreshold ?: defaultSettings.dedupSimilarityThreshold\nresults.exampleQueries = graphRAGSettings?.exampleQueries ?: defaultSettings.exampleQueries\nresults.domainContext = graphRAGSettings?.domainContext ?: defaultSettings.domainContext\n\nreturn results",
 				"parameters":{
-					"graphRAGSettings":"{{ zXXPU.outputs.graphRAGSettings }}"
+					"graphRAGSettings":"{{ zXXPU.outputs.graphRAGSettings }}",
+					"defaultGraphId":"{{ __ENV__.outputs.GRAG_DEFAULT_ID }}"
 				}
 			},
 			"skip":false,
@@ -3324,5 +3324,5 @@
 		"AI Agent",
 		"RBAC"
 	],
-	"version":258
+	"version":260
 }
