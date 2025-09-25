@@ -1,16 +1,16 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1738131920667,
+	"createdTime":1747000738611,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1755437803065,
+		"deployedAt":1758731899908,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68a1daeb9d7d8d3f50462576",
+		"deployedDefinitionId":"68d41e7bd78de600a6bd2c8f",
 		"status":"DEPLOYED",
-		"version":5,
-		"workflowVersion":133
+		"version":73,
+		"workflowVersion":235
 	},
 	"edges":[
 		{
@@ -387,9 +387,9 @@
 		]
 	},
 	"id":"66adcf070fbab558a8313d55",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"knowledge enablement handler",
-	"modifiedTime":1758530912032,
+	"modifiedTime":1758793024519,
 	"name":"Knowledge Enablement Handler",
 	"nodes":[
 		{
@@ -613,7 +613,6 @@
 			},
 			"inputs":{},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -849,7 +848,6 @@
 				"userId":"{{ hsp6A.outputs.result.userId }}"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -1888,6 +1886,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"params":{
 							"type":"object",
@@ -1895,12 +1895,12 @@
 							"additionalProperties":false,
 							"title":"Params"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"ai_agent_id":{
 							"type":"string",
@@ -1922,31 +1922,40 @@
 							},
 							"title":"Url List"
 						},
-						"max_depth":{
-							"type":"integer",
-							"title":"Max Depth"
-						},
 						"knowledge_id":{
 							"type":"string",
 							"title":"Knowledge Id"
+						},
+						"includeDocuments":{
+							"type":"boolean",
+							"title":"Include Documents"
+						},
+						"webpageFetchLimit":{
+							"type":"integer",
+							"title":"Webpage Fetch Limit"
+						},
+						"crawlDepth":{
+							"type":"integer",
+							"title":"Crawl Depth"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"// def formattedUrlList = (binding.hasVariable('url_list') ? url_list : []).collect { url ->\n//     [\n//         \"depth\": max_depth,\n//         \"url\"  : url\n//     ]\n// }\n\ndef formattedUrlList = (binding.hasVariable('url_list') ? url_list : [])\ndef crawlDepth = (binding.hasVariable('crawlDepth') ? crawlDepth : 2)\ndef webpageFetchLimit = (binding.hasVariable('webpageFetchLimit') ? webpageFetchLimit : 100)\ndef includeDocuments = (binding.hasVariable('includeDocuments') ? includeDocuments : false)\n\ndef params = [\n    \"knowledge_id\": knowledge_id,\n    \"test\": test,\n    \"specific_webpages\": specific_webpages,\n    \"url_list\": formattedUrlList,\n    \"max_depth\": crawlDepth,\n    \"agenticProcessing\":true,\n    \"agenticProcessingModelId\":\"e_ai_agent_openai_gpt_4.1_nano\",\n    \"websiteFetchLimit\":webpageFetchLimit,\n    \"downloadFilesAndIndex\":includeDocuments,\n    \"downloadFilesAndIndexLimit\":10\n]\n\nreturn [\"params\": params]\n",
 				"compile_static":false,
-				"code":"// def formattedUrlList = (binding.hasVariable('url_list') ? url_list : []).collect { url ->\n//     [\n//         \"depth\": max_depth,\n//         \"url\"  : url\n//     ]\n// }\n\ndef formattedUrlList = (binding.hasVariable('url_list') ? url_list : [])\n\ndef params = [\n    \"knowledge_id\": knowledge_id,\n    \"test\": test,\n    \"specific_webpages\": specific_webpages,\n    \"url_list\": formattedUrlList,\n    \"max_depth\": max_depth,\n    \"agenticProcessing\":true,\n    \"agenticProcessingModelId\":\"e_ai_agent_openai_gpt_4.1_nano\",\n    \"websiteFetchLimit\":100,\n    \"downloadFilesAndIndex\":true,\n    \"downloadFilesAndIndexLimit\":10\n]\n\nreturn [\"params\": params]\n",
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
-					"specific_webpages":"{{ NJu5U.outputs.object.properties.websiteImportInfo.specificWebpages }}",
 					"test":"false",
+					"specific_webpages":"{{ NJu5U.outputs.object.properties.websiteImportInfo.specificWebpages }}",
+					"knowledge_id":"{{ NJu5U.outputs.object.id }}",
+					"includeDocuments":"{{ NJu5U.outputs.object.properties.websiteImportInfo.includeDocuments }}",
+					"webpageFetchLimit":"{{ NJu5U.outputs.object.properties.websiteImportInfo.webpageFetchLimit }}",
+					"crawlDepth":"{{ NJu5U.outputs.object.properties.websiteImportInfo.crawlDepth }}",
 					"url_list":{
 						"ua:type":"mappedArray",
 						"source":"{{ NJu5U.outputs.object.properties.websiteImportInfo.urlList }}",
 						"items":"{{ NJu5U.outputs.object.properties.websiteImportInfo.urlList[0] }}"
-					},
-					"max_depth":2,
-					"knowledge_id":"{{ NJu5U.outputs.object.id }}"
+					}
 				}
 			},
 			"skip":false,
@@ -2390,7 +2399,7 @@
 			"type":"ACTION"
 		}
 	],
-	"ownerUserId":34,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -2408,5 +2417,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":142
+	"version":236
 }
