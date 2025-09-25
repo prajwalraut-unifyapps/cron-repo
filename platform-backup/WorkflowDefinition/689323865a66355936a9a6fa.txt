@@ -2,16 +2,8 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1757098953645,
+	"createdTime":1758530485884,
 	"deleted":false,
-	"deploymentState":{
-		"deployedAt":1758796442177,
-		"deployedBy":1,
-		"deployedDefinitionId":"68d51a9ad7e8855348a87a6f",
-		"status":"DEPLOYED",
-		"version":21,
-		"workflowVersion":51
-	},
 	"edges":[
 		{
 			"fromNodeId":"n_2Mhg0",
@@ -58,6 +50,13 @@
 			"type":"next"
 		},
 		{
+			"fromNodeId":"_jydsv",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_DHLXr",
+			"type":"next"
+		},
+		{
 			"fromNodeId":"n_xly7l",
 			"name":"4",
 			"priority":0,
@@ -95,6 +94,13 @@
 			"type":"next"
 		},
 		{
+			"fromNodeId":"_jYxdn",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_16MlN",
+			"type":"next"
+		},
+		{
 			"fromNodeId":"n_xly7l",
 			"name":"5",
 			"priority":0,
@@ -117,7 +123,7 @@
 			"type":"next"
 		},
 		{
-			"fromNodeId":"_jydsv",
+			"fromNodeId":"n_DHLXr",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_Xavax",
@@ -131,7 +137,7 @@
 			"type":"next"
 		},
 		{
-			"fromNodeId":"_jYxdn",
+			"fromNodeId":"n_16MlN",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_Xavax",
@@ -173,7 +179,7 @@
 	"id":"689323865a66355936a9a6fa",
 	"lastModifiedBy":-1,
 	"lcName":"metering | enterprise search | statcards and datasource usage",
-	"modifiedTime":1758820908726,
+	"modifiedTime":1758530943752,
 	"name":"Metering | Enterprise Search | StatCards and DataSource usage",
 	"nodes":[
 		{
@@ -430,10 +436,10 @@
 			"inputs":{
 				"projections":[
 					{
-						"aggregationFunction":"COUNT",
-						"includePercentageChange":false,
 						"name":"ENTITY_e_traces=::=ID",
-						"alias":"count"
+						"aggregationFunction":"COUNT",
+						"alias":"count",
+						"includePercentageChange":false
 					}
 				],
 				"filter":{
@@ -463,8 +469,8 @@
 				"entityType":"ENTITY_e_traces",
 				"includeTotalHits":false,
 				"timeFilter":{
-					"since":"{{ n_mHTT5.outputs.result.startTime }}",
-					"until":"{{ n_mHTT5.outputs.result.endTime }}"
+					"since":"{{ n_2Mhg0.outputs.since }}",
+					"until":"{{ n_2Mhg0.outputs.until }}"
 				},
 				"group":"ENTITY_REPORTING"
 			},
@@ -509,16 +515,16 @@
 			"inputs":{
 				"projections":[
 					{
-						"aggregationFunction":"COUNT",
-						"includePercentageChange":false,
 						"name":"ENTITY_e_traces=::=messageId",
-						"alias":"errorCount"
+						"aggregationFunction":"COUNT",
+						"alias":"errorCount",
+						"includePercentageChange":false
 					},
 					{
-						"aggregationFunction":"GROUP",
-						"includePercentageChange":false,
 						"name":"ENTITY_service_hub_message=::=content__agentResponse__executionError",
-						"alias":"execError"
+						"aggregationFunction":"GROUP",
+						"alias":"execError",
+						"includePercentageChange":false
 					}
 				],
 				"filter":{
@@ -560,14 +566,74 @@
 				},
 				"entityType":"ENTITY_e_traces",
 				"includeTotalHits":false,
+				"group":"ENTITY_REPORTING"
+			},
+			"skip":false,
+			"subTitle":"Failed Queries",
+			"title":"Analytics Query",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":454,
+				"resourceName":"analytics_by_unifyapps_query_reports",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_xly7l@_cNV7f-1@3",
+			"id":"n_DHLXr",
+			"index":8,
+			"inputs":{
+				"projections":[
+					{
+						"name":"ENTITY_service_hub_message=::=content__agentResponse__executionError",
+						"aggregationFunction":"COUNT",
+						"alias":"executionErrorCount",
+						"includePercentageChange":true
+					}
+				],
+				"filter":{
+					"filters":[
+						{
+							"property":"ENTITY_service_hub_message=::=type",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"fan"
+							}
+						},
+						{
+							"property":"ENTITY_service_hub_message=::=content__agentResponse__executionError",
+							"filter":{
+								"operator":"EXISTS"
+							}
+						},
+						{
+							"resolvedFilter":{
+								"filter":"{{ n_2Mhg0.outputs.filter }}"
+							}
+						},
+						{
+							"property":"ENTITY_service_hub_case=::=additional__aiAgentId",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"enterprise_search_agent"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"entityType":"ENTITY_service_hub_message",
 				"timeFilter":{
 					"since":"{{ n_mHTT5.outputs.result.startTime }}",
 					"until":"{{ n_mHTT5.outputs.result.endTime }}"
 				},
 				"group":"ENTITY_REPORTING"
 			},
-			"skip":false,
-			"subTitle":"Failed Queries",
+			"skip":true,
+			"subTitle":"Fetch Error Count on Fan Message",
 			"title":"Analytics Query",
 			"type":"ACTION"
 		},
@@ -583,7 +649,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_xly7l@_cNV7f-1@4",
 			"id":"n_xly7l@4",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"name":"Data Source Usage"
 			},
@@ -603,20 +669,20 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_xly7l@_cNV7f-1@4",
 			"id":"_P97Pz",
-			"index":9,
+			"index":10,
 			"inputs":{
 				"projections":[
 					{
-						"aggregationFunction":"GROUP",
-						"includePercentageChange":false,
 						"name":"ENTITY_citation_store=::=metadata__appName",
-						"alias":"appName"
+						"aggregationFunction":"GROUP",
+						"alias":"appName",
+						"includePercentageChange":false
 					},
 					{
-						"aggregationFunction":"COUNT",
-						"includePercentageChange":false,
 						"name":"ENTITY_citation_store=::=COUNT",
-						"alias":"count"
+						"aggregationFunction":"COUNT",
+						"alias":"count",
+						"includePercentageChange":false
 					}
 				],
 				"filter":{
@@ -672,7 +738,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_xly7l@_cNV7f-1@4",
 			"id":"n_bFhCv",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -765,7 +831,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_xly7l@_cNV7f-1@7",
 			"id":"n_xly7l@7",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"name":"Average Response Time"
 			},
@@ -785,20 +851,20 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_xly7l@_cNV7f-1@7",
 			"id":"_jYxdn",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"projections":[
 					{
-						"aggregationFunction":"AVG",
-						"includePercentageChange":false,
 						"name":"ENTITY_service_hub_message=::=additional__responseTime",
-						"alias":"avgResponseTime"
+						"aggregationFunction":"AVG",
+						"alias":"avgResponseTime",
+						"includePercentageChange":false
 					},
 					{
-						"aggregationFunction":"GROUP",
-						"includePercentageChange":false,
 						"name":"ENTITY_e_traces=::=aiAgentId",
-						"alias":"agentId"
+						"aggregationFunction":"GROUP",
+						"alias":"agentId",
+						"includePercentageChange":false
 					}
 				],
 				"filter":{
@@ -827,14 +893,61 @@
 				},
 				"entityType":"ENTITY_e_traces",
 				"includeTotalHits":false,
+				"group":"ENTITY_REPORTING"
+			},
+			"skip":false,
+			"subTitle":"Fetch Response Time",
+			"title":"Analytics Query",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":454,
+				"resourceName":"analytics_by_unifyapps_query_reports",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_xly7l@_cNV7f-1@7",
+			"id":"n_16MlN",
+			"index":14,
+			"inputs":{
+				"projections":[
+					{
+						"aggregationFunction":"AVG",
+						"includePercentageChange":false,
+						"name":"ENTITY_service_hub_message=::=additional__responseTime",
+						"alias":"averageResponseTime"
+					}
+				],
+				"filter":{
+					"filters":[
+						{
+							"property":"ENTITY_service_hub_case=::=additional__aiAgentId",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"enterprise_search_agent"
+							}
+						},
+						{
+							"resolvedFilter":{
+								"filter":"{{ n_2Mhg0.outputs.filter }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"entityType":"ENTITY_service_hub_message",
 				"timeFilter":{
 					"since":"{{ n_mHTT5.outputs.result.startTime }}",
 					"until":"{{ n_mHTT5.outputs.result.endTime }}"
 				},
 				"group":"ENTITY_REPORTING"
 			},
-			"skip":false,
-			"subTitle":"Fetch Response Time",
+			"skip":true,
+			"subTitle":"Fetch Average Response Time",
 			"title":"Analytics Query",
 			"type":"ACTION"
 		},
@@ -850,7 +963,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_xly7l@_cNV7f-1@5",
 			"id":"n_xly7l@5",
-			"index":13,
+			"index":15,
 			"inputs":{
 				"name":"Query/User"
 			},
@@ -870,14 +983,14 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_xly7l@_cNV7f-1@5",
 			"id":"n_u0QeS",
-			"index":14,
+			"index":16,
 			"inputs":{
 				"projections":[
 					{
+						"name":"ENTITY_e_traces=::=userId",
 						"aggregationFunction":"DISTINCT_COUNT",
-						"includePercentageChange":false,
-						"name":"USER=::=USER_ID",
-						"alias":"userCount"
+						"alias":"userCount",
+						"includePercentageChange":false
 					}
 				],
 				"filter":{
@@ -904,10 +1017,6 @@
 					"offset":0,
 					"limit":100000
 				},
-				"timeFilter":{
-					"since":"{{ n_mHTT5.outputs.result.startTime }}",
-					"until":"{{ n_mHTT5.outputs.result.endTime }}"
-				},
 				"group":"ENTITY_REPORTING"
 			},
 			"skip":false,
@@ -916,11 +1025,6 @@
 			"type":"ACTION"
 		},
 		{
-			"additional":{
-				"visibleOptionalFields":[
-					"root.parameters.uniqueErrorCount.items"
-				]
-			},
 			"context":{
 				"appName":"code_by_unifyapps",
 				"resourceVersion":451,
@@ -932,7 +1036,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_cNV7f-1",
 			"id":"n_Xavax",
-			"index":15,
+			"index":17,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -954,24 +1058,17 @@
 							"type":"integer",
 							"title":"Total Queries"
 						},
-						"uniqueErrorCount":{
-							"type":"array",
-							"items":{
-								"type":"integer"
-							},
-							"title":"Unique Error Count"
+						"errorsCount":{
+							"type":"integer",
+							"title":"Errors Count"
 						}
 					}
 				},
+				"code":"int totalSuccess = totalQueries - errorsCount\ndouble successRatio = (totalSuccess / totalQueries.toDouble()) * 100\n\nreturn [\"successRatio\": successRatio]",
 				"compile_static":false,
-				"code":"if (!binding.hasVariable('uniqueErrorCount') || (uniqueErrorCount && uniqueErrorCount.size()==0)) {\n  return [\"successRatio\": 100]\n}\n\nint errorCount = uniqueErrorCount.sum() as int\nint totalSuccess = totalQueries - errorCount\n\ndouble successRatio = (totalSuccess / totalQueries.toDouble()) * 100\n\nreturn [\"successRatio\": successRatio]",
 				"parameters":{
 					"totalQueries":"{{ _atEml.outputs.objects[0].columns.count }}",
-					"uniqueErrorCount":{
-						"source":"{{ _jydsv.outputs.objects }}",
-						"ua:type":"mappedArray",
-						"items":"{{ _jydsv.outputs.objects[0].columns.errorCount }}"
-					}
+					"errorsCount":"{{ _jydsv.outputs.objects[0].columns.errorCount }}"
 				}
 			},
 			"skip":false,
@@ -991,7 +1088,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_cNV7f-1",
 			"id":"n_RgTBN",
-			"index":16,
+			"index":18,
 			"inputs":{
 				"result":{
 					"totalQueries":"=TEXT({{ _atEml.outputs.objects[0].columns.count }}, \"#,##0\")",
@@ -1034,5 +1131,5 @@
 	"tags":[
 		
 	],
-	"version":52
+	"version":34
 }
