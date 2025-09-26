@@ -1,51 +1,123 @@
 {
 	"appsUsed":[
-		
+		"freshdesk"
 	],
 	"createdTime":1758862149977,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_oW9S1",
+			"fromNodeId":"n_vBbem",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_7SWXs",
+			"toNodeId":"n_tGeiy",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_tGeiy",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_esHXs",
 			"type":"next"
 		}
 	],
 	"id":"68d61b45b57aa23969bcb12e",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2usejayaqrk",
-	"modifiedTime":1758862149977,
+	"modifiedTime":1758862180910,
 	"name":"cacheQA2uSEjayAqrk",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1129,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_oW9S1-1",
-			"id":"_oW9S1",
-			"index":0,
+			"id":"n_vBbem",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"companyId":{
+							"type":"string",
+							"title":"companyId"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":8388,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_company",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_oW9S1-1",
-			"id":"_7SWXs",
-			"index":0,
+			"id":"n_tGeiy",
+			"index":2,
+			"inputs":{
+				"companyId":"{{ n_vBbem.outputs.companyId }}"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Freshdesk",
+			"title":"Get company",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1132,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_oW9S1-1",
+			"id":"n_esHXs",
+			"index":3,
+			"inputs":{
+				"result":{
+					"result":"{{ n_tGeiy.outputs.name }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +131,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
