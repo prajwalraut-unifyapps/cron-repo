@@ -127,9 +127,9 @@
 		]
 	},
 	"id":"67a48d37f8f1744841dabb63",
-	"lastModifiedBy":0,
+	"lastModifiedBy":-1,
 	"lcName":"getagentcached",
-	"modifiedTime":1758883506417,
+	"modifiedTime":1758884062220,
 	"name":"GetAgentCached",
 	"nodes":[
 		{
@@ -1500,10 +1500,6 @@
 										"AutomationIdForFewShotExtraFilter":{
 											"type":"string",
 											"title":"Automation Id For Few Shot Extra Filter"
-										},
-										"PublishAssumptionsTakenForSQLgeneration":{
-											"type":"boolean",
-											"title":"Publish Assumptions Taken For SQ Lgeneration"
 										}
 									},
 									"additionalProperties":false,
@@ -1520,24 +1516,6 @@
 									"additionalProperties":false,
 									"title":"Team Manager Settings",
 									"required":[]
-								},
-								"deepResearchSettings":{
-									"type":"object",
-									"properties":{
-										"WebSearchSummariserModel":{
-											"type":"string",
-											"title":"WebSearchSummariserModel"
-										},
-										"ExecutionModel":{
-											"type":"string",
-											"title":"ExecutionModel"
-										},
-										"searchEngineToUse":{
-											"type":"string",
-											"title":"searchEngineToUse"
-										}
-									},
-									"additionalProperties":false
 								}
 							},
 							"required":[]
@@ -2074,6 +2052,10 @@
 					"additionalProperties":false,
 					"required":[],
 					"properties":{
+						"DEFAULT_MODEL":{
+							"type":"string",
+							"title":"DEFAULT MODEL"
+						},
 						"validModelList":{
 							"type":"array",
 							"items":{
@@ -2088,10 +2070,6 @@
 							"properties":{},
 							"additionalProperties":false,
 							"title":"Given Model"
-						},
-						"DEFAULT_MODEL":{
-							"type":"string",
-							"title":"DEFAULT MODEL"
 						}
 					}
 				},
@@ -2099,12 +2077,13 @@
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
-					"givenModel":"{{ mtswW.outputs.properties }}",
+					"DEFAULT_MODEL":"{{ __ENV__.outputs.AI_AGENT_DEFAULT_FALLBACK_MODEL }}",
 					"validModelList":{
 						"source":"{{ n_GJKY4.outputs.objects }}",
 						"ua:type":"mappedArray",
 						"items":"{{ n_GJKY4.outputs.objects[0] }}"
-					}
+					},
+					"givenModel":"{{ mtswW.outputs.properties }}"
 				}
 			},
 			"skip":false,
@@ -2586,16 +2565,10 @@
 							"AutomationIdForContextAdditionForSQLQueryGeneration":"{{ mtswW.outputs.properties.textToSQLSettings.AutomationIdForContextAdditionForSQLQueryGeneration }}",
 							"DirectlyPublishTableIfHasMoreData":"{{ mtswW.outputs.properties.textToSQLSettings.DirectlyPublishTableIfHasMoreData }}",
 							"fewShotExtraFilterNeeded":"{{ mtswW.outputs.properties.textToSQLSettings.fewShotExtraFilterNeeded }}",
-							"AutomationIdForFewShotExtraFilter":"{{ mtswW.outputs.properties.textToSQLSettings.AutomationIdForFewShotExtraFilter }}",
-							"PublishAssumptionsTakenForSQLgeneration":"{{ mtswW.outputs.properties.textToSQLSettings.PublishAssumptionsTakenForSQLgeneration }}"
+							"AutomationIdForFewShotExtraFilter":"{{ mtswW.outputs.properties.textToSQLSettings.AutomationIdForFewShotExtraFilter }}"
 						},
 						"teamManagerSettings":{
 							"agentsAsTools":"{{ mtswW.outputs.properties.teamManagerSettings.agentsAsTools }}"
-						},
-						"deepResearchSettings":{
-							"WebSearchSummariserModel":"{{ mtswW.outputs.properties.deepResearchSettings.WebSearchSummariserModel }}",
-							"ExecutionModel":"{{ mtswW.outputs.properties.deepResearchSettings.ExecutionModel }}",
-							"searchEngineToUse":"{{ mtswW.outputs.properties.deepResearchSettings.searchEngineToUse }}"
 						},
 						"deployedOn":{
 							"source":"{{ mtswW.outputs.properties.deployedOn }}",
@@ -3161,5 +3134,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":96
+	"version":97
 }
