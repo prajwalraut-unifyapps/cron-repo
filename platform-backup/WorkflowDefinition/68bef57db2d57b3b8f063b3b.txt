@@ -1,9 +1,17 @@
 {
 	"appsUsed":[
-		
+		"microsoft_onedrive"
 	],
-	"createdTime":1758530459199,
+	"createdTime":1757705814214,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1758820857847,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68d579f9b57aa23969b94d0b",
+		"status":"DEPLOYED",
+		"version":15,
+		"workflowVersion":61
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_0pUZ3",
@@ -110,9 +118,9 @@
 		]
 	},
 	"id":"68bef57db2d57b3b8f063b3b",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"knowledge downloader | onedrive | file",
-	"modifiedTime":1758530890865,
+	"modifiedTime":1758886185288,
 	"name":"Knowledge Downloader | OneDrive | File",
 	"nodes":[
 		{
@@ -333,7 +341,7 @@
 			"context":{
 				"appName":"microsoft_onedrive",
 				"resourceVersion":172,
-				"connectionId":"67c7f6ad259bff10656890b6",
+				"connectionId":"687202d6c188db3f0da57e9d",
 				"resourceName":"microsoft_onedrive_get_drive_item_metadata",
 				"type":"APPLICATION"
 			},
@@ -347,12 +355,17 @@
 				"path":"{{ n_0pUZ3.outputs.filePath }}"
 			},
 			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
 				"businessHoursConfig":{
 					"enabled":false,
 					"waitForNextWindow":false
 				},
 				"cacheConfig":{
-					"enabled":false
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
 				},
 				"circuitBreakerConfig":{
 					"enabled":false
@@ -366,13 +379,19 @@
 					"enabled":false
 				},
 				"rateLimitConfig":{
-					"enabled":false,
+					"duration":"1",
+					"enabled":true,
+					"threshold":"100",
+					"unit":"MINUTES",
 					"waitForNextWindow":false
 				},
 				"retryConfig":{
-					"backOffFactor":null,
+					"backOffFactor":2.0,
 					"captureRetries":false,
-					"enabled":false
+					"count":3,
+					"enabled":true,
+					"initialDelay":3000,
+					"maxDelay":15000
 				},
 				"stepError":"STOP",
 				"telemetryConfig":{
@@ -400,6 +419,62 @@
 			"index":6,
 			"inputs":{
 				"path":"{{ n_0pUZ3.outputs.filePath }}"
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"duration":"1",
+					"enabled":true,
+					"threshold":"100",
+					"unit":"MINUTES",
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":2.0,
+					"captureRetries":false,
+					"count":3,
+					"enabled":true,
+					"initialDelay":3000,
+					"maxDelay":15000
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				}
 			},
 			"skip":false,
 			"subTitle":"Microsoft OneDrive",
@@ -536,10 +611,14 @@
 						"authorEmail":{
 							"type":"string",
 							"title":"Author Email"
+						},
+						"folder":{
+							"type":"string",
+							"title":"Folder"
 						}
 					}
 				},
-				"code":"def chunkMetadata = [:]\n\nchunkMetadata << (binding.hasVariable('name') && name ? [\"name\": name] : [:])\nchunkMetadata << (binding.hasVariable('mimetype') && mimetype ? [\"mimetype\": mimetype] : [:])\nchunkMetadata << (binding.hasVariable('webViewLink') && webViewLink ? [\"referenceUrl\": webViewLink] : [:])\nchunkMetadata << (binding.hasVariable('size') && size ? [\"size\": size] : [:])\nchunkMetadata << [\"appName\" : \"microsoft_onedrive\"]\nchunkMetadata << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nchunkMetadata << (binding.hasVariable('authorEmail') && authorEmail ? [\"authorEmail\": authorEmail] : [:])\nchunkMetadata << (binding.hasVariable('creationDateTime') && creationDateTime ? [\"createdTime\": java.time.Instant.parse(creationDateTime).toEpochMilli()] : [:])\nchunkMetadata << (binding.hasVariable('modifiedTime') && modifiedTime ? [\"modifiedTime\": java.time.Instant.parse(modifiedTime).toEpochMilli()] : [:])\n\nreturn [\"chunkMetadata\": chunkMetadata]\n",
+				"code":"def chunkMetadata = [:]\n\nchunkMetadata << (binding.hasVariable('name') && name ? [\"name\": name] : [:])\nchunkMetadata << (binding.hasVariable('mimetype') && mimetype ? [\"mimetype\": mimetype] : [:])\nchunkMetadata << (binding.hasVariable('webViewLink') && webViewLink ? [\"referenceUrl\": webViewLink] : [:])\nchunkMetadata << (binding.hasVariable('size') && size ? [\"size\": size] : [:])\nchunkMetadata << [\"appName\" : \"microsoft_onedrive\"]\nchunkMetadata << (binding.hasVariable('folder') && folder ? [\"folderName\": folder] : [:])\nchunkMetadata << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nchunkMetadata << (binding.hasVariable('authorEmail') && authorEmail ? [\"authorEmail\": authorEmail] : [:])\nchunkMetadata << (binding.hasVariable('creationDateTime') && creationDateTime ? [\"createdTime\": java.time.Instant.parse(creationDateTime).toEpochMilli()] : [:])\nchunkMetadata << (binding.hasVariable('modifiedTime') && modifiedTime ? [\"modifiedTime\": java.time.Instant.parse(modifiedTime).toEpochMilli()] : [:])\n\nreturn [\"chunkMetadata\": chunkMetadata]\n",
 				"compile_static":false,
 				"isAsync":false,
 				"captureStdOutput":false,
@@ -551,7 +630,8 @@
 					"author":"{{ k3HVL.outputs.createdBy.user.displayName }}",
 					"creationDateTime":"{{ k3HVL.outputs.createdDateTime }}",
 					"modifiedTime":"{{ k3HVL.outputs.lastModifiedDateTime }}",
-					"authorEmail":"{{ k3HVL.outputs.createdBy.user.email }}"
+					"authorEmail":"{{ k3HVL.outputs.createdBy.user.email }}",
+					"folder":"{{ k3HVL.outputs.parentReference.path }}"
 				}
 			},
 			"skip":false,
@@ -618,6 +698,10 @@
 									"properties":{},
 									"additionalProperties":false,
 									"title":"File Details"
+								},
+								"folder":{
+									"type":"string",
+									"title":"Folder"
 								}
 							},
 							"additionalProperties":false,
@@ -667,10 +751,14 @@
 							"properties":{},
 							"additionalProperties":false,
 							"title":"File Details"
+						},
+						"folder":{
+							"type":"string",
+							"title":"Folder"
 						}
 					}
 				},
-				"code":"def sourceResponse = [:]\n\nif(binding.hasVariable('fileDetails')){\n  sourceResponse[\"fileDetails\"] = fileDetails\n}\n\nsourceResponse << (binding.hasVariable('name') && name ? [\"name\": name] : [:])\nsourceResponse << (binding.hasVariable('mimetype') && mimetype ? [\"mimetype\": mimetype] : [:])\nsourceResponse << (binding.hasVariable('webViewLink') && webViewLink ? [\"referenceUrl\": webViewLink] : [:])\nsourceResponse << (binding.hasVariable('size') && size ? [\"size\": size] : [:])\nsourceResponse << [\"appName\" : \"microsoft_onedrive\"]\nsourceResponse << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nsourceResponse << (binding.hasVariable('authorEmail') && authorEmail ? [\"authorEmail\": authorEmail] : [:])\nsourceResponse << (binding.hasVariable('creationDateTime') && creationDateTime ? [\"createdTime\": java.time.Instant.parse(creationDateTime).toEpochMilli()] : [:])\nsourceResponse << (binding.hasVariable('modifiedTime') && modifiedTime ? [\"modifiedTime\": java.time.Instant.parse(modifiedTime).toEpochMilli()] : [:])\n\nreturn [\"sourceResponse\": sourceResponse]\n",
+				"code":"def sourceResponse = [:]\n\nif(binding.hasVariable('fileDetails')){\n  sourceResponse[\"fileDetails\"] = fileDetails\n}\n\nsourceResponse << (binding.hasVariable('name') && name ? [\"name\": name] : [:])\nsourceResponse << (binding.hasVariable('mimetype') && mimetype ? [\"mimetype\": mimetype] : [:])\nsourceResponse << (binding.hasVariable('webViewLink') && webViewLink ? [\"referenceUrl\": webViewLink] : [:])\nsourceResponse << (binding.hasVariable('size') && size ? [\"size\": size] : [:])\nsourceResponse << [\"appName\" : \"microsoft_onedrive\"]\nsourceResponse << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nsourceResponse << (binding.hasVariable('folder') && folder ? [\"folder\": folder] : [:])\nsourceResponse << (binding.hasVariable('authorEmail') && authorEmail ? [\"authorEmail\": authorEmail] : [:])\nsourceResponse << (binding.hasVariable('creationDateTime') && creationDateTime ? [\"createdTime\": java.time.Instant.parse(creationDateTime).toEpochMilli()] : [:])\nsourceResponse << (binding.hasVariable('modifiedTime') && modifiedTime ? [\"modifiedTime\": java.time.Instant.parse(modifiedTime).toEpochMilli()] : [:])\n\nreturn [\"sourceResponse\": sourceResponse]\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -682,7 +770,8 @@
 					"name":"{{ k3HVL.outputs.name }}",
 					"size":"{{ k3HVL.outputs.size }}",
 					"webViewLink":"{{ _sTbGo.outputs.path }}",
-					"fileDetails":"{{ n_jHX4k.outputs.fileDetails }}"
+					"fileDetails":"{{ n_jHX4k.outputs.fileDetails }}",
+					"folder":"{{ k3HVL.outputs.parentReference.path }}"
 				}
 			},
 			"skip":false,
@@ -716,6 +805,8 @@
 					"resourceType":"file",
 					"uniqueEntityId":"{{ n_0pUZ3.outputs.uniqueEntityId }}",
 					"metadata":"{{ _5iPjK.outputs.result.chunkMetadata }}",
+					"authorEmail":"{{ _SNVyB.outputs.result.sourceResponse.authorEmail }}",
+					"isTypeFile":true,
 					"sharedWithIds":{
 						"ua:type":"mappedArray",
 						"source":"{{ _DH3yZ.outputs.sharedWithIds }}",
@@ -773,5 +864,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":51
+	"version":62
 }
