@@ -5,12 +5,12 @@
 	"createdTime":1752764153624,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758820929825,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68d57a41b57aa23969b94f90",
+		"deployedAt":1758874455954,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d64b57b57aa23969be9cac",
 		"status":"DEPLOYED",
-		"version":52,
-		"workflowVersion":56
+		"version":53,
+		"workflowVersion":57
 	},
 	"edges":[
 		{
@@ -89,6 +89,13 @@
 			"fromNodeId":"_zH2N7",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_LxuU0",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_LxuU0",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"_7DkYu",
 			"type":"next"
 		},
@@ -118,9 +125,9 @@
 		]
 	},
 	"id":"68764a904a79e9934a6439f3",
-	"lastModifiedBy":1,
+	"lastModifiedBy":0,
 	"lcName":"download and index files",
-	"modifiedTime":1758874455770,
+	"modifiedTime":1758886251812,
 	"name":"Download and Index Files",
 	"nodes":[
 		{
@@ -912,6 +919,39 @@
 			"type":"ACTION"
 		},
 		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":469,
+				"resourceName":"analytics_by_unifyapps_execute_query",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"U1dyi@CDUZW@bRhw5@0kb4H@5NJaW@O66xp-1@l@l@y@y@error",
+			"id":"n_LxuU0",
+			"index":12,
+			"inputs":{
+				"outputSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"id":{
+							"type":"string",
+							"title":"Id"
+						}
+					}
+				},
+				"query":"SELECT id FROM WORKFLOW_EXECUTION \nWHERE workflowId = '6708d0a1e5c64343ba9b24c8' \n  AND JSON_QUERY(startNodeOutput, '$.knowledgeId') = '{{ 5UTSt.outputs.knowledgeId }}' \n  AND status = 'FAILED' \n  AND JSON_QUERY(startNodeOutput, '$.uniqueEntityId') = '{{ 5UTSt.outputs.uniqueEntityId }}' \n  AND endTime >= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 30 MINUTE)) * 1000\nORDER BY startTime DESC\nLIMIT 1;",
+				"group":"ENTITY_REPORTING"
+			},
+			"skip":false,
+			"subTitle":"Get Failed Execution",
+			"title":"Execute Analytics SQL Query",
+			"type":"ACTION"
+		},
+		{
 			"additional":{
 				"visibleOptionalFields":[
 					"root.updateFields.items.fieldName",
@@ -929,7 +969,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"U1dyi@CDUZW@bRhw5@0kb4H@5NJaW@O66xp-1@l@l@y@y@error",
 			"id":"_7DkYu",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"recordId":"{{ n_mMvId.outputs.id }}",
 				"writeThroughSessionVariables":false,
@@ -946,6 +986,21 @@
 						"fieldName":"properties.lastProcessedTime",
 						"actionType":"SET",
 						"setValue":"{{ _zH2N7.outputs.result.currentTime }}"
+					},
+					{
+						"fieldName":"properties.errorDetails.error",
+						"actionType":"SET",
+						"setValue":"{{ U1dyi.outputs }}"
+					},
+					{
+						"fieldName":"properties.errorDetails.executionId",
+						"actionType":"SET",
+						"setValue":"{{ n_LxuU0.outputs.objects[0].columns.id }}"
+					},
+					{
+						"fieldName":"properties.errorDetails.workflowId",
+						"actionType":"SET",
+						"setValue":"6708d0a1e5c64343ba9b24c8"
 					}
 				],
 				"unsetIfNull":false
@@ -966,7 +1021,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CDUZW@bRhw5@0kb4H@5NJaW@O66xp-1@l@l@y@y",
 			"id":"wQ2G0",
-			"index":13,
+			"index":14,
 			"inputs":{
 				"result":{
 					"status":"OK",
@@ -988,14 +1043,14 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
 		}
 	},
 	"standard":true,
-	"version":57
+	"version":59
 }
