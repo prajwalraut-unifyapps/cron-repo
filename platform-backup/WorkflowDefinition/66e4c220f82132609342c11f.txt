@@ -1,16 +1,17 @@
 {
 	"appsUsed":[
-		
+		"microsoft_outlook",
+		"storage_by_unifyapps"
 	],
-	"createdTime":1726267936786,
+	"createdTime":1747000739239,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1757441890806,
-		"deployedBy":0,
-		"deployedDefinitionId":"68c06f6291dbf0016b768afd",
+		"deployedAt":1758874560090,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d64bc0b57aa23969be9ff4",
 		"status":"DEPLOYED",
-		"version":101,
-		"workflowVersion":136
+		"version":73,
+		"workflowVersion":152
 	},
 	"edges":[
 		{
@@ -289,11 +290,41 @@
 			"fromNodeId":"fW0si",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"vcLLc",
+			"toNodeId":"n_A15oq",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"m9T0b",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_A15oq",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_A15oq",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_h0PE7",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_h0PE7",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_yzweo",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_yzweo",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_HrVrt",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_A15oq",
 			"name":"no",
 			"priority":0,
 			"skip":false,
@@ -302,6 +333,20 @@
 		},
 		{
 			"fromNodeId":"vcLLc",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_3gNh0",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_HrVrt",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_24Hma",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_3gNh0",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_24Hma",
@@ -356,9 +401,9 @@
 		]
 	},
 	"id":"66e4c220f82132609342c11f",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"execute custom ai agent action",
-	"modifiedTime":1758530336735,
+	"modifiedTime":1758886254077,
 	"name":"Execute Custom AI Agent Action",
 	"nodes":[
 		{
@@ -376,6 +421,10 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"result"
+					],
 					"properties":{
 						"success":{
 							"type":"string",
@@ -387,14 +436,12 @@
 							"additionalProperties":false,
 							"title":"Result"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"result"
-					]
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"actionId":{
 							"type":"string",
@@ -413,10 +460,12 @@
 						"agentType":{
 							"type":"string",
 							"title":"Agent Type"
+						},
+						"AgentResponseMessageId":{
+							"type":"string",
+							"title":"Agent Response Message Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -503,6 +552,12 @@
 						"toolName":{
 							"type":"string",
 							"title":"Tool Name"
+						},
+						"actionOutput":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Action Output"
 						}
 					},
 					"required":[]
@@ -541,6 +596,12 @@
 						"toolName":{
 							"type":"string",
 							"title":"Tool Name"
+						},
+						"actionOutput":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Action Output"
 						}
 					},
 					"required":[]
@@ -659,8 +720,9 @@
 				"object_type":"e_action_ai_agent",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"id":"{{ whabY.outputs.actionId }}",
-				"readThroughSessionVariables":true
+				"readThroughSessionVariables":false
 			},
 			"skip":false,
 			"subTitle":"Action",
@@ -1130,6 +1192,10 @@
 					{
 						"source":"{{ Uphqh.outputs.resourceName }}",
 						"value":"{{ PrwLL.outputs.properties.name }}"
+					},
+					{
+						"source":"{{ Uphqh.outputs.toolName }}",
+						"value":"{{ PrwLL.outputs.properties.name }}"
 					}
 				]
 			},
@@ -1178,6 +1244,10 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"callSynchronous"
+					],
 					"properties":{
 						"inputs":{
 							"type":"object",
@@ -1189,14 +1259,14 @@
 							"type":"boolean",
 							"title":"Call Synchronous"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"callSynchronous"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"caseId"
+					],
 					"properties":{
 						"inputsFromDecisionEngine":{
 							"type":"object",
@@ -1227,23 +1297,25 @@
 							"properties":{},
 							"additionalProperties":false,
 							"title":"Context"
+						},
+						"AgentResponseMessageId":{
+							"type":"string",
+							"title":"Agent Response Message Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"caseId"
-					]
+					}
 				},
+				"code":"def processInputs(inputData) {\n    return inputData?._ua_schema_override_ instanceof Map ? inputData._ua_schema_override_ : inputData\n}\n\ndef mergeMaps(existingMap, newMap, context, Map<?, ?> parent = null, Object parentKey = null) {\n    newMap.each { key, value ->\n        if (value instanceof Map) {\n            if (!(existingMap[key] instanceof Map)) {\n                existingMap[key] = [:]\n            }\n            mergeMaps(existingMap[key], value, context ,existingMap, key)\n\n        } else if (value instanceof List) {\n\n            if (!(existingMap[key] instanceof List)) {\n                existingMap[key] = []\n            }\n            if (existingMap[key].size() == 0) {\n                existingMap[key] = value\n            }\n\n            // custom handling, need to move in other automation\n            if (context?.resourceName == \"custom_http_application_execute\" || context?.resourceName == \"custom_http_endpoint_execute\" ){\n                existingMap[key].forEach{ keyVal ->\n                    matchingLlmKeyVal = value.find{it.key == keyVal.key }\n                    keyVal.value = matchingLlmKeyVal.value\n                }\n            }\n\n            // def mergedList = [:]\n            // def existingList = existingMap[key]\n\n            // existingList.each { item ->\n            //     if (item instanceof Map) {\n            //         mergedList[item.hashCode()] = item\n            //     } else {\n            //         mergedList[item] = item\n            //     }\n            // }\n\n            // value.each { item ->\n            //     if (item instanceof Map) {\n            //         def hashedItem = item.hashCode()\n            //         if (!mergedList.containsKey(hashedItem)) {\n            //             mergedList[hashedItem] = item\n            //         }\n            //     } else {\n            //         if (!mergedList.containsKey(item)) {\n            //             mergedList[item] = item\n            //         }\n            //     }\n            // }\n            \n            // existingMap[key] = mergedList.values().toList()\n            \n        } else {\n            if (key instanceof String && key == \"ua:type\") {\n            }\n            else{\n                if (!existingMap.containsKey(key) || existingMap[key] == null || (existingMap[key] instanceof String && existingMap[key].trim().isEmpty())) {\n                    existingMap[key] = value\n                }\n            }\n        }\n    }\n\n    if (existingMap.isEmpty() && parent != null && parentKey != null) {\n        parent.remove(parentKey)\n    }\n    \n}\n\n\ndef cleanMap(Map inputMap) {\n    inputMap.entrySet().removeIf { entry ->\n        def key = entry.key\n        def value = entry.value\n\n        if (value instanceof Map) {\n            cleanMap(value) \n            return value.isEmpty()\n        } else if (value instanceof List) {\n            value.removeIf { it == null || it == '' || (it instanceof Map && cleanMap(it) && it.isEmpty()) }\n            return value.isEmpty()\n        } else {\n            return (value == '' || value == null)\n        }\n    }\n    return inputMap\n}\n\nif (binding.hasVariable('resourceName') && resourceName == \"callables_call_automation\") {\n    def params = userFilledInputs?.parameters ?: [:]\n    def inputsToSubmit = [:]\n    if (binding.hasVariable('inputsFromDecisionEngine')) {\n        inputsToSubmit.putAll(processInputs(inputsFromDecisionEngine))\n    }\n\n    mergeMaps(inputsToSubmit, params, context)\n\n    if (binding.hasVariable('caseId')) {\n        inputsToSubmit[\"caseId\"] = caseId\n    }\n    if (binding.hasVariable('AgentResponseMessageId')) {\n        inputsToSubmit[\"AgentResponseMessageId\"] = AgentResponseMessageId\n    }\n    \n\n    userFilledInputs[\"parameters\"] = inputsToSubmit\n    userFilledInputs[\"timeoutInMillis\"] = 120000\n\n    return [\"inputs\": userFilledInputs, \"callSynchronous\": userFilledInputs?.synchronous ?: false]\n} else {\n    def inputsToSubmit = [:]\n    if (binding.hasVariable('userFilledInputs')) {\n        inputsToSubmit.putAll(userFilledInputs)\n    }\n\n    if (binding.hasVariable('inputsFromDecisionEngine')) {\n        mergeMaps(inputsToSubmit,processInputs(inputsFromDecisionEngine), context)\n    }\n\n    inputsToSubmit = cleanMap(inputsToSubmit) ?: [:]\n\n    if(binding.hasVariable('context') && context.appName == \"custom_http_endpoint\") {\n        def headers = inputsToSubmit?.headersList\n        if(headers == null || headers.isEmpty()) {\n            headers = []\n        }\n        headers.add([\"key\": \"ua-agent-id\", \"value\": agentId])\n        inputsToSubmit.put(\"headersList\", headers)\n    }\n\n    if(binding.hasVariable('context') && context.resourceName == \"custom_http_application_execute\") {\n        def resolvedPath = inputsToSubmit.path\n        def pathParamsList = inputsToSubmit.pathParamsList\n        pathParamsList.forEach { pathParam ->\n            if (pathParam.key != null && pathParam.value != null )\n            resolvedPath = resolvedPath.replace(\":\" + pathParam.key, pathParam.value)\n        }\n        inputsToSubmit.path = resolvedPath\n    }\n\n    return [\"inputs\": inputsToSubmit]\n}",
 				"compile_static":false,
-				"code":"def processInputs(inputData) {\n    return inputData?._ua_schema_override_ instanceof Map ? inputData._ua_schema_override_ : inputData\n}\n\ndef mergeMaps(existingMap, newMap, context, Map<?, ?> parent = null, Object parentKey = null) {\n    newMap.each { key, value ->\n        if (value instanceof Map) {\n            if (!(existingMap[key] instanceof Map)) {\n                existingMap[key] = [:]\n            }\n            mergeMaps(existingMap[key], value, context ,existingMap, key)\n\n        } else if (value instanceof List) {\n\n            if (!(existingMap[key] instanceof List)) {\n                existingMap[key] = []\n            }\n            if (existingMap[key].size() == 0) {\n                existingMap[key] = value\n            }\n\n            // custom handling, need to move in other automation\n            if (context?.resourceName == \"custom_http_application_execute\" || context?.resourceName == \"custom_http_endpoint_execute\" ){\n                existingMap[key].forEach{ keyVal ->\n                    matchingLlmKeyVal = value.find{it.key == keyVal.key }\n                    keyVal.value = matchingLlmKeyVal.value\n                }\n            }\n\n            // def mergedList = [:]\n            // def existingList = existingMap[key]\n\n            // existingList.each { item ->\n            //     if (item instanceof Map) {\n            //         mergedList[item.hashCode()] = item\n            //     } else {\n            //         mergedList[item] = item\n            //     }\n            // }\n\n            // value.each { item ->\n            //     if (item instanceof Map) {\n            //         def hashedItem = item.hashCode()\n            //         if (!mergedList.containsKey(hashedItem)) {\n            //             mergedList[hashedItem] = item\n            //         }\n            //     } else {\n            //         if (!mergedList.containsKey(item)) {\n            //             mergedList[item] = item\n            //         }\n            //     }\n            // }\n            \n            // existingMap[key] = mergedList.values().toList()\n            \n        } else {\n            if (key instanceof String && key == \"ua:type\") {\n            }\n            else{\n                if (!existingMap.containsKey(key) || existingMap[key] == null || (existingMap[key] instanceof String && existingMap[key].trim().isEmpty())) {\n                    existingMap[key] = value\n                }\n            }\n        }\n    }\n\n    if (existingMap.isEmpty() && parent != null && parentKey != null) {\n        parent.remove(parentKey)\n    }\n    \n}\n\n\ndef cleanMap(Map inputMap) {\n    inputMap.entrySet().removeIf { entry ->\n        def key = entry.key\n        def value = entry.value\n\n        if (value instanceof Map) {\n            cleanMap(value) \n            return value.isEmpty()\n        } else if (value instanceof List) {\n            value.removeIf { it == null || it == '' || (it instanceof Map && cleanMap(it) && it.isEmpty()) }\n            return value.isEmpty()\n        } else {\n            return (value == '' || value == null)\n        }\n    }\n    return inputMap\n}\n\nif (binding.hasVariable('resourceName') && resourceName == \"callables_call_automation\") {\n    def params = userFilledInputs?.parameters ?: [:]\n    def inputsToSubmit = [:]\n    if (binding.hasVariable('inputsFromDecisionEngine')) {\n        inputsToSubmit.putAll(processInputs(inputsFromDecisionEngine))\n    }\n\n    mergeMaps(inputsToSubmit, params, context)\n\n    if (binding.hasVariable('caseId')) {\n        inputsToSubmit[\"caseId\"] = caseId\n    }\n\n    userFilledInputs[\"parameters\"] = inputsToSubmit\n    userFilledInputs[\"timeoutInMillis\"] = 120000\n\n    return [\"inputs\": userFilledInputs, \"callSynchronous\": userFilledInputs?.synchronous ?: false]\n} else {\n    def inputsToSubmit = [:]\n    if (binding.hasVariable('userFilledInputs')) {\n        inputsToSubmit.putAll(userFilledInputs)\n    }\n\n    if (binding.hasVariable('inputsFromDecisionEngine')) {\n        mergeMaps(inputsToSubmit,processInputs(inputsFromDecisionEngine), context)\n    }\n\n    inputsToSubmit = cleanMap(inputsToSubmit) ?: [:]\n\n    if(binding.hasVariable('context') && context.appName == \"custom_http_endpoint\") {\n        def headers = inputsToSubmit?.headersList\n        if(headers == null || headers.isEmpty()) {\n            headers = []\n        }\n        headers.add([\"key\": \"ua-agent-id\", \"value\": agentId])\n        inputsToSubmit.put(\"headersList\", headers)\n    }\n\n    if(binding.hasVariable('context') && context.resourceName == \"custom_http_application_execute\") {\n        def resolvedPath = inputsToSubmit.path\n        def pathParamsList = inputsToSubmit.pathParamsList\n        pathParamsList.forEach { pathParam ->\n            if (pathParam.key != null && pathParam.value != null )\n            resolvedPath = resolvedPath.replace(\":\" + pathParam.key, pathParam.value)\n        }\n        inputsToSubmit.path = resolvedPath\n    }\n\n    return [\"inputs\": inputsToSubmit]\n}",
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"inputsFromDecisionEngine":"{{ whabY.outputs.inputs }}",
-					"caseId":"{{ _1yQ9R.outputs.caseId }}",
 					"userFilledInputs":"{{ Uphqh.outputs.input }}",
 					"resourceName":"{{ Uphqh.outputs.resourceName }}",
+					"caseId":"{{ _1yQ9R.outputs.caseId }}",
 					"agentId":"{{ whabY.outputs.agentId }}",
-					"context":"{{ Uphqh.outputs.context }}"
+					"context":"{{ Uphqh.outputs.context }}",
+					"AgentResponseMessageId":"{{ whabY.outputs.AgentResponseMessageId }}"
 				}
 			},
 			"skip":false,
@@ -1422,7 +1494,7 @@
 						"property":"{{ BzoBD.outputs.result.callSynchronous }}",
 						"filter":{
 							"operator":"EQUAL",
-							"value":""
+							"value":"true"
 						}
 					}
 				],
@@ -1516,8 +1588,10 @@
 			"index":28,
 			"inputs":{
 				"automationId":"{{ KqPlX.outputs.result.automationId }}",
+				"runtimeConnections":{},
 				"synchronous":true,
-				"version":"-1"
+				"version":"-1",
+				"parameters":"{{ KqPlX.outputs.result.parameters }}"
 			},
 			"skip":false,
 			"subTitle":"Callable",
@@ -1564,17 +1638,23 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"appName":{
 							"type":"string",
 							"title":"App Name"
+						},
+						"resourceName":{
+							"type":"string",
+							"title":"Resource Name"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"context":{
 							"type":"object",
@@ -1582,12 +1662,10 @@
 							"additionalProperties":false,
 							"title":"Context"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"return [\"appName\": context?.appName,\"resourceName\":context?.resourceName?:\"\"]",
 				"compile_static":false,
-				"code":"return [\"appName\": context?.appName]",
 				"parameters":{
 					"context":"{{ Uphqh.outputs.context }}"
 				}
@@ -1706,6 +1784,193 @@
 		},
 		{
 			"context":{
+				"appName":"if_else",
+				"resourceVersion":439,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"M9090-1",
+			"id":"n_A15oq",
+			"index":33,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ JRa3S.outputs.result.resourceName }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"microsoft_outlook_get_attachments"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":451,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_A15oq@M9090-1@y",
+			"id":"n_h0PE7",
+			"index":34,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"messageId":{
+							"type":"string",
+							"title":"Message Id"
+						},
+						"attachmentId":{
+							"type":"string",
+							"title":"Attachment Id"
+						},
+						"mailBoxId":{
+							"type":"string",
+							"title":"Mail Box Id"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"inputs":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Inputs"
+						}
+					}
+				},
+				"code":"def inputs=binding.hasVariable(\"inputs\")?inputs:null\nif(inputs!=null)\n{\n  return[\"messageId\":inputs?.messageId?:null,\"attachmentId\":inputs?.attachmentId?:null,\"mailBoxId\":inputs?.mailBoxId?:null]\n}\nreturn [\"messageId\":null,\"attachmentId\":null,\"mailBoxId\":null]",
+				"compile_static":false,
+				"parameters":{
+					"inputs":"{{ RYwQe.outputs.result.modifiedInputs }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"microsoft_outlook",
+				"resourceVersion":2393,
+				"connectionId":"67ace322547f683cd2829990",
+				"resourceName":"microsoft_outlook_get_attachments",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_A15oq@M9090-1@y",
+			"id":"n_yzweo",
+			"index":35,
+			"inputs":{
+				"messageId":"{{ n_h0PE7.outputs.result.messageId }}",
+				"mailBoxId":"{{ n_h0PE7.outputs.result.mailBoxId }}",
+				"attachmentId":"{{ n_h0PE7.outputs.result.attachmentId }}"
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Microsoft Outlook",
+			"title":"Retrieve Attachement",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":447,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_A15oq@M9090-1@y",
+			"id":"n_HrVrt",
+			"index":36,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ Uphqh.outputs.actionOutput }}",
+						"value":"{{ n_yzweo.outputs }}"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"custom_application",
 				"resourceVersion":0,
 				"resourceName":"custom_application_execute",
@@ -1714,9 +1979,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"M9090-1",
+			"groupId":"n_A15oq@M9090-1@n",
 			"id":"vcLLc",
-			"index":33,
+			"index":37,
 			"inputs":{
 				"input":"{{ RYwQe.outputs.result.modifiedInputs }}",
 				"context":"{{ Uphqh.outputs.context }}"
@@ -1724,6 +1989,32 @@
 			"skip":false,
 			"subTitle":"Custom Application",
 			"title":"Execute Custom Application Request",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":447,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_A15oq@M9090-1@n",
+			"id":"n_3gNh0",
+			"index":38,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ Uphqh.outputs.actionOutput }}",
+						"value":"{{ vcLLc.outputs }}"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
 			"type":"ACTION"
 		},
 		{
@@ -1738,7 +2029,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"M9090-1",
 			"id":"n_24Hma",
-			"index":34,
+			"index":39,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -1762,6 +2053,7 @@
 				"object_type":"agent_tool_processing_automation",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"page":{
 					"paginateBy":"OFFSET",
 					"limit":20
@@ -1787,7 +2079,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"M9090-1",
 			"id":"n_OoJLq",
-			"index":35,
+			"index":40,
 			"inputs":{
 				"filters":[
 					{
@@ -1816,10 +2108,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_OoJLq@M9090-1@y",
 			"id":"n_3FTti",
-			"index":36,
+			"index":41,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"context":{
 							"type":"object",
@@ -1833,12 +2127,12 @@
 							"additionalProperties":false,
 							"title":"Automation Inputs"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"automationId":{
 							"type":"string",
@@ -1850,15 +2144,13 @@
 							"additionalProperties":false,
 							"title":"Inputs"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"return [\n  \"automationInputs\": [\n    \"automationId\": automationId,\n    \"runtimeConnections\": [:],\n    \"synchronous\": true,\n    \"version\": \"-1\",\n    \"parameters\": [\n      \"inputs\": binding.hasVariable(\"inputs\") ? binding.getVariable(\"inputs\") : [:]\n    ]\n  ],\n  \"context\": [\n    \"appName\": \"callables\",\n    \"resourceName\": \"callables_call_automation\"\n  ]\n]",
+				"compile_static":false,
 				"parameters":{
-					"inputs":"{{ vcLLc.outputs }}",
-					"automationId":"{{ n_24Hma.outputs.properties.automationId }}"
+					"automationId":"{{ n_24Hma.outputs.properties.automationId }}",
+					"inputs":"{{ Uphqh.outputs.actionOutput }}"
 				}
 			},
 			"skip":false,
@@ -1878,7 +2170,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_OoJLq@M9090-1@y",
 			"id":"_JVpHE",
-			"index":37,
+			"index":42,
 			"inputs":{
 				"input":"{{ n_3FTti.outputs.result.automationInputs }}",
 				"context":"{{ n_3FTti.outputs.result.context }}"
@@ -1900,7 +2192,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_OoJLq@M9090-1@y",
 			"id":"_rgo5D",
-			"index":38,
+			"index":43,
 			"inputs":{
 				"result":{
 					"success":"true",
@@ -1924,11 +2216,11 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_OoJLq@M9090-1@n",
 			"id":"eYvq0",
-			"index":39,
+			"index":44,
 			"inputs":{
 				"result":{
 					"success":"true",
-					"result":"{{ vcLLc.outputs }}"
+					"result":"{{ Uphqh.outputs.actionOutput }}"
 				}
 			},
 			"skip":false,
@@ -1937,7 +2229,10 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1866,
+	"ownerUserId":1,
+	"runtimeConnectionAppNames":[
+		"microsoft_outlook"
+	],
 	"schemaReferences":[
 		
 	],
@@ -1947,6 +2242,7 @@
 		"enableVariableLogging":true,
 		"route":{
 			"default":false,
+			"headerValueTierMap":{},
 			"tierName":"global"
 		}
 	},
@@ -1954,5 +2250,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":139
+	"version":154
 }
