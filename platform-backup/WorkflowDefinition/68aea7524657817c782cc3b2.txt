@@ -1,9 +1,17 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1758530453083,
+	"createdTime":1756386401540,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1758886170484,
+		"deployedBy":0,
+		"deployedDefinitionId":"68d6791a3323d9309656d21a",
+		"status":"DEPLOYED",
+		"version":43,
+		"workflowVersion":51
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_slFh4",
@@ -50,6 +58,13 @@
 		},
 		{
 			"fromNodeId":"n_LdjKt",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_DqeUh",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_DqeUh",
 			"name":"loopback",
 			"priority":0,
 			"skip":false,
@@ -85,7 +100,7 @@
 	"id":"68aea7524657817c782cc3b2",
 	"lastModifiedBy":-1,
 	"lcName":"eval | experiment | update run status",
-	"modifiedTime":1758530882575,
+	"modifiedTime":1758886173347,
 	"name":"Eval | Experiment | Update Run Status",
 	"nodes":[
 		{
@@ -102,9 +117,10 @@
 			"index":1,
 			"inputs":{
 				"cron":"INTERVAL",
+				"sequential":false,
 				"timezone":"Asia/Calcutta",
-				"interval":1,
-				"frequency":"DAYS"
+				"interval":30,
+				"frequency":"MINUTES"
 			},
 			"skip":false,
 			"subTitle":"Schedule",
@@ -143,6 +159,7 @@
 				"object_type":"experiment_runs",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"page":{
 					"paginateBy":"OFFSET",
 					"limit":20000
@@ -185,6 +202,7 @@
 				"object_type":"platform_automation",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"page":{
 					"paginateBy":"OFFSET",
 					"limit":20
@@ -264,9 +282,16 @@
 							"operator":"EQUAL",
 							"value":"FAILED"
 						}
+					},
+					{
+						"property":"{{ n_Yu6By.outputs.objects[0].columns.status }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"CANCELLED"
+						}
 					}
 				],
-				"operator":"AND"
+				"operator":"OR"
 			},
 			"skip":false,
 			"subTitle":"Run Experiment Failed?",
@@ -296,17 +321,58 @@
 				"recordId":"{{ n_oSd5D.outputs.item.id }}",
 				"writeThroughSessionVariables":false,
 				"object_type":"experiment_runs",
+				"skipIfBlank":false,
 				"skipPermissionCheck":false,
 				"updateFields":[
 					{
 						"fieldName":"properties.status",
 						"actionType":"SET",
-						"setValue":"failed"
+						"setValue":"=LOWER({{ n_Yu6By.outputs.objects[0].columns.status }})"
 					}
-				]
+				],
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"Update Status Field to failed",
+			"title":"Update an existing record's fields",
+			"type":"ACTION"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.updateFields.items.fieldName",
+					"root.updateFields.items.actionType"
+				]
+			},
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":610,
+				"resourceName":"storage_by_unifyapps_update_record_fields_by_id",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_diFuO@n_oSd5D@_CjN1Z-1@l@y",
+			"id":"n_DqeUh",
+			"index":8,
+			"inputs":{
+				"recordId":"{{ n_oSd5D.outputs.item.properties.experimentId }}",
+				"writeThroughSessionVariables":false,
+				"object_type":"experiment",
+				"skipIfBlank":false,
+				"skipPermissionCheck":false,
+				"updateFields":[
+					{
+						"fieldName":"properties.lastRunStatus",
+						"actionType":"SET",
+						"setValue":"=LOWER({{ n_Yu6By.outputs.objects[0].columns.status }})"
+					}
+				],
+				"unsetIfNull":false
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
 			"title":"Update an existing record's fields",
 			"type":"ACTION"
 		},
@@ -319,14 +385,14 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CjN1Z-1",
 			"id":"n_Z1biM",
-			"index":8,
+			"index":9,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -343,5 +409,5 @@
 	"tags":[
 		
 	],
-	"version":14
+	"version":52
 }
