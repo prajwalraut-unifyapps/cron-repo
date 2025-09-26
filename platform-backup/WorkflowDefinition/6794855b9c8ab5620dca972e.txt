@@ -1,16 +1,16 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
-	"createdTime":1740748555737,
+	"createdTime":1747000724256,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1755437774254,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68a1dace9d7d8d3f5046243f",
+		"deployedAt":1758874562685,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d64bc2b57aa23969bea008",
 		"status":"DEPLOYED",
-		"version":4,
-		"workflowVersion":9
+		"version":74,
+		"workflowVersion":84
 	},
 	"edges":[
 		{
@@ -22,6 +22,43 @@
 		},
 		{
 			"fromNodeId":"tsp26",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_UOJNx",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_UOJNx",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_MuwtV",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_MuwtV",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_L9R2O",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_L9R2O",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_PBmGf",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_PBmGf",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"qI4Ho",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_L9R2O",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"qI4Ho",
@@ -51,6 +88,13 @@
 		},
 		{
 			"fromNodeId":"VdWQY",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_PjNAE",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_PjNAE",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"bjIYa",
@@ -91,9 +135,9 @@
 		]
 	},
 	"id":"6794855b9c8ab5620dca972e",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"ai agent action executor ",
-	"modifiedTime":1758530876168,
+	"modifiedTime":1758884943339,
 	"name":"AI Agent Action Executor ",
 	"nodes":[
 		{
@@ -107,7 +151,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"SsO9j-1",
 			"id":"rhn3t",
-			"index":0,
+			"index":1,
 			"inputs":{
 				"result":{
 					"additionalProperties":false,
@@ -197,7 +241,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"SsO9j-1",
 			"id":"tsp26",
-			"index":0,
+			"index":2,
 			"inputs":{
 				"automationId":"67a48d37f8f1744841dabb63",
 				"runtimeConnections":{},
@@ -214,6 +258,141 @@
 		},
 		{
 			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":458,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"SsO9j-1",
+			"id":"n_UOJNx",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"connectionToOverride":{
+							"type":"string",
+							"title":"Connection To Override"
+						}
+					},
+					"required":[
+						"connectionToOverride"
+					]
+				}
+			},
+			"inputs":{},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"connectionToOverride":{
+							"type":"string",
+							"title":"Connection To Override"
+						}
+					},
+					"required":[
+						"connectionToOverride"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":176,
+				"resourceName":"storage_by_unifyapps_get_record_by_id",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"SsO9j-1",
+			"id":"_MuwtV",
+			"index":4,
+			"inputs":{
+				"object_type":"e_action_ai_agent",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
+				"id":"{{ rhn3t.outputs.actionId }}",
+				"readThroughSessionVariables":false
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch record by ID",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":439,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"SsO9j-1",
+			"id":"n_L9R2O",
+			"index":5,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ _MuwtV.outputs.properties.context.resourceName }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"microsoft_outlook_get_attachments"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":447,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_L9R2O@SsO9j-1@y",
+			"id":"n_PBmGf",
+			"index":6,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_UOJNx.outputs.connectionToOverride }}",
+						"value":"{{ _MuwtV.outputs.properties.context.connectionId }}"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":15,
 				"resourceName":"callables_call_automation",
@@ -224,17 +403,21 @@
 			"fallbackMode":"MANUAL",
 			"groupId":"SsO9j-1",
 			"id":"qI4Ho",
-			"index":0,
+			"index":7,
 			"inputs":{
 				"automationId":"66e4c220f82132609342c11f",
-				"runtimeConnections":{},
+				"runtimeConnections":{
+					"microsoft_outlook":"{{ n_UOJNx.outputs.connectionToOverride }}"
+				},
 				"synchronous":true,
+				"triggerWorkflowWithRuntimeType":"DEFAULT",
 				"version":"-1",
 				"parameters":{
+					"actionId":"{{ rhn3t.outputs.actionId }}",
 					"inputs":"{{ rhn3t.outputs.toolInputs }}",
 					"agentId":"{{ tsp26.outputs.id }}",
 					"agentType":"{{ tsp26.outputs.properties.agentType }}",
-					"actionId":"{{ rhn3t.outputs.actionId }}"
+					"AgentResponseMessageId":"{{ rhn3t.outputs.agentResponseMessageId }}"
 				}
 			},
 			"options":{
@@ -287,7 +470,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"qI4Ho@SsO9j-1@error",
 			"id":"EWDQe",
-			"index":0,
+			"index":8,
 			"inputs":{
 				"result":{
 					"success":false,
@@ -311,36 +494,39 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"SsO9j-1",
 			"id":"VdWQY",
-			"index":0,
+			"index":9,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"tokens"
+					],
 					"properties":{
 						"tokens":{
 							"type":"number",
 							"title":"Tokens"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"tokens"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"text"
+					],
 					"properties":{
 						"text":{
 							"type":"string",
 							"title":"Text"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"text"
-					]
+					}
 				},
+				"configurationMode":"DEFAULT",
 				"code":"import tiktoken\n\nencoder = tiktoken.encoding_for_model(\"gpt-4\")\ntokens = encoder.encode(str(text))\nresult = {\"tokens\": len(tokens)}\n   \n",
 				"isAsync":false,
+				"python_version":"3.12",
+				"captureStdOutput":false,
 				"parameters":{
 					"text":"{{ qI4Ho.outputs.result }}"
 				}
@@ -378,9 +564,57 @@
 					"enableTelemetry":false
 				}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Code by UnifyApps",
 			"title":"Execute Python script",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":454,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"SsO9j-1",
+			"id":"n_PjNAE",
+			"index":10,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"tokens":{
+							"type":"number",
+							"title":"Tokens"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"text":{
+							"type":"string",
+							"title":"Text"
+						}
+					}
+				},
+				"code":"// import java.util.StringTokenizer\n// def estimateTokenCount(text) {\n//     if (text == null) { return 0}\n//     def tokenizer = new StringTokenizer(text.toString())\n//     return tokenizer.countTokens()\n// }\n// Function to estimate token count for a single string or list of strings\n\n// def estimateTokenCountListByLength(texts) {\n//     if (!(texts instanceof List)) {\n//         texts = [texts?.toString()]\n//     }\n//     texts = texts.findAll { it != null && it.toString().trim() } // filter out empty/null\n//     int avgTokenLength = 4\n//     return texts.collect { txt ->\n//         (int) Math.ceil(txt.length() / (double) avgTokenLength)\n//     }\n// }\n\n\n\n// def countTokensAdvanced(text) {\n//     String textSTR = text.toString()\n//     if (!textSTR) {\n//         return [tokens: 0]\n//     }\n//     def pattern = /\\b\\w+'\\w+|\\b\\w+|\\d+\\.?\\d*|[^\\w\\s]/\n//     def tokens = textSTR.findAll(pattern)\n//     return [tokens: tokens.size()]\n// }\n\n\ndef countTokensAdvanced(text) {\n    String textSTR = text.toString()\n    if (!textSTR) {\n        return [tokens: 0]\n    }\n    String cleanText = textSTR.replaceAll(/\\s+/, '')\n    int estimatedTokens = Math.ceil(cleanText.length() / 4.0) as Integer\n    \n    return [tokens: estimatedTokens]\n}\n\nif(!binding.hasVariable('text')) return ['tokens' : 0]\ndef tokenCount = countTokensAdvanced(text)\nreturn ['tokens' : tokenCount.tokens]",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"text":"{{ qI4Ho.outputs.result }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
 			"type":"ACTION"
 		},
 		{
@@ -395,18 +629,18 @@
 			"fallbackMode":"STOP",
 			"groupId":"SsO9j-1",
 			"id":"bjIYa",
-			"index":0,
+			"index":11,
 			"inputs":{
 				"filters":[
 					{
-						"property":"{{ VdWQY.outputs.result.tokens }}",
+						"property":"{{ n_PjNAE.outputs.result.tokens }}",
 						"filter":{
 							"operator":"GT",
 							"value":"200000"
 						}
 					},
 					{
-						"property":"{{ VdWQY.outputs.result.tokens }}",
+						"property":"{{ n_PjNAE.outputs.result.tokens }}",
 						"filter":{
 							"operator":"EXISTS"
 						}
@@ -431,7 +665,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"bjIYa@SsO9j-1@y",
 			"id":"86SFf",
-			"index":0,
+			"index":12,
 			"inputs":{
 				"result":{
 					"toolOutput":"The tool has been executed, but the output is too large to share.",
@@ -455,7 +689,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"SsO9j-1",
 			"id":"8QqGr",
-			"index":0,
+			"index":13,
 			"inputs":{
 				"result":{
 					"toolOutput":"{{ qI4Ho.outputs.result }}",
@@ -468,7 +702,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -486,5 +720,5 @@
 		"AI Agent",
 		"Team"
 	],
-	"version":17
+	"version":85
 }
