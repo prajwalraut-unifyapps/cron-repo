@@ -5,12 +5,12 @@
 	"createdTime":1747000713867,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758820811461,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68d579cbb57aa23969b94bc4",
+		"deployedAt":1758874357502,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d64af5b57aa23969be99a9",
 		"status":"DEPLOYED",
-		"version":74,
-		"workflowVersion":94
+		"version":75,
+		"workflowVersion":95
 	},
 	"edges":[
 		{
@@ -127,9 +127,9 @@
 		]
 	},
 	"id":"67a48d37f8f1744841dabb63",
-	"lastModifiedBy":1,
+	"lastModifiedBy":0,
 	"lcName":"getagentcached",
-	"modifiedTime":1758874357281,
+	"modifiedTime":1758883506417,
 	"name":"GetAgentCached",
 	"nodes":[
 		{
@@ -1500,6 +1500,10 @@
 										"AutomationIdForFewShotExtraFilter":{
 											"type":"string",
 											"title":"Automation Id For Few Shot Extra Filter"
+										},
+										"PublishAssumptionsTakenForSQLgeneration":{
+											"type":"boolean",
+											"title":"Publish Assumptions Taken For SQ Lgeneration"
 										}
 									},
 									"additionalProperties":false,
@@ -1516,6 +1520,24 @@
 									"additionalProperties":false,
 									"title":"Team Manager Settings",
 									"required":[]
+								},
+								"deepResearchSettings":{
+									"type":"object",
+									"properties":{
+										"WebSearchSummariserModel":{
+											"type":"string",
+											"title":"WebSearchSummariserModel"
+										},
+										"ExecutionModel":{
+											"type":"string",
+											"title":"ExecutionModel"
+										},
+										"searchEngineToUse":{
+											"type":"string",
+											"title":"searchEngineToUse"
+										}
+									},
+									"additionalProperties":false
 								}
 							},
 							"required":[]
@@ -2052,10 +2074,6 @@
 					"additionalProperties":false,
 					"required":[],
 					"properties":{
-						"DEFAULT_MODEL":{
-							"type":"string",
-							"title":"DEFAULT MODEL"
-						},
 						"validModelList":{
 							"type":"array",
 							"items":{
@@ -2070,6 +2088,10 @@
 							"properties":{},
 							"additionalProperties":false,
 							"title":"Given Model"
+						},
+						"DEFAULT_MODEL":{
+							"type":"string",
+							"title":"DEFAULT MODEL"
 						}
 					}
 				},
@@ -2077,13 +2099,12 @@
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
-					"DEFAULT_MODEL":"{{ __ENV__.outputs.AI_AGENT_DEFAULT_FALLBACK_MODEL }}",
+					"givenModel":"{{ mtswW.outputs.properties }}",
 					"validModelList":{
 						"source":"{{ n_GJKY4.outputs.objects }}",
 						"ua:type":"mappedArray",
 						"items":"{{ n_GJKY4.outputs.objects[0] }}"
-					},
-					"givenModel":"{{ mtswW.outputs.properties }}"
+					}
 				}
 			},
 			"skip":false,
@@ -2565,10 +2586,16 @@
 							"AutomationIdForContextAdditionForSQLQueryGeneration":"{{ mtswW.outputs.properties.textToSQLSettings.AutomationIdForContextAdditionForSQLQueryGeneration }}",
 							"DirectlyPublishTableIfHasMoreData":"{{ mtswW.outputs.properties.textToSQLSettings.DirectlyPublishTableIfHasMoreData }}",
 							"fewShotExtraFilterNeeded":"{{ mtswW.outputs.properties.textToSQLSettings.fewShotExtraFilterNeeded }}",
-							"AutomationIdForFewShotExtraFilter":"{{ mtswW.outputs.properties.textToSQLSettings.AutomationIdForFewShotExtraFilter }}"
+							"AutomationIdForFewShotExtraFilter":"{{ mtswW.outputs.properties.textToSQLSettings.AutomationIdForFewShotExtraFilter }}",
+							"PublishAssumptionsTakenForSQLgeneration":"{{ mtswW.outputs.properties.textToSQLSettings.PublishAssumptionsTakenForSQLgeneration }}"
 						},
 						"teamManagerSettings":{
 							"agentsAsTools":"{{ mtswW.outputs.properties.teamManagerSettings.agentsAsTools }}"
+						},
+						"deepResearchSettings":{
+							"WebSearchSummariserModel":"{{ mtswW.outputs.properties.deepResearchSettings.WebSearchSummariserModel }}",
+							"ExecutionModel":"{{ mtswW.outputs.properties.deepResearchSettings.ExecutionModel }}",
+							"searchEngineToUse":"{{ mtswW.outputs.properties.deepResearchSettings.searchEngineToUse }}"
 						},
 						"deployedOn":{
 							"source":"{{ mtswW.outputs.properties.deployedOn }}",
@@ -3122,9 +3149,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -3134,5 +3161,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":95
+	"version":96
 }
