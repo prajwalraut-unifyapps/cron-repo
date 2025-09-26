@@ -5,12 +5,12 @@
 	"createdTime":1752764153559,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758874458141,
-		"deployedBy":1,
-		"deployedDefinitionId":"68d64b59b57aa23969be9cb9",
+		"deployedAt":1758886232627,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68d679583323d9309656d69c",
 		"status":"DEPLOYED",
-		"version":53,
-		"workflowVersion":55
+		"version":54,
+		"workflowVersion":56
 	},
 	"description":"Takes in a single url and indexes it and also extracts the urls from the html.",
 	"edges":[
@@ -60,6 +60,13 @@
 			"type":"next"
 		},
 		{
+			"fromNodeId":"n_SLerT",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_TvIkx",
+			"type":"next"
+		},
+		{
 			"fromNodeId":"n_xbZhI",
 			"name":"error",
 			"priority":0,
@@ -77,6 +84,13 @@
 		},
 		{
 			"fromNodeId":"_zH2N7",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_LxuU0",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_LxuU0",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"_7DkYu",
@@ -98,17 +112,10 @@
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_SLerT",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_C0cw8",
-			"type":"next"
-		},
-		{
 			"fromNodeId":"_ZNFBC",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_C0cw8",
+			"toNodeId":"_soCFR",
 			"type":"next"
 		}
 	],
@@ -123,9 +130,9 @@
 		]
 	},
 	"id":"6878ec5162d7239e6110c84f",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"website or file indexing | page indexer (wrapper)",
-	"modifiedTime":1758886232557,
+	"modifiedTime":1758886233223,
 	"name":"Website or File Indexing | Page Indexer (Wrapper)",
 	"nodes":[
 		{
@@ -144,9 +151,10 @@
 				"result":{
 					"type":"object",
 					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"success":{
-							"type":"string",
+							"type":"boolean",
 							"title":"success"
 						},
 						"extracted_links":{
@@ -501,6 +509,29 @@
 		},
 		{
 			"context":{
+				"appName":"callables",
+				"resourceVersion":455,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_xbZhI@_Yv0XF-1@success",
+			"id":"_TvIkx",
+			"index":7,
+			"inputs":{
+				"result":{
+					"success":true
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		},
+		{
+			"context":{
 				"appName":"if_else",
 				"resourceVersion":439,
 				"resourceName":"if_else_condition",
@@ -511,7 +542,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_xbZhI@_Yv0XF-1@error",
 			"id":"_OrbWD",
-			"index":7,
+			"index":8,
 			"inputs":{
 				"filters":[
 					{
@@ -545,7 +576,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_OrbWD@n_xbZhI@_Yv0XF-1@error@y",
 			"id":"_zH2N7",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -568,6 +599,39 @@
 			"type":"ACTION"
 		},
 		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":469,
+				"resourceName":"analytics_by_unifyapps_execute_query",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_OrbWD@n_xbZhI@_Yv0XF-1@error@y",
+			"id":"n_LxuU0",
+			"index":10,
+			"inputs":{
+				"outputSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"id":{
+							"type":"string",
+							"title":"Id"
+						}
+					}
+				},
+				"query":"SELECT id FROM WORKFLOW_EXECUTION \nWHERE workflowId = '687643b16ccdd5ed9f163a8f' \n  AND JSON_QUERY(startNodeOutput, '$.knowledgeId') = '{{ n_rDYUN.outputs.knowledgeId }}' \n  AND status = 'FAILED' \n  AND JSON_QUERY(startNodeOutput, '$.uniqueEntityId') = '{{ n_rDYUN.outputs.uniqueEntityId }}' \n  AND endTime >= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 30 MINUTE)) * 1000\nORDER BY startTime DESC\nLIMIT 1;",
+				"group":"ENTITY_REPORTING"
+			},
+			"skip":false,
+			"subTitle":"Get Failed Execution",
+			"title":"Execute Analytics SQL Query",
+			"type":"ACTION"
+		},
+		{
 			"additional":{
 				"visibleOptionalFields":[
 					"root.updateFields.items.fieldName",
@@ -585,7 +649,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_OrbWD@n_xbZhI@_Yv0XF-1@error@y",
 			"id":"_7DkYu",
-			"index":9,
+			"index":11,
 			"inputs":{
 				"recordId":"{{ n_rDYUN.outputs.rawDataId }}",
 				"writeThroughSessionVariables":false,
@@ -604,9 +668,19 @@
 						"setValue":"{{ _zH2N7.outputs.result.currentTime }}"
 					},
 					{
-						"fieldName":"properties.errorDetails",
+						"fieldName":"properties.errorDetails.error",
 						"actionType":"SET",
 						"setValue":"{{ n_xbZhI.outputs }}"
+					},
+					{
+						"fieldName":"properties.errorDetails.executionId",
+						"actionType":"SET",
+						"setValue":"{{ n_LxuU0.outputs.objects[0].columns.id }}"
+					},
+					{
+						"fieldName":"properties.errorDetails.workflowId",
+						"actionType":"SET",
+						"setValue":"687643b16ccdd5ed9f163a8f"
 					}
 				],
 				"unsetIfNull":false
@@ -633,7 +707,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_xbZhI@_Yv0XF-1@error",
 			"id":"_ZNFBC",
-			"index":10,
+			"index":12,
 			"inputs":{
 				"automation_id":"687657ea9f2cd2b4cd9ba5da",
 				"with_signal_id":true,
@@ -660,12 +734,12 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"_Yv0XF-1",
-			"id":"n_C0cw8",
-			"index":11,
+			"groupId":"n_xbZhI@_Yv0XF-1@error",
+			"id":"_soCFR",
+			"index":13,
 			"inputs":{
 				"result":{
-					"success":"OK"
+					"success":false
 				}
 			},
 			"skip":false,
@@ -691,5 +765,5 @@
 	"tags":[
 		
 	],
-	"version":56
+	"version":57
 }
