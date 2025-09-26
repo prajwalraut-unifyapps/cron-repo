@@ -5,12 +5,12 @@
 	"createdTime":1758731910787,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758820898764,
+		"deployedAt":1758886222775,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68d57a22b57aa23969b94e31",
+		"deployedDefinitionId":"68d6794e3323d9309656d5d0",
 		"status":"DEPLOYED",
-		"version":4,
-		"workflowVersion":18
+		"version":5,
+		"workflowVersion":19
 	},
 	"edges":[
 		{
@@ -36,6 +36,43 @@
 		},
 		{
 			"fromNodeId":"sgMGe",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_AEwQs",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_AEwQs",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_ljn4J",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_ljn4J",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_T4nYQ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_T4nYQ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_U8QUN",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_U8QUN",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_dfx6r",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_AEwQs",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_dfx6r",
@@ -74,10 +111,10 @@
 		]
 	},
 	"id":"68c2d20017a02914ea79d8b0",
-	"lastModifiedBy":-1,
-	"lcName":"knowledge indexer (rawdata)",
-	"modifiedTime":1758886222701,
-	"name":"Knowledge Indexer (RawData)",
+	"lastModifiedBy":0,
+	"lcName":"knowledge indexer | specific raw data",
+	"modifiedTime":1758886223640,
+	"name":"Knowledge Indexer | Specific Raw Data",
 	"nodes":[
 		{
 			"context":{
@@ -233,6 +270,122 @@
 		},
 		{
 			"context":{
+				"appName":"if_else",
+				"resourceVersion":442,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_hNHYl-1",
+			"id":"n_AEwQs",
+			"index":5,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ sgMGe.outputs.properties.sourceType }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"WEBSITE"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"standard_entities",
+				"resourceVersion":465,
+				"resourceName":"standard_entities_fetch_user",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_AEwQs@_hNHYl-1@y",
+			"id":"n_ljn4J",
+			"index":6,
+			"inputs":{
+				"fetchBy":"id",
+				"applicationId":"",
+				"user":"{{ sgMGe.outputs.ownerUserId }}"
+			},
+			"skip":false,
+			"subTitle":"Standard entities by UnifyApps",
+			"title":"Fetch User",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":516,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_AEwQs@_hNHYl-1@y",
+			"id":"n_T4nYQ",
+			"index":7,
+			"inputs":{
+				"automationId":"687657ea9f2cd2b4cd9ba5da",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"depth":0,
+					"knowledgeId":"{{ sgMGe.outputs.id }}",
+					"readVersion":"{{ _gNR4V.outputs.properties.knowledgeVersion }}",
+					"name":"{{ _gNR4V.outputs.properties.metadata.name }}",
+					"agenticProcessingModelId":"e_ai_agent_openai_gpt_4.1_nano",
+					"limit":{
+						"websiteFetchLimit":100,
+						"fileDownloadLimit":10
+					},
+					"userEmail":"{{ n_ljn4J.outputs.contactDetails.email }}",
+					"url_list":{
+						"items":"{{ _gNR4V.outputs.properties.metadata.websiteUrl }}",
+						"ua:type":"mappedArray"
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":506,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_AEwQs@_hNHYl-1@y",
+			"id":"n_U8QUN",
+			"index":8,
+			"inputs":{
+				"result":{
+					"success":"{{ n_T4nYQ.outputs.success }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		},
+		{
+			"context":{
 				"appName":"storage_by_unifyapps",
 				"resourceVersion":3,
 				"resourceName":"storage_by_unifyapps_get_record_by_id",
@@ -243,7 +396,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_hNHYl-1",
 			"id":"n_dfx6r",
-			"index":5,
+			"index":9,
 			"inputs":{
 				"object_type":"knowledge_source",
 				"includeRoleMappings":false,
@@ -274,7 +427,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_hNHYl-1",
 			"id":"n_nydcG",
-			"index":6,
+			"index":10,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -335,7 +488,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_hNHYl-1",
 			"id":"n_obgnO",
-			"index":7,
+			"index":11,
 			"inputs":{
 				"automationId":"686d35b160366b44cfdfa72c",
 				"runtimeConnections":{},
@@ -375,7 +528,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_hNHYl-1",
 			"id":"n_POMRK",
-			"index":8,
+			"index":12,
 			"inputs":{
 				"result":{
 					"success":"{{ n_obgnO.outputs.success }}"
@@ -405,5 +558,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":19
+	"version":20
 }
