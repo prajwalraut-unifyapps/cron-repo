@@ -7,46 +7,207 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_O525l",
+			"fromNodeId":"n_Cu8R8",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_6Jn7n",
+			"toNodeId":"n_4Bqm9",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_4Bqm9",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_SVbSh",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_SVbSh",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_ZNHmd",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_ZNHmd",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_SVbSh",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_SVbSh",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_orxMX",
 			"type":"next"
 		}
 	],
 	"id":"68d6def412f02341f3d9ac21",
 	"lastModifiedBy":1,
 	"lcName":"whilelooplessthanorequalto11758912239393",
-	"modifiedTime":1758912244981,
+	"modifiedTime":1758912315862,
 	"name":"whileLoopLessThanOrEqualTo11758912239393",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":115,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_O525l-1",
-			"id":"_O525l",
-			"index":0,
+			"id":"n_Cu8R8",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1108,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_O525l-1",
-			"id":"_6Jn7n",
-			"index":0,
+			"id":"n_4Bqm9",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"number",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
+			"inputs":{
+				"i":0
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"number",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":119,
+				"resourceName":"loop_while",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_O525l-1",
+			"id":"n_SVbSh",
+			"index":3,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"{{ n_4Bqm9.outputs.i }}",
+							"filter":{
+								"operator":"LTE",
+								"value":"0"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1105,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_SVbSh@_O525l-1@l",
+			"id":"n_ZNHmd",
+			"index":4,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_4Bqm9.outputs.i }}",
+						"value":"=sum({{ n_4Bqm9.outputs.i }},1)"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_O525l-1",
+			"id":"n_orxMX",
+			"index":5,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +221,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
