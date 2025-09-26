@@ -5,12 +5,12 @@
 	"createdTime":1755674328516,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758886210252,
-		"deployedBy":0,
-		"deployedDefinitionId":"68d679423323d9309656d4da",
+		"deployedAt":1758887226128,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d67d3a3323d9309656ef0e",
 		"status":"DEPLOYED",
-		"version":51,
-		"workflowVersion":102
+		"version":55,
+		"workflowVersion":106
 	},
 	"edges":[
 		{
@@ -175,9 +175,9 @@
 		]
 	},
 	"id":"6858e81779e632724e18b5f0",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":1,
 	"lcName":"fetch recent searches",
-	"modifiedTime":1758886211101,
+	"modifiedTime":1758922745456,
 	"name":"Fetch Recent Searches",
 	"nodes":[
 		{
@@ -534,7 +534,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_U74gX",
@@ -542,30 +542,38 @@
 			"inputs":{
 				"output":{
 					"type":"object",
-					"properties":{
-						"aiAgentId":{
-							"type":"string",
-							"title":"Ai Agent Id"
-						}
-					},
 					"additionalProperties":false,
-					"required":[]
+					"required":[],
+					"properties":{
+						"filter":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Filter"
+						}
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"aiAgentId":{
 							"type":"string",
 							"title":"Ai Agent Id"
+						},
+						"ownerUserId":{
+							"type":"string",
+							"title":"Owner User Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"def agentId = \"enterprise_search_agent\"\n\nif (binding.hasVariable('aiAgentId')) {\n    agentId = aiAgentId\n}\n\ndef ownerId\n\nif(binding.hasVariable('ownerUserId')){\n    ownerId = ownerUserId\n}\n\ndef filters = [\n    op: 'AND',\n    values: [\n        [\n            field: 'ownerUserId',\n            op: 'EQUAL',\n            values: ownerId\n        ],\n        [\n            op: 'OR',\n            values: [\n                [\n                    field: 'properties.aiAgentId',\n                    op: 'EQUAL',\n                    values: agentId\n                ],\n                [\n                    field: 'properties.aiAgentId.__raw__',\n                    op: 'EQUAL',\n                    values: agentId\n                ]\n            ]\n        ]\n    ]\n]\n\nreturn [\"filters\": filters]\n",
 				"compile_static":false,
-				"code":"def agentId = \"enterprise_search_agent\"\n\nif(binding.hasVariable('aiAgentId')){\n  return [\"aiAgentId\": aiAgentId]\n}\n\nreturn [\"aiAgentId\": agentId]",
+				"captureStdOutput":false,
 				"parameters":{
-					"aiAgentId":"{{ n_xmCMt.outputs.aiAgentId }}"
+					"aiAgentId":"{{ n_xmCMt.outputs.aiAgentId }}",
+					"ownerUserId":"{{ __RUN__.outputs.userId }}"
 				}
 			},
 			"skip":false,
@@ -581,7 +589,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_D5EY4",
@@ -590,17 +598,8 @@
 				"triggerInputCondition":{
 					"filters":[
 						{
-							"property":"ownerUserId",
-							"filter":{
-								"operator":"EQUAL",
-								"value":"{{ __RUN__.outputs.userId }}"
-							}
-						},
-						{
-							"property":"properties_aiAgentId",
-							"filter":{
-								"operator":"EQUAL",
-								"value":"{{ n_U74gX.outputs.result.aiAgentId }}"
+							"resolvedFilter":{
+								"filter":"{{ n_U74gX.outputs.result.filter }}"
 							}
 						}
 					],
@@ -663,7 +662,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_y1lIz@_ZeTgv-1@l",
 			"id":"n_MBbPf",
@@ -671,6 +670,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"allowed":{
 							"type":"string",
@@ -682,12 +683,12 @@
 							"additionalProperties":false,
 							"title":"Recent Search"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"searchQuery":{
 							"type":"string",
@@ -709,12 +710,11 @@
 							"type":"string",
 							"title":"Modified Time"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"def allowed = false\ndef recentSearch = [:]\n\nif (binding.hasVariable('searchQuery')) {\n    if ((!binding.hasVariable('query') || searchQuery?.contains(query)) && curQueryUserId == userId ) {\n        allowed = true\n        recentSearch = [\n            \"query\"       : searchQuery,\n            \"lastModifiedTime\" : modifiedTime\n        ]\n    }\n}\n\nreturn [\n    \"recentSearch\": recentSearch,\n    \"allowed\"     : allowed\n]\n",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"query":"{{ n_xmCMt.outputs.query }}",
 					"searchQuery":"{{ n_y1lIz.outputs.item.properties.text }}",
@@ -1655,5 +1655,5 @@
 	"tags":[
 		
 	],
-	"version":103
+	"version":107
 }
