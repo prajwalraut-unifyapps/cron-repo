@@ -1,51 +1,189 @@
 {
 	"appsUsed":[
-		
+		"freshdesk"
 	],
 	"createdTime":1758950619064,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_piy5W",
+			"fromNodeId":"n_GseqA",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_Mgcji",
+			"toNodeId":"n_0XB0B",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_0XB0B",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_0mANM",
 			"type":"next"
 		}
 	],
 	"id":"68d774dbdbdab82365a6cafb",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2fkymybnrqj",
-	"modifiedTime":1758950619064,
+	"modifiedTime":1758950656829,
 	"name":"cacheQA2fKymyBNrQJ",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1216,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_piy5W-1",
-			"id":"_piy5W",
-			"index":0,
+			"id":"n_GseqA",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"companyId":{
+							"type":"string",
+							"title":"companyId"
+						},
+						"contactId":{
+							"type":"string",
+							"title":"contactId"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":8511,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_contact",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_piy5W-1",
-			"id":"_Mgcji",
-			"index":0,
+			"id":"n_0XB0B",
+			"index":2,
+			"inputs":{
+				"contactId":"{{ n_GseqA.outputs.contactId }}"
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":true,
+					"postHooks":[
+						{
+							"continueOnFailure":false,
+							"parameters":{
+								"companyId":"{{ n_GseqA.outputs.companyId }}"
+							},
+							"workflowId":"68d774b5ce29ec20a05ea207"
+						}
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"duration":"2",
+					"enabled":true,
+					"threshold":"5",
+					"unit":"MINUTES",
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Freshdesk",
+			"title":"Get contact",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1219,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_piy5W-1",
+			"id":"n_0mANM",
+			"index":3,
+			"inputs":{
+				"result":{
+					"result":"{{ n_0XB0B.outputs.email }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +197,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
