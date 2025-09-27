@@ -1,51 +1,262 @@
 {
 	"appsUsed":[
-		
+		"freshdesk",
+		"slack"
 	],
 	"createdTime":1758949432687,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_LKYWa",
+			"fromNodeId":"n_h3cWA",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_kCjLk",
+			"toNodeId":"n_pWHWT",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_pWHWT",
+			"name":"success",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_LBSkO",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_pWHWT",
+			"name":"error",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_5RfUh",
+			"type":"error"
+		},
+		{
+			"fromNodeId":"n_LBSkO",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_vYNOl",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_5RfUh",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_vYNOl",
 			"type":"next"
 		}
 	],
 	"id":"68d770381a041b5e74ff9a28",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2dnsisxezoy",
-	"modifiedTime":1758949432687,
+	"modifiedTime":1758949484462,
 	"name":"cacheQA2dnSIsXeZoY",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1216,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_LKYWa-1",
-			"id":"_LKYWa",
-			"index":0,
+			"id":"n_h3cWA",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"channel":{
+							"type":"string",
+							"title":"channel"
+						},
+						"purpose":{
+							"type":"string",
+							"title":"purpose"
+						},
+						"companyId":{
+							"type":"string",
+							"title":"companyId"
+						},
+						"contactId":{
+							"type":"string",
+							"title":"contactId"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1217,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
+			"fallbackMode":"MANUAL",
+			"groupId":"_LKYWa-1",
+			"id":"n_pWHWT",
+			"index":2,
+			"inputs":{
+				"automationId":"68d770151a041b5e74ff99d0",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"companyId":"{{ n_h3cWA.outputs.companyId }}"
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"MANUAL",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"slack",
+				"resourceVersion":6880,
+				"connectionId":"682adda0b3d1743888ec45db",
+				"resourceName":"slack_conversation_set_purpose",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_pWHWT@_LKYWa-1@success",
+			"id":"n_LBSkO",
+			"index":3,
+			"inputs":{
+				"purpose":"{{ n_h3cWA.outputs.purpose }}",
+				"channel":"{{ n_h3cWA.outputs.channel }}"
+			},
+			"skip":false,
+			"subTitle":"Slack",
+			"title":"Set conversation purpose",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":8511,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_contact",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_pWHWT@_LKYWa-1@error",
+			"id":"n_5RfUh",
+			"index":4,
+			"inputs":{
+				"contactId":"{{ n_h3cWA.outputs.contactId }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get contact",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1219,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_LKYWa-1",
-			"id":"_kCjLk",
-			"index":0,
+			"id":"n_vYNOl",
+			"index":5,
+			"inputs":{
+				"result":{
+					"result":"{{ n_5RfUh.outputs.name }}"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +270,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
