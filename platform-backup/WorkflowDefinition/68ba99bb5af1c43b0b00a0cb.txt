@@ -5,12 +5,12 @@
 	"createdTime":1757344766456,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758874354484,
-		"deployedBy":1,
-		"deployedDefinitionId":"68d64af2b57aa23969be9992",
+		"deployedAt":1758886227953,
+		"deployedBy":0,
+		"deployedDefinitionId":"68d679533323d9309656d634",
 		"status":"DEPLOYED",
-		"version":26,
-		"workflowVersion":32
+		"version":28,
+		"workflowVersion":34
 	},
 	"edges":[
 		{
@@ -24,18 +24,11 @@
 			"fromNodeId":"n_bN08c",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_IWfvt",
+			"toNodeId":"n_IgJJ3",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"_IWfvt",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_HGJ8B",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_HGJ8B",
+			"fromNodeId":"n_IgJJ3",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_NUj5p",
@@ -67,9 +60,9 @@
 		]
 	},
 	"id":"68ba99bb5af1c43b0b00a0cb",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":1,
 	"lcName":"eval | experiment | stop an experiment run",
-	"modifiedTime":1758886227005,
+	"modifiedTime":1758963870167,
 	"name":"Eval | Experiment | Stop an experiment run",
 	"nodes":[
 		{
@@ -160,111 +153,26 @@
 			"type":"ACTION"
 		},
 		{
-			"additional":{
-				"xsdSchemaConfig":{
-					"root":{}
-				}
-			},
 			"context":{
-				"appName":"custom_http_endpoint",
-				"resourceVersion":874,
-				"resourceName":"custom_http_endpoint_execute",
+				"appName":"standard_entities",
+				"resourceVersion":41,
+				"resourceName":"standard_entities_cancel_workflow",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_vNZHW-1",
-			"id":"_IWfvt",
+			"id":"n_IgJJ3",
 			"index":3,
 			"inputs":{
-				"isAsync":false,
-				"enableProxy":false,
-				"requestTimeoutInSecs":-1,
-				"httpMethod":"POST",
-				"body":{
-					"customerId":148,
-					"forceSync":true,
-					"failOnMissing":false,
-					"configPaths":[
-						"configs/platform-features/ai-agents/platform/eval"
-					],
-					"setStandard":true
-				},
-				"connectionType":"DIRECT",
-				"sslVerify":false,
-				"path":"/api-platform-admin-token/refresh/{{ __RUN__.outputs.customerId }}",
-				"responseSchema":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[],
-					"properties":{
-						"token":{
-							"type":"string",
-							"title":"Token"
-						}
-					}
-				},
-				"baseUrl":"http://internal-global-svc:80/internal",
-				"httpVersion":"HTTP_2",
-				"queryParamsList":[
-					{
-						"key":"expiryMillis",
-						"value":"86400000"
-					},
-					{
-						"key":"invalidateExisting",
-						"value":"false"
-					}
-				],
-				"responseContentType":"application/json",
-				"authType":"CUSTOM",
-				"requestContentType":"application/json",
-				"ignoreTrailingSlashes":false
+				"async":false,
+				"executionId":"{{ n_bN08c.outputs.properties.instanceId }}",
+				"workflowRunTimeType":"DEFAULT"
 			},
 			"skip":false,
-			"subTitle":"Fetch Admin Token",
-			"title":"custom http endpoint",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"custom_http_endpoint",
-				"resourceVersion":505,
-				"resourceName":"custom_http_endpoint_execute",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"_vNZHW-1",
-			"id":"n_HGJ8B",
-			"index":4,
-			"inputs":{
-				"isAsync":false,
-				"enableProxy":false,
-				"requestTimeoutInSecs":-1,
-				"httpMethod":"POST",
-				"connectionType":"DIRECT",
-				"sslVerify":false,
-				"path":"/workflow/cancel/execution/{{ n_bN08c.outputs.properties.instanceId }}",
-				"baseUrl":"http://api-platform-global-svc.unifyapps.svc.cluster.local:80/api-endpoint/admin",
-				"httpVersion":"HTTP_2",
-				"responseContentType":"application/json",
-				"headersList":[
-					{
-						"key":"x-admin-authorization",
-						"value":"{{ _IWfvt.outputs.result.token }}"
-					}
-				],
-				"authType":"CUSTOM",
-				"requestContentType":"application/json",
-				"ignoreTrailingSlashes":false,
-				"certificateType":"CERT_STRING"
-			},
-			"skip":false,
-			"subTitle":"Custom HTTP Endpoint",
-			"title":"Execute REST request",
+			"subTitle":"Standard entities by UnifyApps",
+			"title":"Cancel workflow",
 			"type":"ACTION"
 		},
 		{
@@ -279,13 +187,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"_vNZHW-1",
 			"id":"n_NUj5p",
-			"index":5,
+			"index":4,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
 					"filters":[
 						{
-							"property":"properties_runId",
+							"property":"runId",
 							"filter":{
 								"operator":"EQUAL",
 								"value":"{{ n_TMzUG.outputs.runId }}"
@@ -303,10 +211,12 @@
 						"setValue":"stopped"
 					}
 				],
+				"skipIfEmpty":false,
 				"page":{
 					"offset":0,
 					"limit":20
-				}
+				},
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"Storage by UnifyApps",
@@ -331,7 +241,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_vNZHW-1",
 			"id":"n_DqeUh",
-			"index":6,
+			"index":5,
 			"inputs":{
 				"recordId":"{{ n_bN08c.outputs.properties.experimentId }}",
 				"writeThroughSessionVariables":false,
@@ -344,7 +254,8 @@
 						"actionType":"SET",
 						"setValue":"stopped"
 					}
-				]
+				],
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"Storage by UnifyApps",
@@ -363,7 +274,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_vNZHW-1",
 			"id":"n_XvB8C",
-			"index":7,
+			"index":6,
 			"inputs":{
 				"result":{
 					"success":true
@@ -380,9 +291,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":true,
-		"enableRunLogging":true,
-		"enableVariableLogging":true,
+		"enableNodeLevelLogging":false,
+		"enableRunLogging":false,
+		"enableVariableLogging":false,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -392,5 +303,5 @@
 	"tags":[
 		
 	],
-	"version":33
+	"version":35
 }
