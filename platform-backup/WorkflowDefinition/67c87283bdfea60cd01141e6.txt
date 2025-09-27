@@ -1,16 +1,17 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps",
+		"tavily"
 	],
-	"createdTime":1741189763034,
+	"createdTime":1747000731877,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1757441911893,
-		"deployedBy":0,
-		"deployedDefinitionId":"68c06f7791dbf0016b768bb8",
+		"deployedAt":1758886286403,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68d6798e3323d9309656da97",
 		"status":"DEPLOYED",
-		"version":63,
-		"workflowVersion":77
+		"version":69,
+		"workflowVersion":96
 	},
 	"edges":[
 		{
@@ -38,11 +39,11 @@
 			"fromNodeId":"RkGgx",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"KS8hc",
+			"toNodeId":"n_5xvhH",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"KS8hc",
+			"fromNodeId":"n_5xvhH",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"MvWJz",
@@ -140,9 +141,9 @@
 		]
 	},
 	"id":"67c87283bdfea60cd01141e6",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":1,
 	"lcName":"websearch agent",
-	"modifiedTime":1758530348992,
+	"modifiedTime":1758963948226,
 	"name":"WebSearch agent",
 	"nodes":[
 		{
@@ -314,34 +315,39 @@
 			},
 			"context":{
 				"appName":"code_by_unifyapps",
-				"resourceVersion":8,
-				"resourceName":"code_by_unifyapps_python",
+				"resourceVersion":452,
+				"resourceName":"code_by_unifyapps_groovy",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"5s0uf-1",
-			"id":"KS8hc",
+			"id":"n_5xvhH",
 			"index":5,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"favicon":{
 							"type":"array",
 							"items":{
-								"type":"string"
+								"type":"object",
+								"properties":{},
+								"additionalProperties":false
 							},
 							"title":"Favicon"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"configurationMode":"DEFAULT",
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"fromWeb"
+					],
 					"properties":{
 						"urls":{
 							"type":"array",
@@ -349,15 +355,18 @@
 								"type":"string"
 							},
 							"title":"Urls"
+						},
+						"fromWeb":{
+							"type":"boolean",
+							"title":"From Web"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"code":"import requests\nfrom bs4 import BeautifulSoup\nfrom urllib.parse import urljoin, urlparse\n\nheaders = {\n    'User-Agent': (\n        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '\n        '(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'\n    ),\n    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',\n    'Accept-Language': 'en-US,en;q=0.9',\n    'Accept-Encoding': 'gzip, deflate, br',\n    'Connection': 'keep-alive',\n    'Upgrade-Insecure-Requests': '1',\n    'Cache-Control': 'max-age=0',\n    'Referer': 'https://google.com'\n}\ntimeout = 10\nselectors = [\n    (\"link\", {\"rel\": \"icon\"}),\n    (\"link\", {\"rel\": \"shortcut icon\"}),\n    (\"link\", {\"rel\": \"apple-touch-icon\"}),\n    (\"link\", {\"rel\": \"apple-touch-icon-precomposed\"}),\n]\n\nif 'urls' in locals():\n    results = []\n\n    for url in urls:\n        favicon_url = None\n        error = None\n        parsed = urlparse(url)\n        base = f\"{parsed.scheme}://{parsed.netloc}\"\n        try:\n            resp = requests.get(url, timeout=timeout, headers=headers)\n            resp.raise_for_status()\n            soup = BeautifulSoup(resp.text, \"html.parser\")\n            for tag, attrs in selectors:\n                el = soup.find(tag, attrs=attrs)\n                if el and el.get(\"href\"):\n                    potential_url = urljoin(base, el[\"href\"])\n                    try:\n                        icon_resp = requests.get(potential_url, timeout=timeout, headers=headers)\n                        if icon_resp.status_code == 200:\n                            content_type = icon_resp.headers.get('content-type', '').lower()\n                            if 'image/' in content_type:\n                                favicon_url = potential_url\n                                break \n                    except requests.RequestException:\n                        continue \n\n        except requests.RequestException as e:\n            error = str(e)\n\n        if not favicon_url:\n            # Use Google favicon fallback\n            favicon_url = f\"https://www.google.com/s2/favicons?domain={parsed.netloc}&sz=64\"\n\n        result = {\n            \"favicon\": favicon_url,\n        }\n        if error:\n            result[\"error\"] = error\n\n        results.append(result)\n\n    result = {\n        \"favicon\": results\n    }\nelse:\n    result = {\n        \"favicon\": []\n    }",
-				"isAsync":false,
-				"python_version":"3.12",
+				"code":"import org.jsoup.Jsoup\nimport org.jsoup.nodes.Document\nimport org.jsoup.nodes.Element\nimport java.net.http.HttpClient\nimport java.net.http.HttpRequest\nimport java.net.http.HttpResponse\nimport java.net.URI\nimport java.time.Duration\n\ndef headers = [\n    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',\n    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',\n    'Accept-Language': 'en-US,en;q=0.9',\n    'Accept-Encoding': 'gzip, deflate, br',\n    'Upgrade-Insecure-Requests': '1',\n    'Cache-Control': 'max-age=0',\n    'Referer': 'https://google.com'\n]\ndef fromWeb=binding.hasVariable(\"fromWeb\")?fromWeb:false\ndef timeout = 0.5\ndef selectors = [\n    [tag: \"link\", attrs: [\"rel\": \"icon\"]],\n    [tag: \"link\", attrs: [\"rel\": \"shortcut icon\"]],\n    [tag: \"link\", attrs: [\"rel\": \"apple-touch-icon\"]],\n    [tag: \"link\", attrs: [\"rel\": \"apple-touch-icon-precomposed\"]]\n]\n\ndef makeRequest = { String url, Map requestHeaders, double timeoutSeconds ->\n\n    def client = HttpClient.newBuilder()\n        .connectTimeout(Duration.ofMillis((long)(timeoutSeconds * 1000)))\n        .build()\n        \n    def requestBuilder = HttpRequest.newBuilder()\n        .uri(URI.create(url))\n        .timeout(Duration.ofMillis((long)(timeoutSeconds * 1000)))\n    \n    requestHeaders.each { key, value ->\n        requestBuilder.header(key, value)\n    }\n    \n    def request = requestBuilder.build()\n    return client.send(request, HttpResponse.BodyHandlers.ofString())\n}\ndef getGoogleFavicon = { String urlParam ->\n    try {\n        def uri = URI.create(urlParam)\n        return \"https://www.google.com/s2/favicons?domain=${uri.host}&sz=64\".toString()\n    } catch (Exception e) {\n        return \"https://www.google.com/s2/favicons?domain=unknown&sz=64\".toString()\n    }\n}\ndef makeHeadRequest = { String url, Map requestHeaders, double timeoutSeconds ->\n    def client = HttpClient.newBuilder()\n        .connectTimeout(Duration.ofMillis((long)(timeoutSeconds * 1000)))\n        .build()\n        \n    def requestBuilder = HttpRequest.newBuilder()\n        .uri(URI.create(url))\n        .timeout(Duration.ofMillis((long)(timeoutSeconds * 1000)))\n        .method(\"HEAD\", HttpRequest.BodyPublishers.noBody())\n    \n    requestHeaders.each { key, value ->\n        requestBuilder.header(key, value)\n    }\n    \n    def request = requestBuilder.build()\n    return client.send(request, HttpResponse.BodyHandlers.discarding())\n}\nif(fromWeb==true)\n{\nif (binding.hasVariable('urls')) {\n    def results = []\n    \n    urls.each { url ->\n        def faviconUrl = null\n        def error = null\n        \n        try {\n            def uri = URI.create(url)\n            def base = \"${uri.scheme}://${uri.host}\"\n            if (uri.port != -1) {\n                base += \":${uri.port}\"\n            }\n            \n            try {\n                def response = makeRequest(url, headers, timeout)                \n                if (response.statusCode() == 200) {\n\n                    def htmlContent = response.body().toString()\n                    Document doc = Jsoup.parse(htmlContent)\n                    for (selector in selectors) {\n                        def selectorString = \"${selector.tag}[${selector.attrs.collect{ k, v -> \"$k=\\\"$v\\\"\" }.join('][')}]\".toString()\n                        def elements = doc.select(selectorString)\n                        \n                        for (Element el : elements) {\n                            def href = el.attr(\"href\")\n                            if (href) {\n                                def potentialUrl = href.startsWith(\"http\") ? href : \n                                                 href.startsWith(\"/\") ? base + href : \n                                                 base + \"/\" + href\n                                try {\n\n                                    def iconResponse = makeHeadRequest(potentialUrl, headers, timeout)\n                                    \n                                    if (iconResponse.statusCode() == 200) {\n                                        faviconUrl = potentialUrl.toString()\n                                        def contentType = iconResponse.headers().firstValue('content-type').orElse('').toLowerCase()\n                                        if (contentType.contains('image/')) {\n                                            faviconUrl = potentialUrl.toString()\n                                            break\n                                        }\n                                    } \n                                } catch (Exception ignored) {\n                                    continue\n                                }\n                            }\n                        }\n                        if (faviconUrl) break\n                    }\n                }\n            } catch (Exception e) {\n                error = e.getMessage().toString()\n            }\n            \n            if (!faviconUrl) {\n                faviconUrl = \"https://www.google.com/s2/favicons?domain=${uri.host}&sz=64\".toString()\n            }\n            \n            def result = [\n                favicon: faviconUrl,\n            ]\n            if (error) {\n                result.error = error\n            }\n            \n            results << result\n            \n        } catch (Exception e) {\n            error = e.getMessage().toString()\n            \n            def result = [\n                favicon: \"https://www.google.com/s2/favicons?domain=unknown&sz=64\".toString(),\n                error: error\n            ]\n            results << result\n        }\n    }\n    \n    return [\n        favicon: results,\n    ]\n} else {\n    return [\n        favicon: [],\n    ]\n}\n}\nelse\n{\n    if(binding.hasVariable(\"urls\"))\n    {\n        def faviconicon=[]\n        urls.each{ url->\n            faviconicon << [\"favicon\":getGoogleFavicon(url)]\n        }\n        return [\"favicon\":faviconicon]\n    }\n\n}",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
+					"fromWeb":false,
 					"urls":{
 						"source":"{{ RkGgx.outputs.results }}",
 						"ua:type":"mappedArray",
@@ -366,8 +375,8 @@
 				}
 			},
 			"skip":false,
-			"subTitle":"Get favicon",
-			"title":"Execute Python script",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
 			"type":"ACTION"
 		},
 		{
@@ -396,9 +405,9 @@
 						"items":"{{ RkGgx.outputs.results[0] }}"
 					},
 					"favicon":{
-						"source":"{{ KS8hc.outputs.result.favicon }}",
 						"ua:type":"mappedArray",
-						"items":"{{ KS8hc.outputs.result.favicon[0] }}"
+						"source":"{{ n_5xvhH.outputs.result.favicon }}",
+						"items":"{{ n_5xvhH.outputs.result.favicon[0] }}"
 					}
 				}
 			},
@@ -428,6 +437,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"chunks":{
 							"type":"array",
@@ -453,12 +464,12 @@
 							},
 							"title":"Chunks"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"input":{
 							"type":"object",
@@ -473,18 +484,17 @@
 							},
 							"title":"Favicon"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"def results = (input?.results as List) ?: []\n\ndef favicons = binding.hasVariable('favicon') ? favicon as List : []\n\ndef chunks = []\n\nfor (int idx = 0; idx < results.size(); idx++) {\n    def item = results[idx]\n    // pick the matching favicon entry by index, or fall back to empty string\n    def iconUrl = (idx < favicons.size() && favicons[idx]?.favicon) ? favicons[idx].favicon : \"\"\n\n    chunks << [\n        chunkMetadata: [\n            chunkContents   : item.content ? [ item.content ] : [],\n            name            : item?.title,\n            title           : item?.title,\n            referenceUrl    : item?.url,\n            websiteUrl      : item?.url,\n            uniqueEntityId  : item?.url,\n            sourceType      : \"WEBSITE\",\n            iconUrl         : iconUrl\n        ],\n        content: item?.content ?: \"\"\n    ]\n}\n\nreturn [ chunks: chunks ]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"input":"{{ RkGgx.outputs }}",
 					"favicon":{
-						"source":"{{ KS8hc.outputs.result.favicon }}",
 						"ua:type":"mappedArray",
-						"items":"{{ KS8hc.outputs.result.favicon[0] }}"
+						"source":"{{ n_5xvhH.outputs.result.favicon }}",
+						"items":"{{ n_5xvhH.outputs.result.favicon[0] }}"
 					}
 				}
 			},
@@ -768,7 +778,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":12,
+	"ownerUserId":1,
 	"runtimeConnectionAppNames":[
 		"tavily"
 	],
@@ -776,9 +786,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":true,
-		"enableRunLogging":true,
-		"enableVariableLogging":true,
+		"enableNodeLevelLogging":false,
+		"enableRunLogging":false,
+		"enableVariableLogging":false,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -789,5 +799,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":79
+	"version":97
 }
