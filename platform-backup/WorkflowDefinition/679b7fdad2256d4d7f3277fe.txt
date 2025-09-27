@@ -5,12 +5,12 @@
 	"createdTime":1747000741155,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758820873815,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68d57a09b57aa23969b94d73",
+		"deployedAt":1758963916555,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d7a8ccce29ec20a05f097f",
 		"status":"DEPLOYED",
-		"version":76,
-		"workflowVersion":93
+		"version":81,
+		"workflowVersion":98
 	},
 	"edges":[
 		{
@@ -316,9 +316,9 @@
 		]
 	},
 	"id":"679b7fdad2256d4d7f3277fe",
-	"lastModifiedBy":1,
+	"lastModifiedBy":-1,
 	"lcName":"fetch chunks given filter and embedding models",
-	"modifiedTime":1758874483793,
+	"modifiedTime":1758966026529,
 	"name":"Fetch Chunks Given Filter and Embedding Models",
 	"nodes":[
 		{
@@ -1642,9 +1642,10 @@
 						}
 					}
 				},
-				"code":"def combinedFilter = [\n    op: 'AND',\n    values: []\n]\n\n// SharedWithIds Filter\ndef sharedFilter = null\nif (binding.hasVariable('sharedWithIds')) {\n    sharedFilter = [\n        field: 'properties.sharedWithIds',\n        op: 'IN',\n        values: sharedWithIds\n    ]\n    combinedFilter['values'].add(sharedFilter)\n}\n\n// Knowledge Filter\ndef knowledgeSetFilter = null\nif (binding.hasVariable('knowledgeSet')) {\n    knowledgeSetFilter = [\n        op: 'OR',\n        values: knowledgeSet.collect { knowledgeItem ->\n            [\n                op: 'OR',\n                values: [\n                    [\n                        field: 'properties.knowledgeSetId',\n                        op: 'EQUAL',\n                        values: [knowledgeItem.id]\n                    ],\n                    [\n                        field: 'properties.knowledgeSetId.__raw__',\n                        op: 'EQUAL',\n                        values: [knowledgeItem.id]\n                    ]\n                ]\n            ]\n        }\n    ]\n    combinedFilter['values'].add(knowledgeSetFilter)\n}\n\n// Helper function to recursively process filter elements and lowercase string values\ndef processFilterElement(element) {\n    if (element instanceof Map) {\n        def processed = [:]\n        element.each { key, value ->\n            if (key == 'values' && value instanceof List) {\n                processed[key] = value.collect { v ->\n                    if (v instanceof String) {\n                        return v.toLowerCase()\n                    } else if (v instanceof Map || v instanceof List) {\n                        return processFilterElement(v)\n                    } else {\n                        return v\n                    }\n                }\n            } else if (value instanceof Map || value instanceof List) {\n                processed[key] = processFilterElement(value)\n            } else {\n                processed[key] = value\n            }\n        }\n        return processed\n    } else if (element instanceof List) {\n        return element.collect { item ->\n            processFilterElement(item)\n        }\n    } else {\n        return element\n    }\n}\n\n// Combine with additionalFilter if it exists\ndef finalFilter = null\ndef validAdditionalFilter = (binding.hasVariable('additionalFilter') &&\n                             additionalFilter instanceof Map &&\n                             additionalFilter.containsKey('op') &&\n                             additionalFilter.containsKey('values'))\n\ndef validCombinedFilter = combinedFilter['values'].size() > 0\n\nif (validCombinedFilter && validAdditionalFilter) {\n    finalFilter = [\n        op: 'AND',\n        values: [\n            additionalFilter,\n            combinedFilter\n        ]\n    ]\n} else if (validCombinedFilter) {\n    finalFilter = combinedFilter\n} else if (validAdditionalFilter) {\n    finalFilter = additionalFilter\n}\n\nreturn ['filter': finalFilter]\n",
+				"code":"def combinedFilter = [\n    op: 'AND',\n    values: []\n]\n\n// SharedWithIds Filter\ndef sharedFilter = null\nif (binding.hasVariable('sharedWithIds')) {\n    sharedFilter = [\n        field: 'properties.sharedWithIds',\n        op: 'IN',\n        values: sharedWithIds\n    ]\n    combinedFilter['values'].add(sharedFilter)\n}\n\n// Knowledge Filter\ndef knowledgeSetFilter = null\nif (binding.hasVariable('knowledgeSet')) {\n    knowledgeSetFilter = [\n        op: 'OR',\n        values: knowledgeSet.collect { knowledgeItem ->\n            [\n                op: 'OR',\n                values: [\n                    [\n                        field: 'properties.knowledgeSetId',\n                        op: 'EQUAL',\n                        values: [knowledgeItem.id]\n                    ],\n                    [\n                        field: 'properties.knowledgeSetId.__raw__',\n                        op: 'EQUAL',\n                        values: [knowledgeItem.id]\n                    ]\n                ]\n            ]\n        }\n    ]\n    combinedFilter['values'].add(knowledgeSetFilter)\n}\n\n// Handle new filter format\nif (binding.hasVariable('filter') && filter instanceof Map && filter.containsKey('op') && filter.containsKey('values')) {\n    filter.values.each { filterElement ->\n        def processedElement = processFilterElement(filterElement)\n        combinedFilter['values'].add(processedElement)\n    }\n}\n\n\n// Helper function to recursively process filter elements and lowercase string values\ndef processFilterElement(element) {\n    if (element instanceof Map) {\n        def processed = [:]\n        element.each { key, value ->\n            if (key == 'values' && value instanceof List) {\n                processed[key] = value.collect { v ->\n                    if (v instanceof String) {\n                        return v.toLowerCase()\n                    } else if (v instanceof Map || v instanceof List) {\n                        return processFilterElement(v)\n                    } else {\n                        return v\n                    }\n                }\n            } else if (value instanceof Map || value instanceof List) {\n                processed[key] = processFilterElement(value)\n            } else {\n                processed[key] = value\n            }\n        }\n        return processed\n    } else if (element instanceof List) {\n        return element.collect { item ->\n            processFilterElement(item)\n        }\n    } else {\n        return element\n    }\n}\n\n// Combine with additionalFilter if it exists\ndef finalFilter = null\ndef validAdditionalFilter = (binding.hasVariable('additionalFilter') &&\n                             additionalFilter instanceof Map &&\n                             additionalFilter.containsKey('op') &&\n                             additionalFilter.containsKey('values'))\n\ndef validCombinedFilter = combinedFilter['values'].size() > 0\n\nif (validCombinedFilter && validAdditionalFilter) {\n    finalFilter = [\n        op: 'AND',\n        values: [\n            additionalFilter,\n            combinedFilter\n        ]\n    ]\n} else if (validCombinedFilter) {\n    finalFilter = combinedFilter\n} else if (validAdditionalFilter) {\n    finalFilter = additionalFilter\n}\n\nreturn ['filter': finalFilter]\n",
 				"compile_static":false,
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"filter":"{{ le3y3.outputs.filter }}",
 					"additionalFilter":"{{ _94gvN.outputs.additionalFilter }}",
@@ -2419,9 +2420,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -2432,5 +2433,5 @@
 		"AI Agent",
 		"Knowledge"
 	],
-	"version":94
+	"version":99
 }
