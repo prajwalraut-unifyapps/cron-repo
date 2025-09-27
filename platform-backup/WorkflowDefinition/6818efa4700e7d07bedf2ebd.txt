@@ -5,12 +5,12 @@
 	"createdTime":1754459048004,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758886189670,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68d6792d3323d9309656d370",
+		"deployedAt":1758963912515,
+		"deployedBy":1,
+		"deployedDefinitionId":"68d7a8c8ce29ec20a05f095f",
 		"status":"DEPLOYED",
-		"version":70,
-		"workflowVersion":101
+		"version":71,
+		"workflowVersion":102
 	},
 	"edges":[
 		{
@@ -153,9 +153,9 @@
 		]
 	},
 	"id":"6818efa4700e7d07bedf2ebd",
-	"lastModifiedBy":1,
+	"lastModifiedBy":-1,
 	"lcName":"docx to html",
-	"modifiedTime":1758963912411,
+	"modifiedTime":1758966012751,
 	"name":"Docx to HTML",
 	"nodes":[
 		{
@@ -169,7 +169,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hm69n-1",
 			"id":"6CYv0",
-			"index":0,
+			"index":1,
 			"inputs":{
 				"result":{
 					"type":"object",
@@ -214,7 +214,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hm69n-1",
 			"id":"QQQpy",
-			"index":0,
+			"index":2,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -263,10 +263,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"hm69n-1",
 			"id":"B7eeR",
-			"index":0,
+			"index":3,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"html":{
 							"type":"string",
@@ -318,23 +320,24 @@
 							},
 							"title":"images"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"url":{
 							"type":"string",
 							"title":"url"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"code":"from pathlib import Path\n\nimport base64\nimport html\nimport zipfile\nfrom lxml import etree\nimport requests\nimport tempfile\nimport os\nimport re\n\n# Create a temporary file\nwith tempfile.NamedTemporaryFile(delete=False) as tmp_file:\n    # Download the file and write to temp file\n    response = requests.get(url, stream=True)\n    response.raise_for_status()\n    for chunk in response.iter_content(chunk_size=8192):\n        tmp_file.write(chunk)\n    temp_file_name = tmp_file.name\n\nNS = {\n    'w' : 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',\n    'a' : 'http://schemas.openxmlformats.org/drawingml/2006/main',\n    'r' : 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',\n    'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'\n}\n\nemf_images = []\nimages = []\n\ndef get_image_tag(ext, b64, emf_images, images):\n    import uuid\n\n    if ext.lower() == 'emf':\n        placeholder = f\"__EMF_IMAGE_{len(emf_images)}__\"\n        emf_images.append({\n            \"placeholder\": placeholder,\n            \"b64\": b64\n        })\n        return f'<img src=\"{placeholder}\"/>'\n    else:\n        placeholder = f\"__NORMAL_IMAGE_{len(images)}__\"\n        images.append({\n            \"placeholder\": placeholder,\n            \"b64\": b64,\n            \"mimeType\": f\"image/{ext}\",\n            \"fileName\": f\"{uuid.uuid4()}.{ext}\"\n        })\n        return f'<img src=\"{placeholder}\"/>'\n\nwith zipfile.ZipFile(temp_file_name) as z:\n    rels_xml = etree.fromstring(z.read('word/_rels/document.xml.rels'))\n    rels = {}\n    for r in rels_xml:\n        rels[r.attrib['Id']] = r.attrib['Target']\n\n    numdef = {}\n    try:\n        num_xml = etree.fromstring(z.read('word/numbering.xml'))\n        abs_fmt = {}\n        for absnum in num_xml.findall('w:abstractNum', NS):\n            aid = absnum.attrib['{' + NS['w'] + '}abstractNumId']\n            for lvl in absnum.findall('w:lvl', NS):\n                ilvl = int(lvl.attrib['{' + NS['w'] + '}ilvl'])\n                fmt  = lvl.find('w:numFmt', NS).attrib['{' + NS['w'] + '}val']\n                abs_fmt[(aid, ilvl)] = fmt\n        for num in num_xml.findall('w:num', NS):\n            nid  = num.attrib['{' + NS['w'] + '}numId']\n            aid  = num.find('w:abstractNumId', NS).attrib['{' + NS['w'] + '}val']\n            for ilvl in range(0, 10):\n                fmt = abs_fmt.get((aid, ilvl))\n                if fmt:\n                    numdef[(nid, ilvl)] = 'ol' if fmt not in ('bullet', 'none') else 'ul'\n    except KeyError:\n        pass\n\n    styles = {}\n    try:\n        styles_xml = etree.fromstring(z.read('word/styles.xml'))\n        for s in styles_xml.findall('w:style', NS):\n            style_id = s.attrib.get('{' + NS['w'] + '}styleId')\n            name_el  = s.find('w:name', NS)\n            if name_el is not None and name_el.attrib.get(\n                    '{' + NS['w'] + '}val', '').lower().startswith('heading'):\n                try:\n                    lvl = int(name_el.attrib['{' + NS['w'] + '}val'][-1])\n                    styles[style_id] = min(lvl, 6)\n                except (ValueError, IndexError):\n                    pass\n    except KeyError:\n        pass\n\n    footnotes = {}\n    footnote_used = []\n    try:\n        fn_xml = etree.fromstring(z.read('word/footnotes.xml'))\n        for fn in fn_xml.findall('w:footnote', NS):\n            fid = fn.attrib['{' + NS['w'] + '}id']\n            if int(fid) < 0:\n                continue\n            text = ''.join(t.text or '' for t in fn.iterfind('.//w:t', NS))\n            footnotes[fid] = html.escape(text)\n    except KeyError:\n        pass\n\n    body = etree.fromstring(z.read('word/document.xml')).find('w:body', NS)\n\n    html_chunks = []\n    list_stack = []\n    prev_ilvl = None\n    prev_is_list = False\n    footnote_index = {}\n\n    def run_to_html(run):\n        import html\n        NS = {\n            'w' : 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',\n            'a' : 'http://schemas.openxmlformats.org/drawingml/2006/main',\n            'r' : 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',\n            'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'\n        }\n        HL_MAP = {\n            'yellow': '#ffff00', 'lightYellow': '#ffffcc', 'green': '#00ff00', 'lightGray': '#d9d9d9',\n            'turquoise': '#00ffff', 'cyan': '#00ffff', 'brightGreen': '#00ff00', 'pink': '#ff00ff',\n            'blue': '#0000ff', 'red': '#ff0000', 'darkYellow': '#999900', 'darkGreen': '#006600',\n            'darkRed': '#990000', 'darkBlue': '#000099'\n        }\n        \n        text = ''.join(t.text or '' for t in run.findall('w:t', NS))\n        text = html.escape(text).replace('\\n', '<br/>')\n        if not text.strip():\n            return ''\n        rPr  = run.find('w:rPr', NS)\n        if rPr is None:\n            return text\n        styles_ = []\n        open_tags, close_tags = [], []\n        # BOLD\n        b = rPr.find('w:b', NS)\n        if b is not None:\n            val = b.attrib.get('{' + NS['w'] + '}val', '1')\n            if val != '0':\n                open_tags.append('<strong>'); close_tags.append('</strong>')\n        # ITALIC\n        i = rPr.find('w:i', NS)\n        if i is not None:\n            val = i.attrib.get('{' + NS['w'] + '}val', '1')\n            if val != '0':\n                open_tags.append('<em>'); close_tags.append('</em>')\n        # UNDERLINE\n        u = rPr.find('w:u', NS)\n        if u is not None:\n            val = u.attrib.get('{' + NS['w'] + '}val', 'single')\n            if val not in ('none', '0'):\n                open_tags.append('<u>'); close_tags.append('</u>')\n        # STRIKETHROUGH\n        s = rPr.find('w:strike', NS)\n        if s is not None:\n            val = s.attrib.get('{' + NS['w'] + '}val', '1')\n            if val != '0':\n                open_tags.append('<s>'); close_tags.append('</s>')\n        # ... (rest of your code unchanged)\n        # (color, highlight, font, etc. as before)\n        # ...\n        va = rPr.find('w:vertAlign', NS)\n        if va is not None:\n            val = va.attrib['{' + NS['w'] + '}val']\n            if val == 'superscript':\n                open_tags.append('<sup>'); close_tags.append('</sup>')\n            elif val == 'subscript':\n                open_tags.append('<sub>'); close_tags.append('</sub>')\n        color = rPr.find('w:color', NS)\n        if color is not None and color.attrib.get('{' + NS['w'] + '}val') not in ('auto', None):\n            val = '{' + NS['w'] + '}val'\n            styles_.append('color:#' + color.attrib[val])\n        highlight = rPr.find('w:highlight', NS)\n        mark_open = mark_close = ''\n        if highlight is not None:\n            hval = highlight.attrib.get('{' + NS['w'] + '}val')\n            color_val = HL_MAP.get(hval, hval)\n            mark_open = '<mark style=\"background-color:' + color_val + '\">'\n            mark_close = '</mark>'\n        size = rPr.find('w:sz', NS)\n        if size is not None:\n            pt = int(size.attrib['{' + NS['w'] + '}val']) * 0.5\n            styles_.append('font-size:' + str(pt) + 'pt')\n        font = rPr.find('w:rFonts', NS)\n        if font is not None and font.attrib.get('{' + NS['w'] + '}ascii'):\n            val = '{' + NS['w'] + '}ascii'\n            styles_.append('font-family:' + font.attrib[val])\n        style_attr = ' style=\"' + ';'.join(styles_) + '\"' if styles_ else ''\n        data = ''.join(open_tags) + mark_open + '<span' + style_attr + '>' + text + '</span>' + mark_close + ''.join(reversed(close_tags))\n        return data\n\n    for node in body:\n        tag = etree.QName(node).localname\n\n        def is_page_or_section_break(p):\n            NS = {\n                'w' : 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',\n                'a' : 'http://schemas.openxmlformats.org/drawingml/2006/main',\n                'r' : 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',\n                'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'\n            }\n            return p.find('.//w:br[@w:type=\"page\"]', NS) is not None \\\n                or p.find('.//w:type[@w:val=\"page\"]', NS) is not None \\\n                or p.find('.//w:type[@w:val=\"section\"]', NS) is not None\n\n        if tag == 'p' and is_page_or_section_break(node):\n            while list_stack:\n                html_chunks.append('</li></' + list_stack.pop()[1] + '>')\n            html_chunks.append('<hr class=\"docx-break\"/>')\n            prev_ilvl = None\n            prev_is_list = False\n            continue\n\n        def para_numbering(p, numdef):\n            NS = {\n                'w' : 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',\n                'a' : 'http://schemas.openxmlformats.org/drawingml/2006/main',\n                'r' : 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',\n                'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'\n            }\n            numPr = p.find('w:pPr/w:numPr', NS)\n            if numPr is None:\n                return False, None\n            nid_el = numPr.find('w:numId', NS)\n            ilvl_el = numPr.find('w:ilvl', NS)\n            if nid_el is None:\n                return False, None\n            nid    = nid_el.attrib['{' + NS['w'] + '}val']\n            ilvl   = int(ilvl_el.attrib['{' + NS['w'] + '}val']) if ilvl_el is not None else 0\n            list_type = numdef.get((nid, ilvl), 'ul')\n            return True, (ilvl, list_type)\n\n        if tag == 'p':\n            is_list, list_info = para_numbering(node, numdef)\n            if is_list:\n                ilvl, list_type = list_info\n                if prev_ilvl is None or ilvl > prev_ilvl:\n                    html_chunks.append('<' + list_type + '><li>')\n                    list_stack.append((ilvl, list_type))\n                elif ilvl < prev_ilvl:\n                    while list_stack and list_stack[-1][0] > ilvl:\n                        html_chunks.append('</li></' + list_stack.pop()[1] + '>')\n                    html_chunks.append('</li><li>')\n                else:\n                    if prev_is_list:\n                        html_chunks.append('</li><li>')\n                    else:\n                        html_chunks.append('<li>')\n                parts = []\n                for run in node:\n                    if etree.QName(run).localname == 'r':\n                        drawing = run.find('w:drawing', NS)\n                        if drawing is not None:\n                            blip = drawing.find('.//a:blip', NS)\n                            if blip is not None:\n                                rId = blip.attrib.get('{' + NS['r'] + '}embed')\n                                target = rels.get(rId)\n                                if target:\n                                    ext = target.split('.')[-1]\n                                    image_path = 'word/' + target\n                                    image_data = z.read(image_path)\n                                    b64 = base64.b64encode(image_data).decode('utf-8')\n                                    parts.append(get_image_tag(ext, b64, emf_images, images))\n                        else:\n                            parts.append(run_to_html(run))\n                    elif etree.QName(run).localname == 'hyperlink':\n                        rid = run.attrib.get('{' + NS['r'] + '}id')\n                        href = rels.get(rid, '#')\n                        inner = []\n                        for r2 in run:\n                            if etree.QName(r2).localname == 'r':\n                                inner.append(run_to_html(r2))\n                        parts.append('<a href=\"' + html.escape(href) + '\">' + ''.join(inner) + '</a>')\n                    elif etree.QName(run).localname == 'footnoteReference':\n                        fid = run.attrib['{' + NS['w'] + '}id']\n                        if fid in footnotes:\n                            if fid not in footnote_index:\n                                footnote_index[fid] = len(footnote_index) + 1\n                                footnote_used.append(fid)\n                            num = footnote_index[fid]\n                            parts.append('<sup id=\"ref-' + str(num) + '\"><a href=\"#fn-' + str(num) + '\">' + str(num) + '</a></sup>')\n                content = ''.join(parts).strip()\n                if content:\n                    html_chunks.append(content)\n                prev_ilvl = ilvl\n                prev_is_list = True\n            else:\n                while list_stack:\n                    html_chunks.append('</li></' + list_stack.pop()[1] + '>')\n                tag2, attrs = 'p', ''\n                pstyle = node.find('w:pPr/w:pStyle', NS)\n                if pstyle is not None:\n                    sid = pstyle.attrib['{' + NS['w'] + '}val']\n                    if sid in styles:\n                        tag2 = 'h' + str(styles[sid])\n                jc = node.find('w:pPr/w:jc', NS)\n                if jc is not None:\n                    val = jc.attrib['{' + NS['w'] + '}val']\n                    attrs = ' style=\"text-align:' + val + '\"'\n                parts = []\n                for run in node:\n                    if etree.QName(run).localname == 'r':\n                        drawing = run.find('w:drawing', NS)\n                        if drawing is not None:\n                            blip = drawing.find('.//a:blip', NS)\n                            if blip is not None:\n                                rId = blip.attrib.get('{' + NS['r'] + '}embed')\n                                target = rels.get(rId)\n                                if target:\n                                    ext = target.split('.')[-1]\n                                    image_path = 'word/' + target\n                                    image_data = z.read(image_path)\n                                    b64 = base64.b64encode(image_data).decode('utf-8')\n                                    parts.append(get_image_tag(ext, b64, emf_images, images))\n                        else:\n                            parts.append(run_to_html(run))\n                    elif etree.QName(run).localname == 'hyperlink':\n                        rid = run.attrib.get('{' + NS['r'] + '}id')\n                        href = rels.get(rid, '#')\n                        inner = []\n                        for r2 in run:\n                            if etree.QName(r2).localname == 'r':\n                                inner.append(run_to_html(r2))\n                        parts.append('<a href=\"' + html.escape(href) + '\">' + ''.join(inner) + '</a>')\n                    elif etree.QName(run).localname == 'footnoteReference':\n                        fid = run.attrib['{' + NS['w'] + '}id']\n                        if fid in footnotes:\n                            if fid not in footnote_index:\n                                footnote_index[fid] = len(footnote_index) + 1\n                                footnote_used.append(fid)\n                            num = footnote_index[fid]\n                            parts.append('<sup id=\"ref-' + str(num) + '\"><a href=\"#fn-' + str(num) + '\">' + str(num) + '</a></sup>')\n                content = ''.join(parts).strip()\n                if content:\n                    html_chunks.append('<' + tag2 + attrs + '>' + content + '</' + tag2 + '>')\n                prev_ilvl = None\n                prev_is_list = False\n\n        elif tag == 'tbl':\n            while list_stack:\n                html_chunks.append('</li></' + list_stack.pop()[1] + '>')\n            rows_html = []\n            for r, row in enumerate(node.findall('w:tr', NS)):\n                tr_html, is_header = [], r == 0 and row.find('.//w:tblHeader', NS) is not None\n                cell_tag = 'th' if is_header else 'td'\n                for cell in row.findall('w:tc', NS):\n                    shade = cell.find('.//w:shd', NS)\n                    bgcss = ''\n                    if shade is not None:\n                        fill = shade.attrib.get('{' + NS['w'] + '}fill')\n                        if fill and fill != 'auto':\n                            bgcss = ' style=\"background-color:#' + fill + '\"'\n                    cell_inner = []\n                    for p in cell.findall('w:p', NS):\n                        tag2, attrs = 'p', ''\n                        pstyle = p.find('w:pPr/w:pStyle', NS)\n                        if pstyle is not None:\n                            sid = pstyle.attrib['{' + NS['w'] + '}val']\n                            if sid in styles:\n                                tag2 = 'h' + str(styles[sid])\n                        jc = p.find('w:pPr/w:jc', NS)\n                        if jc is not None:\n                            val = jc.attrib['{' + NS['w'] + '}val']\n                            attrs = ' style=\"text-align:' + val + '\"'\n                        parts = []\n                        for run in p:\n                            if etree.QName(run).localname == 'r':\n                                drawing = run.find('w:drawing', NS)\n                                if drawing is not None:\n                                    blip = drawing.find('.//a:blip', NS)\n                                    if blip is not None:\n                                        rId = blip.attrib.get('{' + NS['r'] + '}embed')\n                                        target = rels.get(rId)\n                                        if target:\n                                            ext = target.split('.')[-1]\n                                            image_path = 'word/' + target\n                                            image_data = z.read(image_path)\n                                            b64 = base64.b64encode(image_data).decode('utf-8')\n                                            parts.append(get_image_tag(ext, b64, emf_images, images))\n                                else:\n                                    parts.append(run_to_html(run))\n                            elif etree.QName(run).localname == 'hyperlink':\n                                rid = run.attrib.get('{' + NS['r'] + '}id')\n                                href = rels.get(rid, '#')\n                                inner = []\n                                for r2 in run:\n                                    if etree.QName(r2).localname == 'r':\n                                        inner.append(run_to_html(r2))\n                                parts.append('<a href=\"' + html.escape(href) + '\">' + ''.join(inner) + '</a>')\n                            elif etree.QName(run).localname == 'footnoteReference':\n                                fid = run.attrib['{' + NS['w'] + '}id']\n                                if fid in footnotes:\n                                    if fid not in footnote_index:\n                                        footnote_index[fid] = len(footnote_index) + 1\n                                        footnote_used.append(fid)\n                                    num = footnote_index[fid]\n                                    parts.append('<sup id=\"ref-' + str(num) + '\"><a href=\"#fn-' + str(num) + '\">' + str(num) + '</a></sup>')\n                        content = ''.join(parts).strip()\n                        if content:\n                            cell_inner.append('<' + tag2 + attrs + '>' + content + '</' + tag2 + '>')\n                    tr_html.append('<' + cell_tag + bgcss + '>' + ''.join(cell_inner) + '</' + cell_tag + '>')\n                rows_html.append('<tr>' + ''.join(tr_html) + '</tr>')\n            html_chunks.append('<table><tbody>' + ''.join(rows_html) + '</tbody></table>')\n            prev_ilvl = None\n            prev_is_list = False\n\n        else:\n            pass\n\n    while list_stack:\n        html_chunks.append('</li></' + list_stack.pop()[1] + '>')\n\n    if footnote_used:\n        html_chunks.append('<hr/><ol class=\"docx-footnotes\">')\n        for idx, nid in enumerate(footnote_used, 1):\n            html_chunks.append('<li id=\"fn-' + str(idx) + '\">' + footnotes[nid] + '</li>')\n        html_chunks.append('</ol>')\n\n    html_out = ''.join(html_chunks)\n    html_clean = re.sub(r'<p\\b[^>]*>\\s*(<img\\b[^>]*>)\\s*</p>', r'\\1', html_out, flags=re.IGNORECASE)\n    html_clean = re.sub(r'<p\\b[^>]*>\\s*</p>', '', html_clean, flags=re.IGNORECASE)\n    result = {\n        \"html\": html_clean,\n        \"emf_images\": emf_images,\n        \"images\": images\n    }",
+				"configurationMode":"DEFAULT",
+				"code":"from pathlib import Path\n\nimport base64\nimport html\nimport zipfile\nfrom lxml import etree\nimport requests\nimport tempfile\nimport os\nimport re\n\n# Create a temporary file\nwith tempfile.NamedTemporaryFile(delete=False) as tmp_file:\n    # Download the file and write to temp file\n    response = requests.get(url, stream=True)\n    response.raise_for_status()\n    for chunk in response.iter_content(chunk_size=8192):\n        tmp_file.write(chunk)\n    temp_file_name = tmp_file.name\n\nNS = {\n    'w' : 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',\n    'a' : 'http://schemas.openxmlformats.org/drawingml/2006/main',\n    'r' : 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',\n    'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'\n}\n\nemf_images = []\nimages = []\n\ndef get_image_tag(ext, b64, emf_images, images):\n    import uuid\n\n    if ext.lower() == 'emf':\n        placeholder = f\"__EMF_IMAGE_{len(emf_images)}__\"\n        emf_images.append({\n            \"placeholder\": placeholder,\n            \"b64\": b64\n        })\n        return f'<img src=\"{placeholder}\"/>'\n    else:\n        placeholder = f\"__NORMAL_IMAGE_{len(images)}__\"\n        images.append({\n            \"placeholder\": placeholder,\n            \"b64\": b64,\n            \"mimeType\": f\"image/{ext}\",\n            \"fileName\": f\"{uuid.uuid4()}.{ext}\"\n        })\n        return f'<img src=\"{placeholder}\"/>'\n\nwith zipfile.ZipFile(temp_file_name) as z:\n    rels_xml = etree.fromstring(z.read('word/_rels/document.xml.rels'))\n    rels = {}\n    for r in rels_xml:\n        rels[r.attrib['Id']] = r.attrib['Target']\n\n    numdef = {}\n    try:\n        num_xml = etree.fromstring(z.read('word/numbering.xml'))\n        abs_fmt = {}\n        for absnum in num_xml.findall('w:abstractNum', NS):\n            aid = absnum.attrib['{' + NS['w'] + '}abstractNumId']\n            for lvl in absnum.findall('w:lvl', NS):\n                ilvl = int(lvl.attrib['{' + NS['w'] + '}ilvl'])\n                fmt  = lvl.find('w:numFmt', NS).attrib['{' + NS['w'] + '}val']\n                abs_fmt[f\"{aid}:{ilvl}\"] = fmt\n        for num in num_xml.findall('w:num', NS):\n            nid  = num.attrib['{' + NS['w'] + '}numId']\n            aid  = num.find('w:abstractNumId', NS).attrib['{' + NS['w'] + '}val']\n            for ilvl in range(0, 10):\n                fmt = abs_fmt.get(f\"{aid}:{ilvl}\")\n                if fmt:\n                    numdef[f\"{nid}:{ilvl}\"] = 'ol' if fmt not in ('bullet', 'none') else 'ul'\n    except KeyError:\n        pass\n\n    styles = {}\n    try:\n        styles_xml = etree.fromstring(z.read('word/styles.xml'))\n        for s in styles_xml.findall('w:style', NS):\n            style_id = s.attrib.get('{' + NS['w'] + '}styleId')\n            name_el  = s.find('w:name', NS)\n            if name_el is not None and name_el.attrib.get(\n                    '{' + NS['w'] + '}val', '').lower().startswith('heading'):\n                try:\n                    lvl = int(name_el.attrib['{' + NS['w'] + '}val'][-1])\n                    styles[style_id] = min(lvl, 6)\n                except (ValueError, IndexError):\n                    pass\n    except KeyError:\n        pass\n\n    footnotes = {}\n    footnote_used = []\n    try:\n        fn_xml = etree.fromstring(z.read('word/footnotes.xml'))\n        for fn in fn_xml.findall('w:footnote', NS):\n            fid = fn.attrib['{' + NS['w'] + '}id']\n            if int(fid) < 0:\n                continue\n            text = ''.join(t.text or '' for t in fn.iterfind('.//w:t', NS))\n            footnotes[fid] = html.escape(text)\n    except KeyError:\n        pass\n\n    body = etree.fromstring(z.read('word/document.xml')).find('w:body', NS)\n\n    html_chunks = []\n    list_stack = []\n    prev_ilvl = None\n    prev_is_list = False\n    footnote_index = {}\n\n    def run_to_html(run):\n        import html\n        NS = {\n            'w' : 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',\n            'a' : 'http://schemas.openxmlformats.org/drawingml/2006/main',\n            'r' : 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',\n            'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'\n        }\n        HL_MAP = {\n            'yellow': '#ffff00', 'lightYellow': '#ffffcc', 'green': '#00ff00', 'lightGray': '#d9d9d9',\n            'turquoise': '#00ffff', 'cyan': '#00ffff', 'brightGreen': '#00ff00', 'pink': '#ff00ff',\n            'blue': '#0000ff', 'red': '#ff0000', 'darkYellow': '#999900', 'darkGreen': '#006600',\n            'darkRed': '#990000', 'darkBlue': '#000099'\n        }\n        \n        text = ''.join(t.text or '' for t in run.findall('w:t', NS))\n        text = html.escape(text).replace('\\n', '<br/>')\n        if not text.strip():\n            return ''\n        rPr  = run.find('w:rPr', NS)\n        if rPr is None:\n            return text\n        styles_ = []\n        open_tags, close_tags = [], []\n        # BOLD\n        b = rPr.find('w:b', NS)\n        if b is not None:\n            val = b.attrib.get('{' + NS['w'] + '}val', '1')\n            if val != '0':\n                open_tags.append('<strong>'); close_tags.append('</strong>')\n        # ITALIC\n        i = rPr.find('w:i', NS)\n        if i is not None:\n            val = i.attrib.get('{' + NS['w'] + '}val', '1')\n            if val != '0':\n                open_tags.append('<em>'); close_tags.append('</em>')\n        # UNDERLINE\n        u = rPr.find('w:u', NS)\n        if u is not None:\n            val = u.attrib.get('{' + NS['w'] + '}val', 'single')\n            if val not in ('none', '0'):\n                open_tags.append('<u>'); close_tags.append('</u>')\n        # STRIKETHROUGH\n        s = rPr.find('w:strike', NS)\n        if s is not None:\n            val = s.attrib.get('{' + NS['w'] + '}val', '1')\n            if val != '0':\n                open_tags.append('<s>'); close_tags.append('</s>')\n        # ... (rest of your code unchanged)\n        # (color, highlight, font, etc. as before)\n        # ...\n        va = rPr.find('w:vertAlign', NS)\n        if va is not None:\n            val = va.attrib['{' + NS['w'] + '}val']\n            if val == 'superscript':\n                open_tags.append('<sup>'); close_tags.append('</sup>')\n            elif val == 'subscript':\n                open_tags.append('<sub>'); close_tags.append('</sub>')\n        color = rPr.find('w:color', NS)\n        if color is not None and color.attrib.get('{' + NS['w'] + '}val') not in ('auto', None):\n            val = '{' + NS['w'] + '}val'\n            styles_.append('color:#' + color.attrib[val])\n        highlight = rPr.find('w:highlight', NS)\n        mark_open = mark_close = ''\n        if highlight is not None:\n            hval = highlight.attrib.get('{' + NS['w'] + '}val')\n            color_val = HL_MAP.get(hval, hval)\n            mark_open = '<mark style=\"background-color:' + color_val + '\">'\n            mark_close = '</mark>'\n        size = rPr.find('w:sz', NS)\n        if size is not None:\n            pt = int(size.attrib['{' + NS['w'] + '}val']) * 0.5\n            styles_.append('font-size:' + str(pt) + 'pt')\n        font = rPr.find('w:rFonts', NS)\n        if font is not None and font.attrib.get('{' + NS['w'] + '}ascii'):\n            val = '{' + NS['w'] + '}ascii'\n            styles_.append('font-family:' + font.attrib[val])\n        style_attr = ' style=\"' + ';'.join(styles_) + '\"' if styles_ else ''\n        data = ''.join(open_tags) + mark_open + '<span' + style_attr + '>' + text + '</span>' + mark_close + ''.join(reversed(close_tags))\n        return data\n\n    for node in body:\n        tag = etree.QName(node).localname\n\n        def is_page_or_section_break(p):\n            NS = {\n                'w' : 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',\n                'a' : 'http://schemas.openxmlformats.org/drawingml/2006/main',\n                'r' : 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',\n                'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'\n            }\n            return p.find('.//w:br[@w:type=\"page\"]', NS) is not None \\\n                or p.find('.//w:type[@w:val=\"page\"]', NS) is not None \\\n                or p.find('.//w:type[@w:val=\"section\"]', NS) is not None\n\n        if tag == 'p' and is_page_or_section_break(node):\n            while list_stack:\n                html_chunks.append('</li></' + list_stack.pop()[1] + '>')\n            html_chunks.append('<hr class=\"docx-break\"/>')\n            prev_ilvl = None\n            prev_is_list = False\n            continue\n\n        def para_numbering(p, numdef):\n            NS = {\n                'w' : 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',\n                'a' : 'http://schemas.openxmlformats.org/drawingml/2006/main',\n                'r' : 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',\n                'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'\n            }\n            numPr = p.find('w:pPr/w:numPr', NS)\n            if numPr is None:\n                return False, None\n            nid_el = numPr.find('w:numId', NS)\n            ilvl_el = numPr.find('w:ilvl', NS)\n            if nid_el is None:\n                return False, None\n            nid    = nid_el.attrib['{' + NS['w'] + '}val']\n            ilvl   = int(ilvl_el.attrib['{' + NS['w'] + '}val']) if ilvl_el is not None else 0\n            list_type = numdef.get(f\"{nid}:{ilvl}\", 'ul')\n            return True, (ilvl, list_type)\n\n        if tag == 'p':\n            is_list, list_info = para_numbering(node, numdef)\n            if is_list:\n                ilvl, list_type = list_info\n                if prev_ilvl is None or ilvl > prev_ilvl:\n                    html_chunks.append('<' + list_type + '><li>')\n                    list_stack.append((ilvl, list_type))\n                elif ilvl < prev_ilvl:\n                    while list_stack and list_stack[-1][0] > ilvl:\n                        html_chunks.append('</li></' + list_stack.pop()[1] + '>')\n                    html_chunks.append('</li><li>')\n                else:\n                    if prev_is_list:\n                        html_chunks.append('</li><li>')\n                    else:\n                        html_chunks.append('<li>')\n                parts = []\n                for run in node:\n                    if etree.QName(run).localname == 'r':\n                        drawing = run.find('w:drawing', NS)\n                        if drawing is not None:\n                            blip = drawing.find('.//a:blip', NS)\n                            if blip is not None:\n                                rId = blip.attrib.get('{' + NS['r'] + '}embed')\n                                target = rels.get(rId)\n                                if target:\n                                    ext = target.split('.')[-1]\n                                    image_path = 'word/' + target\n                                    image_data = z.read(image_path)\n                                    b64 = base64.b64encode(image_data).decode('utf-8')\n                                    parts.append(get_image_tag(ext, b64, emf_images, images))\n                        else:\n                            parts.append(run_to_html(run))\n                    elif etree.QName(run).localname == 'hyperlink':\n                        rid = run.attrib.get('{' + NS['r'] + '}id')\n                        href = rels.get(rid, '#')\n                        inner = []\n                        for r2 in run:\n                            if etree.QName(r2).localname == 'r':\n                                inner.append(run_to_html(r2))\n                        parts.append('<a href=\"' + html.escape(href) + '\">' + ''.join(inner) + '</a>')\n                    elif etree.QName(run).localname == 'footnoteReference':\n                        fid = run.attrib['{' + NS['w'] + '}id']\n                        if fid in footnotes:\n                            if fid not in footnote_index:\n                                footnote_index[fid] = len(footnote_index) + 1\n                                footnote_used.append(fid)\n                            num = footnote_index[fid]\n                            parts.append('<sup id=\"ref-' + str(num) + '\"><a href=\"#fn-' + str(num) + '\">' + str(num) + '</a></sup>')\n                content = ''.join(parts).strip()\n                if content:\n                    html_chunks.append(content)\n                prev_ilvl = ilvl\n                prev_is_list = True\n            else:\n                while list_stack:\n                    html_chunks.append('</li></' + list_stack.pop()[1] + '>')\n                tag2, attrs = 'p', ''\n                pstyle = node.find('w:pPr/w:pStyle', NS)\n                if pstyle is not None:\n                    sid = pstyle.attrib['{' + NS['w'] + '}val']\n                    if sid in styles:\n                        tag2 = 'h' + str(styles[sid])\n                jc = node.find('w:pPr/w:jc', NS)\n                if jc is not None:\n                    val = jc.attrib['{' + NS['w'] + '}val']\n                    attrs = ' style=\"text-align:' + val + '\"'\n                parts = []\n                for run in node:\n                    if etree.QName(run).localname == 'r':\n                        drawing = run.find('w:drawing', NS)\n                        if drawing is not None:\n                            blip = drawing.find('.//a:blip', NS)\n                            if blip is not None:\n                                rId = blip.attrib.get('{' + NS['r'] + '}embed')\n                                target = rels.get(rId)\n                                if target:\n                                    ext = target.split('.')[-1]\n                                    image_path = 'word/' + target\n                                    image_data = z.read(image_path)\n                                    b64 = base64.b64encode(image_data).decode('utf-8')\n                                    parts.append(get_image_tag(ext, b64, emf_images, images))\n                        else:\n                            parts.append(run_to_html(run))\n                    elif etree.QName(run).localname == 'hyperlink':\n                        rid = run.attrib.get('{' + NS['r'] + '}id')\n                        href = rels.get(rid, '#')\n                        inner = []\n                        for r2 in run:\n                            if etree.QName(r2).localname == 'r':\n                                inner.append(run_to_html(r2))\n                        parts.append('<a href=\"' + html.escape(href) + '\">' + ''.join(inner) + '</a>')\n                    elif etree.QName(run).localname == 'footnoteReference':\n                        fid = run.attrib['{' + NS['w'] + '}id']\n                        if fid in footnotes:\n                            if fid not in footnote_index:\n                                footnote_index[fid] = len(footnote_index) + 1\n                                footnote_used.append(fid)\n                            num = footnote_index[fid]\n                            parts.append('<sup id=\"ref-' + str(num) + '\"><a href=\"#fn-' + str(num) + '\">' + str(num) + '</a></sup>')\n                content = ''.join(parts).strip()\n                if content:\n                    html_chunks.append('<' + tag2 + attrs + '>' + content + '</' + tag2 + '>')\n                prev_ilvl = None\n                prev_is_list = False\n\n        elif tag == 'tbl':\n            while list_stack:\n                html_chunks.append('</li></' + list_stack.pop()[1] + '>')\n            rows_html = []\n            for r, row in enumerate(node.findall('w:tr', NS)):\n                tr_html, is_header = [], r == 0 and row.find('.//w:tblHeader', NS) is not None\n                cell_tag = 'th' if is_header else 'td'\n                for cell in row.findall('w:tc', NS):\n                    shade = cell.find('.//w:shd', NS)\n                    bgcss = ''\n                    if shade is not None:\n                        fill = shade.attrib.get('{' + NS['w'] + '}fill')\n                        if fill and fill != 'auto':\n                            bgcss = ' style=\"background-color:#' + fill + '\"'\n                    cell_inner = []\n                    for p in cell.findall('w:p', NS):\n                        tag2, attrs = 'p', ''\n                        pstyle = p.find('w:pPr/w:pStyle', NS)\n                        if pstyle is not None:\n                            sid = pstyle.attrib['{' + NS['w'] + '}val']\n                            if sid in styles:\n                                tag2 = 'h' + str(styles[sid])\n                        jc = p.find('w:pPr/w:jc', NS)\n                        if jc is not None:\n                            val = jc.attrib['{' + NS['w'] + '}val']\n                            attrs = ' style=\"text-align:' + val + '\"'\n                        parts = []\n                        for run in p:\n                            if etree.QName(run).localname == 'r':\n                                drawing = run.find('w:drawing', NS)\n                                if drawing is not None:\n                                    blip = drawing.find('.//a:blip', NS)\n                                    if blip is not None:\n                                        rId = blip.attrib.get('{' + NS['r'] + '}embed')\n                                        target = rels.get(rId)\n                                        if target:\n                                            ext = target.split('.')[-1]\n                                            image_path = 'word/' + target\n                                            image_data = z.read(image_path)\n                                            b64 = base64.b64encode(image_data).decode('utf-8')\n                                            parts.append(get_image_tag(ext, b64, emf_images, images))\n                                else:\n                                    parts.append(run_to_html(run))\n                            elif etree.QName(run).localname == 'hyperlink':\n                                rid = run.attrib.get('{' + NS['r'] + '}id')\n                                href = rels.get(rid, '#')\n                                inner = []\n                                for r2 in run:\n                                    if etree.QName(r2).localname == 'r':\n                                        inner.append(run_to_html(r2))\n                                parts.append('<a href=\"' + html.escape(href) + '\">' + ''.join(inner) + '</a>')\n                            elif etree.QName(run).localname == 'footnoteReference':\n                                fid = run.attrib['{' + NS['w'] + '}id']\n                                if fid in footnotes:\n                                    if fid not in footnote_index:\n                                        footnote_index[fid] = len(footnote_index) + 1\n                                        footnote_used.append(fid)\n                                    num = footnote_index[fid]\n                                    parts.append('<sup id=\"ref-' + str(num) + '\"><a href=\"#fn-' + str(num) + '\">' + str(num) + '</a></sup>')\n                        content = ''.join(parts).strip()\n                        if content:\n                            cell_inner.append('<' + tag2 + attrs + '>' + content + '</' + tag2 + '>')\n                    tr_html.append('<' + cell_tag + bgcss + '>' + ''.join(cell_inner) + '</' + cell_tag + '>')\n                rows_html.append('<tr>' + ''.join(tr_html) + '</tr>')\n            html_chunks.append('<table><tbody>' + ''.join(rows_html) + '</tbody></table>')\n            prev_ilvl = None\n            prev_is_list = False\n\n        else:\n            pass\n\n    while list_stack:\n        html_chunks.append('</li></' + list_stack.pop()[1] + '>')\n\n    if footnote_used:\n        html_chunks.append('<hr/><ol class=\"docx-footnotes\">')\n        for idx, nid in enumerate(footnote_used, 1):\n            html_chunks.append('<li id=\"fn-' + str(idx) + '\">' + footnotes[nid] + '</li>')\n        html_chunks.append('</ol>')\n\n    html_out = ''.join(html_chunks)\n    html_clean = re.sub(r'<p\\b[^>]*>\\s*(<img\\b[^>]*>)\\s*</p>', r'\\1', html_out, flags=re.IGNORECASE)\n    html_clean = re.sub(r'<p\\b[^>]*>\\s*</p>', '', html_clean, flags=re.IGNORECASE)\n    result = {\n        \"html\": html_clean,\n        \"emf_images\": emf_images,\n        \"images\": images\n    }",
 				"isAsync":false,
+				"python_version":"3.12",
+				"captureStdOutput":false,
 				"parameters":{
 					"url":"{{ 6CYv0.outputs.publicUrl }}"
 				}
@@ -356,7 +359,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hm69n-1",
 			"id":"dLomS",
-			"index":0,
+			"index":4,
 			"inputs":{
 				"variables":[
 					{
@@ -382,7 +385,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hm69n-1",
 			"id":"PjICs",
-			"index":0,
+			"index":5,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ B7eeR.outputs.result.images }}",
@@ -405,7 +408,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"PjICs@hm69n-1@l",
 			"id":"EJRQt",
-			"index":0,
+			"index":6,
 			"inputs":{
 				"base64Content":"{{ PjICs.outputs.item.b64 }}",
 				"fileName":"{{ PjICs.outputs.item.fileName }}",
@@ -429,7 +432,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"PjICs@hm69n-1@l",
 			"id":"8Qafd",
-			"index":0,
+			"index":7,
 			"inputs":{
 				"file":"{{ EJRQt.outputs.fileDetails }}"
 			},
@@ -450,7 +453,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"PjICs@hm69n-1@l",
 			"id":"fbk5x",
-			"index":0,
+			"index":8,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -507,7 +510,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"PjICs@hm69n-1@l",
 			"id":"ATU0h",
-			"index":0,
+			"index":9,
 			"inputs":{
 				"variables":[
 					{
@@ -533,7 +536,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hm69n-1",
 			"id":"mHFub",
-			"index":0,
+			"index":10,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ B7eeR.outputs.result.emf_images }}",
@@ -556,7 +559,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"mHFub@hm69n-1@l",
 			"id":"PtODo",
-			"index":0,
+			"index":11,
 			"inputs":{
 				"outputMimetype":"image/svg+xml",
 				"base64Img":"{{ mHFub.outputs.item.b64 }}",
@@ -579,7 +582,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"mHFub@hm69n-1@l",
 			"id":"oCB5h",
-			"index":0,
+			"index":12,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -612,7 +615,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"mHFub@hm69n-1@l",
 			"id":"ZxYOz",
-			"index":0,
+			"index":13,
 			"inputs":{
 				"base64Content":"{{ PtODo.outputs.base64 }}",
 				"fileName":"{{ oCB5h.outputs.result.filename }}",
@@ -636,7 +639,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"mHFub@hm69n-1@l",
 			"id":"lGvUF",
-			"index":0,
+			"index":14,
 			"inputs":{
 				"file":"{{ ZxYOz.outputs.fileDetails }}"
 			},
@@ -657,7 +660,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"mHFub@hm69n-1@l",
 			"id":"Xw0Hs",
-			"index":0,
+			"index":15,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -714,7 +717,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"mHFub@hm69n-1@l",
 			"id":"FEU1n",
-			"index":0,
+			"index":16,
 			"inputs":{
 				"variables":[
 					{
@@ -740,7 +743,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hm69n-1",
 			"id":"YQ5s8",
-			"index":0,
+			"index":17,
 			"inputs":{
 				"result":{
 					"htmlContent":"{{ QQQpy.outputs.htmlContent }}"
@@ -757,9 +760,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -769,5 +772,5 @@
 	"tags":[
 		
 	],
-	"version":102
+	"version":103
 }
