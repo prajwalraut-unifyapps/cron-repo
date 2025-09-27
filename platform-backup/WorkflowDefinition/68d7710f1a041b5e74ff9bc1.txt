@@ -22,6 +22,22 @@
 			"type":"next"
 		},
 		{
+			"fromNodeId":"n_NVuLE",
+			"name":"success",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_3WeHU",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_NVuLE",
+			"name":"error",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_N387x",
+			"type":"error"
+		},
+		{
 			"fromNodeId":"n_RiQeI",
 			"name":"error",
 			"priority":0,
@@ -30,7 +46,14 @@
 			"type":"error"
 		},
 		{
-			"fromNodeId":"n_NVuLE",
+			"fromNodeId":"n_3WeHU",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_vnF3L",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_N387x",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_vnF3L",
@@ -47,7 +70,7 @@
 	"id":"68d7710f1a041b5e74ff9bc1",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2rgkqelvyno",
-	"modifiedTime":1758949726773,
+	"modifiedTime":1758949762584,
 	"name":"cacheQA2rGKQeLvyNo",
 	"nodes":[
 		{
@@ -57,7 +80,7 @@
 				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_9uEif-1",
 			"id":"n_WRcCA",
@@ -121,7 +144,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"MANUAL",
 			"groupId":"_9uEif-1",
 			"id":"n_RiQeI",
@@ -197,16 +220,113 @@
 			},
 			"debug":false,
 			"dirty":true,
-			"fallbackMode":"STOP",
+			"fallbackMode":"MANUAL",
 			"groupId":"n_RiQeI@_9uEif-1@success",
 			"id":"n_NVuLE",
 			"index":3,
 			"inputs":{
 				"contactId":"{{ n_WRcCA.outputs.contactId }}"
 			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"MANUAL",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
 			"skip":false,
 			"subTitle":"Freshdesk",
 			"title":"Get contact",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":8511,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_contact",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_NVuLE@n_RiQeI@_9uEif-1@success@success",
+			"id":"n_3WeHU",
+			"index":4,
+			"inputs":{
+				"contactId":"{{ n_WRcCA.outputs.contactIdTwo }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get contact",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":8511,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_company",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_NVuLE@n_RiQeI@_9uEif-1@success@error",
+			"id":"n_N387x",
+			"index":5,
+			"inputs":{
+				"companyId":"{{ n_WRcCA.outputs.companyIdTwo }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get company",
 			"type":"ACTION"
 		},
 		{
@@ -218,11 +338,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_RiQeI@_9uEif-1@error",
 			"id":"n_zg09f",
-			"index":4,
+			"index":6,
 			"inputs":{
 				"purpose":"{{ n_WRcCA.outputs.purpose }}",
 				"channel":"{{ n_WRcCA.outputs.channel }}"
@@ -240,11 +360,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_9uEif-1",
 			"id":"n_vnF3L",
-			"index":5,
+			"index":7,
 			"inputs":{
 				"result":{
 					"result":"{{ n_zg09f.outputs.channel.purpose.value }}"
@@ -273,5 +393,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
