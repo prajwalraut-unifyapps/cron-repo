@@ -6,46 +6,304 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_6o4KP",
+			"fromNodeId":"n_WoPgb",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_dgw2T",
+			"toNodeId":"n_GMFUE",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_GMFUE",
+			"name":"success",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_SWZU1",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_GMFUE",
+			"name":"error",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_TGLoK",
+			"type":"error"
+		},
+		{
+			"fromNodeId":"n_SWZU1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_dd7oK",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_TGLoK",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_dd7oK",
 			"type":"next"
 		}
 	],
 	"id":"68d8c0a27d27e973405f75c6",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2nzgirfwylh",
-	"modifiedTime":1759035554374,
+	"modifiedTime":1759035617119,
 	"name":"cacheQA2nzgIrfWYlH",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1404,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_6o4KP-1",
-			"id":"_6o4KP",
-			"index":0,
+			"id":"n_WoPgb",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"d":{
+							"type":"integer",
+							"title":"d"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"a":{
+							"type":"integer",
+							"title":"a"
+						},
+						"b":{
+							"type":"integer",
+							"title":"b"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1405,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
+			"fallbackMode":"MANUAL",
+			"groupId":"_6o4KP-1",
+			"id":"n_GMFUE",
+			"index":2,
+			"inputs":{
+				"automationId":"68d8c078cd09303bac28a76d",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"a":"{{ n_WoPgb.outputs.a }}",
+					"b":"{{ n_WoPgb.outputs.b }}"
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"MANUAL",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":1344,
+				"resourceName":"code_by_unifyapps_java",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_GMFUE@_6o4KP-1@success",
+			"id":"n_SWZU1",
+			"index":3,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"d":{
+							"type":"integer",
+							"title":"d"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"a":{
+							"type":"integer",
+							"title":"a"
+						},
+						"b":{
+							"type":"integer",
+							"title":"b"
+						}
+					}
+				},
+				"code":"d=a*b;",
+				"captureStdOutput":false,
+				"parameters":{
+					"a":"{{ n_WoPgb.outputs.a }}",
+					"b":"{{ n_WoPgb.outputs.b }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Java code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":1344,
+				"resourceName":"code_by_unifyapps_java",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_GMFUE@_6o4KP-1@error",
+			"id":"n_TGLoK",
+			"index":4,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"e":{
+							"type":"integer",
+							"title":"e"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"a":{
+							"type":"integer",
+							"title":"a"
+						},
+						"b":{
+							"type":"integer",
+							"title":"b"
+						}
+					}
+				},
+				"code":"e=a-b;",
+				"captureStdOutput":false,
+				"parameters":{
+					"a":"{{ n_WoPgb.outputs.a }}",
+					"b":"{{ n_WoPgb.outputs.b }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Java code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1407,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_6o4KP-1",
-			"id":"_dgw2T",
-			"index":0,
+			"id":"n_dd7oK",
+			"index":5,
+			"inputs":{
+				"result":{
+					"d":"{{ n_GMFUE.outputs.c }}"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +317,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
