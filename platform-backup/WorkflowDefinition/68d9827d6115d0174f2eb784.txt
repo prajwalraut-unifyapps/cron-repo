@@ -7,46 +7,213 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_p8k9H",
+			"fromNodeId":"n_7cN4e",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_Osg9U",
+			"toNodeId":"n_zFsj6",
 			"type":"next"
 		}
 	],
 	"id":"68d9827d6115d0174f2eb784",
 	"lastModifiedBy":1,
 	"lcName":"importwsdlanduseschema117590849121020",
-	"modifiedTime":1759085181236,
+	"modifiedTime":1759085199154,
 	"name":"importWSDLAndUseSchema117590849121020",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1408,
+				"resourceName":"callables_from_api"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_p8k9H-1",
-			"id":"_p8k9H",
-			"index":0,
+			"id":"n_7cN4e",
+			"index":1,
+			"inputs":{
+				"request":{
+					"body":{
+						"type":"object",
+						"properties":{
+							"sucheProduktUeberAngebot":{
+								"type":"object",
+								"properties":{
+									"Angebot":{
+										"type":"object",
+										"properties":{
+											"kundenindividuellePreiskenner":{
+												"type":"array",
+												"items":{
+													"type":"object",
+													"properties":{
+														"ID":{
+															"type":"string",
+															"minLength":1,
+															"maxLength":36
+														}
+													}
+												},
+												"required":[
+													"ID"
+												],
+												"ua:xmlArrayType":"sequence"
+											}
+										}
+									}
+								},
+								"required":[
+									"Angebot"
+								]
+							}
+						}
+					}
+				},
+				"endpointType":"SOAP",
+				"targetNamespace":"http://sucheProduktUeberAngebot_v08.SalesAndServiceCatalogue.CRM.bbfn.telekom.de",
+				"response":[
+					{
+						"name":"sucheProduktUeberAngebotResponseMessage",
+						"status":200,
+						"namespaces":[
+							{
+								"key":"impl",
+								"value":"http://sucheProduktUeberAngebot_v08.SalesAndServiceCatalogue.CRM.bbfn.telekom.de"
+							},
+							{
+								"key":"wsdl",
+								"value":"http://schemas.xmlsoap.org/wsdl/"
+							},
+							{
+								"key":"data",
+								"value":"http://sucheProduktUeberAngebot_v08.SalesAndServiceCatalogue.CRM.bbfn.telekom.de"
+							},
+							{
+								"key":"apachesoap",
+								"value":"http://xml.apache.org/xml-soap"
+							},
+							{
+								"key":"ns",
+								"value":"http://BusinessServiceFault_v2.bbfn.telekom.de"
+							},
+							{
+								"key":"intf",
+								"value":"http://sucheProduktUeberAngebot_v08.SalesAndServiceCatalogue.CRM.bbfn.telekom.de"
+							},
+							{
+								"key":"xsd",
+								"value":"http://www.w3.org/2001/XMLSchema"
+							},
+							{
+								"key":"wsdlsoap",
+								"value":"http://schemas.xmlsoap.org/wsdl/soap/"
+							},
+							{
+								"key":"ns1",
+								"value":"http://ServiceFault_v2.bbfn.telekom.de"
+							},
+							{
+								"key":"soapenc",
+								"value":"http://schemas.xmlsoap.org/soap/encoding/"
+							}
+						],
+						"body":{
+							"type":"object",
+							"properties":{
+								"intf:sucheProduktUeberAngebotResponse":{
+									"type":"object",
+									"properties":{
+										"intf:Payload":{
+											"type":"object",
+											"properties":{
+												"intf:Angebot":{
+													"type":"object",
+													"properties":{
+														"intf:kundenindividuellePreiskenner":{
+															"type":"array",
+															"items":{
+																"type":"object",
+																"properties":{
+																	"intf:ID":{
+																		"type":"string",
+																		"minLength":1,
+																		"maxLength":36
+																	}
+																}
+															},
+															"required":[
+																"intf:ID"
+															],
+															"ua:xmlArrayType":"sequence"
+														}
+													}
+												}
+											},
+											"required":[
+												"intf:Angebot"
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				],
+				"soapVersion":"v1.1",
+				"streamingResponse":false
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via API",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1410,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_p8k9H-1",
-			"id":"_Osg9U",
-			"index":0,
+			"id":"n_zFsj6",
+			"index":2,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_sucheProduktUeberAngebotResponseMessage",
+				"body":{
+					"intf:sucheProduktUeberAngebotResponse":{
+						"intf:Payload":{
+							"intf:Angebot":{
+								"intf:kundenindividuellePreiskenner":{
+									"source":"{{ n_7cN4e.outputs.body.sucheProduktUeberAngebot.Angebot.kundenindividuellePreiskenner }}",
+									"ua:type":"mappedArray",
+									"items":{
+										"intf:ID":"{{ n_7cN4e.outputs.body.sucheProduktUeberAngebot.Angebot.kundenindividuellePreiskenner[0].ID }}"
+									}
+								}
+							}
+						}
+					}
+				},
+				"status":200
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +227,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
