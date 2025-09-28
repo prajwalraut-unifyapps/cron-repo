@@ -7,46 +7,183 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_NNULW",
+			"fromNodeId":"n_UCi7Y",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_mHaaR",
+			"toNodeId":"n_8TD66",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_8TD66",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_HDgZH",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_HDgZH",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8TD66",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_8TD66",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_FmKNq",
 			"type":"next"
 		}
 	],
 	"id":"68d9908e6115d0174f2eedf7",
 	"lastModifiedBy":1,
 	"lcName":"forloopcaptureiterations_batch11759084899995",
-	"modifiedTime":1759088782179,
+	"modifiedTime":1759088796958,
 	"name":"forLoopCaptureIterations_batch11759084899995",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":116,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_NNULW-1",
-			"id":"_NNULW",
-			"index":0,
+			"id":"n_UCi7Y",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"name":{
+								"type":"array",
+								"items":{
+									"type":"object",
+									"properties":{},
+									"additionalProperties":false
+								},
+								"title":"name"
+							}
+						},
+						"additionalProperties":false,
+						"required":[
+							"name"
+						]
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":119,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_NNULW-1",
-			"id":"_mHaaR",
-			"index":0,
+			"id":"n_8TD66",
+			"index":2,
+			"inputs":{
+				"repeatMode":"BATCH",
+				"listSource":"{{ n_UCi7Y.outputs.body.name }}",
+				"captureIterations":true,
+				"batchSize":2
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1363,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_8TD66@_NNULW-1@l",
+			"id":"n_HDgZH",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"a":{
+							"type":"number",
+							"title":"a"
+						}
+					},
+					"required":[
+						"a"
+					]
+				}
+			},
+			"inputs":{
+				"a":"{{ n_8TD66.outputs.item }}"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"a":{
+							"type":"number",
+							"title":"a"
+						}
+					},
+					"required":[
+						"a"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_NNULW-1",
+			"id":"n_FmKNq",
+			"index":4,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +197,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
