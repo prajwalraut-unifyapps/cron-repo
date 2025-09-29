@@ -1,0 +1,277 @@
+{
+	"appsUsed":[
+		
+	],
+	"createdTime":1757815947402,
+	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1759125271332,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68da1f17787a2819a08111ea",
+		"status":"DEPLOYED",
+		"version":18,
+		"workflowVersion":18
+	},
+	"edges":[
+		{
+			"fromNodeId":"n_IiZTE",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_y63Mv",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_y63Mv",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_rJY9d",
+			"type":"next"
+		}
+	],
+	"grants":{
+		"configs":[
+			{
+				"permissions":[
+					"V"
+				],
+				"principalType":"GLOBAL"
+			}
+		]
+	},
+	"id":"68c2d2cd17a02914ea79e4f7",
+	"lastModifiedBy":1,
+	"lcName":"knowledge downloader | onedrive | single file wrapper",
+	"modifiedTime":1759166515411,
+	"name":"Knowledge Downloader | OneDrive | Single File Wrapper",
+	"nodes":[
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":438,
+				"resourceName":"callables_from_interface"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_IpAR7-1",
+			"id":"n_IiZTE",
+			"index":1,
+			"inputs":{
+				"result":{
+					"additionalProperties":false,
+					"type":"object",
+					"required":[],
+					"ua:modal":{
+						"field_type":"STRING",
+						"is_optional":true
+					},
+					"properties":{
+						"hasMore":{
+							"type":"boolean",
+							"title":"Has More"
+						},
+						"cursor":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Cursor"
+						},
+						"downloadedEntitiesCount":{
+							"type":"integer",
+							"title":"Downloaded Entities Count"
+						},
+						"knowledgeDownloadFinished":{
+							"type":"boolean",
+							"title":"Knowledge Download Finished"
+						}
+					}
+				},
+				"callableInterfaceId":"6854484ac68462013926b9cf",
+				"setup":{
+					"additionalProperties":false,
+					"type":"object",
+					"required":[],
+					"ua:modal":{
+						"field_type":"STRING",
+						"is_optional":true
+					},
+					"properties":{
+						"knowledgeId":{
+							"type":"string",
+							"title":"knowledgeId"
+						},
+						"aiAgentId":{
+							"type":"string",
+							"title":"aiAgentId"
+						},
+						"knowledge":{
+							"type":"object",
+							"properties":{
+								"readVersion":{
+									"type":"integer",
+									"title":"readVersion"
+								},
+								"lastSyncTime":{
+									"type":"integer",
+									"title":"lastSyncTime"
+								},
+								"cursorObject":{
+									"type":"object",
+									"title":"cursorObject"
+								},
+								"applicationInfo":{
+									"type":"object",
+									"properties":{
+										"context":{
+											"type":"object",
+											"properties":{
+												"connectionId":{
+													"type":"string",
+													"title":"Connection Id"
+												}
+											},
+											"additionalProperties":false,
+											"title":"Context",
+											"required":[]
+										}
+									},
+									"additionalProperties":false,
+									"title":"Application Info",
+									"required":[]
+								},
+								"indexingVersion":{
+									"type":"integer",
+									"title":"Indexing Version"
+								}
+							},
+							"title":"knowledge",
+							"additionalProperties":false,
+							"required":[]
+						},
+						"inputs":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Inputs"
+						},
+						"cursor":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Cursor"
+						},
+						"importerConnections":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Importer Connections"
+						},
+						"downloaderConfig":{
+							"type":"object",
+							"properties":{
+								"grabberType":{
+									"type":"string",
+									"title":"Grabber Type"
+								},
+								"currentTimeEpoch":{
+									"type":"integer",
+									"title":"Current Time Epoch"
+								},
+								"startTimeEpoch":{
+									"type":"integer",
+									"title":"Start Time Epoch"
+								}
+							},
+							"additionalProperties":false,
+							"title":"Downloader Config",
+							"required":[]
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Trigger interface",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":467,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_IpAR7-1",
+			"id":"n_y63Mv",
+			"index":2,
+			"inputs":{
+				"automationId":"68bef42fb2d57b3b8f06258d",
+				"runtimeConnections":{
+					"microsoft_onedrive":"{{ n_IiZTE.outputs.knowledge.applicationInfo.context.connectionId }}"
+				},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"connectionId":"{{ n_IiZTE.outputs.knowledge.applicationInfo.context.connectionId }}",
+					"indexingVersion":"{{ n_IiZTE.outputs.knowledge.indexingVersion }}",
+					"knowledgeId":"{{ n_IiZTE.outputs.knowledgeId }}",
+					"inputs":"{{ n_IiZTE.outputs.inputs }}",
+					"downloaderConfig":"{{ n_IiZTE.outputs.downloaderConfig }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":457,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_IpAR7-1",
+			"id":"n_rJY9d",
+			"index":3,
+			"inputs":{
+				"result":{
+					"hasMore":false,
+					"downloadedEntitiesCount":1,
+					"knowledgeDownloadFinished":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		}
+	],
+	"ownerUserId":-1,
+	"schemaReferences":[
+		
+	],
+	"settings":{
+		"enableNodeLevelLogging":false,
+		"enableRunLogging":false,
+		"enableVariableLogging":false,
+		"route":{
+			"default":false,
+			"tierName":"global"
+		}
+	},
+	"standard":true,
+	"tags":[
+		
+	],
+	"version":19
+}
