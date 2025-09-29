@@ -5,12 +5,12 @@
 	"createdTime":1747000741619,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759125253724,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68da1f05787a2819a081115e",
+		"deployedAt":1759127252806,
+		"deployedBy":1,
+		"deployedDefinitionId":"68da26d43d93db7914c90fb8",
 		"status":"DEPLOYED",
-		"version":73,
-		"workflowVersion":239
+		"version":74,
+		"workflowVersion":240
 	},
 	"edges":[
 		{
@@ -223,7 +223,7 @@
 	"id":"66ab98083d73300e63962287",
 	"lastModifiedBy":1,
 	"lcName":"generic_co_pilot_fetch_case_conversation",
-	"modifiedTime":1759127252626,
+	"modifiedTime":1759127502755,
 	"name":"GENERIC_CO_PILOT_Fetch_Case_Conversation",
 	"nodes":[
 		{
@@ -659,7 +659,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"9jp6m-1",
 			"id":"M2nB3",
@@ -667,6 +667,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"filter":{
 							"type":"object",
@@ -678,12 +680,12 @@
 							"type":"string",
 							"title":"Sort Order"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"since":{
 							"type":"string",
@@ -697,13 +699,12 @@
 							"type":"string",
 							"title":"Case Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"def childFilters = []\ndef caseFilter = [\n        field: 'properties.caseId',\n        op: 'IN',\n        values: [caseId]\n    ] \nchildFilters.add(caseFilter)    \n\ndef sortOrder = \"DESC\"\n\n//since\nif(binding.hasVariable('since') && since!= null) {\ndef sinceFilter = [\n        field: 'cTm',\n        op: 'GT',\n        values: [since]\n    ] \n    childFilters.add(sinceFilter)\n    sortOrder = \"ASC\"\n} \n\n//until\nif(binding.hasVariable('until') && until != null) {\ndef untilFilter = [\n        field: 'cTm',\n        op: 'LT',\n        values: [until]\n    ] \n    childFilters.add(untilFilter)\n} \n\ndef internalMessagesFilter = [\n        field: 'properties.additional.internalMessageType',\n        op: 'NOT_IN',\n        values: [\"AGENT_INTERNAL_RESPONSE\"]\n    ] \n    childFilters.add(internalMessagesFilter)\n\nreturn [\"filter\":[\n        op: 'AND',\n        values : childFilters\n    ],\n    \"sortOrder\": sortOrder]\n",
 				"compile_static":false,
-				"code":"def childFilters = []\ndef caseFilter = [\n        field: 'properties.caseId',\n        op: 'IN',\n        values: [caseId]\n    ] \nchildFilters.add(caseFilter)    \n\ndef sortOrder = \"DESC\"\n\n//since\nif(binding.hasVariable('since')) {\ndef sinceFilter = [\n        field: 'cTm',\n        op: 'GT',\n        values: [since]\n    ] \n    childFilters.add(sinceFilter)\n    sortOrder = \"ASC\"\n} \n\n//until\nif(binding.hasVariable('until')) {\ndef untilFilter = [\n        field: 'cTm',\n        op: 'LT',\n        values: [until]\n    ] \n    childFilters.add(untilFilter)\n} \n\ndef internalMessagesFilter = [\n        field: 'properties.additional.internalMessageType',\n        op: 'NOT_IN',\n        values: [\"AGENT_INTERNAL_RESPONSE\"]\n    ] \n    childFilters.add(internalMessagesFilter)\n\nreturn [\"filter\":[\n        op: 'AND',\n        values : childFilters\n    ],\n    \"sortOrder\": sortOrder]\n",
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"since":"{{ wFCqc.outputs.since }}",
 					"until":"{{ wFCqc.outputs.until }}",
@@ -779,7 +780,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"9jp6m-1",
 			"id":"n_sGZQA",
@@ -788,6 +789,7 @@
 				"output":{
 					"$schema":"http://json-schema.org/draft-07/schema#",
 					"type":"object",
+					"required":[],
 					"properties":{
 						"reverseMessageList":{
 							"type":"array",
@@ -1546,11 +1548,12 @@
 							},
 							"title":"Reverse Message List"
 						}
-					},
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"messageList":{
 							"type":"array",
@@ -1565,19 +1568,18 @@
 							"type":"string",
 							"title":"Since"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"if(binding.hasVariable('messageList') && messageList != null && binding.hasVariable('since') && since != null)\n{\n  return [ 'reverseMessageList': messageList.reverse() ]\n} \nif(binding.hasVariable('messageList') && messageList != null)\n{\n  return [ 'reverseMessageList' : messageList ]\n}\nreturn [ 'reverseMessageList' : [] ]\n",
 				"compile_static":false,
-				"code":"if(binding.hasVariable('messageList') && binding.hasVariable('since'))\n{\n  return [ 'reverseMessageList': messageList.reverse() ]\n} \nif(binding.hasVariable('messageList'))\n{\n  return [ 'reverseMessageList' : messageList ]\n}\nreturn [ 'reverseMessageList' : [] ]\n",
+				"captureStdOutput":false,
 				"parameters":{
+					"since":"{{ wFCqc.outputs.since }}",
 					"messageList":{
 						"source":"{{ FnElN.outputs.objects }}",
 						"ua:type":"mappedArray",
 						"items":"{{ FnElN.outputs.objects[0] }}"
-					},
-					"since":"{{ wFCqc.outputs.since }}"
+					}
 				}
 			},
 			"skip":false,
@@ -3019,5 +3021,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":240
+	"version":241
 }
