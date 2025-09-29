@@ -7,46 +7,244 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_5N6Yb",
+			"fromNodeId":"n_56JKL",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_10rwV",
+			"toNodeId":"n_b4HXl",
 			"type":"next"
 		}
 	],
 	"id":"68da29c83d93db7914c92190",
 	"lastModifiedBy":1,
 	"lcName":"workflow_xmlparsing117591270391380",
-	"modifiedTime":1759128008146,
+	"modifiedTime":1759128046085,
 	"name":"workflow_xmlParsing117591270391380",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1473,
+				"resourceName":"callables_from_api"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_5N6Yb-1",
-			"id":"_5N6Yb",
-			"index":0,
+			"id":"n_56JKL",
+			"index":1,
+			"inputs":{
+				"request":{
+					"body":{
+						"type":"object",
+						"additionalProperties":false,
+						"properties":{
+							"customer":{
+								"type":"object",
+								"properties":{
+									"id":{
+										"type":"string",
+										"title":"id"
+									},
+									"firstName":{
+										"type":"string",
+										"title":"firstName"
+									},
+									"lastName":{
+										"type":"string",
+										"title":"lastName"
+									},
+									"email":{
+										"type":"string",
+										"title":"email"
+									},
+									"addresses":{
+										"type":"object",
+										"properties":{
+											"address":{
+												"type":"array",
+												"items":{
+													"type":"object",
+													"properties":{
+														"street":{
+															"type":"string",
+															"title":"street"
+														},
+														"city":{
+															"type":"string",
+															"title":"city"
+														},
+														"state":{
+															"type":"string",
+															"title":"state"
+														},
+														"zipCode":{
+															"type":"integer",
+															"title":"zipCode"
+														},
+														"country":{
+															"type":"string",
+															"title":"country"
+														}
+													},
+													"additionalProperties":false
+												},
+												"title":"address"
+											}
+										},
+										"title":"addresses",
+										"additionalProperties":false
+									},
+									"phoneNumbers":{
+										"type":"object",
+										"properties":{
+											"phone":{
+												"type":"array",
+												"items":{
+													"type":"object",
+													"properties":{
+														"type":{
+															"type":"string",
+															"title":"type"
+														},
+														"number":{
+															"type":"string",
+															"title":"number"
+														}
+													},
+													"additionalProperties":false
+												},
+												"title":"phone"
+											}
+										},
+										"title":"phoneNumbers",
+										"additionalProperties":false
+									},
+									"orders":{
+										"type":"object",
+										"properties":{
+											"order":{
+												"type":"array",
+												"items":{
+													"type":"object",
+													"properties":{
+														"orderId":{
+															"type":"string",
+															"title":"orderId"
+														},
+														"orderDate":{
+															"type":"string",
+															"title":"orderDate"
+														},
+														"items":{
+															"type":"object",
+															"properties":{
+																"item":{
+																	"type":"array",
+																	"items":{
+																		"type":"object",
+																		"properties":{
+																			"productId":{
+																				"type":"string",
+																				"title":"productId"
+																			},
+																			"quantity":{
+																				"type":"integer",
+																				"title":"quantity"
+																			},
+																			"price":{
+																				"type":"number",
+																				"title":"price"
+																			}
+																		},
+																		"additionalProperties":false
+																	},
+																	"title":"item"
+																}
+															},
+															"title":"items",
+															"additionalProperties":false
+														},
+														"totalAmount":{
+															"type":"number",
+															"title":"totalAmount"
+														}
+													},
+													"additionalProperties":false
+												},
+												"title":"order"
+											}
+										},
+										"title":"orders",
+										"additionalProperties":false
+									}
+								},
+								"title":"customer",
+								"additionalProperties":false
+							}
+						}
+					},
+					"contentType":"application/json"
+				},
+				"endpointType":"SOAP",
+				"response":[
+					{
+						"name":"res",
+						"status":200,
+						"namespaces":[],
+						"body":{
+							"type":"object",
+							"additionalProperties":false,
+							"properties":{
+								"result":{
+									"type":"object",
+									"title":"result"
+								}
+							}
+						}
+					}
+				],
+				"soapVersion":"v1.2",
+				"streamingResponse":false
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via API",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1475,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_5N6Yb-1",
-			"id":"_10rwV",
-			"index":0,
+			"id":"n_b4HXl",
+			"index":2,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_res",
+				"body":{
+					"result":"{{ n_56JKL.outputs.body.customer }}"
+				},
+				"status":200
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +258,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
