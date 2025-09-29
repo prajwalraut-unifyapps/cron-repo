@@ -2,15 +2,15 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1757480395720,
+	"createdTime":1757705885325,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1757528314775,
-		"deployedBy":635,
-		"deployedDefinitionId":"68c1c0fa06bba15e66ee732e",
+		"deployedAt":1759125267602,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68da1f13787a2819a08111cf",
 		"status":"DEPLOYED",
-		"version":3,
-		"workflowVersion":28
+		"version":19,
+		"workflowVersion":46
 	},
 	"edges":[
 		{
@@ -60,9 +60,9 @@
 		]
 	},
 	"id":"687de610011363a381b1aa4d",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":1,
 	"lcName":"knowledge indexer | confluence | page",
-	"modifiedTime":1758530342843,
+	"modifiedTime":1759166509375,
 	"name":"Knowledge Indexer | Confluence | Page",
 	"nodes":[
 		{
@@ -156,6 +156,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"chunk":{
 							"type":"string",
@@ -288,12 +290,12 @@
 							"type":"string",
 							"title":"Author"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"sourceResponse":{
 							"type":"object",
@@ -301,12 +303,11 @@
 							"additionalProperties":false,
 							"title":"Source Response"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"return sourceResponse",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"sourceResponse":"{{ n_YFuhI.outputs.sourceResponse }}"
 				}
@@ -332,6 +333,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"chunk_metadata":{
 							"type":"object",
@@ -343,12 +346,12 @@
 							"type":"string",
 							"title":"Metadata String"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"pageId":{
 							"type":"string",
@@ -374,17 +377,16 @@
 							"type":"string",
 							"title":"Created Time"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"import java.time.Instant\nimport java.time.ZoneId\nimport java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\n\ndef createdTimeEpoch = \"\"\n\nif(binding.hasVariable('createdTime')){\n  Instant instant = Instant.parse(createdTime);\n  createdTimeEpoch = instant.toEpochMilli()\n}\n\ndef chunk_metadata = [:]\nchunk_metadata << ['appName':'confluence']\nchunk_metadata << (binding.hasVariable('pageName') && pageName ? [\"name\": pageName] : [:])\nchunk_metadata << (binding.hasVariable('spaceName') && spaceName ? [\"spaceName\": spaceName] : [:])\nchunk_metadata << (binding.hasVariable('referenceUrl') && referenceUrl ? [\"referenceUrl\": referenceUrl] : [:])\nchunk_metadata << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nchunk_metadata << (binding.hasVariable('createdTime') && createdTime ? [\"date\": createdTimeEpoch] : [:])\nchunk_metadata << (binding.hasVariable('createdTime') && createdTime ? [\"date\": createdTimeEpoch] : [:])\n\ndef metadataString = \"\";\n\nif(binding.hasVariable('pageId')){\n  metadataString += \" pageId: \" + pageId\n}\n\nif(binding.hasVariable('pageName')){\n  metadataString += \", pageName: \" + pageName\n}\n\n\nif(binding.hasVariable('spaceName')){\n  metadataString += \", spaceName: \" + spaceName\n}\n\nreturn [\"chunk_metadata\":chunk_metadata,\n        \"metadataString\":metadataString]",
 				"compile_static":false,
-				"code":"import java.time.Instant\nimport java.time.ZoneId\nimport java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\n\ndef createdTimeEpoch = \"\"\n\nif(binding.hasVariable('createdTime')){\n  Instant instant = Instant.parse(createdTime);\n  createdTimeEpoch = instant.toEpochMilli()\n}\n\ndef chunk_metadata = [:]\nchunk_metadata << ['appName':'confluence']\nchunk_metadata << (binding.hasVariable('pageName') && pageName ? [\"name\": pageName] : [:])\nchunk_metadata << (binding.hasVariable('referenceUrl') && referenceUrl ? [\"referenceUrl\": referenceUrl] : [:])\nchunk_metadata << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nchunk_metadata << (binding.hasVariable('createdTime') && createdTime ? [\"date\": createdTimeEpoch] : [:])\n\ndef metadataString = \"\";\n\nif(binding.hasVariable('pageId')){\n  metadataString += \" pageId: \" + pageId\n}\n\nif(binding.hasVariable('pageName')){\n  metadataString += \", pageName: \" + pageName\n}\n\n\nif(binding.hasVariable('spaceName')){\n  metadataString += \", spaceName: \" + spaceName\n}\n\nreturn [\"chunk_metadata\":chunk_metadata,\n        \"metadataString\":metadataString]",
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
-					"referenceUrl":"{{ n_FeUgW.outputs.result.referenceUrl }}",
 					"pageId":"{{ n_FeUgW.outputs.result.response.id }}",
 					"pageName":"{{ n_FeUgW.outputs.result.response.title }}",
+					"referenceUrl":"{{ n_FeUgW.outputs.result.referenceUrl }}",
 					"spaceName":"{{ n_FeUgW.outputs.result.spaceName }}",
 					"author":"{{ n_FeUgW.outputs.result.author }}",
 					"createdTime":"{{ n_FeUgW.outputs.result.response.createdAt }}"
@@ -489,14 +491,14 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":44103,
+	"ownerUserId":-1,
 	"schemaReferences":[
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":true,
-		"enableRunLogging":true,
-		"enableVariableLogging":true,
+		"enableNodeLevelLogging":false,
+		"enableRunLogging":false,
+		"enableVariableLogging":false,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -506,5 +508,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":29
+	"version":47
 }
