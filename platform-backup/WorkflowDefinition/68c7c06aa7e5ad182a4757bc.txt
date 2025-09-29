@@ -5,12 +5,12 @@
 	"createdTime":1758007161402,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758886171834,
+		"deployedAt":1758965992487,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68d6791b3323d9309656d239",
+		"deployedDefinitionId":"68d7b0e86115d0174f2b850b",
 		"status":"DEPLOYED",
-		"version":16,
-		"workflowVersion":21
+		"version":17,
+		"workflowVersion":22
 	},
 	"edges":[
 		{
@@ -53,8 +53,16 @@
 			"fromNodeId":"_M3rHm",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_rK5Pa",
+			"toNodeId":"n_ArqWW",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_ArqWW",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_rK5Pa",
+			"type":"if"
 		},
 		{
 			"fromNodeId":"n_rK5Pa",
@@ -96,8 +104,16 @@
 			"fromNodeId":"_m1nkl",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_K3RP7",
+			"toNodeId":"n_M1mYV",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_M1mYV",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_K3RP7",
+			"type":"if"
 		},
 		{
 			"fromNodeId":"_K3RP7",
@@ -122,7 +138,23 @@
 			"type":"next"
 		},
 		{
+			"fromNodeId":"n_ArqWW",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Jyeo3",
+			"type":"next"
+		},
+		{
 			"fromNodeId":"n_54kAN",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Jyeo3",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_M1mYV",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_Jyeo3",
@@ -149,7 +181,7 @@
 	"id":"68c7c06aa7e5ad182a4757bc",
 	"lastModifiedBy":-1,
 	"lcName":"convert files to images (less than 500kb)",
-	"modifiedTime":1758965992406,
+	"modifiedTime":1759125162869,
 	"name":"Convert Files To Images (Less than 500kb)",
 	"nodes":[
 		{
@@ -295,12 +327,25 @@
 						"status":{
 							"type":"string",
 							"title":"Status"
+						},
+						"sizeLimit":{
+							"type":"integer",
+							"title":"Size Limit"
+						},
+						"imageLimit":{
+							"type":"integer",
+							"title":"Image Limit"
 						}
 					},
-					"required":[]
+					"required":[
+						"sizeLimit"
+					]
 				}
 			},
-			"inputs":{},
+			"inputs":{
+				"imageLimit":50,
+				"sizeLimit":500000
+			},
 			"outputSchema":{
 				"dynamic":false,
 				"schema":{
@@ -310,9 +355,19 @@
 						"status":{
 							"type":"string",
 							"title":"Status"
+						},
+						"sizeLimit":{
+							"type":"integer",
+							"title":"Size Limit"
+						},
+						"imageLimit":{
+							"type":"integer",
+							"title":"Image Limit"
 						}
 					},
-					"required":[]
+					"required":[
+						"sizeLimit"
+					]
 				}
 			},
 			"skip":false,
@@ -683,7 +738,7 @@
 										"property":"{{ n_d8bhp.outputs.size }}",
 										"filter":{
 											"operator":"LT",
-											"value":"500000"
+											"value":"{{ n_gxUi3.outputs.sizeLimit }}"
 										}
 									}
 								],
@@ -708,7 +763,7 @@
 										"property":"{{ n_d8bhp.outputs.size }}",
 										"filter":{
 											"operator":"LT",
-											"value":"500000"
+											"value":"{{ n_gxUi3.outputs.sizeLimit }}"
 										}
 									}
 								],
@@ -754,7 +809,7 @@
 							"property":"{{ n_d8bhp.outputs.size }}",
 							"filter":{
 								"operator":"LT",
-								"value":"500000"
+								"value":"{{ n_gxUi3.outputs.sizeLimit }}"
 							}
 						}
 					],
@@ -799,6 +854,36 @@
 			"type":"CALL_WORKFLOW"
 		},
 		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":442,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_yYLGs@_dGQ76-1@1",
+			"id":"n_ArqWW",
+			"index":7,
+			"inputs":{
+				"filters":[
+					{
+						"property":"=LEN({{ _M3rHm.outputs.images }})",
+						"filter":{
+							"operator":"LT",
+							"value":"{{ n_gxUi3.outputs.imageLimit }}"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
 			"additional":{
 				"visibleOptionalFields":[
 					"root.itemsToAdd.items.file.name",
@@ -819,9 +904,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_yYLGs@_dGQ76-1@1",
+			"groupId":"n_ArqWW@n_yYLGs@_dGQ76-1@1@y",
 			"id":"n_rK5Pa",
-			"index":7,
+			"index":8,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -856,9 +941,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_yYLGs@_dGQ76-1@1",
+			"groupId":"n_ArqWW@n_yYLGs@_dGQ76-1@1@y",
 			"id":"n_85Y5Y",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"variables":[
 					{
@@ -884,7 +969,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_yYLGs@_dGQ76-1@2",
 			"id":"n_yYLGs@2",
-			"index":9,
+			"index":10,
 			"inputs":{
 				"name":"DOCX",
 				"conditions":{
@@ -900,7 +985,7 @@
 							"property":"{{ n_d8bhp.outputs.size }}",
 							"filter":{
 								"operator":"LT",
-								"value":"500000"
+								"value":"{{ n_gxUi3.outputs.sizeLimit }}"
 							}
 						}
 					],
@@ -923,7 +1008,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_yYLGs@_dGQ76-1@2",
 			"id":"BE4zl",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"fileDetails":"{{ n_d8bhp.outputs.fileObject }}",
 				"fileType":"DOCX"
@@ -945,7 +1030,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_yYLGs@_dGQ76-1@2",
 			"id":"_63ZMo",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"file":"{{ BE4zl.outputs.file }}"
 			},
@@ -966,7 +1051,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_yYLGs@_dGQ76-1@2",
 			"id":"_m1nkl",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"automationId":"67a4a244bcb7ea266fc400e6",
 				"runtimeConnections":{},
@@ -986,6 +1071,36 @@
 			"subTitle":"PDF to images",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":442,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_yYLGs@_dGQ76-1@2",
+			"id":"n_M1mYV",
+			"index":14,
+			"inputs":{
+				"filters":[
+					{
+						"property":"=LEN({{ _m1nkl.outputs.images }})",
+						"filter":{
+							"operator":"LT",
+							"value":"{{ n_gxUi3.outputs.imageLimit }}"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
 		},
 		{
 			"additional":{
@@ -1008,9 +1123,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_yYLGs@_dGQ76-1@2",
+			"groupId":"n_M1mYV@n_yYLGs@_dGQ76-1@2@y",
 			"id":"_K3RP7",
-			"index":13,
+			"index":15,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -1045,9 +1160,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_yYLGs@_dGQ76-1@2",
+			"groupId":"n_M1mYV@n_yYLGs@_dGQ76-1@2@y",
 			"id":"n_54kAN",
-			"index":14,
+			"index":16,
 			"inputs":{
 				"variables":[
 					{
@@ -1073,7 +1188,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_yYLGs@_dGQ76-1@default",
 			"id":"n_kE5rj",
-			"index":15,
+			"index":17,
 			"inputs":{
 				"code":"return [:]",
 				"compile_static":false,
@@ -1096,7 +1211,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_dGQ76-1",
 			"id":"n_Jyeo3",
-			"index":16,
+			"index":18,
 			"inputs":{
 				"result":{
 					"status":"{{ n_gxUi3.outputs.status }}",
@@ -1140,5 +1255,5 @@
 	"tags":[
 		
 	],
-	"version":22
+	"version":23
 }
