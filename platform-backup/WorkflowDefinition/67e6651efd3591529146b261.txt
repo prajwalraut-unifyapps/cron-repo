@@ -1,16 +1,16 @@
 {
 	"appsUsed":[
-		"storage_by_unifyapps"
+		
 	],
 	"createdTime":1747000728374,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758963912056,
-		"deployedBy":1,
-		"deployedDefinitionId":"68d7a8c8ce29ec20a05f095b",
+		"deployedAt":1758966018732,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68d7b1026115d0174f2b876b",
 		"status":"DEPLOYED",
-		"version":76,
-		"workflowVersion":223
+		"version":77,
+		"workflowVersion":224
 	},
 	"edges":[
 		{
@@ -211,18 +211,11 @@
 			"fromNodeId":"b66uk",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_tfEAW",
+			"toNodeId":"n_zYRZZ",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_tfEAW",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"_CqcoE",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"_CqcoE",
+			"fromNodeId":"n_zYRZZ",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"QDnRy",
@@ -250,7 +243,7 @@
 	"id":"67e6651efd3591529146b261",
 	"lastModifiedBy":-1,
 	"lcName":"apply pii to knowledge chunk",
-	"modifiedTime":1758966018650,
+	"modifiedTime":1759125185813,
 	"name":"Apply PII to knowledge chunk",
 	"nodes":[
 		{
@@ -268,6 +261,10 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"proceed"
+					],
 					"properties":{
 						"text":{
 							"type":"string",
@@ -281,14 +278,12 @@
 							"type":"boolean",
 							"title":"isModified"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"proceed"
-					]
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"text":{
 							"type":"string",
@@ -365,10 +360,12 @@
 								}
 							},
 							"additionalProperties":false
+						},
+						"parentType":{
+							"type":"string",
+							"title":"Parent Type"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -448,19 +445,20 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"now"
+					],
 					"properties":{
 						"now":{
 							"type":"integer",
 							"title":"Now"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"now"
-					]
+					}
 				},
+				"code":"return ['now': System.currentTimeMillis()]",
 				"compile_static":false,
-				"code":"return ['now': System.currentTimeMillis()]"
+				"captureStdOutput":false
 			},
 			"skip":false,
 			"subTitle":"startTime",
@@ -1023,6 +1021,12 @@
 							"operator":"EQUAL",
 							"value":"true"
 						}
+					},
+					{
+						"property":"{{ YL4M8.outputs.parentType }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
 					}
 				],
 				"operator":"OR"
@@ -1048,19 +1052,30 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"timeTaken"
+					],
 					"properties":{
 						"timeTaken":{
 							"type":"number",
 							"title":"Time Taken"
+						},
+						"input":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Input"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"timeTaken"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"agentId",
+						"startTime"
+					],
 					"properties":{
 						"caseId":{
 							"type":"string",
@@ -1079,7 +1094,7 @@
 							"title":"parent"
 						},
 						"input":{
-							"type":"object",
+							"type":"string",
 							"title":"input"
 						},
 						"output":{
@@ -1094,23 +1109,19 @@
 							"type":"integer",
 							"title":"Start Time"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"agentId",
-						"startTime"
-					]
+					}
 				},
+				"code":"def timeTaken = System.currentTimeMillis() - startTime\n\nreturn [\n    \"timeTaken\": timeTaken,\n    \"input\"    : [\n        input: \"****\"\n    ]\n]\n",
 				"compile_static":false,
-				"code":"def timeTaken = System.currentTimeMillis() - startTime\nreturn ['timeTaken': timeTaken]\n",
+				"captureStdOutput":false,
 				"parameters":{
-					"step":"PII Mask",
-					"parent":"Guardrail",
 					"caseId":"{{ U3IHx.outputs.caseId }}",
 					"messageId":"{{ U3IHx.outputs.messageId }}",
-					"agentId":"{{ U3IHx.outputs.aiAgentId }}",
+					"step":"PII Mask",
+					"parent":"Guardrail",
 					"input":"*****",
 					"output":"{{ 7dDjY.outputs.modifiedText }}",
+					"agentId":"{{ U3IHx.outputs.aiAgentId }}",
 					"startTime":"{{ C1588.outputs.result.now }}"
 				}
 			},
@@ -1154,60 +1165,37 @@
 		},
 		{
 			"context":{
-				"appName":"utility_by_unifyapps",
-				"resourceVersion":0,
-				"resourceName":"utility_by_unifyapps_to_json_object",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"0F7XM@ZrWT9-1@y",
-			"id":"n_tfEAW",
-			"index":22,
-			"inputs":{
-				"jsonString":"{\"input\": \"****\"}"
-			},
-			"skip":false,
-			"subTitle":"Deserialise Input",
-			"title":"Deserialise string to JSON object",
-			"type":"ACTION"
-		},
-		{
-			"additional":{
-				"visibleOptionalFields":[
-					"root.record.tools.items"
-				]
-			},
-			"context":{
-				"appName":"storage_by_unifyapps",
-				"resourceVersion":291,
-				"resourceName":"storage_by_unifyapps_create_record",
+				"appName":"callables",
+				"resourceVersion":467,
+				"resourceName":"callables_call_automation",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"CONTINUE",
 			"groupId":"0F7XM@ZrWT9-1@y",
-			"id":"_CqcoE",
-			"index":23,
+			"id":"n_zYRZZ",
+			"index":22,
 			"inputs":{
-				"writeThroughSessionVariables":false,
-				"object_type":"e_traces",
-				"skipIfBlank":false,
-				"record":{
+				"automationId":"68c51597269ad81cc750a3ca",
+				"runtimeConnections":{},
+				"synchronous":false,
+				"triggerWorkflowWithRuntimeType":"IN_MEMORY",
+				"version":"-1",
+				"parameters":{
 					"caseId":"{{ U3IHx.outputs.caseId }}",
 					"aiAgentId":"{{ U3IHx.outputs.aiAgentId }}",
-					"parent":"Guardrail",
+					"executionInstanceId":"{{ __RUN__.outputs.executionId }}",
+					"parent":"{{ YL4M8.outputs.parentType }}",
 					"messageId":"{{ U3IHx.outputs.messageId }}",
-					"llmTimeTaken":"{{ b66uk.outputs.result.timeTaken }}",
-					"input":"{{ n_tfEAW.outputs.result }}",
+					"llmTimeTaken":"=INT((NOW()-DATE(1970,1,1))*86400000)-{{ C1588.outputs.result.now }}",
+					"input":"{{ b66uk.outputs.result.input }}",
 					"currentType":"PII Mask",
 					"rootExecutionId":"{{ __RUN__.outputs.rootExecutionId }}",
 					"parentExecutionId":"{{ __RUN__.outputs.parentExecutionId }}",
 					"userId":"=IF(ISNUMBER({{ __RUN__.outputs.userId }}), {{ __RUN__.outputs.userId }}, 0)",
 					"output":"{{ 7dDjY.outputs.modifiedText }}",
-					"fromAutomationId":"67e6651efd3591529146b261",
+					"fromAutomationId":"{{ __RUN__.outputs.workflowId }}",
 					"startTime":"{{ C1588.outputs.result.now }}",
 					"success":true
 				}
@@ -1222,7 +1210,8 @@
 					"waitForNextWindow":false
 				},
 				"cacheConfig":{
-					"enabled":false
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
 				},
 				"circuitBreakerConfig":{
 					"enabled":false
@@ -1230,10 +1219,19 @@
 				"disableLogging":false,
 				"enabledForReExecution":false,
 				"hookConfig":{
-					"enabled":false
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
 				},
 				"logConfig":{
-					"enabled":false
+					"enabled":false,
+					"logPolicies":[
+						
+					]
 				},
 				"rateLimitConfig":{
 					"enabled":false,
@@ -1253,9 +1251,9 @@
 				}
 			},
 			"skip":false,
-			"subTitle":"Create Trace",
-			"title":"Create record",
-			"type":"ACTION"
+			"subTitle":"Capture Trace",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
 		},
 		{
 			"context":{
@@ -1269,7 +1267,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ZrWT9-1",
 			"id":"QDnRy",
-			"index":24,
+			"index":23,
 			"inputs":{
 				"result":{
 					"proceed":"{{ 7dDjY.outputs.proceed }}",
@@ -1298,5 +1296,5 @@
 		}
 	},
 	"standard":true,
-	"version":224
+	"version":225
 }
