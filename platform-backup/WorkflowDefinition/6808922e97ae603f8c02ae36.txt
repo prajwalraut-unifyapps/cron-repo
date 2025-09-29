@@ -4,16 +4,8 @@
 		"gcloud_storage",
 		"google_big_query"
 	],
-	"createdTime":1753188572905,
+	"createdTime":1759117990948,
 	"deleted":false,
-	"deploymentState":{
-		"deployedAt":1758719810501,
-		"deployedBy":39713,
-		"deployedDefinitionId":"68d3ef40a00cb67df4bdef43",
-		"status":"DEPLOYED",
-		"version":3,
-		"workflowVersion":57
-	},
 	"edges":[
 		{
 			"fromNodeId":"n_K18z7",
@@ -123,9 +115,9 @@
 		}
 	],
 	"id":"6808922e97ae603f8c02ae36",
-	"lastModifiedBy":39713,
+	"lastModifiedBy":1,
 	"lcName":"aut-unete",
-	"modifiedTime":1758720756304,
+	"modifiedTime":1759117990948,
 	"name":"AUT-Unete",
 	"nodes":[
 		{
@@ -265,6 +257,61 @@
 				"timeoutMs":100000,
 				"maxResults":1000,
 				"query":"CREATE OR REPLACE TABLE belcorp-digital.analytics_327881126.unete_export_staging \nOPTIONS(\n  expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 3 HOUR)\n)\nAS\nwith unete_analytics as \n(\n    select \n--IDENTIFICADOR DE SESIÓN\n      concat(user_pseudo_id,cast((SELECT value.int_value FROM UNNEST(event_params) WHERE key = \"ga_session_id\") as string)) as sessionid --ok\n      ,user_pseudo_id as clientid                                                                                                        --ok\n      ,(SELECT value.int_value FROM UNNEST(event_params) WHERE key = \"ga_session_id\") AS ga_session_id                                   --ok\n      ,(SELECT value.int_value FROM UNNEST(event_params) WHERE key = \"ga_session_number\") AS ga_session_number                           --ok\n      ,concat(SUBSTR(event_date,0,4),'-',SUBSTR(event_date,5,2),'-',SUBSTR(event_date,7,2)) fecha                                        --ok\n      ,CASE \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/pe/%', '%/pe','%/pe?%') THEN 'PE' \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/mx/%', '%/mx','%/mx?%') THEN 'MX' \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/co/%', '%/co','%/co?%') THEN 'CO' \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/cl/%', '%/cl','%/cl?%') THEN 'CL' \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/ec/%', '%/ec','%/ec?%') THEN 'EC' \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/pa/%', '%/pa','%/pa?%') THEN 'PA' \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/bo/%', '%/bo','%/bo?%') THEN 'BO' \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/do/%', '%/do','%/do?%') THEN 'DO' \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/pr/%', '%/pr','%/pr?%') THEN 'PR' \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/cr/%', '%/cr','%/cr?%') THEN 'CR' \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/gt/%', '%/gt','%/gt?%') THEN 'GT' \n            WHEN (SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") LIKE ANY ('%/sv/%', '%/sv','%/sv?%') THEN 'SV' \n      END \n            AS codigopais \n--TIPO DEL EVENTO\n      ,device.web_info.hostname as session_hostname                                                                                      --ok\n      ,stream_id as session_stream                                                                                                       --ok\n      ,platform as session_platform                                                                                                      --ok\n      ,event_name                                                                                                                        --ok\n      ,event_timestamp as event_time                                                                                                     --ok\n      ,FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', TIMESTAMP_SUB(TIMESTAMP_MICROS(event_timestamp), INTERVAL 5 HOUR)) as event_timestamp_utc   --ok\n--INFORMACIÓN DE LA PÁGINA\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_location\") AS page_location                                --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_title\") AS page_title                                      --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"page_path\") AS page_path                                        --ok\n--INFORMACIÓN DE LOS EVENTOS\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"flow\") AS event_flow                                            --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"step\") as event_step                                            --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"section\") as event_section                                      --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"elementDescription\") as event_elementdescription                --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"elementType\") as event_elementtype                              --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"country\") as event_country                                      --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"comeFrom\") as event_comefrom                                    --ok\n--INFORMACIÓN DEL DISPOSITIVO\n      ,device.category as device_category\n      ,device.mobile_brand_name as device_mobile_brand\n      ,device.mobile_model_name as device_mobile_model\n      ,device.operating_system as device_operating_system\n      ,device.browser as device_browser\n      ,device.web_info.browser as device_web_browser\n--INFORMACIÓN DE TRÁFICO\n      ,traffic_source.name as traffic_name\n      ,traffic_source.source as traffic_source\n      ,traffic_source.medium as traffic_medium\n      ,collected_traffic_source.manual_source as utm_source\n      ,collected_traffic_source.manual_medium as utm_medium\n      ,collected_traffic_source.manual_campaign_name as utm_campaign\n      ,collected_traffic_source.manual_content as utm_content\n      ,collected_traffic_source.manual_term as utm_term\n--PARAMETROS MANUALES\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"urlCampaign\") as param_campaign                                 --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"urlContent\") as param_content                                   --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"urlMedium\") as param_medium                                     --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"urlSource\") as param_source                                     --ok\n      ,(SELECT value.string_value FROM UNNEST(event_params) WHERE key = \"urlTerm\") as param_term                                         --ok\n--OTROS PARÁMETROS\n      ,collected_traffic_source.manual_campaign_id as utm_campaign_id\n      ,collected_traffic_source.gclid as traffic_gclid\n      ,collected_traffic_source.dclid as traffic_dclid\n--INFORMACIÓN DE GEO\n      ,geo.country as geo_country\n      ,geo.region as geo_region\n      ,geo.city as geo_city\nfrom \n      `belcorp-digital.analytics_327881126.events_intraday_*`\nwhere \n      _TABLE_SUFFIX BETWEEN FORMAT_DATE('%Y%m%d',DATE_SUB(CURRENT_DATE('America/Lima'), INTERVAL 1 DAY)) AND FORMAT_DATE('%Y%m%d',DATE_SUB(CURRENT_DATE('America/Lima'), INTERVAL 1 DAY))\n),\n\n\nunete_prework as \n(\nselect \n      sessionid\n      ,codigopais\n      ,replace(replace(event_elementtype, \"'\" , ''), \",\" , '') as eventoaccion\n      ,replace(replace(concat(event_step,' - ',event_section), \"'\" , ''), \",\" , '') as eventocategoria\n      ,replace(replace(event_elementdescription, \"'\" , ''), \",\" , '') as eventoetiqueta\n      ,device_category as dispositivo\n      ,session_hostname as nombrehost\n      ,replace(replace(page_location, \"'\" , ''), \",\" , '') as urlpagina\n      ,replace(replace(page_title, \"'\" , ''), \",\" , '') as titulopagina\n      ,case \n            when param_source is not null then param_source\n            when param_source is null then utm_source\n       end as fuente\n      ,replace(replace(page_location, \"'\" , ''), \",\" , '') as paginadestino\n      ,1 as paginasvisitadas\n      ,case \n            when ga_session_number > 1 then 'Returning visitor'\n            else 'New visitor' \n       end as tipousuario\n      ,case \n            when param_medium is not null then param_medium\n            when param_medium is null then utm_medium\n       end as medio\n      ,0 as duracionsesion\n      ,event_country as nombrePais\n      ,fecha\n      ,clientid as visitorid\n      ,clientid as clientID\n      ,'' as solicitudID\n      ,utm_campaign_id as campanaID\n      ,case \n            when param_campaign is not null then param_campaign\n            when param_campaign is null then utm_campaign\n       end as campania\n      ,row_number () over (partition by sessionid order by event_time asc ) as hitnumber\n      ,case \n            when param_content is not null then param_content\n            when param_content is null then utm_content\n       end as utmcontent\n      ,case \n            when param_term is not null then param_term\n            when param_term is null then utm_term\n       end as utmterm\n      ,traffic_gclid as gclid\n      --,event_name as tipohit\n      ,case\n            when event_name = 'page_view' then 'PAGE'\n            when event_name = 'GA4virtualEvent' then 'EVENT'\n            when event_name = 'GA4conversionEvent_U3' then 'LEAD_U3'\n            when event_name = 'GA4conversionEvent_U4' then 'LEAD_U4'      \n      end as tipohit\n      ,event_time as tiempohit\n      ,device_mobile_brand as marcadispositivo\n      ,device_mobile_model as modelodispositivo\n      ,device_operating_system as sistemaoperativo\n      ,device_web_browser as navegadordispositivo\n      ,ga_session_id as visitstarttime\n      ,clientid as fullvisitorid\n      ,clientid as idcliente\n      ,ga_session_id as visitId\n      ,event_timestamp_utc as fechahit\n      ,'(not available)' as tipopago\n      ,event_comefrom as tipodocumento\nfrom \n    unete_analytics\nwhere \n      event_name in ('page_view','GA4virtualEvent','GA4conversionEvent_U4','GA4conversionEvent_U3')\n      and sessionid is not null\n),\n\nunete_bounce as \n(\n  SELECT \n    sessionid AS sessionid_br\n    ,CASE \n      WHEN total_hits > 1 THEN 0 \n      ELSE 1 \n    END  \n      AS bounce\nFROM \n(\n  SELECT \n    sessionid\n    ,COUNT(TIPOHIT) AS total_hits\n  FROM \n    unete_prework\n  GROUP BY \n    sessionid\n)\n)\n\n\nselect \n      aa.sessionid\n      ,aa.codigopais\n      ,left(aa.eventoaccion,150) as eventoaccion\n      ,left(aa.eventocategoria,150) as eventocategoria\n      ,left(aa.eventoetiqueta,2000) as eventoetiqueta\n      ,aa.dispositivo\n      ,bb.bounce\n      ,left(aa.nombrehost,100) as nombrehost\n      ,left(aa.urlpagina,1500) as urlpagina\n      ,left(aa.titulopagina,250) as titulopagina\n      ,left(aa.fuente,500) as fuente\n      ,left(aa.paginadestino,1500) as paginadestino\n      ,aa.paginasvisitadas\n      ,aa.tipousuario\n      ,left(aa.medio,100) as medio\n      ,left(concat(aa.fuente,'/',aa.medio),200) as fuentemedio\n      ,aa.duracionsesion\n      ,left(aa.nombrePais,30) as nombrePais\n      ,aa.fecha\n      ,aa.visitorid\n      ,aa.clientID\n      ,aa.solicitudID\n      ,aa.campanaID\n      ,left(aa.campania, 500) as campania\n      ,aa.hitnumber\n      ,left(aa.utmcontent, 500) as utmcontent\n      ,left(aa.utmterm, 500) as utmterm\n      ,left(aa.gclid, 500) as gclid \n      ,aa.tipohit\n      ,aa.tiempohit\n      ,aa.marcadispositivo\n      ,aa.modelodispositivo\n      ,aa.sistemaoperativo\n      ,aa.navegadordispositivo\n      ,aa.visitstarttime\n      ,aa.fullvisitorid\n      ,aa.idcliente\n      ,aa.visitId\n      ,aa.fechahit\n      ,aa.tipopago\n      ,left(aa.tipodocumento, 500) as tipodocumento\nfrom \n      unete_prework aa \n left join \n      unete_bounce bb \n  on \n      (aa.sessionid = bb.sessionid_br);"
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"duration":"10",
+					"enabled":true,
+					"unit":"SECONDS"
+				}
 			},
 			"skip":false,
 			"subTitle":"Google Big Query",
@@ -643,6 +690,61 @@
 				"bucketName":"bq-results-analytics-bsp",
 				"name":"{{ n_Fgu3d.outputs.item.name }}"
 			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"duration":"10",
+					"enabled":true,
+					"unit":"SECONDS"
+				}
+			},
 			"skip":false,
 			"subTitle":"Google Cloud Storage",
 			"title":"Download an object",
@@ -728,7 +830,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"IhJoz-1",
 			"id":"_IAT7c",
@@ -762,7 +864,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"IhJoz-1",
 			"id":"_ZZNHe",
@@ -788,7 +890,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"IhJoz-1",
 			"id":"LFVGF",
@@ -823,7 +925,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"IhJoz-1",
 			"id":"vYsRm",
@@ -842,7 +944,7 @@
 			"type":"ACTION"
 		}
 	],
-	"ownerUserId":3952,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -859,5 +961,5 @@
 	"tags":[
 		
 	],
-	"version":58
+	"version":59
 }
