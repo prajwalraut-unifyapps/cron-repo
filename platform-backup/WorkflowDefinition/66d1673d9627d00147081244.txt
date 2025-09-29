@@ -5,12 +5,12 @@
 	"createdTime":1747000729116,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758963929432,
-		"deployedBy":1,
-		"deployedDefinitionId":"68d7a8d9ce29ec20a05f09f9",
+		"deployedAt":1758966010803,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68d7b0fa6115d0174f2b86b3",
 		"status":"DEPLOYED",
-		"version":81,
-		"workflowVersion":168
+		"version":82,
+		"workflowVersion":169
 	},
 	"edges":[
 		{
@@ -410,7 +410,7 @@
 	"id":"66d1673d9627d00147081244",
 	"lastModifiedBy":-1,
 	"lcName":"response generator - ai agent",
-	"modifiedTime":1758966010705,
+	"modifiedTime":1759125179529,
 	"name":"Response Generator - AI Agent",
 	"nodes":[
 		{
@@ -428,6 +428,8 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"success":{
 							"type":"string",
@@ -437,12 +439,15 @@
 							"type":"string",
 							"title":"Message Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"temporaryMessage",
+						"fromCustomerUserId"
+					],
 					"properties":{
 						"caseId":{
 							"type":"string",
@@ -683,6 +688,10 @@
 														"required":[]
 													},
 													"title":"Events"
+												},
+												"size":{
+													"type":"string",
+													"title":"Size"
 												}
 											},
 											"title":"props",
@@ -749,12 +758,7 @@
 							"additionalProperties":false,
 							"required":[]
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"temporaryMessage",
-						"fromCustomerUserId"
-					]
+					}
 				}
 			},
 			"skip":false,
@@ -1751,7 +1755,10 @@
 					"root.record.additional.usedMetadata.items",
 					"root.record.customProperties.topicName",
 					"root.record.customProperties.toolName",
-					"root.record.customProperties.slotInstructionMessage"
+					"root.record.customProperties.slotInstructionMessage",
+					"root.record.content.previewDetails.canvas.props.size",
+					"root.record.additional.streamingCompletionTime",
+					"root.record.additional.SQLServerAddditionalMetadata"
 				]
 			},
 			"context":{
@@ -1769,29 +1776,20 @@
 			"inputs":{
 				"writeThroughSessionVariables":true,
 				"object_type":"service_hub_message",
+				"skipIfBlank":false,
 				"record":{
-					"additional":{
-						"IsDataRAGExecuted":false,
-						"parallelToolCallEnabled":false,
-						"temporaryMessage":"{{ E6a0f.outputs.temporaryMessage }}",
-						"parentMessageId":"{{ Jaaay.outputs.lastFanMessageId }}",
-						"internalMessageType":"{{ zn4VJ.outputs.internalMessageType }}",
-						"deepResearch":"{{ Ohyp8.outputs.deepResearch }}"
-					},
-					"customProperties":{
-						"slotInstructionMessage":false
-					},
+					"messageId":"{{ n_pSC1m.outputs.result.messageId }}",
 					"type":"bot",
+					"channelCreatedTime":"{{ n_pSC1m.outputs.result.creationEpoch }}",
 					"content":{
 						"text":"{{ E6a0f.outputs.message }}",
 						"html":"{{ 24hAN.outputs.chunkMetadataStr }}",
-						"choiceList":{
-							"source":"{{ E6a0f.outputs.choices }}",
-							"ua:type":"mappedArray",
-							"items":{
-								"id":"{{ E6a0f.outputs.choices[0].id }}",
-								"title":"{{ E6a0f.outputs.choices[0].title }}",
-								"url":"{{ E6a0f.outputs.choices[0].url }}"
+						"coPilotBlocks":{
+							"role":"{{ E6a0f.outputs.coPilotBlocks.role }}",
+							"blocks":{
+								"source":"{{ E6a0f.outputs.coPilotBlocks.blocks }}",
+								"ua:type":"mappedArray",
+								"items":"{{ E6a0f.outputs.coPilotBlocks.blocks[0] }}"
 							}
 						},
 						"interfaceDetails":{
@@ -1800,14 +1798,6 @@
 							"slug":"{{ E6a0f.outputs.interfaceDetails.slug }}",
 							"pageInputs":"{{ E6a0f.outputs.interfaceDetails.pageInputs }}",
 							"interfaceDescription":"{{ E6a0f.outputs.interfaceDetails.interfaceDescription }}"
-						},
-						"coPilotBlocks":{
-							"blocks":{
-								"source":"{{ E6a0f.outputs.coPilotBlocks.blocks }}",
-								"ua:type":"mappedArray",
-								"items":"{{ E6a0f.outputs.coPilotBlocks.blocks[0] }}"
-							},
-							"role":"{{ E6a0f.outputs.coPilotBlocks.role }}"
 						},
 						"agentResponse":{
 							"toolUseDetails":{
@@ -1827,6 +1817,7 @@
 									"interfacePageSlug":"{{ E6a0f.outputs.previewDetails.canvas.props.interfacePageSlug }}",
 									"pageInputs":"{{ E6a0f.outputs.previewDetails.canvas.props.pageInputs }}",
 									"src":"{{ E6a0f.outputs.previewDetails.canvas.props.src }}",
+									"size":"{{ E6a0f.outputs.previewDetails.canvas.props.size }}",
 									"events":{
 										"source":"{{ E6a0f.outputs.previewDetails.canvas.props.events }}",
 										"ua:type":"mappedArray",
@@ -1856,6 +1847,15 @@
 								"type":"{{ E6a0f.outputs.previewDetails.thumbnail.type }}",
 								"display":"{{ E6a0f.outputs.previewDetails.thumbnail.display }}"
 							}
+						},
+						"choiceList":{
+							"source":"{{ E6a0f.outputs.choices }}",
+							"ua:type":"mappedArray",
+							"items":{
+								"id":"{{ E6a0f.outputs.choices[0].id }}",
+								"title":"{{ E6a0f.outputs.choices[0].title }}",
+								"url":"{{ E6a0f.outputs.choices[0].url }}"
+							}
 						}
 					},
 					"accountId":"{{ zn4VJ.outputs.defaultAccountId }}",
@@ -1864,13 +1864,22 @@
 					"caseId":"{{ zn4VJ.outputs.caseID }}",
 					"fromCustomerUserId":"{{ zn4VJ.outputs.aiCoPilotId }}",
 					"channelName":"{{ zn4VJ.outputs.coPilotChannelName }}",
-					"toCustomerUserId":"{{ zn4VJ.outputs.userIdWithCoPilot }}",
-					"searchQueryId":"{{ Jaaay.outputs.lastFanMessageId }}",
-					"hasAttachments":"=NOT(ISBLANK({{ E6a0f.outputs.attachments[0].type }}))",
-					"messageId":"{{ n_pSC1m.outputs.result.messageId }}",
-					"channelCreatedTime":"{{ n_pSC1m.outputs.result.creationEpoch }}",
 					"channelModifiedTime":"{{ n_pSC1m.outputs.result.creationEpoch }}",
-					"uniqueId":"{{ n_pSC1m.outputs.result.messageId }}"
+					"hasAttachments":"=NOT(ISBLANK({{ E6a0f.outputs.attachments[0].type }}))",
+					"uniqueId":"{{ n_pSC1m.outputs.result.messageId }}",
+					"toCustomerUserId":"{{ zn4VJ.outputs.userIdWithCoPilot }}",
+					"additional":{
+						"temporaryMessage":"{{ E6a0f.outputs.temporaryMessage }}",
+						"internalMessageType":"{{ zn4VJ.outputs.internalMessageType }}",
+						"parentMessageId":"{{ Jaaay.outputs.lastFanMessageId }}",
+						"IsDataRAGExecuted":false,
+						"deepResearch":"{{ Ohyp8.outputs.deepResearch }}",
+						"parallelToolCallEnabled":false
+					},
+					"searchQueryId":"{{ Jaaay.outputs.lastFanMessageId }}",
+					"customProperties":{
+						"slotInstructionMessage":false
+					}
 				}
 			},
 			"skip":false,
@@ -1982,14 +1991,16 @@
 				"recordId":"{{ E6a0f.outputs.caseId }}",
 				"writeThroughSessionVariables":true,
 				"object_type":"service_hub_case",
+				"skipIfBlank":false,
 				"skipPermissionCheck":false,
 				"updateFields":[
 					{
-						"actionType":"SET",
 						"fieldName":"properties.additional.lastPreviewDetails",
+						"actionType":"SET",
 						"setValue":"{{ E6a0f.outputs.previewDetails }}"
 					}
-				]
+				],
+				"unsetIfNull":false
 			},
 			"options":{
 				"businessHoursConfig":{
@@ -2142,6 +2153,7 @@
 				"recordId":"{{ 9gbb1.outputs.id }}",
 				"writeThroughSessionVariables":false,
 				"object_type":"service_hub_message",
+				"skipIfBlank":false,
 				"skipPermissionCheck":false,
 				"updateFields":[
 					{
@@ -2149,7 +2161,8 @@
 						"actionType":"SET",
 						"setValue":"{{ 9gbb1.outputs.id }}"
 					}
-				]
+				],
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"set parentMessageId to own Id",
@@ -2179,6 +2192,7 @@
 				"recordId":"{{ E6a0f.outputs.caseId }}",
 				"writeThroughSessionVariables":true,
 				"object_type":"cached_service_hub_case",
+				"skipIfBlank":false,
 				"skipPermissionCheck":false,
 				"updateFields":[
 					{
@@ -2186,7 +2200,8 @@
 						"actionType":"ADD_TO_SET",
 						"setValue":"{{ 9gbb1.outputs }}"
 					}
-				]
+				],
+				"unsetIfNull":false
 			},
 			"options":{
 				"businessHoursConfig":{
@@ -2629,5 +2644,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":169
+	"version":170
 }
