@@ -7,46 +7,111 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_hSbQ9",
+			"fromNodeId":"n_tdVZk",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_0N88Q",
+			"toNodeId":"n_bsRG9",
 			"type":"next"
 		}
 	],
 	"id":"68da0a7ae05bfb675ebd88e8",
 	"lastModifiedBy":1,
 	"lcName":"callablearrayschema_117591198694400",
-	"modifiedTime":1759119994862,
+	"modifiedTime":1759120009577,
 	"name":"callableArraySchema_117591198694400",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1447,
+				"resourceName":"callables_from_api"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_hSbQ9-1",
-			"id":"_hSbQ9",
-			"index":0,
+			"id":"n_tdVZk",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"name":{
+								"type":"array",
+								"items":{
+									"type":"string"
+								},
+								"title":"name"
+							}
+						},
+						"additionalProperties":false
+					}
+				},
+				"endpointType":"REST",
+				"response":[
+					{
+						"name":"resp",
+						"status":200,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						},
+						"body":{
+							"type":"object",
+							"properties":{
+								"result":{
+									"type":"string",
+									"title":"result"
+								}
+							},
+							"additionalProperties":false
+						},
+						"namespaces":[]
+					}
+				],
+				"streamingResponse":false
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via API",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1449,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_hSbQ9-1",
-			"id":"_0N88Q",
-			"index":0,
+			"id":"n_bsRG9",
+			"index":2,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_resp",
+				"body":{
+					"result":"{{ n_tdVZk.outputs.body.name }}"
+				},
+				"status":200
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +125,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
