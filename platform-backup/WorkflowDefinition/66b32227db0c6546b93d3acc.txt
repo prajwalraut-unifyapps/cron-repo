@@ -5,12 +5,12 @@
 	"createdTime":1747000721236,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758874581350,
+		"deployedAt":1759229887975,
 		"deployedBy":1,
-		"deployedDefinitionId":"68d64bd5b57aa23969bea0aa",
+		"deployedDefinitionId":"68dbb7bf37a5b56e94dd377e",
 		"status":"DEPLOYED",
-		"version":73,
-		"workflowVersion":128
+		"version":81,
+		"workflowVersion":136
 	},
 	"edges":[
 		{
@@ -75,18 +75,27 @@
 			"fromNodeId":"d40Bw",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"b66uk",
+			"toNodeId":"n_RaP7y",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"b66uk",
+			"fromNodeId":"n_RaP7y",
+			"name":"yes",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_CqcoE",
+			"toNodeId":"n_zYRZZ",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_zYRZZ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"KszV6",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"_CqcoE",
+			"fromNodeId":"n_RaP7y",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"KszV6",
@@ -106,7 +115,7 @@
 	"id":"66b32227db0c6546b93d3acc",
 	"lastModifiedBy":-1,
 	"lcName":"custom word filter (ai agent)",
-	"modifiedTime":1758886247349,
+	"modifiedTime":1759253921697,
 	"name":"Custom Word Filter (AI Agent)",
 	"nodes":[
 		{
@@ -124,6 +133,9 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"dynamic":true,
 					"properties":{
 						"filtered_answer":{
 							"type":"string",
@@ -134,13 +146,12 @@
 							"title":"block",
 							"default":false
 						}
-					},
-					"additionalProperties":false,
-					"required":[],
-					"dynamic":true
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"answer":{
 							"type":"string",
@@ -165,10 +176,12 @@
 							"type":"boolean",
 							"title":"filterProfanity",
 							"default":false
+						},
+						"parentType":{
+							"type":"string",
+							"title":"Parent Type"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -445,160 +458,65 @@
 		},
 		{
 			"context":{
-				"appName":"code_by_unifyapps",
-				"resourceVersion":300,
-				"resourceName":"code_by_unifyapps_groovy",
+				"appName":"if_else",
+				"resourceVersion":439,
+				"resourceName":"if_else_condition",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
-			"fallbackMode":"CONTINUE",
+			"fallbackMode":"STOP",
 			"groupId":"Dc7oH-1",
-			"id":"b66uk",
+			"id":"n_RaP7y",
 			"index":9,
 			"inputs":{
-				"output":{
-					"type":"object",
-					"properties":{
-						"timeTaken":{
-							"type":"number",
-							"title":"Time Taken"
+				"filters":[
+					{
+						"property":"{{ ZaGfO.outputs.parentType }}",
+						"filter":{
+							"operator":"EXISTS"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"timeTaken"
-					]
-				},
-				"input":{
-					"type":"object",
-					"properties":{
-						"caseId":{
-							"type":"string",
-							"title":"caseId"
-						},
-						"messageId":{
-							"type":"string",
-							"title":"messageId"
-						},
-						"step":{
-							"type":"string",
-							"title":"step"
-						},
-						"parent":{
-							"type":"string",
-							"title":"parent"
-						},
-						"input":{
-							"type":"object",
-							"title":"input"
-						},
-						"output":{
-							"type":"object",
-							"title":"output"
-						},
-						"agentId":{
-							"type":"string",
-							"title":"Agent Id"
-						},
-						"startTime":{
-							"type":"integer",
-							"title":"Start Time"
-						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"agentId",
-						"startTime"
-					]
-				},
-				"compile_static":false,
-				"code":"def timeTaken = System.currentTimeMillis() - startTime\nreturn ['timeTaken': timeTaken]\n",
-				"parameters":{
-					"step":"Custom Word Filter",
-					"parent":"Guardrail",
-					"startTime":"{{ t4nNA.outputs.result.now }}",
-					"caseId":"{{ U3IHx.outputs.caseId }}",
-					"messageId":"{{ U3IHx.outputs.messageId }}",
-					"input":"{{ ZaGfO.outputs.answer }}",
-					"output":"{{ d40Bw.outputs.result.filtered_answer }}",
-					"agentId":"{{ U3IHx.outputs.aiAgentId }}"
-				}
-			},
-			"options":{
-				"businessHoursConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"cacheConfig":{
-					"enabled":false
-				},
-				"circuitBreakerConfig":{
-					"enabled":false
-				},
-				"disableLogging":false,
-				"enabledForReExecution":false,
-				"hookConfig":{
-					"enabled":false
-				},
-				"logConfig":{
-					"enabled":false
-				},
-				"rateLimitConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"retryConfig":{
-					"backOffFactor":null,
-					"captureRetries":false,
-					"enabled":false
-				},
-				"stepError":"CONTINUE",
-				"telemetryConfig":{
-					"enableTelemetry":false
-				}
+					}
+				],
+				"operator":"AND"
 			},
 			"skip":false,
-			"subTitle":"Capture Trace",
-			"title":"Execute Groovy code",
-			"type":"ACTION"
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
 		},
 		{
-			"additional":{
-				"visibleOptionalFields":[
-					"root.record.tools.items"
-				]
-			},
 			"context":{
-				"appName":"storage_by_unifyapps",
-				"resourceVersion":291,
-				"resourceName":"storage_by_unifyapps_create_record",
+				"appName":"callables",
+				"resourceVersion":467,
+				"resourceName":"callables_call_automation",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"CONTINUE",
-			"groupId":"Dc7oH-1",
-			"id":"_CqcoE",
+			"groupId":"n_RaP7y@Dc7oH-1@y",
+			"id":"n_zYRZZ",
 			"index":10,
 			"inputs":{
-				"writeThroughSessionVariables":false,
-				"object_type":"e_traces",
-				"skipIfBlank":false,
-				"record":{
+				"automationId":"68c51597269ad81cc750a3ca",
+				"runtimeConnections":{},
+				"synchronous":false,
+				"version":"-1",
+				"parameters":{
 					"caseId":"{{ U3IHx.outputs.caseId }}",
 					"aiAgentId":"{{ U3IHx.outputs.aiAgentId }}",
 					"executionInstanceId":"{{ __RUN__.outputs.executionId }}",
-					"parent":"Guardrail",
+					"parent":"{{ ZaGfO.outputs.parentType }}",
 					"messageId":"{{ U3IHx.outputs.messageId }}",
-					"llmTimeTaken":"{{ b66uk.outputs.result.timeTaken }}",
+					"llmTimeTaken":"=INT((NOW()-DATE(1970,1,1))*86400000)-{{ t4nNA.outputs.result.now }}",
 					"input":"{{ ZaGfO.outputs }}",
 					"currentType":"Custom Word Filter",
 					"rootExecutionId":"{{ __RUN__.outputs.rootExecutionId }}",
 					"parentExecutionId":"{{ __RUN__.outputs.parentExecutionId }}",
 					"userId":"=IF(ISNUMBER({{ __RUN__.outputs.userId }}), {{ __RUN__.outputs.userId }}, 0)",
 					"output":"{{ d40Bw.outputs.result.filtered_answer }}",
-					"fromAutomationId":"66b32227db0c6546b93d3acc",
+					"fromAutomationId":"{{ __RUN__.outputs.workflowId }}",
 					"startTime":"{{ t4nNA.outputs.result.now }}",
 					"success":true
 				}
@@ -613,7 +531,8 @@
 					"waitForNextWindow":false
 				},
 				"cacheConfig":{
-					"enabled":false
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
 				},
 				"circuitBreakerConfig":{
 					"enabled":false
@@ -621,10 +540,19 @@
 				"disableLogging":false,
 				"enabledForReExecution":false,
 				"hookConfig":{
-					"enabled":false
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
 				},
 				"logConfig":{
-					"enabled":false
+					"enabled":false,
+					"logPolicies":[
+						
+					]
 				},
 				"rateLimitConfig":{
 					"enabled":false,
@@ -644,9 +572,9 @@
 				}
 			},
 			"skip":false,
-			"subTitle":"Create Trace",
-			"title":"Create record",
-			"type":"ACTION"
+			"subTitle":"Capture Trace",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
 		},
 		{
 			"context":{
@@ -690,5 +618,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":129
+	"version":137
 }
