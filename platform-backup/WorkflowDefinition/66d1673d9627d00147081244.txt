@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1724999485413,
+	"createdTime":1747000729116,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758655355066,
-		"deployedBy":0,
-		"deployedDefinitionId":"68d2f37b38757c179b1235c0",
+		"deployedAt":1759229860793,
+		"deployedBy":1,
+		"deployedDefinitionId":"68dbb7a437a5b56e94dd3587",
 		"status":"DEPLOYED",
-		"version":114,
-		"workflowVersion":167
+		"version":86,
+		"workflowVersion":173
 	},
 	"edges":[
 		{
@@ -410,7 +410,7 @@
 	"id":"66d1673d9627d00147081244",
 	"lastModifiedBy":-1,
 	"lcName":"response generator - ai agent",
-	"modifiedTime":1759243541725,
+	"modifiedTime":1759253862370,
 	"name":"Response Generator - AI Agent",
 	"nodes":[
 		{
@@ -757,6 +757,10 @@
 							},
 							"additionalProperties":false,
 							"required":[]
+						},
+						"deepResearchEnabled":{
+							"type":"boolean",
+							"title":"Deep Research Enabled"
 						}
 					}
 				}
@@ -1072,6 +1076,7 @@
 				"object_type":"customer_profile",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"id":"{{ n_rrDIf.outputs.properties.fromCustomerUserId }}",
 				"readThroughSessionVariables":true
 			},
@@ -1511,18 +1516,14 @@
 			"inputs":{
 				"variableSchema":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"lastFanMessageId":{
 							"type":"string",
 							"title":"Last Fan Message Id"
-						},
-						"deepResearch":{
-							"type":"boolean",
-							"title":"Deep Research"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -1652,6 +1653,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"messageId":{
 							"type":"string",
@@ -1661,12 +1664,11 @@
 							"type":"string",
 							"title":"Creation Epoch"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"return [\n  \"messageId\": UUID.randomUUID().toString(),\n  \"creationEpoch\": System.currentTimeMillis()\n];",
 				"compile_static":false,
-				"code":"return [\n  \"messageId\": UUID.randomUUID().toString(),\n  \"creationEpoch\": System.currentTimeMillis()\n];"
+				"captureStdOutput":false
 			},
 			"skip":false,
 			"subTitle":"Code by UnifyApps",
@@ -1719,7 +1721,6 @@
 					"root.record.additional.hasMoreData",
 					"root.record.additional.triggeredFromApplicationId",
 					"root.record.additional.IsDataRAGExecuted",
-					"root.record.additional.deepResearch",
 					"root.record.content.agentResponse.toolUseDetails.agentExecutorExecutionId",
 					"root.record.content.agentResponse.thinkingSignature",
 					"root.record.content.agentResponse.executionError",
@@ -1758,7 +1759,9 @@
 					"root.record.customProperties.slotInstructionMessage",
 					"root.record.content.previewDetails.canvas.props.size",
 					"root.record.additional.streamingCompletionTime",
-					"root.record.additional.SQLServerAddditionalMetadata"
+					"root.record.additional.SQLServerAddditionalMetadata",
+					"root.record.additional.sql_output",
+					"root.record.additional.deepResearchEnabled"
 				]
 			},
 			"context":{
@@ -1873,8 +1876,8 @@
 						"internalMessageType":"{{ zn4VJ.outputs.internalMessageType }}",
 						"parentMessageId":"{{ Jaaay.outputs.lastFanMessageId }}",
 						"IsDataRAGExecuted":false,
-						"deepResearch":"{{ Ohyp8.outputs.deepResearch }}",
-						"parallelToolCallEnabled":false
+						"parallelToolCallEnabled":false,
+						"deepResearchEnabled":"{{ E6a0f.outputs.deepResearchEnabled }}"
 					},
 					"searchQueryId":"{{ Jaaay.outputs.lastFanMessageId }}",
 					"customProperties":{
@@ -2083,18 +2086,20 @@
 					"operator":"AND"
 				},
 				"object_type":"service_hub_case",
+				"skipIfBlank":false,
 				"updateFields":[
 					{
+						"fieldName":"properties.additional.lastAssociatedMassageType",
 						"actionType":"SET",
-						"setValue":"BOT",
-						"fieldName":"properties.additional.lastAssociatedMassageType"
+						"setValue":"BOT"
 					}
 				],
 				"skipIfEmpty":false,
 				"page":{
 					"offset":0,
 					"limit":20
-				}
+				},
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"set lastAssociatedMessageType",
@@ -2295,6 +2300,7 @@
 			"inputs":{
 				"writeThroughSessionVariables":false,
 				"object_type":"service_hub_attachment",
+				"skipIfBlank":false,
 				"record":{
 					"entityType":"MESSAGE",
 					"entityId":"{{ 9gbb1.outputs.properties.messageId }}",
@@ -2626,7 +2632,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1866,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -2644,5 +2650,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":168
+	"version":174
 }
