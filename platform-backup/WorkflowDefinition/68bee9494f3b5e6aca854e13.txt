@@ -2,19 +2,26 @@
 	"appsUsed":[
 		"microsoft_onedrive"
 	],
-	"createdTime":1757705799605,
+	"createdTime":1757528317550,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759169764152,
+		"deployedAt":1759243526075,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68dacce48b303f31c2308227",
+		"deployedDefinitionId":"68dbed065e003e08cdeb2e65",
 		"status":"DEPLOYED",
-		"version":21,
-		"workflowVersion":73
+		"version":4,
+		"workflowVersion":61
 	},
 	"edges":[
 		{
 			"fromNodeId":"n_ljCIU",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_ZoZJY",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_ZoZJY",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"1WPP3",
@@ -110,9 +117,9 @@
 		]
 	},
 	"id":"68bee9494f3b5e6aca854e13",
-	"lastModifiedBy":1,
+	"lastModifiedBy":-1,
 	"lcName":"knowledge downloader | onedrive | folder",
-	"modifiedTime":1759229653693,
+	"modifiedTime":1759243561572,
 	"name":"Knowledge Downloader | OneDrive | Folder",
 	"nodes":[
 		{
@@ -271,6 +278,60 @@
 		{
 			"context":{
 				"appName":"code_by_unifyapps",
+				"resourceVersion":0,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_0u0ns-1",
+			"id":"n_ZoZJY",
+			"index":2,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"skipToken":{
+							"type":"string",
+							"title":"Skip Token"
+						},
+						"lastModifiedTime":{
+							"type":"integer",
+							"title":"Last Modified Time"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"cursorObject":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Cursor Object"
+						}
+					}
+				},
+				"code":"if(!binding.hasVariable('cursorObject') || !cursorObject.containsKey('skipToken')){\n  cursorObject[\"skipToken\"] = \"\"\n}\nreturn cursorObject",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"cursorObject":"{{ n_ljCIU.outputs.cursor }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
 				"resourceVersion":68,
 				"resourceName":"code_by_unifyapps_groovy",
 				"type":"APPLICATION"
@@ -280,7 +341,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_0u0ns-1",
 			"id":"1WPP3",
-			"index":2,
+			"index":3,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -359,6 +420,7 @@
 				},
 				"code":"import java.lang.Math\nimport java.time.Instant\nimport java.time.*\nimport java.time.Instant\nimport java.time.LocalDateTime\nimport java.time.ZoneId\nimport java.time.format.DateTimeFormatter\n\n\nString getTimeStampString(Long epoch) {\n    return LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(\"yyyy-MM-dd'T'HH:mm:ss\"));\n}\n\ndef mappedInputs = [:]\ndef userSpecifiedStartDate = 0\ndef userSpecifiedEndDate = binding.hasVariable(\"downloaderConfig\") ? downloaderConfig.get(\"currentTimeEpoch\",0) : 0;\n\nif(binding.hasVariable('inputs')){\n    if(inputs?.createdDate){\n        userSpecifiedStartDate = inputs.createdDate.from ?  Instant.parse(inputs.createdDate.from).toEpochMilli() : 0;\n        userSpecifiedEndDate = inputs.createdDate.to ? Instant.parse(inputs.createdDate.to).toEpochMilli() : downloaderConfig.get(\"currentTimeEpoch\",0);\n    }\n    mappedInputs[\"folderPath\"] = inputs?.folderPath\n    mappedInputs[\"recursive\"] = inputs?.recursive\n    mappedInputs[\"author\"] = inputs?.author\n    mappedInputs[\"fileSize\"] = inputs?.fileSize\n    mappedInputs[\"author\"] = inputs?.author\n    mappedInputs[\"nameContains\"] = inputs?.nameContains\n    mappedInputs[\"fileType\"] = inputs?.fileType\n}\n\nmappedInputs[\"startDate\"] = userSpecifiedStartDate\nmappedInputs[\"endDate\"] = userSpecifiedEndDate\n\nreturn [\"mappedInputs\": mappedInputs];",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"inputs":"{{ n_ljCIU.outputs.inputs }}",
 					"cursor":"{{ n_ljCIU.outputs.cursor }}",
@@ -382,7 +444,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_0u0ns-1",
 			"id":"_lX2vf",
-			"index":3,
+			"index":4,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -416,6 +478,7 @@
 				},
 				"code":"def encodedFolderPath\n\nif(binding.hasVariable('folderPath')){\n  encodedFolderPath = encodeUrl(folderPath)\n}\n\ndef path = [:]\n\nif(encodedFolderPath == \"root\"){\n  return [\"path\": path]\n}\n\npath[\"id\"] = encodedFolderPath\n\nreturn [\"path\": path]\n\ndef encodeUrl(String url) {\n    def encoded = URLEncoder.encode(url, 'UTF-8')\n    newUrl = encoded.replace('+', '%20')\n    return newUrl\n}",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"folderPath":"{{ 1WPP3.outputs.result.mappedInputs.folderPath }}"
 				}
@@ -437,7 +500,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_0u0ns-1",
 			"id":"n_iaXR5",
-			"index":4,
+			"index":5,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1024,7 +1087,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_0u0ns-1",
 			"id":"n_bFiXl",
-			"index":5,
+			"index":6,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1067,7 +1130,7 @@
 			"context":{
 				"appName":"microsoft_onedrive",
 				"resourceVersion":2382,
-				"connectionId":"687202d6c188db3f0da57e9d",
+				"connectionId":"68c30c2e37208f7049c80447",
 				"resourceName":"microsoft_onedrive_list_drive_items",
 				"type":"APPLICATION"
 			},
@@ -1076,70 +1139,14 @@
 			"fallbackMode":"STOP",
 			"groupId":"_0u0ns-1",
 			"id":"n_ob5x2",
-			"index":6,
+			"index":7,
 			"inputs":{
 				"path":"{{ _lX2vf.outputs.result.path }}",
-				"skipToken":"{{ n_ljCIU.outputs.cursor.skipToken }}",
+				"skipToken":"{{ n_ZoZJY.outputs.result.skipToken }}",
 				"orderBy":"lastModifiedDateTime",
 				"pageSize":100,
 				"FilesOrFolders":"files",
 				"operator":"asc"
-			},
-			"options":{
-				"bulkheadConfig":{
-					"enabled":false,
-					"global":false
-				},
-				"businessHoursConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"cacheConfig":{
-					"enabled":false,
-					"usagePolicy":"ALWAYS"
-				},
-				"circuitBreakerConfig":{
-					"enabled":false
-				},
-				"disableLogging":false,
-				"enabledForReExecution":false,
-				"hookConfig":{
-					"enabled":false,
-					"postHooks":[
-						
-					],
-					"preHooks":[
-						
-					]
-				},
-				"logConfig":{
-					"enabled":false,
-					"logPolicies":[
-						
-					]
-				},
-				"rateLimitConfig":{
-					"duration":"1",
-					"enabled":true,
-					"threshold":"100",
-					"unit":"MINUTES",
-					"waitForNextWindow":false
-				},
-				"retryConfig":{
-					"backOffFactor":2.0,
-					"captureRetries":false,
-					"count":3,
-					"enabled":true,
-					"initialDelay":3000,
-					"maxDelay":15000
-				},
-				"stepError":"STOP",
-				"telemetryConfig":{
-					"enableTelemetry":false,
-					"metricConfigs":[
-						
-					]
-				}
 			},
 			"skip":false,
 			"subTitle":"Microsoft OneDrive",
@@ -1163,7 +1170,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_0u0ns-1",
 			"id":"n_n6ZIg",
-			"index":7,
+			"index":8,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1406,6 +1413,7 @@
 				},
 				"code":"import java.time.*\nimport java.time.format.DateTimeFormatter\n\ndef filterFilesByTime(folders, startTimeMillis, endTimeMillis) {\n    def filteredFiles = []\n\n    def startInstant = Instant.ofEpochMilli(startTimeMillis)\n    def endInstant = Instant.ofEpochMilli(endTimeMillis)\n\n    folders.each { file ->\n        def modifiedStr = file.createdDateTime\n        if (modifiedStr) {\n            def modifiedInstant = Instant.parse(modifiedStr)\n\n            if (!modifiedInstant.isBefore(startInstant) && !modifiedInstant.isAfter(endInstant)) {\n                filteredFiles << file\n            }\n        }\n    }\n\n    return [filteredFiles: filteredFiles]\n}\n\nif(!binding.hasVariable('inputFolders')){\n    return []\n}\n\ndef result = filterFilesByTime(inputFolders, userStartTime, userEndTime)\nreturn result\n",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"userStartTime":"{{ 1WPP3.outputs.result.mappedInputs.startDate }}",
 					"userEndTime":"{{ 1WPP3.outputs.result.mappedInputs.endDate }}",
@@ -1433,12 +1441,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"_0u0ns-1",
 			"id":"n_XT4gx",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"repeatMode":"BATCH",
 				"listSource":"{{ n_n6ZIg.outputs.result.filteredFiles }}",
 				"captureIterations":false,
-				"batchSize":20
+				"batchSize":10
 			},
 			"skip":false,
 			"subTitle":"Loop",
@@ -1457,7 +1465,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_XT4gx@_0u0ns-1@l",
 			"id":"n_7jdLv",
-			"index":9,
+			"index":10,
 			"inputs":{
 				"automationId":"68bef42fb2d57b3b8f06258d",
 				"runtimeConnections":{
@@ -1475,8 +1483,8 @@
 						"parentPath":"{{ n_XT4gx.outputs.item[0].parentReference.path }}",
 						"fileName":"{{ n_XT4gx.outputs.item[0].name }}",
 						"inputs":"{{ 1WPP3.outputs.result.mappedInputs }}",
-						"maxModifiedTime":"{{ n_ljCIU.outputs.cursor.maxModifiedTime }}",
-						"downloaderConfig":"{{ n_ljCIU.outputs.downloaderConfig }}"
+						"downloaderConfig":"{{ n_ljCIU.outputs.downloaderConfig }}",
+						"maxModifiedTime":"{{ n_ZoZJY.outputs.result.lastModifiedTime }}"
 					}
 				},
 				"version":"-1"
@@ -1489,7 +1497,7 @@
 		{
 			"additional":{
 				"visibleOptionalFields":[
-					"root.parameters.files.items"
+					"root.parameters.lastModifiedTimeList.items"
 				]
 			},
 			"context":{
@@ -1503,7 +1511,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_0u0ns-1",
 			"id":"Wdlf1",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1517,6 +1525,10 @@
 						"hasMore":{
 							"type":"boolean",
 							"title":"Has More"
+						},
+						"lastModifiedTime":{
+							"type":"integer",
+							"title":"Last Modified Time"
 						}
 					}
 				},
@@ -1528,14 +1540,27 @@
 						"nextPageToken":{
 							"type":"string",
 							"title":"Next Page Token"
+						},
+						"lastModifiedTimeList":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Last Modified Time List"
 						}
 					}
 				},
-				"code":"import java.net.URLDecoder\n\nif (!binding.hasVariable('nextPageToken')) {\n    return [hasMore: false, skipToken: null] \n}\n\ndef queryParams = nextPageToken.split(\"\\\\?\")[1] \ndef params = queryParams.split(\"&\") \n\nfor (param in params) {\n    def keyValue = param.split(\"=\")\n    if (keyValue[0] == \"\\$skiptoken\") { \n        def decodedToken = URLDecoder.decode(keyValue[1], \"UTF-8\") \n        return [hasMore: true, skipToken: decodedToken] \n    }\n} \n\nreturn [hasMore: false, skipToken: null] ",
+				"code":"import java.net.URLDecoder\nimport java.text.SimpleDateFormat\nimport java.util.TimeZone\nimport java.time.*\nimport java.time.format.DateTimeFormatter\nimport java.time.*\nimport java.time.format.DateTimeFormatter\n\n\nif (!binding.hasVariable('nextPageToken')) {\n    return [hasMore: false, skipToken: null] \n}\n\ndef lastModifiedTime\n\nif(binding.hasVariable('lastModifiedTimeList')){\n    lastModifiedTime = lastModifiedTimeList[-1]\n    lastModifiedTime = Instant.parse(lastModifiedTime).toEpochMilli()\n}\n\ndef queryParams = nextPageToken.split(\"\\\\?\")[1] \ndef params = queryParams.split(\"&\") \n\nfor (param in params) {\n    def keyValue = param.split(\"=\")\n    if (keyValue[0] == \"\\$skipToken\") { \n        def decodedToken = URLDecoder.decode(keyValue[1], \"UTF-8\") \n        return ['hasMore': true, 'skipToken': decodedToken, 'lastModifiedTime': lastModifiedTime] \n    }\n} \n\nreturn ['hasMore': false, 'skipToken': null, 'lastModifiedTime': lastModifiedTime] ",
 				"compile_static":false,
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
-					"nextPageToken":"{{ n_ob5x2.outputs.@odata_nextLink }}"
+					"nextPageToken":"{{ n_ob5x2.outputs.@odata_nextLink }}",
+					"lastModifiedTimeList":{
+						"source":"{{ n_ob5x2.outputs.value }}",
+						"ua:type":"mappedArray",
+						"items":"{{ n_ob5x2.outputs.value[0].lastModifiedDateTime }}"
+					}
 				}
 			},
 			"skip":false,
@@ -1560,7 +1585,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_0u0ns-1",
 			"id":"n_vwbKn",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1612,15 +1637,26 @@
 								"additionalProperties":false
 							},
 							"title":"Files"
+						},
+						"lastModifiedTime":{
+							"type":"integer",
+							"title":"Last Modified Time"
+						},
+						"currentToken":{
+							"type":"string",
+							"title":"Current Token"
 						}
 					}
 				},
-				"code":"boolean channelHasMore = false\ndef token\nif(binding.hasVariable('nextToken') && nextToken.length()>0){\n    channelHasMore = true \n    token = nextToken\n}\n\nboolean hasMore = (channelHasMore)\n\nreturn [\"cursor\": [\"skipToken\": token], \"hasMore\":hasMore]\n",
+				"code":"boolean channelHasMore = false\ndef token\n\nif(binding.hasVariable('nextToken') && nextToken.length()>0){\n    channelHasMore = true \n    token = nextToken\n}\nelse if(binding.hasVariable('currentToken'))\n{\n    token = currentToken\n}\n\ndef lastModifiedTimeNew\n\nif(binding.hasVariable('lastModifiedTime')){\n    lastModifiedTimeNew = lastModifiedTime\n}\n\nboolean hasMore = (channelHasMore)\n\nreturn [\"cursor\": [\"skipToken\": token, \"lastModifiedTime\": lastModifiedTimeNew], \"hasMore\":hasMore]\n",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"nextToken":"{{ Wdlf1.outputs.result.skipToken }}",
 					"userSpecifiedEndTime":"{{ 1WPP3.outputs.result.mappedInputs.endDate }}",
 					"currentTimeEpoch":"{{ n_ljCIU.outputs.downloaderConfig.currentTimeEpoch }}",
+					"lastModifiedTime":"{{ Wdlf1.outputs.result.lastModifiedTime }}",
+					"currentToken":"{{ n_ZoZJY.outputs.result.skipToken }}",
 					"files":{
 						"source":"{{ n_ob5x2.outputs.value }}",
 						"ua:type":"mappedArray",
@@ -1645,7 +1681,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_0u0ns-1",
 			"id":"n_Rah3o",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"result":{
 					"hasMore":"{{ n_vwbKn.outputs.result.hasMore }}",
@@ -1660,7 +1696,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":635,
 	"runtimeConnectionAppNames":[
 		"microsoft_onedrive"
 	],
@@ -1668,9 +1704,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -1681,5 +1717,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":74
+	"version":62
 }
