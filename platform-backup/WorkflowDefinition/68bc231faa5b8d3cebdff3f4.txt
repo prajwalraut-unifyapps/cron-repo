@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"microsoft_sharepoint"
 	],
-	"createdTime":1757705827999,
+	"createdTime":1757528316920,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759169799210,
+		"deployedAt":1759243556249,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68dacd078b303f31c230831f",
+		"deployedDefinitionId":"68dbed2423e6682b9a51eb4e",
 		"status":"DEPLOYED",
-		"version":21,
-		"workflowVersion":77
+		"version":4,
+		"workflowVersion":65
 	},
 	"edges":[
 		{
@@ -134,9 +134,9 @@
 		]
 	},
 	"id":"68bc231faa5b8d3cebdff3f4",
-	"lastModifiedBy":1,
+	"lastModifiedBy":-1,
 	"lcName":"knowledge downloader | sharepoint | folder",
-	"modifiedTime":1759229651573,
+	"modifiedTime":1759243588894,
 	"name":"Knowledge Downloader | Sharepoint | Folder",
 	"nodes":[
 		{
@@ -348,6 +348,10 @@
 						"endDate":{
 							"type":"string",
 							"title":"End Date"
+						},
+						"offset":{
+							"type":"integer",
+							"title":"Offset"
 						}
 					}
 				},
@@ -376,9 +380,10 @@
 						}
 					}
 				},
-				"code":"import java.net.URLEncoder\nimport java.lang.Math\nimport java.time.Instant\nimport java.time.LocalDateTime\nimport java.time.ZoneId\nimport java.time.format.DateTimeFormatter\n\nString getTimeStampString(Long epoch) {\n    return LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(\"yyyy-MM-dd'T'HH:mm:ss\"));\n}\ndef toReturn = [:]\n\ndef startDate = binding.hasVariable(\"downloaderConfig\") ? getTimeStampString(downloaderConfig.get(\"startTimeEpoch\")) : getTimeStampString(0)\ndef endDate = binding.hasVariable(\"downloaderConfig\") ? getTimeStampString(downloaderConfig.get(\"currentTimeEpoch\")) : getTimeStampString(0)\n\nif(binding.hasVariable(\"cursor\") && cursor?.timeLastModified != null){\n  toReturn.put(\"startDate\", getTimeStampString(cursor.timeLastModified))\n} else {\n  toReturn.put(\"startDate\", startDate)\n}\ntoReturn.put(\"endDate\", endDate);\n\nif(!binding.hasVariable('inputs')){\n  return toReturn\n}\n\nif(inputs?.folderPath != null){\n  toReturn.put(\"folderPath\", inputs.folderPath)\n}\nif(inputs?.recursive != null)\n{\n  toReturn.put(\"recursive\", inputs.recursive)\n}\nif(inputs?.nameContains != null)\n{\n  toReturn.put(\"nameContains\", inputs.nameContains)\n}\nif(inputs?.siteName != null)\n{\n  toReturn.put(\"siteName\", inputs.siteName)\n}\nif(inputs?.author != null)\n{\n  toReturn.put(\"author\", inputs.author)\n}\nif(inputs.folderInfo != null){\n  toReturn.put(\"folderInfo\",inputs.folderInfo)\n}\nif(inputs?.folderInfo?.d?.Name!=null){\n  toReturn.put(\"parentFolder\",inputs.folderInfo.d.Name)\n}\n\nreturn toReturn\n",
+				"code":"import java.net.URLEncoder\nimport java.lang.Math\nimport java.time.Instant\nimport java.time.LocalDateTime\nimport java.time.ZoneId\nimport java.time.format.DateTimeFormatter\n\nString getTimeStampString(Long epoch) {\n  return LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(\"yyyy-MM-dd'T'HH:mm:ss\"));\n}\ndef toReturn = [:]\n\ndef startDate = binding.hasVariable(\"downloaderConfig\") ? getTimeStampString(downloaderConfig.get(\"startTimeEpoch\")) : getTimeStampString(0)\ndef endDate = binding.hasVariable(\"downloaderConfig\") ? getTimeStampString(downloaderConfig.get(\"currentTimeEpoch\")) : getTimeStampString(0)\n\nif(binding.hasVariable(\"cursor\") && cursor?.timeLastModified != null){\n  toReturn.put(\"startDate\", getTimeStampString(cursor.timeLastModified))\n} else {\n  toReturn.put(\"startDate\", startDate)\n}\ntoReturn.put(\"endDate\", endDate);\n\nif(binding.hasVariable(\"cursor\") && cursor.containsKey('offset')){\n  toReturn.put(\"offset\", cursor.offset)\n}\n\nif(!binding.hasVariable('inputs')){\n  return toReturn\n}\n\nif(inputs?.folderPath != null){\n  toReturn.put(\"folderPath\", inputs.folderPath)\n}\nif(inputs?.recursive != null)\n{\n  toReturn.put(\"recursive\", inputs.recursive)\n}\nif(inputs?.nameContains != null)\n{\n  toReturn.put(\"nameContains\", inputs.nameContains)\n}\nif(inputs?.siteName != null)\n{\n  toReturn.put(\"siteName\", inputs.siteName)\n}\nif(inputs?.author != null)\n{\n  toReturn.put(\"author\", inputs.author)\n}\nif(inputs.folderInfo != null){\n  toReturn.put(\"folderInfo\",inputs.folderInfo)\n}\nif(inputs?.folderInfo?.d?.Name!=null){\n  toReturn.put(\"parentFolder\",inputs.folderInfo.d.Name)\n}\n\nreturn toReturn\n",
 				"compile_static":false,
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"inputs":"{{ n_BCpyz.outputs.inputs }}",
 					"cursor":"{{ n_BCpyz.outputs.cursor }}",
@@ -466,9 +471,10 @@
 			"index":4,
 			"inputs":{
 				"site_name":"{{ _B7QXL.outputs.result.siteName }}",
-				"filter":"TimeLastModified gt datetime'{{ _B7QXL.outputs.result.startDate }}' and TimeLastModified lt datetime'{{ _B7QXL.outputs.result.endDate }}'",
+				"filter":"TimeLastModified ge datetime'{{ _B7QXL.outputs.result.startDate }}' and TimeLastModified lt datetime'{{ _B7QXL.outputs.result.endDate }}'",
 				"top":"100",
 				"orderBy":"TimeLastModified asc",
+				"skip":"{{ _B7QXL.outputs.result.offset }}",
 				"folder_path":"{{ _B7QXL.outputs.result.parentFolder }}"
 			},
 			"skip":false,
@@ -737,6 +743,10 @@
 						"lastModifiedTime":{
 							"type":"integer",
 							"title":"Last Modified Time"
+						},
+						"offset":{
+							"type":"integer",
+							"title":"Offset"
 						}
 					}
 				},
@@ -753,12 +763,20 @@
 								"additionalProperties":false
 							},
 							"title":"Items"
+						},
+						"cursor":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Cursor"
 						}
 					}
 				},
-				"code":"import java.time.*\nimport java.time.Instant\n\nif(!binding.hasVariable(\"items\")){\n  return [\"hasMore\":false]\n}\n\ndef lastModifiedTime = items[-1].TimeLastModified\nif (!lastModifiedTime.endsWith(\"Z\")) {\n    lastModifiedTime += \"Z\"\n}\ndef lastModifiedTimeEpoch = Instant.parse(lastModifiedTime).toEpochMilli()\n\nreturn [\"hasMore\": items.size()==100 ? true:false, \"lastModifiedTime\":lastModifiedTimeEpoch]",
+				"code":"import java.time.*\nimport java.time.Instant\n\nif(!binding.hasVariable(\"items\")){\n  return [\"hasMore\":false]\n}\n\ndef lastModifiedTime = items[-1].TimeLastModified\ndef count = items.count { it.TimeLastModified == lastModifiedTime }\nif (!lastModifiedTime.endsWith(\"Z\")) {\n    lastModifiedTime += \"Z\"\n}\ndef lastModifiedTimeEpoch = Instant.parse(lastModifiedTime).toEpochMilli()\ndef offset = Math.max(count-5,0)\n\nif(binding.hasVariable('cursor') && cursor.containsKey('timeLastModified')){\n  if(lastModifiedTimeEpoch == cursor.timeLastModified){\n    if(cursor.containsKey('offset')){\n      offset+=cursor.offset\n    }\n  }\n}\n\n\nreturn [\"hasMore\": items.size()==100 ? true:false, \"lastModifiedTime\":lastModifiedTimeEpoch, \"offset\":offset]",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
+					"cursor":"{{ n_BCpyz.outputs.cursor }}",
 					"items":{
 						"ua:type":"mappedArray",
 						"source":"{{ n_wm1AS.outputs.d.results }}",
@@ -845,14 +863,20 @@
 						"downloadedFiles":{
 							"type":"integer",
 							"title":"Downloaded Files"
+						},
+						"offset":{
+							"type":"integer",
+							"title":"Offset"
 						}
 					}
 				},
-				"code":"if(!binding.hasVariable('lastModifiedTime')){\n  return [\"downloadedFileCount\":downloadedFiles]\n}\nreturn [\"downloadedFileCount\":downloadedFiles, \"cursor\":[\"timeLastModified\":lastModifiedTime]]",
+				"code":"if(!binding.hasVariable('lastModifiedTime')){\n  return [\"downloadedFileCount\":downloadedFiles]\n}\nreturn [\"downloadedFileCount\":downloadedFiles, \"cursor\":[\"timeLastModified\":lastModifiedTime,\"offset\":offset]]",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"lastModifiedTime":"{{ n_dRgsr.outputs.result.lastModifiedTime }}",
-					"downloadedFiles":"{{ n_DwVo5.outputs.downloadedCount }}"
+					"downloadedFiles":"{{ n_DwVo5.outputs.downloadedCount }}",
+					"offset":"{{ n_dRgsr.outputs.result.offset }}"
 				}
 			},
 			"skip":false,
@@ -887,7 +911,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":635,
 	"runtimeConnectionAppNames":[
 		"microsoft_sharepoint"
 	],
@@ -895,9 +919,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -908,5 +932,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":78
+	"version":66
 }
