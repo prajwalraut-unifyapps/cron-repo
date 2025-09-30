@@ -5,12 +5,12 @@
 	"createdTime":1747000742687,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759166558089,
+		"deployedAt":1759229700840,
 		"deployedBy":1,
-		"deployedDefinitionId":"68dac05ed46b57677a9793ee",
+		"deployedDefinitionId":"68dbb704e1e9c51c83781aed",
 		"status":"DEPLOYED",
-		"version":76,
-		"workflowVersion":118
+		"version":78,
+		"workflowVersion":120
 	},
 	"edges":[
 		{
@@ -231,7 +231,7 @@
 	"id":"67bdf597ba32d908560a680f",
 	"lastModifiedBy":-1,
 	"lcName":"generic create case (streaming response)",
-	"modifiedTime":1759169848852,
+	"modifiedTime":1759253927367,
 	"name":"Generic Create Case (Streaming Response)",
 	"nodes":[
 		{
@@ -249,6 +249,8 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"messageId":{
 							"type":"string",
@@ -273,12 +275,20 @@
 							"title":"delta",
 							"additionalProperties":false,
 							"required":[]
+						},
+						"deepResearchEnabled":{
+							"type":"boolean",
+							"title":"Deep Research Enabled"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"messageContentType",
+						"formData"
+					],
 					"properties":{
 						"message":{
 							"type":"string",
@@ -464,12 +474,7 @@
 							"type":"string",
 							"title":"Space Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"messageContentType",
-						"formData"
-					]
+					}
 				}
 			},
 			"skip":false,
@@ -849,10 +854,11 @@
 				"includeCurrentUserPermissions":false,
 				"sortBy":[
 					{
-						"order":"DESC",
-						"field":"properties_instanceType"
+						"field":"properties_instanceType",
+						"order":"DESC"
 					}
 				],
+				"translationsOption":"DEFAULT",
 				"page":{
 					"paginateBy":"OFFSET",
 					"limit":20
@@ -970,15 +976,16 @@
 			"inputs":{
 				"writeThroughSessionVariables":false,
 				"object_type":"e_ai_agent_streaming_detail",
+				"skipIfBlank":false,
 				"record":{
-					"streamingInProgress":"{{ n_xaIPv.outputs.properties.streamingInProgress }}",
 					"waitingInstanceId":"{{ __RUN__.outputs.executionId }}",
 					"aiAgentId":"{{ n_xaIPv.outputs.properties.aiAgentId }}",
 					"currentMessageId":"{{ n_xaIPv.outputs.properties.currentMessageId }}",
-					"instanceType":"UI_LISTENER",
+					"streamingInProgress":"{{ n_xaIPv.outputs.properties.streamingInProgress }}",
 					"currentMessageType":"{{ n_xaIPv.outputs.properties.currentMessageType }}",
 					"userId_caseId":"{{ __RUN__.outputs.userId }}_{{ 7TbGa.outputs.caseId }}",
-					"waitingInstanceRunTimeType":"{{ n_xaIPv.outputs.properties.waitingInstanceRunTimeType }}"
+					"instanceType":"UI_LISTENER",
+					"waitingInstanceRunTimeType":"=IF(ISBLANK({{ n_xaIPv.outputs.properties.waitingInstanceRunTimeType }}), \"IN_MEMORY\", {{ n_xaIPv.outputs.properties.waitingInstanceRunTimeType }})"
 				}
 			},
 			"skip":false,
@@ -1106,6 +1113,8 @@
 				"signal_payload":{
 					"payload":{
 						"type":"object",
+						"additionalProperties":false,
+						"required":[],
 						"properties":{
 							"messageId":{
 								"type":"string",
@@ -1130,9 +1139,12 @@
 								"title":"delta",
 								"additionalProperties":false,
 								"required":[]
+							},
+							"deepResearchEnabled":{
+								"type":"boolean",
+								"title":"Deep Research Enabled"
 							}
-						},
-						"additionalProperties":false
+						}
 					}
 				}
 			},
@@ -1222,12 +1234,13 @@
 			"index":22,
 			"inputs":{
 				"result":{
+					"messageId":"{{ SHlhb.outputs.payload.messageId }}",
 					"delta":{
 						"path":"{{ SHlhb.outputs.payload.delta.path }}",
 						"data":"{{ SHlhb.outputs.payload.delta.data }}",
 						"op":"{{ SHlhb.outputs.payload.delta.op }}"
 					},
-					"messageId":"{{ SHlhb.outputs.payload.messageId }}"
+					"deepResearchEnabled":"{{ SHlhb.outputs.payload.deepResearchEnabled }}"
 				},
 				"completed":false
 			},
@@ -1269,6 +1282,7 @@
 					"operator":"AND"
 				},
 				"object_type":"debug_agent",
+				"skipIfBlank":false,
 				"updateFields":[
 					{
 						"fieldName":"properties.events",
@@ -1280,7 +1294,8 @@
 				"page":{
 					"offset":0,
 					"limit":20
-				}
+				},
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"debugAgent",
@@ -1326,5 +1341,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":119
+	"version":121
 }
