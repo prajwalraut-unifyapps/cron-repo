@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1747000714938,
+	"createdTime":1723018634955,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758965984988,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68d7b0e0e05bfb675eb93065",
+		"deployedAt":1758655331966,
+		"deployedBy":0,
+		"deployedDefinitionId":"68d2f36338757c179b1231de",
 		"status":"DEPLOYED",
-		"version":79,
-		"workflowVersion":112
+		"version":82,
+		"workflowVersion":111
 	},
 	"edges":[
 		{
@@ -150,6 +150,29 @@
 			"fromNodeId":"_H6MPc",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_Mx9Pv",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Mx9Pv",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_NmogX",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_NmogX",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"QOdfO",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Mx9Pv",
+			"name":"no",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"QOdfO",
 			"type":"next"
 		},
@@ -263,7 +286,7 @@
 	"id":"66b32d8adb0c6546b93d52e5",
 	"lastModifiedBy":-1,
 	"lcName":"ai agent co-pilot ",
-	"modifiedTime":1759125156259,
+	"modifiedTime":1759243521254,
 	"name":"AI Agent CO-PILOT ",
 	"nodes":[
 		{
@@ -442,7 +465,7 @@
 				},
 				"cacheConfig":{
 					"cacheKey":"{{ iTBXy.outputs.userId }}",
-					"enabled":true,
+					"enabled":false,
 					"timeToLive":"3600",
 					"usagePolicy":"ALWAYS"
 				},
@@ -910,12 +933,12 @@
 				"synchronous":false,
 				"version":"-1",
 				"parameters":{
-					"userId":"{{ iTBXy.outputs.userId }}",
 					"userQuery":"{{ iTBXy.outputs.userQuery }}",
+					"userId":"{{ iTBXy.outputs.userId }}",
 					"messageId":"{{ iTBXy.outputs.messageId }}",
 					"caseId":"{{ iTBXy.outputs.caseId }}",
-					"agentId":"{{ iTBXy.outputs.aiAgentId }}",
-					"limitMemoriesForDedup":"{{ n_QbFWo.outputs.properties.longTermMemorySettings.limitMemoriesForDedup }}"
+					"limitMemoriesForDedup":"{{ n_QbFWo.outputs.properties.longTermMemorySettings.limitMemoriesForDedup }}",
+					"agentId":"{{ iTBXy.outputs.aiAgentId }}"
 				}
 			},
 			"skip":false,
@@ -956,6 +979,71 @@
 		},
 		{
 			"context":{
+				"appName":"if_else",
+				"resourceVersion":439,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_nFLm2@ClP5t-1@y",
+			"id":"n_Mx9Pv",
+			"index":17,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_QbFWo.outputs.properties.longTermMemorySettings.ProceduralMemoryRetrievalEnabled }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					},
+					{
+						"property":"{{ n_QbFWo.outputs.properties.longTermMemorySettings.ProceduralMemoryRetrievalEnabled }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"true"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"procedural MemP?",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":465,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_Mx9Pv@n_nFLm2@ClP5t-1@y@y",
+			"id":"n_NmogX",
+			"index":18,
+			"inputs":{
+				"automationId":"68bac27d8e6fac33f2abe9cf",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"query":"{{ iTBXy.outputs.userQuery }}",
+					"caseID":"{{ iTBXy.outputs.caseId }}",
+					"agentId":"{{ iTBXy.outputs.aiAgentId }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"procedural retrieval",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":48,
 				"resourceName":"callables_call_automation",
@@ -966,7 +1054,7 @@
 			"fallbackMode":"MANUAL",
 			"groupId":"ClP5t-1",
 			"id":"QOdfO",
-			"index":17,
+			"index":19,
 			"inputs":{
 				"automationId":"66966960e8797a59f4a46292",
 				"runtimeConnections":{},
@@ -1023,7 +1111,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"QOdfO@ClP5t-1@success",
 			"id":"cDYWi",
-			"index":18,
+			"index":20,
 			"inputs":{
 				"variables":[
 					{
@@ -1049,7 +1137,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"QOdfO@ClP5t-1@success",
 			"id":"s4LAV",
-			"index":19,
+			"index":21,
 			"inputs":{
 				"filters":[
 					{
@@ -1079,7 +1167,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"s4LAV@QOdfO@ClP5t-1@success@n",
 			"id":"lzPBD",
-			"index":20,
+			"index":22,
 			"inputs":{
 				"automationId":"66d1673d9627d00147081244",
 				"runtimeConnections":{},
@@ -1113,7 +1201,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"s4LAV@QOdfO@ClP5t-1@success@n",
 			"id":"d8Zju",
-			"index":21,
+			"index":23,
 			"inputs":{
 				"automationId":"67b4908aaffe713b4ced2d83",
 				"runtimeConnections":{},
@@ -1143,7 +1231,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"QOdfO@ClP5t-1@error",
 			"id":"fy5V5",
-			"index":22,
+			"index":24,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
@@ -1189,7 +1277,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"QOdfO@ClP5t-1@error",
 			"id":"n_daiSJ",
-			"index":23,
+			"index":25,
 			"inputs":{
 				"automationId":"68ad6550c2dc2d2036d2b3c5",
 				"runtimeConnections":{},
@@ -1218,7 +1306,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"QOdfO@ClP5t-1@error",
 			"id":"qaWlq",
-			"index":24,
+			"index":26,
 			"inputs":{
 				"variables":[
 					{
@@ -1244,7 +1332,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"QOdfO@ClP5t-1@error",
 			"id":"Tjycv",
-			"index":25,
+			"index":27,
 			"inputs":{
 				"automationId":"66d1673d9627d00147081244",
 				"runtimeConnections":{},
@@ -1277,7 +1365,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"QOdfO@ClP5t-1@error",
 			"id":"pEZXT",
-			"index":26,
+			"index":28,
 			"inputs":{
 				"automationId":"67b4908aaffe713b4ced2d83",
 				"runtimeConnections":{},
@@ -1306,7 +1394,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ClP5t-1",
 			"id":"8neny",
-			"index":27,
+			"index":29,
 			"inputs":{
 				"result":{
 					"success":"true"
@@ -1318,7 +1406,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1,
+	"ownerUserId":520,
 	"schemaReferences":[
 		
 	],
@@ -1335,5 +1423,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":113
+	"version":112
 }
