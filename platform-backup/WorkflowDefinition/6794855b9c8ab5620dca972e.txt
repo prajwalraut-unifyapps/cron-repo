@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1738062230363,
+	"createdTime":1747000724256,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758655326279,
-		"deployedBy":0,
-		"deployedDefinitionId":"68d2f35e38757c179b1230fc",
+		"deployedAt":1759229880187,
+		"deployedBy":1,
+		"deployedDefinitionId":"68dbb7b837a5b56e94dd36f5",
 		"status":"DEPLOYED",
-		"version":60,
-		"workflowVersion":103
+		"version":80,
+		"workflowVersion":92
 	},
 	"edges":[
 		{
@@ -137,7 +137,7 @@
 	"id":"6794855b9c8ab5620dca972e",
 	"lastModifiedBy":-1,
 	"lcName":"ai agent action executor ",
-	"modifiedTime":1759243516548,
+	"modifiedTime":1759253835290,
 	"name":"AI Agent Action Executor ",
 	"nodes":[
 		{
@@ -280,14 +280,21 @@
 						"connectionToOverride":{
 							"type":"string",
 							"title":"Connection To Override"
+						},
+						"maxTokens":{
+							"type":"integer",
+							"title":"Max Tokens"
 						}
 					},
 					"required":[
-						"connectionToOverride"
+						"connectionToOverride",
+						"maxTokens"
 					]
 				}
 			},
-			"inputs":{},
+			"inputs":{
+				"maxTokens":50000
+			},
 			"outputSchema":{
 				"dynamic":false,
 				"schema":{
@@ -297,10 +304,15 @@
 						"connectionToOverride":{
 							"type":"string",
 							"title":"Connection To Override"
+						},
+						"maxTokens":{
+							"type":"integer",
+							"title":"Max Tokens"
 						}
 					},
 					"required":[
-						"connectionToOverride"
+						"connectionToOverride",
+						"maxTokens"
 					]
 				}
 			},
@@ -586,11 +598,17 @@
 				"output":{
 					"type":"object",
 					"additionalProperties":false,
-					"required":[],
+					"required":[
+						"truncated"
+					],
 					"properties":{
 						"tokens":{
 							"type":"number",
 							"title":"Tokens"
+						},
+						"truncated":{
+							"type":"string",
+							"title":"Truncated"
 						}
 					}
 				},
@@ -602,14 +620,19 @@
 						"text":{
 							"type":"string",
 							"title":"Text"
+						},
+						"maxTokens":{
+							"type":"integer",
+							"title":"Max Tokens"
 						}
 					}
 				},
-				"code":"// import java.util.StringTokenizer\n// def estimateTokenCount(text) {\n//     if (text == null) { return 0}\n//     def tokenizer = new StringTokenizer(text.toString())\n//     return tokenizer.countTokens()\n// }\n// Function to estimate token count for a single string or list of strings\n\n// def estimateTokenCountListByLength(texts) {\n//     if (!(texts instanceof List)) {\n//         texts = [texts?.toString()]\n//     }\n//     texts = texts.findAll { it != null && it.toString().trim() } // filter out empty/null\n//     int avgTokenLength = 4\n//     return texts.collect { txt ->\n//         (int) Math.ceil(txt.length() / (double) avgTokenLength)\n//     }\n// }\n\n\n\n// def countTokensAdvanced(text) {\n//     String textSTR = text.toString()\n//     if (!textSTR) {\n//         return [tokens: 0]\n//     }\n//     def pattern = /\\b\\w+'\\w+|\\b\\w+|\\d+\\.?\\d*|[^\\w\\s]/\n//     def tokens = textSTR.findAll(pattern)\n//     return [tokens: tokens.size()]\n// }\n\n\ndef countTokensAdvanced(text) {\n    String textSTR = text.toString()\n    if (!textSTR) {\n        return [tokens: 0]\n    }\n    String cleanText = textSTR.replaceAll(/\\s+/, '')\n    int estimatedTokens = Math.ceil(cleanText.length() / 4.0) as Integer\n    \n    return [tokens: estimatedTokens]\n}\n\nif(!binding.hasVariable('text')) return ['tokens' : 0]\ndef tokenCount = countTokensAdvanced(text)\nreturn ['tokens' : tokenCount.tokens]",
+				"code":"def countTokensAdvanced(text) {\n    if (!text) {\n        return [tokens: 0]\n    }\n    String textSTR = text.toString()\n    // Remove whitespace to better approximate token density\n    String cleanText = textSTR.replaceAll(/\\s+/, '')\n    int estimatedTokens = Math.ceil(cleanText.length() / 4.0) as Integer\n    \n    return [tokens: estimatedTokens]\n}\n\nif (!binding.hasVariable('text')) {\n    return [tokens: 0, truncated: \"\"]\n}\n\ndef tokenCount = countTokensAdvanced(text)\n\nint maxTok = 50000\nif (!binding.hasVariable('maxTokens')) {\n    maxTok = maxTokens\n}\n\nString truncated = text.toString()\n\n// Approximate truncation by characters (since we don’t have real token arrays)\nif (tokenCount.tokens > maxTok) {\n    int approxChars = maxTok * 4  // since 1 token ~ 4 chars\n    truncated = truncated.substring(0, Math.min(approxChars, truncated.length()))\n}\n\nreturn [tokens: tokenCount.tokens, truncated: truncated]\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
-					"text":"{{ qI4Ho.outputs.result }}"
+					"text":"{{ qI4Ho.outputs.result }}",
+					"maxTokens":"{{ n_UOJNx.outputs.maxTokens }}"
 				}
 			},
 			"skip":false,
@@ -636,13 +659,7 @@
 						"property":"{{ n_PjNAE.outputs.result.tokens }}",
 						"filter":{
 							"operator":"GT",
-							"value":"200000"
-						}
-					},
-					{
-						"property":"{{ n_PjNAE.outputs.result.tokens }}",
-						"filter":{
-							"operator":"EXISTS"
+							"value":"{{ n_UOJNx.outputs.maxTokens }}"
 						}
 					}
 				],
@@ -668,7 +685,7 @@
 			"index":12,
 			"inputs":{
 				"result":{
-					"toolOutput":"The tool has been executed, but the output is too large to share.",
+					"toolOutput":"The tool has been executed, but the output is too large to share. Truncated output-> {{ n_PjNAE.outputs.result.truncated }}",
 					"success":true
 				}
 			},
@@ -702,7 +719,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1866,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -720,5 +737,5 @@
 		"AI Agent",
 		"Team"
 	],
-	"version":104
+	"version":93
 }
