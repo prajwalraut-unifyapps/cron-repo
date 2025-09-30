@@ -5,17 +5,144 @@
 	"createdTime":1759223932268,
 	"deleted":false,
 	"edges":[
-		
+		{
+			"fromNodeId":"n_NGPoi",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_D0Lyf",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_D0Lyf",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Xg82W",
+			"type":"next"
+		}
 	],
 	"id":"68dba07ca9053b24a02b2c68",
 	"lastModifiedBy":1,
 	"lcName":"saitest",
-	"modifiedTime":1759223932268,
+	"modifiedTime":1759223932562,
 	"name":"saiTest",
 	"nodes":[
-		
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":52,
+				"resourceName":"callables_from_api"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_najig-1",
+			"id":"n_NGPoi",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"pathParams":{
+						"type":"object",
+						"properties":{
+							"str":{
+								"type":"string",
+								"title":"str"
+							}
+						},
+						"additionalProperties":false,
+						"required":[]
+					}
+				},
+				"endpointType":"REST",
+				"response":[
+					{
+						"status":200,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						},
+						"name":"200",
+						"body":{
+							"type":"object",
+							"properties":{
+								"isPallindrome":{
+									"type":"boolean",
+									"title":"isPallindrome"
+								}
+							},
+							"additionalProperties":false,
+							"required":[]
+						}
+					}
+				],
+				"streamingResponse":false
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Trigger via API",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":52,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_najig-1",
+			"id":"n_D0Lyf",
+			"index":2,
+			"inputs":{
+				"automationId":"68dba06fa9053b24a02b2c13",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"str":"{{ n_NGPoi.outputs.pathParams.str }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":55,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_najig-1",
+			"id":"n_Xg82W",
+			"index":3,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_200",
+				"body":{
+					"isPallindrome":"{{ n_D0Lyf.outputs.isPallindrome }}"
+				},
+				"status":200
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
+		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -26,5 +153,8 @@
 		}
 	},
 	"standard":false,
-	"version":0
+	"tags":[
+		
+	],
+	"version":1
 }
