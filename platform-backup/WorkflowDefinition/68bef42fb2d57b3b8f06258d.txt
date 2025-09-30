@@ -5,12 +5,12 @@
 	"createdTime":1757705797681,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759166514736,
+		"deployedAt":1759229653508,
 		"deployedBy":1,
-		"deployedDefinitionId":"68dac032d46b57677a9792c6",
+		"deployedDefinitionId":"68dbb6d5e1e9c51c837816ba",
 		"status":"DEPLOYED",
-		"version":20,
-		"workflowVersion":52
+		"version":22,
+		"workflowVersion":54
 	},
 	"edges":[
 		{
@@ -85,7 +85,7 @@
 	"id":"68bef42fb2d57b3b8f06258d",
 	"lastModifiedBy":-1,
 	"lcName":"knowledge downloader |onedrive | file wrapper",
-	"modifiedTime":1759169761407,
+	"modifiedTime":1759253843204,
 	"name":"Knowledge Downloader |OneDrive | File wrapper",
 	"nodes":[
 		{
@@ -144,7 +144,7 @@
 							"title":"Inputs"
 						},
 						"maxModifiedTime":{
-							"type":"string",
+							"type":"integer",
 							"title":"Max Modified Time"
 						},
 						"downloaderConfig":{
@@ -293,7 +293,7 @@
 				},
 				"rateLimitConfig":{
 					"duration":"1",
-					"enabled":true,
+					"enabled":false,
 					"threshold":"100",
 					"unit":"MINUTES",
 					"waitForNextWindow":false
@@ -312,6 +312,9 @@
 					"metricConfigs":[
 						
 					]
+				},
+				"timeoutConfig":{
+					"enabled":false
 				}
 			},
 			"skip":false,
@@ -372,17 +375,73 @@
 						"grabberType":{
 							"type":"string",
 							"title":"Grabber Type"
+						},
+						"maxLastModifiedTime":{
+							"type":"integer",
+							"title":"Max Last Modified Time"
 						}
 					}
 				},
-				"code":"import java.text.SimpleDateFormat\nimport java.util.TimeZone\nimport java.time.*\nimport java.time.format.DateTimeFormatter\nimport java.time.*\nimport java.time.format.DateTimeFormatter\n\ndef allowed = true\n\nif (binding.hasVariable('inputs')) {\n  if (inputs.fileType != null && inputs.fileType instanceof List && (!inputs.fileType.isEmpty())) {\n    allowed = allowed && inputs.fileType.any { it == properties?.file?.mimeType }\n  }\n  if (inputs.nameContains != null){\n    allowed = allowed && (properties.name != null && properties.name.contains(inputs.nameContains))\n  }\n  if (inputs.author != null){\n    allowed = allowed && (inputs.author.equals(properties?.createdBy?.user?.email))\n  }\n  if (inputs.fileSize != null){\n    allowed = allowed && (properties.size <= inputs.fileSize)\n  }\n}\n\nif(binding.hasVariable('grabberType') && grabberType.contains(\"backward_\")){\n  return ['isAllowed':allowed]\n}\n\nif(binding.hasVariable('currentTimeEpoch') && binding.hasVariable('startTimeEpoch')){\n  def fileModifiedTimeStr = properties.lastModifiedDateTime\n  if (fileModifiedTimeStr) {\n    def fileModifiedTimeEpoch = Instant.parse(fileModifiedTimeStr).toEpochMilli()\n\n    if (!(fileModifiedTimeEpoch >= startTimeEpoch && fileModifiedTimeEpoch <= currentTimeEpoch)) {\n      allowed = false\n    }\n  }\n}\n\nreturn ['isAllowed':allowed]\n",
+				"code":"import java.text.SimpleDateFormat\nimport java.util.TimeZone\nimport java.time.*\nimport java.time.format.DateTimeFormatter\nimport java.time.*\nimport java.time.format.DateTimeFormatter\n\ndef allowed = true\ndef startTime\n\nif(binding.hasVariable('startTimeEpoch')){\n  startTime = startTimeEpoch\n}\n\nif (binding.hasVariable('inputs')) {\n  if (inputs.fileType != null && inputs.fileType instanceof List && (!inputs.fileType.isEmpty())) {\n    allowed = allowed && inputs.fileType.any { it == properties?.file?.mimeType }\n  }\n  if (inputs.nameContains != null){\n    allowed = allowed && (properties.name != null && properties.name.contains(inputs.nameContains))\n  }\n  if (inputs.author != null){\n    allowed = allowed && (inputs.author.equals(properties?.createdBy?.user?.email))\n  }\n  if (inputs.fileSize != null){\n    allowed = allowed && (properties.size <= inputs.fileSize)\n  }\n}\n\nif(binding.hasVariable('grabberType') && grabberType.contains(\"backward_\")){\n  return ['isAllowed':allowed]\n}\n\nif(binding.hasVariable('maxLastModifiedTime')){\n    startTime = maxLastModifiedTime\n} \n\nif(binding.hasVariable('currentTimeEpoch') && binding.hasVariable('startTimeEpoch')){\n  def fileModifiedTimeStr = properties.lastModifiedDateTime\n  if (fileModifiedTimeStr) {\n    def fileModifiedTimeEpoch = Instant.parse(fileModifiedTimeStr).toEpochMilli()\n\n    if (!(fileModifiedTimeEpoch >= startTime && fileModifiedTimeEpoch <= currentTimeEpoch)) {\n      allowed = false\n    }\n  }\n}\n\nreturn ['isAllowed':allowed]\n",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"inputs":"{{ n_zOhOM.outputs.inputs }}",
 					"properties":"{{ n_DJSr6.outputs }}",
 					"startTimeEpoch":"{{ n_zOhOM.outputs.downloaderConfig.startTimeEpoch }}",
 					"currentTimeEpoch":"{{ n_zOhOM.outputs.downloaderConfig.currentTimeEpoch }}",
-					"grabberType":"{{ n_zOhOM.outputs.downloaderConfig.grabberType }}"
+					"grabberType":"{{ n_zOhOM.outputs.downloaderConfig.grabberType }}",
+					"maxLastModifiedTime":"{{ n_zOhOM.outputs.maxModifiedTime }}"
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
 				}
 			},
 			"skip":false,
@@ -523,5 +582,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":53
+	"version":55
 }
