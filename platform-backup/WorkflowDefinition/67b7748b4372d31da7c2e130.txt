@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1740110529541,
+	"createdTime":1747000721647,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758655380667,
-		"deployedBy":0,
-		"deployedDefinitionId":"68d2f39438757c179b123a15",
+		"deployedAt":1759229886185,
+		"deployedBy":1,
+		"deployedDefinitionId":"68dbb7be37a5b56e94dd375b",
 		"status":"DEPLOYED",
-		"version":82,
-		"workflowVersion":117
+		"version":84,
+		"workflowVersion":203
 	},
 	"edges":[
 		{
@@ -834,11 +834,18 @@
 			"name":"yes",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"UPYvx",
+			"toNodeId":"n_yMNo5",
 			"type":"if"
 		},
 		{
 			"fromNodeId":"I9DcG",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_yMNo5",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_yMNo5",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"UPYvx",
@@ -1199,7 +1206,7 @@
 	"id":"67b7748b4372d31da7c2e130",
 	"lastModifiedBy":-1,
 	"lcName":"streaming accumulator",
-	"modifiedTime":1759243563207,
+	"modifiedTime":1759253886533,
 	"name":"Streaming Accumulator",
 	"nodes":[
 		{
@@ -5823,6 +5830,37 @@
 			"type":"ACTION"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":131,
+				"resourceName":"variable_by_unifyapps_get_session_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"u9un8@wonjF@L5wao-1@l@y",
+			"id":"n_yMNo5",
+			"index":89,
+			"inputs":{
+				"variableSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"deepResearchEnabled":{
+							"type":"boolean",
+							"title":"Deep Research Enabled"
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Get Session Variables",
+			"type":"ACTION"
+		},
+		{
 			"additional":{
 				"visibleOptionalFields":[
 					"root.parameters.coPilotBlocks.items"
@@ -5839,10 +5877,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"u9un8@wonjF@L5wao-1@l@y",
 			"id":"UPYvx",
-			"index":89,
+			"index":90,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"botMessage":{
 							"type":"object",
@@ -5850,12 +5890,12 @@
 							"additionalProperties":false,
 							"title":"botMessage"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"messageContent":{
 							"type":"string",
@@ -5895,26 +5935,30 @@
 							"properties":{},
 							"additionalProperties":false,
 							"title":"Additional"
+						},
+						"deepResearchEnabled":{
+							"type":"boolean",
+							"title":"Deep Research Enabled"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"def text = \"\"\ndef messages = []\nif(binding.hasVariable('coPilotBlocks')) {\n  messages.addAll(coPilotBlocks)\n}\nif(binding.hasVariable('messageContent')) {\ntext = messageContent\n}\ndef textBlock = [\"blockType\":\"Typography\", \"data\":[\"type\":\"MARKDOWN\", \"text\":text]]\nmessages.add(textBlock)\n\ndef botMessage = [\"messageType\":\"Bot\",\"messageId\": messageId, \"caseId\": caseId, \"createdTime\": messageCreatedTime,\"fromCustomerUserId\":fromCustomerUserId, \"message\": messages]\n\ndef deepResearchEnabled = binding.hasVariable(\"deepResearchEnabled\") ? binding.getVariable(\"deepResearchEnabled\") : false\n\nif(binding.hasVariable(\"internalMessageType\")&& internalMessageType != null && internalMessageType.trim()!= \"\") {\n  botMessage << [\"additional\":[\"internalMessageType\":\"THOUGHT\", \"streamingInProgress\":true, \"deepResearchEnabled\": deepResearchEnabled]]\n} else {\n   botMessage << [\"additional\":[\"streamingInProgress\":true, \"deepResearchEnabled\": deepResearchEnabled]]\n}\n\nif(binding.hasVariable(\"additional\")) {\n  botMessage << [\"additional\": additional]\n}\n\n\n\nreturn [\"botMessage\": botMessage]\n",
 				"compile_static":false,
-				"code":"def text = \"\"\ndef messages = []\nif(binding.hasVariable('coPilotBlocks')) {\n  messages.addAll(coPilotBlocks)\n}\nif(binding.hasVariable('messageContent')) {\ntext = messageContent\n}\ndef textBlock = [\"blockType\":\"Typography\", \"data\":[\"type\":\"MARKDOWN\", \"text\":text]]\nmessages.add(textBlock)\n\ndef botMessage = [\"messageType\":\"Bot\",\"messageId\": messageId, \"caseId\": caseId, \"createdTime\": messageCreatedTime,\"fromCustomerUserId\":fromCustomerUserId, \"message\": messages]\n\nif(binding.hasVariable(\"internalMessageType\")&& internalMessageType != null && internalMessageType.trim()!= \"\") {\n  botMessage << [\"additional\":[\"internalMessageType\":\"THOUGHT\", \"streamingInProgress\":true]]\n} else {\n   botMessage << [\"additional\":[\"streamingInProgress\":true]]\n}\n\n\nif(binding.hasVariable(\"additional\")) {\n  botMessage << [\"additional\": additional]\n}\n\n\n\nreturn [\"botMessage\": botMessage]\n",
+				"captureStdOutput":false,
 				"parameters":{
 					"messageContent":"{{ du6pK.outputs.messageContent }}",
-					"coPilotBlocks":{
-						"source":"{{ OhlEU.outputs.items }}",
-						"ua:type":"mappedArray",
-						"items":"{{ OhlEU.outputs.items[0] }}"
-					},
 					"caseId":"{{ 4Qxd9.outputs.caseId }}",
 					"fromCustomerUserId":"{{ du6pK.outputs.fromCustomerUserId }}",
 					"messageCreatedTime":"{{ du6pK.outputs.messageCreatedTime }}",
 					"messageId":"{{ du6pK.outputs.messageId }}",
 					"internalMessageType":"{{ du6pK.outputs.internalMessageType }}",
-					"additional":"{{ du6pK.outputs.additional }}"
+					"additional":"{{ du6pK.outputs.additional }}",
+					"deepResearchEnabled":"{{ n_yMNo5.outputs.deepResearchEnabled }}",
+					"coPilotBlocks":{
+						"source":"{{ OhlEU.outputs.items }}",
+						"ua:type":"mappedArray",
+						"items":"{{ OhlEU.outputs.items[0] }}"
+					}
 				}
 			},
 			"options":{
@@ -5967,7 +6011,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"u9un8@wonjF@L5wao-1@l@y",
 			"id":"_6sKJL",
-			"index":90,
+			"index":91,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ _AATVp.outputs.objects }}",
@@ -5998,7 +6042,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_6sKJL@u9un8@wonjF@L5wao-1@l@y@l",
 			"id":"_GOnv2",
-			"index":91,
+			"index":92,
 			"inputs":{
 				"automation_id":"67b45c506083d2071be3d528",
 				"with_signal_id":false,
@@ -6033,7 +6077,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"u9un8@wonjF@L5wao-1@l@y",
 			"id":"n_zUxKU",
-			"index":92,
+			"index":93,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -6060,7 +6104,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"u9un8@wonjF@L5wao-1@l@y",
 			"id":"JQXrt",
-			"index":93,
+			"index":94,
 			"inputs":{
 				"variables":[
 					{
@@ -6086,7 +6130,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"wonjF@L5wao-1@l",
 			"id":"20c3j",
-			"index":94,
+			"index":95,
 			"inputs":{
 				"filters":[
 					{
@@ -6115,7 +6159,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"20c3j@wonjF@L5wao-1@l@y",
 			"id":"JniDU",
-			"index":95,
+			"index":96,
 			"inputs":{
 				"variables":[
 					{
@@ -6141,7 +6185,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"20c3j@wonjF@L5wao-1@l@y",
 			"id":"n_0J7LN",
-			"index":96,
+			"index":97,
 			"inputs":{
 				"variables":[
 					{
@@ -6172,7 +6216,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"20c3j@wonjF@L5wao-1@l@y",
 			"id":"n_O0hVb",
-			"index":97,
+			"index":98,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -6258,7 +6302,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"20c3j@wonjF@L5wao-1@l@y",
 			"id":"rVMiT",
-			"index":98,
+			"index":99,
 			"inputs":{
 				"filters":[
 					{
@@ -6307,7 +6351,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"rVMiT@20c3j@wonjF@L5wao-1@l@y@y",
 			"id":"n_KWgY7",
-			"index":99,
+			"index":100,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ _AATVp.outputs.objects }}",
@@ -6338,7 +6382,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_KWgY7@rVMiT@20c3j@wonjF@L5wao-1@l@y@y@l",
 			"id":"XUNQr",
-			"index":100,
+			"index":101,
 			"inputs":{
 				"automation_id":"67b45c506083d2071be3d528",
 				"with_signal_id":false,
@@ -6373,7 +6417,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"rVMiT@20c3j@wonjF@L5wao-1@l@y@y",
 			"id":"n_MKFAs",
-			"index":101,
+			"index":102,
 			"inputs":{
 				"variables":[
 					{
@@ -6398,7 +6442,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"20c3j@wonjF@L5wao-1@l@y",
 			"id":"n_4kZmP",
-			"index":102,
+			"index":103,
 			"inputs":{
 				"filters":[
 					{
@@ -6435,7 +6479,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_4kZmP@20c3j@wonjF@L5wao-1@l@y@y",
 			"id":"n_x8Doj",
-			"index":103,
+			"index":104,
 			"inputs":{
 				"automationId":"685914facb8d060a8c7b1481",
 				"runtimeConnections":{},
@@ -6473,7 +6517,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_4kZmP@20c3j@wonjF@L5wao-1@l@y@y",
 			"id":"n_nzG21",
-			"index":104,
+			"index":105,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -6548,7 +6592,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_4kZmP@20c3j@wonjF@L5wao-1@l@y@y",
 			"id":"n_78ZvE",
-			"index":105,
+			"index":106,
 			"inputs":{
 				"listName":"{{ n_86Kcq.outputs.items[0] }}"
 			},
@@ -6569,7 +6613,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_4kZmP@20c3j@wonjF@L5wao-1@l@y@y",
 			"id":"n_FjgXy",
-			"index":106,
+			"index":107,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -6596,7 +6640,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_4kZmP@20c3j@wonjF@L5wao-1@l@y@y",
 			"id":"n_2HgfR",
-			"index":107,
+			"index":108,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ _AATVp.outputs.objects }}",
@@ -6627,7 +6671,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_2HgfR@n_4kZmP@20c3j@wonjF@L5wao-1@l@y@y@l",
 			"id":"_YI4P3",
-			"index":108,
+			"index":109,
 			"inputs":{
 				"automation_id":"67b45c506083d2071be3d528",
 				"with_signal_id":false,
@@ -6669,7 +6713,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_4kZmP@20c3j@wonjF@L5wao-1@l@y@y",
 			"id":"_JEzIS",
-			"index":109,
+			"index":110,
 			"inputs":{
 				"recordId":"{{ du6pK.outputs.messageId }}",
 				"writeThroughSessionVariables":false,
@@ -6706,7 +6750,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_4kZmP@20c3j@wonjF@L5wao-1@l@y@y",
 			"id":"n_fUnMz",
-			"index":110,
+			"index":111,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -6767,7 +6811,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_4kZmP@20c3j@wonjF@L5wao-1@l@y@y",
 			"id":"n_hN514",
-			"index":111,
+			"index":112,
 			"inputs":{
 				"variables":[
 					{
@@ -6793,7 +6837,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"20c3j@wonjF@L5wao-1@l@n",
 			"id":"GyzZ9",
-			"index":112,
+			"index":113,
 			"inputs":{
 				"filters":[
 					{
@@ -6828,7 +6872,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"GyzZ9@20c3j@wonjF@L5wao-1@l@n@y",
 			"id":"jqhgz",
-			"index":113,
+			"index":114,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -6913,7 +6957,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"GyzZ9@20c3j@wonjF@L5wao-1@l@n@y",
 			"id":"dUc8o",
-			"index":114,
+			"index":115,
 			"inputs":{
 				"filters":[
 					{
@@ -6943,7 +6987,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"dUc8o@GyzZ9@20c3j@wonjF@L5wao-1@l@n@y@y",
 			"id":"tiz8z",
-			"index":115,
+			"index":116,
 			"inputs":{
 				"variables":[
 					{
@@ -6968,7 +7012,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"dUc8o@GyzZ9@20c3j@wonjF@L5wao-1@l@n@y@y",
 			"id":"oyc1F",
-			"index":116,
+			"index":117,
 			"inputs":{
 				"itemToAdd":"{{ jqhgz.outputs.result.textBlock }}",
 				"insertLocation":"END",
@@ -6991,7 +7035,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"GyzZ9@20c3j@wonjF@L5wao-1@l@n@y",
 			"id":"P6dru",
-			"index":117,
+			"index":118,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ wonjF.outputs.payload.coPilotBlocks }}",
@@ -7014,7 +7058,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"P6dru@GyzZ9@20c3j@wonjF@L5wao-1@l@n@y@l",
 			"id":"ONWB1",
-			"index":118,
+			"index":119,
 			"inputs":{
 				"filters":[
 					{
@@ -7044,7 +7088,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ONWB1@P6dru@GyzZ9@20c3j@wonjF@L5wao-1@l@n@y@l@y",
 			"id":"n_maVhT",
-			"index":119,
+			"index":120,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ _AATVp.outputs.objects }}",
@@ -7074,7 +7118,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_maVhT@ONWB1@P6dru@GyzZ9@20c3j@wonjF@L5wao-1@l@n@y@l@y@l",
 			"id":"zDukY",
-			"index":120,
+			"index":121,
 			"inputs":{
 				"automation_id":"67b45c506083d2071be3d528",
 				"with_signal_id":false,
@@ -7109,7 +7153,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"P6dru@GyzZ9@20c3j@wonjF@L5wao-1@l@n@y@l",
 			"id":"ECGpW",
-			"index":121,
+			"index":122,
 			"inputs":{
 				"itemToAdd":"{{ P6dru.outputs.item }}",
 				"insertLocation":"END",
@@ -7132,7 +7176,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"L5wao-1",
 			"id":"WcnFN",
-			"index":122,
+			"index":123,
 			"inputs":{
 				"result":{
 					"success":true
@@ -7144,7 +7188,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1866,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -7162,5 +7206,5 @@
 		"AI Agent",
 		"Internal"
 	],
-	"version":118
+	"version":204
 }
