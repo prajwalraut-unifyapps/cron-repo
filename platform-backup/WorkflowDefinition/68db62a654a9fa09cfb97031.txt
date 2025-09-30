@@ -1,30 +1,168 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
 	"createdTime":1759208102047,
 	"deleted":false,
 	"edges":[
-		
+		{
+			"fromNodeId":"e7L2g",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"gCdTT",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"gCdTT",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"HPA28",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"HPA28",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"SvTeO",
+			"type":"next"
+		}
 	],
 	"id":"68db62a654a9fa09cfb97031",
 	"lastModifiedBy":1,
 	"lcName":"backend_automationignore_even_numbers_in_an_array1759208101415",
-	"modifiedTime":1759208102047,
+	"modifiedTime":1759208102864,
 	"name":"Backend_AutomationIGNORE_EVEN_NUMBERS_IN_AN_ARRAY1759208101415",
 	"nodes":[
-		
+		{
+			"context":{
+				"appName":"schedule",
+				"resourceVersion":61,
+				"resourceName":"schedule_default"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"e7L2g-1",
+			"id":"e7L2g",
+			"index":0,
+			"inputs":{
+				"cron":"INTERVAL",
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"filter":{
+								"value":"",
+								"operator":"EQUAL"
+							},
+							"property":""
+						}
+					],
+					"operator":"AND"
+				},
+				"interval":15,
+				"frequency":"MINUTES"
+			},
+			"skip":false,
+			"title":"New Recurring Event",
+			"trigger":{
+				"type":"SCHEDULED"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":16,
+				"resourceName":"storage_by_unifyapps_fetch_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"e7L2g-1",
+			"id":"gCdTT",
+			"index":0,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"filter":{
+								"value":"shortestNumberAutoBackend",
+								"operator":"EQUAL"
+							},
+							"property":"properties.name"
+						}
+					],
+					"operator":"AND"
+				},
+				"object_type":"person_auto_dndd",
+				"pageSize":20,
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":20
+				},
+				"numberOfRecordsToFetch":"MULTIPLE",
+				"includeTotalCount":false
+			},
+			"skip":false,
+			"subTitle":"FETCH_DATA",
+			"title":"Fetch Records",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":13,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"e7L2g-1",
+			"id":"HPA28",
+			"index":0,
+			"inputs":{
+				"automationId":"68db62a254a9fa09cfb97021",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"parameters":{
+					"NUMBER_ARRAY":{
+						"source":"{{ gCdTT.outputs.objects[0] }}",
+						"items":{
+							"NUM":"{{ gCdTT.outputs.objects[0].properties.age }}"
+						},
+						"ua:type":"mappedArray"
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"CALL_SKIP_EVEN",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"e7L2g-1",
+			"id":"SvTeO",
+			"index":0,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
+		}
 	],
 	"ownerUserId":1,
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
-		"enableVariableLogging":true,
-		"route":{
-			"default":false,
-			"tierName":"global"
-		}
+		"enableVariableLogging":true
 	},
 	"standard":false,
-	"version":0
+	"version":1
 }
