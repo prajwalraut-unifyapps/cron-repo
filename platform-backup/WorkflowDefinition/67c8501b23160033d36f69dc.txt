@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1747000718499,
+	"createdTime":1741180955906,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759166606413,
-		"deployedBy":1,
-		"deployedDefinitionId":"68dac08ed46b57677a979554",
+		"deployedAt":1758655342987,
+		"deployedBy":0,
+		"deployedDefinitionId":"68d2f36e38757c179b1233a4",
 		"status":"DEPLOYED",
-		"version":83,
-		"workflowVersion":83
+		"version":66,
+		"workflowVersion":88
 	},
 	"edges":[
 		{
@@ -244,7 +244,7 @@
 	"id":"67c8501b23160033d36f69dc",
 	"lastModifiedBy":-1,
 	"lcName":"[dnd] extract mimetype",
-	"modifiedTime":1759169769245,
+	"modifiedTime":1759243530747,
 	"name":"[DND] Extract MimeType",
 	"nodes":[
 		{
@@ -341,6 +341,7 @@
 				},
 				"code":"if(!binding.hasVariable('fileDetails')) {\nreturn [:]\n}\nreturn [\"fileType\":(fileDetails?.fileType?.trim()) ? (fileDetails?.fileType) : null]",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"fileDetails":"{{ GlIuz.outputs.fileDetails }}"
 				}
@@ -633,28 +634,29 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"mimeType":{
 							"type":"string",
 							"title":"Mime Type"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"fname":{
 							"type":"string",
 							"title":"Fname"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"String getMimeTypeForFilename(String filename) {\n    def EXTENSION_TO_MIMETYPE = [\n        // Code files\n        '.cpp': 'text/x-c++src', '.cc': 'text/x-c++src', '.cxx': 'text/x-c++src', '.hpp': 'text/x-c++src', '.hxx': 'text/x-c++src',\n        '.h': 'text/x-csrc', '.c': 'text/x-csrc',\n        '.go': 'text/x-go',\n        '.java': 'text/x-java-source',\n        '.kt': 'text/x-kotlin', '.kts': 'text/x-kotlin',\n        '.js': 'text/javascript',\n        '.ts': 'text/typescript',\n        '.php': 'text/x-php',\n        '.proto': 'text/x-proto',\n        '.py': 'text/x-python',\n        '.rst': 'text/x-rst',\n        '.rb': 'text/x-ruby',\n        '.rs': 'text/x-rustsrc',\n        '.scala': 'text/x-scala',\n        '.swift': 'text/x-swift',\n        '.md': 'text/markdown',\n        '.tex': 'text/x-latex',\n        '.sol': 'text/x-solidity',\n        '.cs': 'text/x-csharp',\n        '.cob': 'text/x-cobol', '.cbl': 'text/x-cobol',\n        '.lua': 'text/x-lua',\n        '.hs': 'text/x-haskell',\n        '.sav': 'application/x-spss-sav',\n        '.xml': 'application/xml',\n        '.p': 'text/x-progress',\n\n        // Office documents\n        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',\n        '.doc':  'application/msword',\n        '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',\n        '.xls':  'application/vnd.ms-excel',\n        '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',\n        '.ppt':  'application/vnd.ms-powerpoint',\n        '.odt':  'application/vnd.oasis.opendocument.text',\n        '.ods':  'application/vnd.oasis.opendocument.spreadsheet',\n        '.odp':  'application/vnd.oasis.opendocument.presentation',\n        '.rtf':  'application/rtf',\n        '.pdf':  'application/pdf',\n\n        // Text/markup\n        '.html': 'text/html', '.htm': 'text/html',\n        '.csv':  'text/csv',\n        '.txt':  'text/plain',\n        '.json': 'application/json',\n        '.yaml': 'text/yaml', '.yml': 'text/yaml',\n\n        // Images\n        '.png':  'image/png',\n        '.jpg':  'image/jpeg', '.jpeg': 'image/jpeg',\n        '.gif':  'image/gif',\n        '.bmp':  'image/bmp',\n        '.svg':  'image/svg+xml',\n        '.webp': 'image/webp',\n        '.ico':  'image/x-icon',\n\n        // Archives\n        '.zip':  'application/zip',\n        '.tar':  'application/x-tar',\n        '.gz':   'application/gzip',\n        '.rar':  'application/vnd.rar',\n        '.7z':   'application/x-7z-compressed',\n\n        // Audio/video\n        '.mp3':  'audio/mpeg',\n        '.wav':  'audio/wav',\n        '.ogg':  'audio/ogg',\n        '.mp4':  'video/mp4',\n        '.mov':  'video/quicktime',\n        '.avi':  'video/x-msvideo',\n        '.webm': 'video/webm',\n        '.mkv':  'video/x-matroska'\n    ]\n    String ext = filename.lastIndexOf('.') >= 0 ? filename.substring(filename.lastIndexOf('.')).toLowerCase() : ''\n    String mimeType = EXTENSION_TO_MIMETYPE[ext]\n    if (mimeType) {\n        return mimeType\n    } else {\n        return 'application/octet-stream'\n    }\n}\n\nreturn [\n    \"mimeType\" : getMimeTypeForFilename(fname)\n]",
 				"compile_static":false,
-				"code":"String getMimeTypeForFilename(String filename) {\n    def EXTENSION_TO_MIMETYPE = [\n        // Code files\n        '.cpp': 'text/x-c++src', '.cc': 'text/x-c++src', '.cxx': 'text/x-c++src', '.hpp': 'text/x-c++src', '.hxx': 'text/x-c++src',\n        '.h': 'text/x-csrc', '.c': 'text/x-csrc',\n        '.go': 'text/x-go',\n        '.java': 'text/x-java-source',\n        '.kt': 'text/x-kotlin', '.kts': 'text/x-kotlin',\n        '.js': 'text/javascript',\n        '.ts': 'text/typescript',\n        '.php': 'text/x-php',\n        '.proto': 'text/x-proto',\n        '.py': 'text/x-python',\n        '.rst': 'text/x-rst',\n        '.rb': 'text/x-ruby',\n        '.rs': 'text/x-rustsrc',\n        '.scala': 'text/x-scala',\n        '.swift': 'text/x-swift',\n        '.md': 'text/markdown',\n        '.tex': 'text/x-latex',\n        '.sol': 'text/x-solidity',\n        '.cs': 'text/x-csharp',\n        '.cob': 'text/x-cobol', '.cbl': 'text/x-cobol',\n        '.lua': 'text/x-lua',\n        '.hs': 'text/x-haskell',\n        '.sav': 'application/x-spss-sav',\n        '.xml': 'application/xml',\n\n        // Office documents\n        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',\n        '.doc':  'application/msword',\n        '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',\n        '.xls':  'application/vnd.ms-excel',\n        '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',\n        '.ppt':  'application/vnd.ms-powerpoint',\n        '.odt':  'application/vnd.oasis.opendocument.text',\n        '.ods':  'application/vnd.oasis.opendocument.spreadsheet',\n        '.odp':  'application/vnd.oasis.opendocument.presentation',\n        '.rtf':  'application/rtf',\n        '.pdf':  'application/pdf',\n\n        // Text/markup\n        '.html': 'text/html', '.htm': 'text/html',\n        '.csv':  'text/csv',\n        '.txt':  'text/plain',\n        '.json': 'application/json',\n        '.yaml': 'text/yaml', '.yml': 'text/yaml',\n\n        // Images\n        '.png':  'image/png',\n        '.jpg':  'image/jpeg', '.jpeg': 'image/jpeg',\n        '.gif':  'image/gif',\n        '.bmp':  'image/bmp',\n        '.svg':  'image/svg+xml',\n        '.webp': 'image/webp',\n        '.ico':  'image/x-icon',\n\n        // Archives\n        '.zip':  'application/zip',\n        '.tar':  'application/x-tar',\n        '.gz':   'application/gzip',\n        '.rar':  'application/vnd.rar',\n        '.7z':   'application/x-7z-compressed',\n\n        // Audio/video\n        '.mp3':  'audio/mpeg',\n        '.wav':  'audio/wav',\n        '.ogg':  'audio/ogg',\n        '.mp4':  'video/mp4',\n        '.mov':  'video/quicktime',\n        '.avi':  'video/x-msvideo',\n        '.webm': 'video/webm',\n        '.mkv':  'video/x-matroska'\n    ]\n    String ext = filename.lastIndexOf('.') >= 0 ? filename.substring(filename.lastIndexOf('.')).toLowerCase() : ''\n    String mimeType = EXTENSION_TO_MIMETYPE[ext]\n    if (mimeType) {\n        return mimeType\n    } else {\n        return 'application/octet-stream'\n    }\n}\n\nreturn [\n    \"mimeType\" : getMimeTypeForFilename(fname)\n]",
+				"captureStdOutput":false,
 				"parameters":{
 					"fname":"{{ GlIuz.outputs.fileDetails.name }}"
 				}
@@ -833,6 +835,7 @@
 				"code":"import requests\nimport zipfile\nfrom io import BytesIO\nimport magic\nimport os\n\n# Mapping from file extension to code type\n\n\n# Mapping from code type to text/* mimetype\nCODE_TYPE_TO_MIMETYPE = {\n    'CPP': 'text/x-c++src',\n    'GO': 'text/x-go',\n    'JAVA': 'text/x-java-source',\n    'KOTLIN': 'text/x-kotlin',\n    'JS': 'text/javascript',\n    'TS': 'text/typescript',\n    'PHP': 'text/x-php',\n    'PROTO': 'text/x-proto',\n    'PYTHON': 'text/x-python',\n    'RST': 'text/x-rst',\n    'RUBY': 'text/x-ruby',\n    'RUST': 'text/x-rustsrc',\n    'SCALA': 'text/x-scala',\n    'SWIFT': 'text/x-swift',\n    'MARKDOWN': 'text/markdown',\n    'LATEX': 'text/x-latex',\n    'HTML': 'text/html',\n    'SOL': 'text/x-solidity',\n    'CSHARP': 'text/x-csharp',\n    'COBOL': 'text/x-cobol',\n    'C': 'text/x-csrc',\n    'LUA': 'text/x-lua',\n    'HASKELL': 'text/x-haskell',\n    'SAV': 'application/x-spss-sav',\n    'XML': 'application/xml',\n    \"SQL\": 'text/sql',\n    'VBS': 'text/vbscript',\n    \"PROGRESS\" : \"text/x-progress\"\n}\n\ndef detect_code_type(filename):\n    import os \n    EXTENSION_TO_CODE_TYPE = {\n    '.cpp': 'CPP', '.cc': 'CPP', '.cxx': 'CPP', '.hpp': 'CPP', '.hxx': 'CPP',\n    '.h': 'C', '.c': 'C',\n    '.go': 'GO',\n    '.java': 'JAVA',\n    '.kt': 'KOTLIN', '.kts': 'KOTLIN',\n    '.js': 'JS',\n    '.ts': 'TS',\n    '.php': 'PHP',\n    '.proto': 'PROTO',\n    '.py': 'PYTHON',\n    '.rst': 'RST',\n    '.rb': 'RUBY',\n    '.rs': 'RUST',\n    '.scala': 'SCALA',\n    '.swift': 'SWIFT',\n    '.md': 'MARKDOWN',\n    '.tex': 'LATEX',\n    '.html': 'HTML', '.htm': 'HTML',\n    '.sol': 'SOL',\n    '.cs': 'CSHARP',\n    '.cob': 'COBOL', '.cbl': 'COBOL',\n    '.lua': 'LUA',\n    '.hs': 'HASKELL',\n    '.sav': 'SAV',\n    '.xml': 'XML',\n    '.sql': \"SQL\",\n    '.vbs': \"VBS\",\n    '.p' : \"PROGRESS\"\n}\n    \n    ext = os.path.splitext(filename)[1].lower()\n    return EXTENSION_TO_CODE_TYPE.get(ext)\n\ndef get_code_type_from_zip(zip_file):\n    for name in zip_file.namelist():\n        code_type = detect_code_type(name)\n        if code_type:\n            return code_type\n    return None\n\ndef get_filename_from_url(url):\n    from urllib.parse import urlparse, unquote\n    import os \n    parsed = urlparse(url)\n    path = parsed.path\n    filename = os.path.basename(path)\n    return unquote(filename)\n\n\nresponse = requests.get(url)\ncontent = response.content\n\ncode_type = None\nmimetype = None\nis_zipfile = False\n\nfilename = get_filename_from_url(url)\n\nif zipfile.is_zipfile(BytesIO(content)):\n    is_zipfile = True\n    with zipfile.ZipFile(BytesIO(content)) as zip_file:\n        names = zip_file.namelist()\n        if 'word/document.xml' in names:\n            mimetype = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'\n        elif 'xl/workbook.xml' in names:\n            mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'\n        elif 'ppt/presentation.xml' in names:\n            mimetype = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'\n        elif \".mp4\" in names:\n            mimetype = 'video/mp4'\n        else:\n            code_type = get_code_type_from_zip(zip_file)\n            if code_type:\n                mimetype = CODE_TYPE_TO_MIMETYPE.get(code_type, 'text/plain')\n            else:\n                mimetype = 'application/zip'\nelse:\n    code_type = detect_code_type(filename)\n    if code_type:\n        mimetype = CODE_TYPE_TO_MIMETYPE.get(code_type, 'text/plain')\n    else:\n        mime = magic.Magic(mime=True)\n        mimetype = mime.from_buffer(content)\n\nresult = {\n    \"filename\": filename,\n    \"is_zipfile\": is_zipfile,\n        \"mimeType\": mimetype\n    }",
 				"isAsync":false,
 				"python_version":"3.12",
+				"captureStdOutput":false,
 				"parameters":{
 					"url":"{{ UIcDR.outputs.url }}"
 				}
@@ -1072,7 +1075,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1,
+	"ownerUserId":45775,
 	"schemaReferences":[
 		
 	],
@@ -1089,5 +1092,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":84
+	"version":89
 }
