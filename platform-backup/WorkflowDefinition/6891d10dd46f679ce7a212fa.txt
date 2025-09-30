@@ -5,12 +5,12 @@
 	"createdTime":1758731875373,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759166582859,
+		"deployedAt":1759229723214,
 		"deployedBy":1,
-		"deployedDefinitionId":"68dac076d46b57677a97949c",
+		"deployedDefinitionId":"68dbb71be1e9c51c83781c61",
 		"status":"DEPLOYED",
-		"version":8,
-		"workflowVersion":45
+		"version":10,
+		"workflowVersion":47
 	},
 	"edges":[
 		{
@@ -36,6 +36,13 @@
 		},
 		{
 			"fromNodeId":"n_ckNXN",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"L2IpJ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"L2IpJ",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_0QXFh",
@@ -122,11 +129,25 @@
 			"fromNodeId":"_VG1ro",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"_HeHkX",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_HeHkX",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"_swKzt",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"_swKzt",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"8GW17",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"8GW17",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_bf0b9",
@@ -220,7 +241,7 @@
 	"id":"6891d10dd46f679ce7a212fa",
 	"lastModifiedBy":-1,
 	"lcName":"deep research tool | research plan and draft generator | execute plan",
-	"modifiedTime":1759169777726,
+	"modifiedTime":1759253859540,
 	"name":"Deep Research Tool | Research Plan and Draft Generator | Execute Plan",
 	"nodes":[
 		{
@@ -607,6 +628,41 @@
 		},
 		{
 			"context":{
+				"appName":"conv_ai_by_unifyapps",
+				"resourceVersion":116,
+				"resourceName":"conv_ai_by_unifyapps_publish_response",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_h62vp-1",
+			"id":"L2IpJ",
+			"index":5,
+			"inputs":{
+				"callableInterfaceId":"__ua__publish_response_interface",
+				"defaultFallbackWorkflowId":"66fbed229edc4e0b6303cefd",
+				"parameters":{
+					"responses":[
+						{
+							"language":"en",
+							"content":"Creating a comprehensive Research Plan for your query.."
+						}
+					],
+					"caseId":"{{ n_HY0rN.outputs.caseId }}",
+					"publishToEndUser":true,
+					"temporaryMessage":true,
+					"async":false,
+					"deepResearchEnabled":true
+				}
+			},
+			"skip":false,
+			"subTitle":"research plan thought",
+			"title":"Publish Response",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":464,
 				"resourceName":"callables_call_automation",
@@ -617,7 +673,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"n_0QXFh",
-			"index":5,
+			"index":6,
 			"inputs":{
 				"automationId":"66ac70650f725f5b425d12d8",
 				"runtimeConnections":{},
@@ -661,7 +717,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"n_8I4ja",
-			"index":6,
+			"index":7,
 			"inputs":{
 				"input_schema":{
 					"query":"{{ n_HY0rN.outputs.user_query }}",
@@ -686,7 +742,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"_Q4K4i",
-			"index":7,
+			"index":8,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -959,19 +1015,20 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"_6P1AW",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"automationId":"66ac70650f725f5b425d12d8",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"logProbs":false,
 					"aiAgentId":"{{ n_HY0rN.outputs.agentId }}",
 					"caseId":"{{ n_HY0rN.outputs.caseId }}",
+					"modelId":"{{ n_UxLo3.outputs.modelId }}",
 					"responseFormat":{
 						"type":"text"
 					},
+					"logProbs":false,
 					"message":{
 						"items":{
 							"role":"user",
@@ -982,8 +1039,7 @@
 							}
 						},
 						"ua:type":"mappedArray"
-					},
-					"modelId":"{{ n_UxLo3.outputs.modelId }}"
+					}
 				}
 			},
 			"skip":false,
@@ -1003,15 +1059,16 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"_wa6OO",
-			"index":9,
+			"index":10,
 			"inputs":{
 				"writeThroughSessionVariables":false,
 				"object_type":"draft_ttd_dr",
+				"skipIfBlank":false,
 				"record":{
-					"caseid":"{{ n_HY0rN.outputs.caseId }}",
 					"draft":"{{ _6P1AW.outputs.llmResponse }}",
+					"agentid":"{{ n_HY0rN.outputs.agentId }}",
 					"messageId":"{{ n_HY0rN.outputs.message_ID }}",
-					"agentid":"{{ n_HY0rN.outputs.agentId }}"
+					"caseId":"{{ n_HY0rN.outputs.caseId }}"
 				}
 			},
 			"skip":false,
@@ -1031,7 +1088,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"n_4555V",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"automationId":"6891ce76c06ff80a8817719a",
 				"runtimeConnections":{},
@@ -1064,7 +1121,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"_N22L9",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1121,7 +1178,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"_UBPJj",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -1178,10 +1235,14 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"6uxFX",
-			"index":13,
+			"index":14,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"sortedMessages"
+					],
 					"properties":{
 						"sortedMessages":{
 							"type":"array",
@@ -1207,14 +1268,14 @@
 							},
 							"title":"Sorted Messages"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"sortedMessages"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"messages"
+					],
 					"properties":{
 						"messages":{
 							"type":"array",
@@ -1225,14 +1286,11 @@
 							},
 							"title":"Messages"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"messages"
-					]
+					}
 				},
-				"compile_static":false,
 				"code":"if(!binding.hasVariable('messages')) {\n  return [\"sortedMessages\": []]\n}\nreturn [\"sortedMessages\": messages.sort{it.createdTime}]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"messages":{
 						"ua:type":"mappedArray",
@@ -1258,12 +1316,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"n_JLiZe",
-			"index":14,
+			"index":15,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
 						{
-							"property":"properties_caseid",
+							"property":"properties_caseId",
 							"filter":{
 								"operator":"EQUAL",
 								"value":"{{ n_HY0rN.outputs.caseId }}"
@@ -1313,7 +1371,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"n_a6dAD",
-			"index":15,
+			"index":16,
 			"inputs":{
 				"input_schema":{
 					"query":"{{ n_HY0rN.outputs.user_query }}",
@@ -1338,7 +1396,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"_VG1ro",
-			"index":16,
+			"index":17,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1601,6 +1659,41 @@
 		},
 		{
 			"context":{
+				"appName":"conv_ai_by_unifyapps",
+				"resourceVersion":116,
+				"resourceName":"conv_ai_by_unifyapps_publish_response",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_h62vp-1",
+			"id":"_HeHkX",
+			"index":18,
+			"inputs":{
+				"callableInterfaceId":"__ua__publish_response_interface",
+				"defaultFallbackWorkflowId":"66fbed229edc4e0b6303cefd",
+				"parameters":{
+					"responses":[
+						{
+							"language":"en",
+							"content":"Finalising details and Generating report.."
+						}
+					],
+					"caseId":"{{ n_HY0rN.outputs.caseId }}",
+					"publishToEndUser":true,
+					"temporaryMessage":true,
+					"async":false,
+					"deepResearchEnabled":true
+				}
+			},
+			"skip":false,
+			"subTitle":"report gen thought",
+			"title":"Publish Response",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":464,
 				"resourceName":"callables_call_automation",
@@ -1611,19 +1704,21 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"_swKzt",
-			"index":17,
+			"index":19,
 			"inputs":{
 				"automationId":"66ac70650f725f5b425d12d8",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"logProbs":false,
 					"aiAgentId":"{{ n_HY0rN.outputs.agentId }}",
 					"caseId":"{{ n_HY0rN.outputs.caseId }}",
+					"modelId":"{{ n_UxLo3.outputs.modelId }}",
 					"responseFormat":{
 						"type":"text"
 					},
+					"logProbs":false,
+					"stream":true,
 					"message":{
 						"items":{
 							"role":"user",
@@ -1634,12 +1729,40 @@
 							}
 						},
 						"ua:type":"mappedArray"
-					},
-					"modelId":"{{ n_UxLo3.outputs.modelId }}"
+					}
 				}
 			},
 			"skip":false,
 			"subTitle":"final report gen",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":168,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_h62vp-1",
+			"id":"8GW17",
+			"index":20,
+			"inputs":{
+				"automationId":"67deb8826ff2a8770508424b",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"finalAnswer":"{{ _swKzt.outputs.llmResponse }}",
+					"caseId":"{{ n_HY0rN.outputs.caseId }}",
+					"aiAgentId":"{{ n_HY0rN.outputs.agentId }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Publish LLM Response",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
 		},
@@ -1655,22 +1778,30 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"n_bf0b9",
-			"index":18,
+			"index":21,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
 					"filters":[
 						{
-							"property":"properties_caseid",
+							"property":"properties_caseId",
 							"filter":{
 								"operator":"EQUAL",
 								"value":"{{ n_HY0rN.outputs.caseId }}"
+							}
+						},
+						{
+							"property":"properties_messageId",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"{{ n_HY0rN.outputs.message_ID }}"
 							}
 						}
 					],
 					"operator":"AND"
 				},
 				"object_type":"draft_ttd_dr",
+				"skipIfBlank":false,
 				"updateFields":[
 					{
 						"fieldName":"properties.draft",
@@ -1682,7 +1813,8 @@
 				"page":{
 					"offset":0,
 					"limit":20
-				}
+				},
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"Storage by UnifyApps",
@@ -1701,9 +1833,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"ch8no",
-			"index":19,
+			"index":22,
 			"inputs":{
 				"callableInterfaceId":"__ua__publish_response_interface",
+				"defaultFallbackWorkflowId":"66fbed229edc4e0b6303cefd",
 				"parameters":{
 					"responses":[
 						{
@@ -1717,7 +1850,7 @@
 					"fromCustomerUserId":"{{ n_HY0rN.outputs.agentId }}"
 				}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Conversation AI by UnifyApps",
 			"title":"Publish Response",
 			"type":"CALL_INTERFACE_WORKFLOW"
@@ -1734,10 +1867,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"n_O0hVb",
-			"index":20,
+			"index":23,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"citationPresent":{
 							"type":"boolean",
@@ -1750,28 +1885,27 @@
 							},
 							"title":"Chunk Number"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"messageContent":{
 							"type":"string",
 							"title":"Message Content"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"if(!binding.hasVariable(\"messageContent\"))\n    return [citationPresent: false, chunkNumber: []]\n\ndef citationPresent = false\ndef chunkNumber = []\n\ndef fullPattern = ~/\\$\\$\\[(\\d+(?:,\\d+)*)\\]\\$\\$/\n\n// Check for properly closed citations $$[n]$$ or $$[n1,n2,…]$$\ndef citationMatcher = messageContent =~ fullPattern\nif (citationMatcher) {\n    citationPresent = true\n    citationMatcher.each { m ->\n        m[1].split(',').each { chunkNumber.add(it.trim()) }\n    }\n}\n\nreturn [citationPresent: citationPresent, chunkNumber: chunkNumber]",
 				"compile_static":false,
-				"code":"if(!binding.hasVariable(\"messageContent\"))\n    return [citationPresent: false, chunkNumber: []]\n\ndef citationPresent = false\ndef chunkNumber = []\n\ndef fullPattern = ~/\\[([\\d,]+)\\]/\n\n// Check for properly closed citations $$[n]$$ or $$[n1,n2,…]$$\ndef citationMatcher = messageContent =~ fullPattern\nif (citationMatcher) {\n    citationPresent = true\n    citationMatcher.each { m ->\n        m[1].split(',').each { chunkNumber.add(it.trim()) }\n    }\n}\n\nreturn [citationPresent: citationPresent, chunkNumber: chunkNumber]",
+				"captureStdOutput":false,
 				"parameters":{
-					"messageContent":"{{ n_JLiZe.outputs.properties.draft }}"
+					"messageContent":"{{ _swKzt.outputs.llmResponse }}"
 				}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"citation present?",
 			"title":"Execute Groovy code",
 			"type":"ACTION"
@@ -1788,7 +1922,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"n_MG4Us",
-			"index":21,
+			"index":24,
 			"inputs":{
 				"filters":[
 					{
@@ -1801,7 +1935,7 @@
 				],
 				"operator":"AND"
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"citation present?",
 			"title":"Condition",
 			"type":"IF_ELSE"
@@ -1818,7 +1952,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_MG4Us@_h62vp-1@y",
 			"id":"n_hPyXb",
-			"index":22,
+			"index":25,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -1835,6 +1969,7 @@
 				"object_type":"service_hub_message",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"page":{
 					"paginateBy":"OFFSET",
 					"limit":20
@@ -1843,7 +1978,7 @@
 				"readThroughSessionVariables":false,
 				"includeTotalCount":false
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Fetch servicehub_message",
 			"title":"Fetch records",
 			"type":"ACTION"
@@ -1860,7 +1995,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_MG4Us@_h62vp-1@y",
 			"id":"n_OzWW8",
-			"index":23,
+			"index":26,
 			"inputs":{
 				"filters":[
 					{
@@ -1869,11 +2004,17 @@
 							"operator":"GT",
 							"value":"0"
 						}
+					},
+					{
+						"property":"{{ n_hPyXb.outputs.properties.content.citations }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
 					}
 				],
 				"operator":"AND"
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"inline citations populated?",
 			"title":"Condition",
 			"type":"IF_ELSE"
@@ -1890,7 +2031,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_OzWW8@n_MG4Us@_h62vp-1@y@n",
 			"id":"n_x8Doj",
-			"index":24,
+			"index":27,
 			"inputs":{
 				"automationId":"685914facb8d060a8c7b1481",
 				"runtimeConnections":{},
@@ -1905,7 +2046,7 @@
 					"caseId":"{{ n_HY0rN.outputs.caseId }}"
 				}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Fetch chunks from citation store",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
@@ -1928,19 +2069,21 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"n_OzWW8@n_MG4Us@_h62vp-1@y@n",
 			"id":"_8NVuq",
-			"index":25,
+			"index":28,
 			"inputs":{
 				"recordId":"{{ ch8no.outputs.messageId }}",
 				"writeThroughSessionVariables":false,
 				"object_type":"service_hub_message",
+				"skipIfBlank":false,
 				"skipPermissionCheck":false,
 				"updateFields":[
 					{
-						"actionType":"SET",
 						"fieldName":"properties.content.citations",
+						"actionType":"SET",
 						"setValue":"{{ n_x8Doj.outputs.citationData }}"
 					}
-				]
+				],
+				"unsetIfNull":false
 			},
 			"options":{
 				"businessHoursConfig":{
@@ -1990,7 +2133,7 @@
 					]
 				}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Update citations",
 			"title":"Update an existing record's fields",
 			"type":"ACTION"
@@ -2007,10 +2150,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"_h62vp-1",
 			"id":"n_3ODis",
-			"index":26,
+			"index":29,
 			"inputs":{
 				"result":{
-					"final_output":"The report has been published, the tool has been successfully executed. [STRICTLY] Do not repeat this in the final answer"
+					"final_output":"{{ _swKzt.outputs.llmResponse }}"
 				}
 			},
 			"skip":false,
@@ -2036,5 +2179,5 @@
 	"tags":[
 		
 	],
-	"version":46
+	"version":48
 }
