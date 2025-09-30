@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1758731905539,
+	"createdTime":1758646563823,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759166582965,
-		"deployedBy":1,
-		"deployedDefinitionId":"68dac076d46b57677a97949d",
+		"deployedAt":1758655385946,
+		"deployedBy":0,
+		"deployedDefinitionId":"68d2f39938757c179b123b19",
 		"status":"DEPLOYED",
-		"version":8,
-		"workflowVersion":64
+		"version":2,
+		"workflowVersion":58
 	},
 	"edges":[
 		{
@@ -213,7 +213,7 @@
 	"id":"6891ce76c06ff80a8817719a",
 	"lastModifiedBy":-1,
 	"lcName":"deep research tool | plan executor",
-	"modifiedTime":1759169812989,
+	"modifiedTime":1759243567838,
 	"name":"Deep Research Tool | Plan Executor",
 	"nodes":[
 		{
@@ -609,7 +609,7 @@
 			"id":"n_3j0DS",
 			"index":9,
 			"inputs":{
-				"object":"{{ n_jm6U8.outputs.ans }}"
+				"object":"{{ n_jm6U8.outputs.res }}"
 			},
 			"skip":false,
 			"subTitle":"Utility by UnifyApps",
@@ -993,17 +993,18 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"questionId":{
 							"type":"string",
 							"title":"Question Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"\nreturn [questionId : UUID.randomUUID().toString()]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{}
 			},
 			"skip":false,
@@ -1032,6 +1033,7 @@
 			"inputs":{
 				"writeThroughSessionVariables":false,
 				"object_type":"deep_research_qn_a",
+				"skipIfBlank":false,
 				"record":{
 					"caseId":"{{ n_i50FL.outputs.caseId }}",
 					"Question":"{{ n_wmjPS.outputs.searchQuery }}",
@@ -1062,7 +1064,7 @@
 				"triggerInputCondition":{
 					"filters":[
 						{
-							"property":"properties_caseid",
+							"property":"properties_caseId",
 							"filter":{
 								"operator":"EQUAL",
 								"value":"{{ n_i50FL.outputs.caseId }}"
@@ -1331,7 +1333,7 @@
 					"ua:type":"mappedArray",
 					"items":{
 						"type":"text",
-						"text":"You are a Textual Surgeon. Your role is to perform precise, targeted edits on a document. You do not rewrite or summarize; you locate specific points for revision and update them while preserving the integrity of the surrounding text.\nTASK: Your task is to update the Current Draft by finding the exact placeholder that the New Retrieved Information addresses. You will then replace only that placeholder with the new information and output the complete, updated draft.\nINPUTS:\nOriginal Query: {{ n_i50FL.outputs.user_query }}\nCurrent Draft: {{ n_ewsSW.outputs.properties.draft }}\nNew Retrieved Information: [Question : {{ n_wmjPS.outputs.searchQuery }}, Answer : {{ n_jm6U8.outputs.res.result }}]\nUPDATE AND REVISION PROTOCOL:\nTHE GOLDEN RULE (CRITICAL):\nYou MUST return the entire, word-for-word text of the draft. Your job is to perform an edit, not a summary. Statements like \"[The rest of the document remains the same]\" are strictly forbidden and constitute a task failure.\nSURGICAL INSTRUCTIONS:\nLocate the Target: Read the New Retrieved Information and identify the exact placeholder in the Current Draft that it answers (e.g., [NEEDS RESEARCH: \"market growth rate\"]).\nPerform the Replacement: Delete the placeholder tag and, in its exact place, insert the relevant fact from the New Retrieved Information.\nCite the Source: Immediately following the newly inserted information, add the corresponding URL given in the input, which is the url provided in the information.\nPreserve the Rest: Do not change, alter, or omit any other part of the Current Draft. The surrounding text must remain identical.\nExample of a Correct Operation:\nBefore Snippet: \"...the industry expanded by approximately [NEEDS RESEARCH: \"official 2024 industry growth percentage\"]...\"\nAfter Snippet: \"...the industry expanded by approximately 8.5% [url]...\"\nReturn only the full, updated draft below."
+						"text":"You are a Textual Surgeon. Your role is to perform precise, targeted edits on a document. You do not rewrite or summarize; you locate specific points for revision and update them while preserving the integrity of the surrounding text.\nYour task is to update the Current Draft by finding the exact placeholder that the New Retrieved Information addresses. You must replace only that placeholder with the new information and output the complete, updated draft. Inline citations are mandatory as outlined below.\n\nINPUTS:\nOriginal Query: {{ n_i50FL.outputs.user_query }}\nCurrent Draft: {{ n_ewsSW.outputs.properties.draft }}\nNew Retrieved Information: [Question : {{ n_wmjPS.outputs.searchQuery }}, Answer : {{ n_jm6U8.outputs.res.result }}]. The tool outputs that produced the Answer include chunkIDs. Use the appropriate chunk IDs for inline citations.\n========== TASK INSTRUCTIONS ==========\n\n\nLocate the exact placeholder in the Current Draft that matches the question answered by the New Retrieved Information (e.g., [NEEDS RESEARCH: \"market growth rate\"]). Delete the placeholder tag, and insert—in its exact place—the relevant fact from the Answer.\n\n\nImmediately following the newly inserted information, you must add Inline citation(s) in this exact format:\nFor a single source: $$[1]$$\nFor multiple sources: $$[1,2,3]$$\nCitation numbers must correspond exactly to the chunk IDs from the tool output which are present in the answer provided.\nAlways list all relevant chunk IDs as comma-separated numbers, never as ranges or with skipped numbers.\nPlace the inline citation(s) immediately after the relevant inserted claim, not at the end of the sentence.\nYou must preserve the entire surrounding text and all existing content/citations in the draft; under no circumstances should you alter, omit, or add content except for the exact replacement, the required inline citation(s).\nWhen referencing information, you MUST use inline citations in this exact format:\n\n\nFor single source: \"Information here $$[1]$$\"\nFor multiple sources: \"Information here $$[1,2,3]$$\" Citation numbers are taken from the tool outputs. Place citations directly after the relevant claim.\nInline Citations are MANDATORY for every factual claim derived from the Answer, as well as whenever merging new information with the draft. Always pass all relevant chunk IDs in the inline citation. You must retain all existing inline citations in the Current Draft.\n\n\nOUTPUT ONLY the full, updated draft below. Do NOT include explanations, summaries, headers, or additional notes—only the complete, revised draft as per these instructions.\n\n\n========== EXAMPLES ==========\n\n\nBefore: \"...the industry expanded by approximately [NEEDS RESEARCH: \"official 2024 industry growth percentage\"]...\"\nAfter: \"...the industry expanded by approximately 8.5% $$[1]$$...\"\n\n\nBefore: \"...the initiative launched in [NEEDS RESEARCH: \"launch month and year\"]...\"\nAfter: \"...the initiative launched in March 2024 $$[2,3]$$...\"\n\nReturn only the full, updated draft below."
 					}
 				},
 				"ua:title":"content",
@@ -1387,10 +1389,12 @@
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"logProbs":false,
+					"aiAgentId":"{{ n_i50FL.outputs.agentId }}",
+					"caseId":"{{ n_i50FL.outputs.caseId }}",
 					"responseFormat":{
 						"type":"text"
 					},
+					"logProbs":false,
 					"message":{
 						"items":{
 							"role":"user",
@@ -1401,9 +1405,7 @@
 							}
 						},
 						"ua:type":"mappedArray"
-					},
-					"aiAgentId":"{{ n_i50FL.outputs.agentId }}",
-					"caseId":"{{ n_i50FL.outputs.caseId }}"
+					}
 				}
 			},
 			"skip":false,
@@ -1429,7 +1431,7 @@
 				"triggerInputCondition":{
 					"filters":[
 						{
-							"property":"properties_caseid",
+							"property":"properties_caseId",
 							"filter":{
 								"operator":"EQUAL",
 								"value":"{{ n_i50FL.outputs.caseId }}"
@@ -1446,6 +1448,7 @@
 					"operator":"AND"
 				},
 				"object_type":"draft_ttd_dr",
+				"skipIfBlank":false,
 				"updateFields":[
 					{
 						"fieldName":"properties.draft",
@@ -1462,7 +1465,8 @@
 				"page":{
 					"offset":0,
 					"limit":20
-				}
+				},
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"Storage by UnifyApps",
@@ -1485,6 +1489,7 @@
 			"inputs":{
 				"writeThroughSessionVariables":false,
 				"object_type":"draftSeq",
+				"skipIfBlank":false,
 				"record":{
 					"caseid":"{{ n_a9Cj5.outputs.properties.caseId }}",
 					"draft":"{{ _swKzt.outputs.llmResponse }}",
@@ -1514,7 +1519,7 @@
 				"triggerInputCondition":{
 					"filters":[
 						{
-							"property":"properties_caseid",
+							"property":"properties_caseId",
 							"filter":{
 								"operator":"EQUAL",
 								"value":"{{ n_i50FL.outputs.caseId }}"
@@ -1559,7 +1564,7 @@
 						"property":"{{ 4Ssfa.outputs.properties.numberOfSteps }}",
 						"filter":{
 							"operator":"GTE",
-							"value":"5"
+							"value":"2"
 						}
 					}
 				],
@@ -1641,9 +1646,10 @@
 				"version":"-1",
 				"parameters":{
 					"caseId":"{{ n_i50FL.outputs.caseId }}",
-					"aiAgentId":"{{ n_i50FL.outputs.agentId }}",
 					"task":"{{ n_i50FL.outputs.user_query }}",
-					"instructionsToAppend":"{{ n_i50FL.outputs.research_plan }}"
+					"aiAgentId":"{{ n_i50FL.outputs.agentId }}",
+					"instructionsToAppend":"{{ n_i50FL.outputs.research_plan }}",
+					"message_ID":"{{ n_i50FL.outputs.messageId }}"
 				}
 			},
 			"skip":false,
@@ -1675,7 +1681,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":-1,
+	"ownerUserId":0,
 	"schemaReferences":[
 		
 	],
@@ -1692,5 +1698,5 @@
 	"tags":[
 		
 	],
-	"version":65
+	"version":59
 }
