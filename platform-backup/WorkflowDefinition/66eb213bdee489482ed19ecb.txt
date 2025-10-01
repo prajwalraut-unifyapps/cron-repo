@@ -5,12 +5,12 @@
 	"createdTime":1747000740965,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758886255546,
+		"deployedAt":1759312627065,
 		"deployedBy":0,
-		"deployedDefinitionId":"68d6796f3323d9309656d83c",
+		"deployedDefinitionId":"68dcfaf31edc480c9a44f6f6",
 		"status":"DEPLOYED",
-		"version":76,
-		"workflowVersion":115
+		"version":84,
+		"workflowVersion":123
 	},
 	"edges":[
 		{
@@ -91,8 +91,15 @@
 			"name":"yes",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_SFK4H",
+			"toNodeId":"n_3eYga",
 			"type":"if"
+		},
+		{
+			"fromNodeId":"n_3eYga",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_SFK4H",
+			"type":"next"
 		},
 		{
 			"fromNodeId":"n_SFK4H",
@@ -245,6 +252,14 @@
 			"name":"yes",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_bGewX",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_bGewX",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_SoEmC",
 			"type":"if"
 		},
@@ -272,6 +287,14 @@
 		},
 		{
 			"fromNodeId":"n_xIVld",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"qz4IS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_bGewX",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"qz4IS",
@@ -421,7 +444,7 @@
 	"id":"66eb213bdee489482ed19ecb",
 	"lastModifiedBy":1,
 	"lcName":"observability | analytics final",
-	"modifiedTime":1758963899348,
+	"modifiedTime":1759324027048,
 	"name":"Observability | Analytics Final",
 	"nodes":[
 		{
@@ -439,10 +462,15 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"avgTraces"
+					],
 					"properties":{
 						"totalSessions":{
 							"type":"integer",
-							"title":"Total Sessions"
+							"title":"Total Sessions",
+							"default":"0"
 						},
 						"sessions":{
 							"type":"array",
@@ -506,24 +534,25 @@
 						},
 						"avgTokenUsed":{
 							"type":"string",
-							"title":"Avg Token Used"
+							"title":"Avg Token Used",
+							"default":"0"
 						},
 						"avgSessionDuration":{
 							"type":"string",
-							"title":"Avg Session Duration"
+							"title":"Avg Session Duration",
+							"default":"0"
 						},
 						"avgTraces":{
 							"type":"number",
-							"title":"Avg Traces"
+							"title":"Avg Traces",
+							"default":"0"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"avgTraces"
-					]
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"agentId":{
 							"type":"string",
@@ -556,9 +585,7 @@
 							},
 							"title":"Filter Customer Profile Ids"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -585,21 +612,23 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"startTime":{
-							"type":"number",
+							"type":"string",
 							"title":"Start Time"
 						},
 						"endTime":{
-							"type":"number",
+							"type":"string",
 							"title":"End Time"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"startDate":{
 							"type":"string",
@@ -609,12 +638,11 @@
 							"type":"string",
 							"title":"End Date"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"import java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\n\ndef formatter = DateTimeFormatter.ofPattern(\"yyyy-MM-dd'T'HH:mm:ssXXX\")\n\n// Handle startDate\ndef startTime\nif (binding.hasVariable('startDate') && startDate != null) {\n    startTime = startDate\n} else {\n    startTime = ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(0), java.time.ZoneOffset.UTC).format(formatter)\n}\n\n// Handle endDate\ndef endTime\nif (binding.hasVariable('endDate') && endDate != null) {\n    endTime = endDate\n} else {\n    endTime = ZonedDateTime.now().format(formatter)\n}\n\nreturn ['startTime': startTime, 'endTime': endTime]\n",
 				"compile_static":false,
-				"code":"import java.time.Instant\nimport java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\n\ndef getEpochMillis(timestamp) {\n  ZonedDateTime zdt = ZonedDateTime.parse(timestamp, DateTimeFormatter.ISO_DATE_TIME)\n  return zdt.toInstant().toEpochMilli()\n}\n\ndef startTime, endTime\nif(!binding.hasVariable('startDate'))\n{\n  startTime=0L\n}\nelse\n{\n  startTime = getEpochMillis(startDate)\n}\nif(!binding.hasVariable('endDate'))\n{\n  endTime=System.currentTimeMillis()\n}\nelse\n{\n  endTime = getEpochMillis(endDate)\n}\n\nreturn ['startTime':startTime, 'endTime':endTime]",
+				"captureStdOutput":false,
 				"parameters":{
 					"startDate":"{{ 4aY8o.outputs.startTime }}",
 					"endDate":"{{ 4aY8o.outputs.endTime }}"
@@ -1205,6 +1233,84 @@
 			"type":"IF_ELSE"
 		},
 		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":478,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_S5iL7@fNpZG@fenGp-1@1@y",
+			"id":"n_3eYga",
+			"index":11,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"sqlQuery":{
+							"type":"string",
+							"title":"Sql Query"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"agentId":{
+							"type":"string",
+							"title":"Agent Id"
+						},
+						"timestampStart":{
+							"type":"string",
+							"title":"Timestamp Start"
+						},
+						"timestampEnd":{
+							"type":"string",
+							"title":"Timestamp End"
+						},
+						"limit":{
+							"type":"string",
+							"title":"Limit"
+						},
+						"offset":{
+							"type":"string",
+							"title":"Offset"
+						},
+						"currentUserId":{
+							"type":"string",
+							"title":"Current User Id"
+						},
+						"AGENT_TRACE_VISIBILITY":{
+							"type":"string",
+							"title":"AGENT TRACE VISIBILITY"
+						}
+					}
+				},
+				"code":"if (!binding.hasVariable('AGENT_TRACE_VISIBILITY')) {\n    AGENT_TRACE_VISIBILITY = \"public\"\n}\n\n\ndef generateSessionQuery(aiAgentId, startTime, endTime, limit, offset, AGENT_TRACE_VISIBILITY, userId) {\n    def automationIds = \" '6851442f9e30586f552a6d73', \" +\n            \"        '67df12719fa26d792211be4f', \" +\n            \"        '66ac70650f725f5b425d12d8', \" +\n            \"        '67933cc866e1f1098aa02c39', \" +\n            \"        '66b32227db0c6546b93d3acc', \" +\n            \"        '66a1e74accc70b77f9bf0308', \" +\n            \"        '66b356891a78c401cb586890', \" +\n            \"        '67e6651efd3591529146b261', \" +\n            \"        '67e4346d4718117333c7ee9a', \" +\n            \"        '66b3353e1a78c401cb583431', \" +\n            \"        '679c6521a6583456a7198e97', \" +\n            \"        '68206abcccc45f469e288de0', \" +\n            \"        '6853d10e492bca4185ba983d', \" +\n            \"        '6704f23182227947dd32e79c', \" +\n            \"        '679b7fdad2256d4d7f3277fe', \" +\n            \"        '6784ec5e2bf24b00b3976630', \" +\n            \"        '6784e8da2bf24b00b3975b17', \" +\n            \"        '66b0c2ccd84fac07ea3f3e84', \" +\n            \"        '66ae2f6e381d8834cd6742de', \" +\n            \"        '6784b9216fb83f0972c5625d' \"\n    \n    String filter = AGENT_TRACE_VISIBILITY == \"private\" ? \" AND  eTraces._pr_userId = \" + \"'\" + userId + \"' \" : \"\"\n\n    return \"SELECT \" +\n           \"eTraces._pr_caseId AS sessionId, \" +\n           \"MIN(serviceHubCase._pr_additional__firstFanMessageCreatedTime) AS startTime, \" +\n           \"MAX(serviceHubCase._pr_additional__lastBrandMessageTime) AS endTime \" +\n           \"FROM ENTITY_e_traces AS eTraces \" +\n           \"JOIN ENTITY_service_hub_case AS serviceHubCase \" +\n           \"ON (eTraces._pr_caseId = serviceHubCase.id) \" +\n           \"WHERE eTraces._pr_fromAutomationId IN (\" + automationIds + \") \" +\n           \"AND eTraces.timestamp BETWEEN '\" + startTime + \"' AND '\" + endTime + \"' \" +\n           \"AND serviceHubCase.timestamp BETWEEN '\" + startTime + \"' AND '\" + endTime + \"' \" +\n           \"AND eTraces._pr_aiAgentId = '\" + aiAgentId + \"' \" +\n             filter + \n           \"GROUP BY eTraces._pr_caseId \" +\n           \"ORDER BY startTime DESC \" +\n           \"LIMIT \" + offset + \", \" + limit\n}\n\ndef sqlQuery = generateSessionQuery(agentId, timestampStart, timestampEnd, limit, offset, AGENT_TRACE_VISIBILITY, currentUserId)\nreturn [sqlQuery: sqlQuery]\n",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"agentId":"{{ 4aY8o.outputs.agentId }}",
+					"timestampStart":"{{ n_p6gF0.outputs.result.startTime }}",
+					"timestampEnd":"{{ n_p6gF0.outputs.result.endTime }}",
+					"limit":"{{ 4aY8o.outputs.limit }}",
+					"offset":"{{ 4aY8o.outputs.offset }}",
+					"currentUserId":"{{ __RUN__.outputs.userId }}",
+					"AGENT_TRACE_VISIBILITY":"{{ __ENV__.outputs.AGENT_TRACE_VISIBILITY }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
 			"additional":{
 				"xsdSchemaConfig":{
 					"root":{}
@@ -1221,7 +1327,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_S5iL7@fNpZG@fenGp-1@1@y",
 			"id":"n_SFK4H",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"outputSchema":{
 					"type":"object",
@@ -1248,7 +1354,7 @@
 						}
 					}
 				},
-				"query":"SELECT \n    eTraces._pr_caseId AS sessionId,\n    MIN(serviceHubCase._pr_additional__firstFanMessageCreatedTime) AS startTime,\n    MAX(serviceHubCase._pr_additional__lastBrandMessageTime) AS endTime\nFROM ENTITY_e_traces AS eTraces\nJOIN ENTITY_service_hub_case AS serviceHubCase \n    ON (eTraces._pr_caseId = serviceHubCase.id)\nWHERE eTraces._pr_fromAutomationId IN (\n    '66ac70650f725f5b425d12d8',\n    '67933cc866e1f1098aa02c39',\n    '66b32227db0c6546b93d3acc',\n    '66a1e74accc70b77f9bf0308',\n    '66b356891a78c401cb586890',\n    '67e6651efd3591529146b261',\n    '67e4346d4718117333c7ee9a',\n    '66b3353e1a78c401cb583431',\n    '679c6521a6583456a7198e97',\n    '68206abcccc45f469e288de0',\n    '6853d10e492bca4185ba983d',\n    '6851442f9e30586f552a6d73','67df12719fa26d792211be4f'\n)\nAND eTraces.timestamp BETWEEN '{{ 4aY8o.outputs.startTime }}' AND '{{ 4aY8o.outputs.endTime }}'\nAND serviceHubCase.timestamp BETWEEN '{{ 4aY8o.outputs.startTime }}' AND '{{ 4aY8o.outputs.endTime }}'\n  AND eTraces._pr_aiAgentId = '{{ 4aY8o.outputs.agentId }}'\nGROUP BY eTraces._pr_caseId\nORDER BY startTime DESC\nLIMIT {{ 4aY8o.outputs.offset }}, {{ 4aY8o.outputs.limit }};\n",
+				"query":"{{ n_3eYga.outputs.result.sqlQuery }}",
 				"group":"ENTITY_REPORTING"
 			},
 			"skip":false,
@@ -1268,7 +1374,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_S5iL7@fNpZG@fenGp-1@1@y",
 			"id":"n_uOy1Q",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"variables":[
 					{
@@ -1304,7 +1410,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_S5iL7@fNpZG@fenGp-1@1@n",
 			"id":"_ZMGAj",
-			"index":13,
+			"index":14,
 			"inputs":{
 				"projections":[
 					{
@@ -1382,7 +1488,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_S5iL7@fNpZG@fenGp-1@1@n",
 			"id":"n_t8yrJ",
-			"index":14,
+			"index":15,
 			"inputs":{
 				"variables":[
 					{
@@ -1418,7 +1524,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"OyxLW",
-			"index":15,
+			"index":16,
 			"inputs":{
 				"projections":[
 					{
@@ -1496,7 +1602,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"c4W9Q",
-			"index":16,
+			"index":17,
 			"inputs":{
 				"filters":[
 					{
@@ -1526,7 +1632,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"c4W9Q@fNpZG@fenGp-1@1@y",
 			"id":"CVUId",
-			"index":17,
+			"index":18,
 			"inputs":{
 				"result":{
 					"avgSessionDuration":"0",
@@ -1551,7 +1657,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"bJJUf",
-			"index":18,
+			"index":19,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1809,7 +1915,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"6zmM2",
-			"index":19,
+			"index":20,
 			"inputs":{
 				"object_type":"service_hub_case",
 				"includeRoleMappings":false,
@@ -1839,7 +1945,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"Bd8Is",
-			"index":20,
+			"index":21,
 			"inputs":{
 				"object_type":"customer_profile",
 				"includeRoleMappings":false,
@@ -1869,7 +1975,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"n_RENmP",
-			"index":21,
+			"index":22,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ Bd8Is.outputs.objects }}",
@@ -1892,7 +1998,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_RENmP@fNpZG@fenGp-1@1@l",
 			"id":"n_62NZD",
-			"index":22,
+			"index":23,
 			"inputs":{
 				"projections":[
 					{
@@ -1931,7 +2037,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_RENmP@fNpZG@fenGp-1@1@l",
 			"id":"n_bzUwL",
-			"index":23,
+			"index":24,
 			"inputs":{
 				"filters":[
 					{
@@ -1967,7 +2073,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_bzUwL@n_RENmP@fNpZG@fenGp-1@1@l@y",
 			"id":"n_NM4rG",
-			"index":24,
+			"index":25,
 			"inputs":{
 				"itemToAdd":{
 					"id":"{{ n_RENmP.outputs.item.id }}",
@@ -1998,10 +2104,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"n_w8wDz",
-			"index":25,
+			"index":26,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"sessionIdCsv":{
 							"type":"string",
@@ -2015,12 +2123,12 @@
 							"type":"string",
 							"title":"End Time"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"sessionIds":{
 							"type":"array",
@@ -2037,12 +2145,11 @@
 							"type":"string",
 							"title":"End Time"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"import java.time.*\nimport java.time.format.DateTimeFormatter\n\nlong toEpochMillis(String dateTimeWithZone) {\n    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(\"yyyy-MM-dd'T'HH:mm:ssXXX\")\n    OffsetDateTime odt = OffsetDateTime.parse(dateTimeWithZone, formatter)\n    return odt.toInstant().toEpochMilli()\n}\n\nif(!binding.hasVariable('sessionIds')) {\n  return [sessionIdsCsv : null]\n}\n\n\nreturn [\n    sessionIdCsv: sessionIds.collect { \"'${it}'\" }.join(','),\n    startTime : toEpochMillis(startTime),\n    endTime : toEpochMillis(endTime)\n]\n",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"sessionIds":{
 						"source":"{{ bJJUf.outputs.items }}",
@@ -2070,7 +2177,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"n_nK38E",
-			"index":26,
+			"index":27,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -2175,7 +2282,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"n_rOz5H",
-			"index":27,
+			"index":28,
 			"inputs":{
 				"filters":[
 					{
@@ -2200,6 +2307,42 @@
 			"type":"IF_ELSE"
 		},
 		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":442,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_rOz5H@fNpZG@fenGp-1@1@y",
+			"id":"n_bGewX",
+			"index":29,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_w8wDz.outputs.result.sessionIdCsv }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					},
+					{
+						"property":"=LEN({{ n_w8wDz.outputs.result.sessionIdCsv }})",
+						"filter":{
+							"operator":"NOT_EQUAL",
+							"value":"0"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
 			"additional":{
 				"xsdSchemaConfig":{
 					"root":{}
@@ -2214,9 +2357,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_rOz5H@fNpZG@fenGp-1@1@y",
+			"groupId":"n_bGewX@n_rOz5H@fNpZG@fenGp-1@1@y@y",
 			"id":"n_SoEmC",
-			"index":28,
+			"index":30,
 			"inputs":{
 				"outputSchema":{
 					"type":"object",
@@ -2247,7 +2390,7 @@
 						}
 					}
 				},
-				"query":"SELECT \n    _pr_caseId AS caseId,\n    COUNT(DISTINCT _pr_messageId) AS messageCount,\n    MIN(_pr_messageId) AS firstMessageId,\n    MAX(_pr_messageId) AS lastMessageId\nFROM ENTITY_e_traces\nWHERE _pr_fromAutomationId IN (\n  '67df12719fa26d792211be4f',\n    '6851442f9e30586f552a6d73',\n    '66ac70650f725f5b425d12d8',\n    '66966960e8797a59f4a46292',\n    '66b32227db0c6546b93d3acc',\n    '66a1e74accc70b77f9bf0308',\n    '66b356891a78c401cb586890',\n    '67e6651efd3591529146b261',\n    '67e4346d4718117333c7ee9a',\n    '66b3353e1a78c401cb583431',\n    '679c6521a6583456a7198e97',\n    '68206abcccc45f469e288de0',\n    '6853d10e492bca4185ba983d'\n)\n  AND _pr_caseId IN ({{ n_w8wDz.outputs.result.sessionIdCsv }})\n  AND timestamp BETWEEN '{{ 4aY8o.outputs.startTime }}' AND '{{ 4aY8o.outputs.endTime }}'\nGROUP BY _pr_caseId",
+				"query":"SELECT \n    _pr_caseId AS caseId,\n    COUNT(DISTINCT _pr_messageId) AS messageCount,\n    MIN(_pr_messageId) AS firstMessageId,\n    MAX(_pr_messageId) AS lastMessageId\nFROM ENTITY_e_traces\nWHERE _pr_fromAutomationId IN (\n    '6851442f9e30586f552a6d73',\n    '67df12719fa26d792211be4f',\n    '66ac70650f725f5b425d12d8',\n    '67933cc866e1f1098aa02c39',\n    '66b32227db0c6546b93d3acc',\n    '66a1e74accc70b77f9bf0308',\n    '66b356891a78c401cb586890',\n    '67e6651efd3591529146b261',\n    '67e4346d4718117333c7ee9a',\n    '66b3353e1a78c401cb583431',\n    '679c6521a6583456a7198e97',\n    '68206abcccc45f469e288de0',\n    '6853d10e492bca4185ba983d',\n    '6704f23182227947dd32e79c',\n    '679b7fdad2256d4d7f3277fe',\n    '6784ec5e2bf24b00b3976630',\n    '6784e8da2bf24b00b3975b17',\n    '66b0c2ccd84fac07ea3f3e84',\n    '66ae2f6e381d8834cd6742de',\n    '6784b9216fb83f0972c5625d'\n)\n  AND _pr_caseId IN ({{ n_w8wDz.outputs.result.sessionIdCsv }})\n  AND timestamp BETWEEN '{{ 4aY8o.outputs.startTime }}' AND '{{ 4aY8o.outputs.endTime }}'\nGROUP BY _pr_caseId",
 				"group":"ENTITY_REPORTING"
 			},
 			"skip":false,
@@ -2265,9 +2408,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_rOz5H@fNpZG@fenGp-1@1@y",
+			"groupId":"n_bGewX@n_rOz5H@fNpZG@fenGp-1@1@y@y",
 			"id":"n_xIVld",
-			"index":29,
+			"index":31,
 			"inputs":{
 				"variables":[
 					{
@@ -2304,7 +2447,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_rOz5H@fNpZG@fenGp-1@1@n",
 			"id":"_o88ch",
-			"index":30,
+			"index":32,
 			"inputs":{
 				"projections":[
 					{
@@ -2380,7 +2523,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_rOz5H@fNpZG@fenGp-1@1@n",
 			"id":"n_Jz1sc",
-			"index":31,
+			"index":33,
 			"inputs":{
 				"variables":[
 					{
@@ -2417,7 +2560,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"qz4IS",
-			"index":32,
+			"index":34,
 			"inputs":{
 				"projections":[
 					{
@@ -2493,7 +2636,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"z9wQe",
-			"index":33,
+			"index":35,
 			"inputs":{
 				"object_type":"service_hub_message",
 				"includeRoleMappings":false,
@@ -2523,7 +2666,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"umRBL",
-			"index":34,
+			"index":36,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -2781,7 +2924,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@1",
 			"id":"X0W3O",
-			"index":35,
+			"index":37,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -2849,7 +2992,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@2",
 			"id":"fNpZG@2",
-			"index":36,
+			"index":38,
 			"inputs":{
 				"name":"Session Analytics"
 			},
@@ -2869,7 +3012,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@2",
 			"id":"n_msKQf",
-			"index":37,
+			"index":39,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -3022,7 +3165,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fNpZG@fenGp-1@2",
 			"id":"n_MN9Xq",
-			"index":38,
+			"index":40,
 			"inputs":{
 				"filters":[
 					{
@@ -3058,7 +3201,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_MN9Xq@fNpZG@fenGp-1@2@y",
 			"id":"9p1oe",
-			"index":39,
+			"index":41,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -3094,18 +3237,29 @@
 						"timestampEnd":{
 							"type":"string",
 							"title":"Timestamp End"
+						},
+						"AGENT_TRACE_VISIBILITY":{
+							"type":"string",
+							"title":"AGENT TRACE VISIBILITY"
+						},
+						"currentUserId":{
+							"type":"string",
+							"title":"Current User Id"
 						}
 					}
 				},
-				"code":"import java.time.Instant\nimport java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\n\ndef toEpochMillis(ts) {\n    if (ts instanceof Number) {\n        return ts.longValue()\n    } else {\n        return ZonedDateTime.parse(ts.toString(), DateTimeFormatter.ISO_DATE_TIME)\n                            .toInstant()\n                            .toEpochMilli()\n    }\n}\n\ndef generateQuery(aiAgentId, startTime, endTime, limit, offset) {\n    return \"SELECT \" +\n           \"    *, \" +\n           \"    AVG(TotalTokensUsed) OVER() AS AvgTokens, \" +\n           \"    AVG(SessionDuration) OVER() AS AvgSessionDuration \" +\n           \"FROM ( \" +\n           \"    SELECT \" +\n           \"        eTraces._pr_caseId AS SessionID, \" +\n           \"        SUM(COALESCE(eTraces._pr_inputToken, 0) + COALESCE(eTraces._pr_outputToken, 0)) AS TotalTokensUsed, \" +\n           \"        SUM(COALESCE(eTraces._pr_inputTokenCost, 0)) AS TotalInputCost, \" +\n           \"        SUM(COALESCE(eTraces._pr_outputTokenCost, 0)) AS TotalOutputCost, \" +\n           \"        MIN(serviceHubCase._pr_additional__firstFanMessageCreatedTime) AS StartTime, \" +\n           \"        MAX(serviceHubCase._pr_additional__lastBrandMessageTime) AS EndTime, \" +\n           \"        AVG(serviceHubCase._pr_additional__lastBrandMessageTime - serviceHubCase._pr_additional__firstFanMessageCreatedTime) AS SessionDuration, \" +\n           \"        COUNT(*) OVER() AS TotalSessions \" +\n           \"    FROM ENTITY_e_traces AS eTraces \" +\n           \"    JOIN ENTITY_service_hub_case AS serviceHubCase \" +\n           \"      ON (eTraces._pr_caseId = serviceHubCase.id) \" +\n           \"    WHERE eTraces._pr_aiAgentId = '\" + aiAgentId + \"' \" +\n           \"      AND eTraces._pr_caseId IS NOT NULL \" +\n           \"      AND eTraces.timestamp BETWEEN '\" + startTime + \"' AND '\" + endTime + \"' \" +\n           \"      AND serviceHubCase.timestamp BETWEEN '\" + startTime + \"' AND '\" + endTime + \"' \" +\n           \"      AND eTraces._pr_fromAutomationId IN ( \" +\n           \"            '6851442f9e30586f552a6d73', \" +\n           \"           '66ac70650f725f5b425d12d8', \" +\n           \"           '67933cc866e1f1098aa02c39', \" +\n           \"           '66b32227db0c6546b93d3acc', \" +\n           \"           '66a1e74accc70b77f9bf0308', \" +\n           \"           '66b356891a78c401cb586890', \" +\n           \"           '67e6651efd3591529146b261', \" +\n           \"           '67e4346d4718117333c7ee9a', \" +\n           \"           '66b3353e1a78c401cb583431', \" +\n           \"           '679c6521a6583456a7198e97', \" +\n           \"           '68206abcccc45f469e288de0', \" +\n           \"           '6853d10e492bca4185ba983d' \" +\n           \"      ) \" +\n           \"    GROUP BY eTraces._pr_caseId \" +\n           \") AS T \" +\n           \"ORDER BY StartTime DESC \" +\n           \"LIMIT \" + offset + \", \" + limit + \";\"\n}\n\n\ndef sqlQuery = generateQuery(agentId, timestampStart, timestampEnd, limit, offset)\nreturn [sqlQuery: sqlQuery]\n",
+				"code":"import java.time.Instant\nimport java.time.ZonedDateTime\nimport java.time.format.DateTimeFormatter\n\nif (!binding.hasVariable('AGENT_TRACE_VISIBILITY')) {\n    AGENT_TRACE_VISIBILITY = \"public\"\n}\n\n\ndef toEpochMillis(ts) {\n    if (ts instanceof Number) {\n        return ts.longValue()\n    } else {\n        return ZonedDateTime.parse(ts.toString(), DateTimeFormatter.ISO_DATE_TIME)\n                            .toInstant()\n                            .toEpochMilli()\n    }\n}\n\ndef generateQuery(aiAgentId, startTime, endTime, limit, offset,userId, AGENT_TRACE_VISIBILITY) {\n    String filter = AGENT_TRACE_VISIBILITY == \"private\" ? \" AND  _pr_userId = \" + \"'\" + userId + \"'\" : \"\"\n     return \"SELECT \" +\n           \"    *, \" +\n           \"    AVG(TotalTokensUsed) OVER() AS AvgTokens, \" +\n           \"    AVG(SessionDuration) OVER() AS AvgSessionDuration \" +\n           \"FROM ( \" +\n           \"    SELECT \" +\n           \"        eTraces._pr_caseId AS SessionID, \" +\n           \"        SUM(COALESCE(eTraces._pr_inputToken, 0) + COALESCE(eTraces._pr_outputToken, 0)) AS TotalTokensUsed, \" +\n           \"        SUM(COALESCE(eTraces._pr_inputTokenCost, 0)) AS TotalInputCost, \" +\n           \"        SUM(COALESCE(eTraces._pr_outputTokenCost, 0)) AS TotalOutputCost, \" +\n           \"        MIN(serviceHubCase._pr_additional__firstFanMessageCreatedTime) AS StartTime, \" +\n           \"        MAX(serviceHubCase._pr_additional__lastBrandMessageTime) AS EndTime, \" +\n           \"        AVG(serviceHubCase._pr_additional__lastBrandMessageTime - serviceHubCase._pr_additional__firstFanMessageCreatedTime) AS SessionDuration, \" +\n           \"        COUNT(*) OVER() AS TotalSessions \" +\n           \"    FROM ENTITY_e_traces AS eTraces \" +\n           \"    JOIN ENTITY_service_hub_case AS serviceHubCase \" +\n           \"      ON (eTraces._pr_caseId = serviceHubCase.id) \" +\n           \"    WHERE eTraces._pr_aiAgentId = '\" + aiAgentId + \"' \" +\n           \"      AND eTraces._pr_caseId IS NOT NULL \" +\n           \"      AND eTraces.timestamp BETWEEN '\" + startTime + \"' AND '\" + endTime + \"' \" +\n           \"      AND serviceHubCase.timestamp BETWEEN '\" + startTime + \"' AND '\" + endTime + \"' \" +\n           \"      AND eTraces._pr_fromAutomationId IN ( \" +\n           \"         '6851442f9e30586f552a6d73', \" +\n            \"        '67df12719fa26d792211be4f', \" +\n            \"        '66ac70650f725f5b425d12d8', \" +\n            \"        '67933cc866e1f1098aa02c39', \" +\n            \"        '66b32227db0c6546b93d3acc', \" +\n            \"        '66a1e74accc70b77f9bf0308', \" +\n            \"        '66b356891a78c401cb586890', \" +\n            \"        '67e6651efd3591529146b261', \" +\n            \"        '67e4346d4718117333c7ee9a', \" +\n            \"        '66b3353e1a78c401cb583431', \" +\n            \"        '679c6521a6583456a7198e97', \" +\n            \"        '68206abcccc45f469e288de0', \" +\n            \"        '6853d10e492bca4185ba983d', \" +\n            \"        '6704f23182227947dd32e79c', \" +\n            \"        '679b7fdad2256d4d7f3277fe', \" +\n            \"        '6784ec5e2bf24b00b3976630', \" +\n            \"        '6784e8da2bf24b00b3975b17', \" +\n            \"        '66b0c2ccd84fac07ea3f3e84', \" +\n            \"        '66ae2f6e381d8834cd6742de', \" +\n            \"        '6784b9216fb83f0972c5625d' \" +\n           filter + \n           \"      ) \" +\n           \"    GROUP BY eTraces._pr_caseId \" +\n           \") AS T \" +\n           \"ORDER BY StartTime DESC \" +\n           \"LIMIT \" + offset + \", \" + limit + \";\"\n}\n\n\ndef sqlQuery = generateQuery(agentId, timestampStart, timestampEnd, limit, offset, currentUserId, AGENT_TRACE_VISIBILITY)\nreturn [sqlQuery: sqlQuery]\n",
 				"compile_static":false,
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"agentId":"{{ 4aY8o.outputs.agentId }}",
 					"limit":"{{ 4aY8o.outputs.limit }}",
 					"offset":"{{ 4aY8o.outputs.offset }}",
-					"timestampStart":"{{ 4aY8o.outputs.startTime }}",
-					"timestampEnd":"{{ 4aY8o.outputs.endTime }}"
+					"timestampStart":"{{ n_p6gF0.outputs.result.startTime }}",
+					"timestampEnd":"{{ n_p6gF0.outputs.result.endTime }}",
+					"AGENT_TRACE_VISIBILITY":"{{ __ENV__.outputs.AGENT_TRACE_VISIBILITY }}",
+					"currentUserId":"{{ __RUN__.outputs.userId }}"
 				}
 			},
 			"options":{
@@ -3175,7 +3329,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_MN9Xq@fNpZG@fenGp-1@2@y",
 			"id":"1q6LI",
-			"index":40,
+			"index":42,
 			"inputs":{
 				"outputSchema":{
 					"type":"object",
@@ -3254,7 +3408,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_MN9Xq@fNpZG@fenGp-1@2@y",
 			"id":"n_Pe75e",
-			"index":41,
+			"index":43,
 			"inputs":{
 				"variables":[
 					{
@@ -3297,7 +3451,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_MN9Xq@fNpZG@fenGp-1@2@n",
 			"id":"_G8RTL",
-			"index":42,
+			"index":44,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -3364,7 +3518,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_MN9Xq@fNpZG@fenGp-1@2@n",
 			"id":"_6804d",
-			"index":43,
+			"index":45,
 			"inputs":{
 				"outputSchema":{
 					"type":"object",
@@ -3443,7 +3597,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_MN9Xq@fNpZG@fenGp-1@2@n",
 			"id":"n_jrGYy",
-			"index":44,
+			"index":46,
 			"inputs":{
 				"variables":[
 					{
@@ -3502,7 +3656,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"fenGp-1",
 			"id":"y0Cab",
-			"index":45,
+			"index":47,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -3583,6 +3737,10 @@
 						"avgTraceCount":{
 							"type":"integer",
 							"title":"Avg Trace Count"
+						},
+						"totalSessions":{
+							"type":"integer",
+							"title":"Total Sessions"
 						}
 					}
 				},
@@ -3741,13 +3899,19 @@
 								]
 							},
 							"title":"Brand Messages"
+						},
+						"totalSessions":{
+							"type":"integer",
+							"title":"Total Sessions"
 						}
 					}
 				},
-				"code":"def caseVsCustomerProfileName = [:] as Map<String, String>\ndef customerProfileVsName = [:] as Map<String, String>\ndef caseVSCustomerProfileIds = [:] as Map<String, String>\ndef caseById = [:] as Map<String, Object>\ndef caseMessageCountMap = [:] as Map<String, Integer>\ndef caseIdVsFirstMessage = [:] as Map<String, String>\ndef caseIdVsLastMessage = [:] as Map<String, String>\n\ndef totalTraceCount = 0\n\n// Map customer profileId -> name\ncustomerProfiles.each { customerProfile ->\n    customerProfileVsName[customerProfile['profileId']] = customerProfile['name']\n}\n\nfanMessages.each { fanMessage ->\n    caseIdVsFirstMessage[fanMessage['caseId']] = fanMessage['content']\n}\nif(binding.hasVariable('brandMessages')) {\n    brandMessages.each { brandMessage ->\n    caseIdVsLastMessage[brandMessage['caseId']] = brandMessage['content']\n    }\n}\n\n\n// Map caseId -> messageCount and compute total traces\ncaseVsMessageCount.each { entry ->\n    caseMessageCountMap[entry.caseId] = entry.messageCount\n    totalTraceCount += entry.messageCount\n}\n\ndef avgTraceCount = (totalTraceCount / (caseMessageCountMap.size() ?: 1)).round()\n\n// Prepare case related mappings\ncases.each { caseData ->\n    String profileId = caseData['customerProfileId']\n    String profileName = customerProfileVsName[profileId]\n    if (profileName == null || profileName=='') {\n        return\n    }\n    String caseId = caseData['caseId']\n\n    caseData['traces'] = caseMessageCountMap[caseId] ?: 0  // Safe access\n    caseData['firstMessage'] = caseIdVsFirstMessage[caseId] ?: ''  // Safe access\n    caseData['lastMessage'] = caseIdVsLastMessage[caseId] ?: ''  // Safe access\n    caseVsCustomerProfileName[caseId] = profileName\n    caseVSCustomerProfileIds[caseId] = profileId\n    caseById[caseId] = caseData\n}\n\nList<Map<String, Object>> response = []\n\n// Build the final session response\nsessions.each { session ->\n    def sessionData = new HashMap(session)\n    def sessionId = session['sessionID'].toString()\n    def caseData = caseById[sessionId]\n\n    sessionData['customerProfileName'] = caseVsCustomerProfileName[sessionId] ?: ''\n    if (sessionData['customerProfileName'] == null || sessionData['customerProfileName'] == '') {\n        return\n    }\n    sessionData['customerProfileId'] = caseVSCustomerProfileIds[sessionId] ?: ''\n    sessionData['summary'] = caseData ? sessionId + \" : \" + caseData.subject : sessionId\n    sessionData['traces'] = caseData ? caseData['traces'] : 0\n    sessionData['firstMessage'] = caseData ? caseData['firstMessage'] : ''\n    sessionData['lastMessage'] = caseData ? caseData['lastMessage'] : ''\n    response.add(sessionData)\n}\n\nreturn [\"sessions\": response, \"avgTraceCount\": avgTraceCount]",
+				"code":"if(!binding.hasVariable('cases')) {\n    cases = []\n}\n\nif (!binding.hasVariable('totalSessions')) {\n    totalSessions = 0\n}\n\n\n\nif(!binding.hasVariable('customerProfiles')) {\n    customerProfiles = []\n}\n\nif(!binding.hasVariable('sessions')) {\n    sessions = []\n}\n\nif(!binding.hasVariable('caseVsMessageCount')) {\n    caseVsMessageCount = []\n}\n\n\nif(!binding.hasVariable('fanMessages')) {\n    fanMessages = []\n}\n\n\nif(!binding.hasVariable('brandMessages')) {\n    brandMessages = []\n}\n\n\n\n\n\n\n\ndef caseVsCustomerProfileName = [:] as Map<String, String>\ndef customerProfileVsName = [:] as Map<String, String>\ndef caseVSCustomerProfileIds = [:] as Map<String, String>\ndef caseById = [:] as Map<String, Object>\ndef caseMessageCountMap = [:] as Map<String, Integer>\ndef caseIdVsFirstMessage = [:] as Map<String, String>\ndef caseIdVsLastMessage = [:] as Map<String, String>\n\ndef totalTraceCount = 0\n\n// Map customer profileId -> name\ncustomerProfiles.each { customerProfile ->\n    customerProfileVsName[customerProfile['profileId']] = customerProfile['name']\n}\n\nfanMessages.each { fanMessage ->\n    caseIdVsFirstMessage[fanMessage['caseId']] = fanMessage['content']\n}\nif(binding.hasVariable('brandMessages')) {\n    brandMessages.each { brandMessage ->\n    caseIdVsLastMessage[brandMessage['caseId']] = brandMessage['content']\n    }\n}\n\n\n// Map caseId -> messageCount and compute total traces\ncaseVsMessageCount.each { entry ->\n    caseMessageCountMap[entry.caseId] = entry.messageCount\n    totalTraceCount += entry.messageCount\n}\n\ndef avgTraceCount = (totalTraceCount / (caseMessageCountMap.size() ?: 1)).round()\n\n// Prepare case related mappings\ncases.each { caseData ->\n    String profileId = caseData['customerProfileId']\n    String profileName = customerProfileVsName[profileId]\n    if (profileName == null || profileName=='') {\n        return\n    }\n    String caseId = caseData['caseId']\n\n    caseData['traces'] = caseMessageCountMap[caseId] ?: 0  // Safe access\n    caseData['firstMessage'] = caseIdVsFirstMessage[caseId] ?: ''  // Safe access\n    caseData['lastMessage'] = caseIdVsLastMessage[caseId] ?: ''  // Safe access\n    caseVsCustomerProfileName[caseId] = profileName\n    caseVSCustomerProfileIds[caseId] = profileId\n    caseById[caseId] = caseData\n}\n\nList<Map<String, Object>> response = []\n\n// Build the final session response\nsessions.each { session ->\n    def sessionData = new HashMap(session)\n    def sessionId = session['sessionID'].toString()\n    def caseData = caseById[sessionId]\n\n    sessionData['customerProfileName'] = caseVsCustomerProfileName[sessionId] ?: ''\n    if (sessionData['customerProfileName'] == null || sessionData['customerProfileName'] == '') {\n        return\n    }\n    sessionData['customerProfileId'] = caseVSCustomerProfileIds[sessionId] ?: ''\n    sessionData['summary'] = caseData ? sessionId + \" : \" + caseData.subject : sessionId\n    sessionData['traces'] = caseData ? caseData['traces'] : 0\n    sessionData['firstMessage'] = caseData ? caseData['firstMessage'] : ''\n    sessionData['lastMessage'] = caseData ? caseData['lastMessage'] : ''\n    response.add(sessionData)\n}\n\nreturn [\"sessions\": response, \"avgTraceCount\": avgTraceCount, \"totalSessions\" : totalSessions]",
 				"compile_static":false,
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
+					"totalSessions":"{{ n_msKQf.outputs.result[0].columns.TotalSessions }}",
 					"cases":{
 						"ua:type":"mappedArray",
 						"items":{
@@ -3821,10 +3985,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"fenGp-1",
 			"id":"sMdDO",
-			"index":46,
+			"index":48,
 			"inputs":{
 				"result":{
-					"totalSessions":"{{ n_msKQf.outputs.result[0].columns.TotalSessions }}",
+					"totalSessions":"{{ y0Cab.outputs.result.totalSessions }}",
 					"avgTokenUsed":"{{ n_msKQf.outputs.result[0].columns.AvgTokens }}",
 					"avgSessionDuration":"{{ n_msKQf.outputs.result[0].columns.AvgSessionDuration }}",
 					"avgTraces":"{{ y0Cab.outputs.result.avgTraceCount }}",
@@ -3872,5 +4036,5 @@
 		"AI Agent",
 		"Observability"
 	],
-	"version":116
+	"version":124
 }
