@@ -1,0 +1,291 @@
+{
+	"appsUsed":[
+		"storage_by_unifyapps",
+		"twilio"
+	],
+	"createdTime":1759298576097,
+	"deleted":false,
+	"edges":[
+		{
+			"fromNodeId":"P43P2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"1NgM6",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"1NgM6",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_utiz0",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_utiz0",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"Q4ey1",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"Q4ey1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"uWGN5",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"uWGN5",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"w5yhW",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"w5yhW",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"AfRDU",
+			"type":"next"
+		}
+	],
+	"id":"68dcc410113250726c90d811",
+	"lastModifiedBy":1,
+	"lcName":"twilio inbound call agent",
+	"modifiedTime":1759298576097,
+	"name":"Twilio Inbound Call Agent",
+	"nodes":[
+		{
+			"context":{
+				"appName":"twilio",
+				"resourceVersion":343,
+				"resourceName":"twilio_on_new_voice_event"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ysnVz-1",
+			"id":"P43P2",
+			"index":0,
+			"inputs":{},
+			"skip":false,
+			"subTitle":"Twilio",
+			"title":"On New Voice Event",
+			"trigger":{
+				"type":"EVENT"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":64,
+				"resourceName":"variable_by_unifyapps_set_session_variable",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ysnVz-1",
+			"id":"1NgM6",
+			"index":0,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"currentAIAgentId":{
+							"type":"string",
+							"title":"Current AI Agent Id"
+						}
+					},
+					"required":[]
+				}
+			},
+			"inputs":{
+				"currentAIAgentId":"<AI_AGENT_ID>"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"currentAIAgentId":{
+							"type":"string",
+							"title":"Current AI Agent Id"
+						}
+					},
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Set Session Variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":35,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ysnVz-1",
+			"id":"_utiz0",
+			"index":0,
+			"inputs":{
+				"automationId":"674afe5adefb851816d61959",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"caseAssociationType":"NEW_CASE_ON_EVERY_MESSAGE",
+					"channelName":"VOICE",
+					"text":"Call Received from Customer's Phone: {{ P43P2.outputs.From }}, Customer says Hello",
+					"toCustomerUserId":"<AI_AGENT_ID>",
+					"messageType":"FAN",
+					"channelSpecificUserId":"{{ P43P2.outputs.From }}",
+					"channelSpecificMessageId":"{{ P43P2.outputs.CallSid }}",
+					"triggeredFromAutomationId":"{{ __RUN__.outputs.workflowId }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"voicebot_by_unifyapps",
+				"resourceVersion":8,
+				"resourceName":"voicebot_by_unifyapps_web_session_start",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ysnVz-1",
+			"id":"Q4ey1",
+			"index":0,
+			"inputs":{
+				"input_audio_format":"g711_ulaw",
+				"ai_agent_id":"{{ 1NgM6.outputs.currentAIAgentId }}",
+				"workflow_id":"6804da461e148552bd895cad",
+				"user_id":"1",
+				"output_audio_format":"g711_ulaw",
+				"case_id":"{{ _utiz0.outputs.caseId }}",
+				"session_id":"TW_{{ P43P2.outputs.CallSid }}",
+				"create_room":false
+			},
+			"skip":false,
+			"subTitle":"Voicebot by UnifyApps",
+			"title":"Start Voicebot Session",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":4753,
+				"resourceName":"storage_by_unifyapps_create_record",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ysnVz-1",
+			"id":"uWGN5",
+			"index":0,
+			"inputs":{
+				"object_type":"voicebot_conv",
+				"record":{
+					"channelName":"VOICE",
+					"caseId":"{{ _utiz0.outputs.caseId }}",
+					"callSid":"{{ P43P2.outputs.CallSid }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Create record",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":74,
+				"resourceName":"storage_by_unifyapps_create_record",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ysnVz-1",
+			"id":"w5yhW",
+			"index":0,
+			"inputs":{
+				"object_type":"voice_conversation",
+				"record":{
+					"direction":"INBOUND",
+					"status":"RINGING",
+					"from":"{{ P43P2.outputs.From }}",
+					"to":"{{ P43P2.outputs.To }}",
+					"aiAgentId":"{{ 1NgM6.outputs.currentAIAgentId }}",
+					"caseId":"{{ uWGN5.outputs.properties.caseId }}",
+					"callSid":"{{ uWGN5.outputs.properties.callSid }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Create record",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"twilio",
+				"resourceVersion":344,
+				"resourceName":"twilio_redirect_to_voicebot",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ysnVz-1",
+			"id":"AfRDU",
+			"index":0,
+			"inputs":{
+				"useRealtimeModel":true,
+				"aiAgentId":"<AI_AGENT_ID>",
+				"speechThresholdMillis":500,
+				"workflowId":"6804da461e148552bd895cad"
+			},
+			"skip":false,
+			"subTitle":"Twilio",
+			"title":"Redirect to Voicebot",
+			"type":"STOP"
+		}
+	],
+	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
+	"settings":{
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
+		"route":{
+			"default":false,
+			"tierName":"global"
+		}
+	},
+	"standard":false,
+	"tags":[
+		
+	],
+	"version":0
+}
