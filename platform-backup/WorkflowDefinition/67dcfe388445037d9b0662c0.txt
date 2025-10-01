@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1742627478170,
+	"createdTime":1753422208440,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758655413212,
+		"deployedAt":1759312616219,
 		"deployedBy":0,
-		"deployedDefinitionId":"68d2f3b538757c179b123f57",
+		"deployedDefinitionId":"68dcfae81edc480c9a44f652",
 		"status":"DEPLOYED",
-		"version":57,
-		"workflowVersion":110
+		"version":79,
+		"workflowVersion":135
 	},
 	"edges":[
 		{
@@ -104,9 +104,9 @@
 		]
 	},
 	"id":"67dcfe388445037d9b0662c0",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":1,
 	"lcName":"test agent streaming",
-	"modifiedTime":1759243590845,
+	"modifiedTime":1759323986252,
 	"name":"Test Agent Streaming",
 	"nodes":[
 		{
@@ -127,6 +127,8 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"delta":{
 							"type":"object",
@@ -150,12 +152,19 @@
 						"messageId":{
 							"type":"string",
 							"title":"messageId"
+						},
+						"deepResearchEnabled":{
+							"type":"boolean",
+							"title":"Deep Research Enabled"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
 				"setup":{
 					"type":"object",
+					"$comment":"agent_Test",
+					"required":[
+						"formData"
+					],
 					"properties":{
 						"aiAgentId":{
 							"type":"string"
@@ -350,11 +359,7 @@
 							"type":"string",
 							"title":"Message Id"
 						}
-					},
-					"$comment":"agent_Test",
-					"required":[
-						"formData"
-					]
+					}
 				}
 			},
 			"skip":false,
@@ -523,6 +528,7 @@
 				"object_type":"service_hub_message",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"id":"{{ ZPXM8.outputs.messageId }}",
 				"readThroughSessionVariables":true
 			},
@@ -675,6 +681,7 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
 					"properties":{
 						"index":{
 							"type":"integer",
@@ -723,21 +730,27 @@
 											"messageId":{
 												"type":"string",
 												"title":"messageId"
+											},
+											"deepResearchEnabled":{
+												"type":"boolean",
+												"title":"Deep Research Enabled"
 											}
 										},
 										"title":"result",
-										"additionalProperties":false
+										"additionalProperties":false,
+										"required":[]
 									}
 								},
 								"additionalProperties":false
 							},
 							"title":"item"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"output":{
 							"type":"object",
@@ -745,12 +758,11 @@
 							"additionalProperties":false,
 							"title":"Output"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"return output;",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"output":"{{ FxBER.outputs }}"
 				}
@@ -810,7 +822,8 @@
 						"op":"{{ rEdty.outputs.item.result.delta.op }}",
 						"path":"{{ rEdty.outputs.item.result.delta.path }}"
 					},
-					"messageId":"{{ rEdty.outputs.item.result.messageId }}"
+					"messageId":"{{ rEdty.outputs.item.result.messageId }}",
+					"deepResearchEnabled":"{{ rEdty.outputs.item.result.deepResearchEnabled }}"
 				},
 				"completed":false
 			},
@@ -835,14 +848,14 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1866,
+	"ownerUserId":1,
 	"schemaReferences":[
 		"entity|e_code_snippet|e_67a2172ddff5de75934bd167"
 	],
 	"settings":{
-		"enableNodeLevelLogging":true,
-		"enableRunLogging":true,
-		"enableVariableLogging":true,
+		"enableNodeLevelLogging":false,
+		"enableRunLogging":false,
+		"enableVariableLogging":false,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -852,5 +865,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":111
+	"version":136
 }
