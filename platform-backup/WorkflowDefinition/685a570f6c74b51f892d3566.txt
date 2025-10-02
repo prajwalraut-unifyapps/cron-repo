@@ -5,12 +5,12 @@
 	"createdTime":1750750991453,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758566805303,
+		"deployedAt":1758636567064,
 		"deployedBy":155543,
-		"deployedDefinitionId":"68d199955476ac7d8586f36d",
+		"deployedDefinitionId":"68d2aa16ffc501557a52fc68",
 		"status":"DEPLOYED",
-		"version":37,
-		"workflowVersion":82
+		"version":39,
+		"workflowVersion":84
 	},
 	"edges":[
 		{
@@ -446,9 +446,9 @@
 		}
 	],
 	"id":"685a570f6c74b51f892d3566",
-	"lastModifiedBy":155543,
+	"lastModifiedBy":44108,
 	"lcName":"ua infra | mongo | combined",
-	"modifiedTime":1758567602782,
+	"modifiedTime":1759387193195,
 	"name":"UA Infra | Mongo | Combined",
 	"nodes":[
 		{
@@ -458,7 +458,7 @@
 				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_ZxfCG-1",
 			"id":"n_1QrNY",
@@ -499,7 +499,9 @@
 							"title":"Collection Name"
 						},
 						"query":{
-							"type":"string",
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
 							"title":"Query"
 						},
 						"sort":{
@@ -583,7 +585,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_ZxfCG-1",
 			"id":"n_bbrvO",
@@ -613,7 +615,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_bbrvO@_ZxfCG-1@y",
 			"id":"n_O1bos",
@@ -621,7 +623,7 @@
 			"inputs":{
 				"jsonString":"{{ n_1QrNY.outputs.query }}"
 			},
-			"skip":true,
+			"skip":false,
 			"subTitle":"Utility by UnifyApps",
 			"title":"Deserialise string to JSON object",
 			"type":"ACTION"
@@ -634,7 +636,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_ZxfCG-1",
 			"id":"n_U2lhK",
@@ -709,7 +711,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_ZxfCG-1",
 			"id":"n_zSXzg",
@@ -778,7 +780,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_ZxfCG-1",
 			"id":"n_qfOsw",
@@ -1001,7 +1003,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@1",
 			"id":"n_qfOsw@1",
@@ -1039,7 +1041,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"MANUAL",
 			"groupId":"n_qfOsw@_ZxfCG-1@1",
 			"id":"n_Lnyp7",
@@ -1171,23 +1173,26 @@
 			"inputs":{
 				"isAsync":false,
 				"enableProxy":false,
-				"requestTimeoutInSecs":3,
+				"requestTimeoutInSecs":-1,
 				"httpMethod":"POST",
 				"body":{
 					"resourceType":"{{ n_1QrNY.outputs.resourceType }}",
 					"collectionName":"{{ n_1QrNY.outputs.collectionName }}",
+					"query":"{{ n_O1bos.outputs.result }}",
+					"sort":"{{ n_Lnyp7.outputs.result.sort }}",
 					"skip":"{{ n_1QrNY.outputs.skip }}",
 					"limit":"{{ n_1QrNY.outputs.limit }}",
-					"sort":"{{ n_Lnyp7.outputs.result.sort }}",
-					"query":"{{ n_O1bos.outputs.result }}",
 					"projections":"{{ n_Lnyp7.outputs.result.projection }}"
 				},
 				"connectionType":"DIRECT",
 				"sslVerify":true,
 				"path":"/internal/mongo-internal/find/{{ n_1QrNY.outputs.customerId }}",
 				"baseUrl":"{{ n_U2lhK.outputs.baseInternalUrl }}",
+				"httpVersion":"HTTP_2",
 				"bodySchema":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"resourceType":{
 							"type":"string",
@@ -1223,14 +1228,13 @@
 							"additionalProperties":false,
 							"title":"Projections"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"responseContentType":"application/json",
 				"authType":"CUSTOM",
 				"requestContentType":"application/json",
-				"ignoreTrailingSlashes":false
+				"ignoreTrailingSlashes":false,
+				"certificateType":"CERT_STRING"
 			},
 			"skip":false,
 			"subTitle":"Custom HTTP Endpoint",
@@ -1245,7 +1249,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_Lnyp7@n_qfOsw@_ZxfCG-1@1@success",
 			"id":"n_ZTJdW",
@@ -1275,7 +1279,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_Lnyp7@n_qfOsw@_ZxfCG-1@1@error",
 			"id":"n_YjMbH",
@@ -1299,7 +1303,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@2",
 			"id":"n_qfOsw@2",
@@ -1331,7 +1335,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@2",
 			"id":"n_dTBe2",
@@ -1399,7 +1403,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@2",
 			"id":"_MKgVh",
@@ -1429,7 +1433,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@3",
 			"id":"n_qfOsw@3",
@@ -1461,7 +1465,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@3",
 			"id":"_eRayP",
@@ -1479,7 +1483,6 @@
 				"sslVerify":false,
 				"path":"/internal/mongo-internal/listIndexes/{{ n_1QrNY.outputs.customerId }}",
 				"baseUrl":"{{ n_U2lhK.outputs.baseInternalUrl }}",
-				"httpVersion":"HTTP_2",
 				"bodySchema":{
 					"type":"object",
 					"properties":{
@@ -1498,8 +1501,7 @@
 				"responseContentType":"application/json",
 				"authType":"CUSTOM",
 				"requestContentType":"application/json",
-				"ignoreTrailingSlashes":false,
-				"certificateType":"CERT_STRING"
+				"ignoreTrailingSlashes":false
 			},
 			"skip":false,
 			"subTitle":"Custom HTTP Endpoint",
@@ -1514,7 +1516,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@3",
 			"id":"_Cakep",
@@ -1544,7 +1546,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@4",
 			"id":"n_qfOsw@4",
@@ -1576,7 +1578,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@4",
 			"id":"n_m2iHs",
@@ -1624,7 +1626,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@4",
 			"id":"n_dLukX",
@@ -1654,7 +1656,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@5",
 			"id":"n_qfOsw@5",
@@ -1686,7 +1688,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@5",
 			"id":"n_udMD7",
@@ -1750,7 +1752,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@5",
 			"id":"n_eZKah",
@@ -1780,7 +1782,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@6",
 			"id":"n_qfOsw@6",
@@ -1812,7 +1814,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@6",
 			"id":"n_XYRYY",
@@ -1841,7 +1843,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_XYRYY@n_qfOsw@_ZxfCG-1@6@y",
 			"id":"n_mIcJJ",
@@ -1867,7 +1869,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@6",
 			"id":"n_L44el",
@@ -1888,7 +1890,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@6",
 			"id":"n_fC5ts",
@@ -1936,7 +1938,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@6",
 			"id":"n_8LDVj",
@@ -1966,7 +1968,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@7",
 			"id":"n_qfOsw@7",
@@ -1998,7 +2000,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@7",
 			"id":"n_bDYO6",
@@ -2066,7 +2068,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@7",
 			"id":"n_vmMPI",
@@ -2092,7 +2094,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@8",
 			"id":"n_qfOsw@8",
@@ -2124,7 +2126,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@8",
 			"id":"n_AIkGF",
@@ -2196,7 +2198,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@8",
 			"id":"n_sHQab",
@@ -2222,7 +2224,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@9",
 			"id":"n_qfOsw@9",
@@ -2254,7 +2256,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@9",
 			"id":"_ea85r",
@@ -2319,7 +2321,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@9",
 			"id":"_eLf8x",
@@ -2345,7 +2347,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@10",
 			"id":"n_qfOsw@10",
@@ -2377,7 +2379,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@10",
 			"id":"_olar5",
@@ -2435,7 +2437,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@10",
 			"id":"_C2UeA",
@@ -2461,7 +2463,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@11",
 			"id":"n_qfOsw@11",
@@ -2493,7 +2495,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@11",
 			"id":"_KOdra",
@@ -2565,7 +2567,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_qfOsw@_ZxfCG-1@11",
 			"id":"_XwXqH",
@@ -2591,7 +2593,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_ZxfCG-1",
 			"id":"n_4IFBm",
@@ -2640,5 +2642,5 @@
 	"tags":[
 		"ua-infra"
 	],
-	"version":83
+	"version":85
 }
