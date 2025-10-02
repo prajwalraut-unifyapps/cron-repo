@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1747000735237,
+	"createdTime":1746006306122,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1758886296565,
+		"deployedAt":1759243664942,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68d679983323d9309656db50",
+		"deployedDefinitionId":"68dbed905e003e08cdeb3138",
 		"status":"DEPLOYED",
-		"version":86,
-		"workflowVersion":148
+		"version":47,
+		"workflowVersion":138
 	},
 	"edges":[
 		{
@@ -59,6 +59,29 @@
 			"fromNodeId":"n_o0yZa",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_0i9lF",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_0i9lF",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_v8FwC",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_v8FwC",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"Bonax",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_0i9lF",
+			"name":"no",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"Bonax",
 			"type":"next"
 		}
@@ -74,9 +97,9 @@
 		]
 	},
 	"id":"67dd2df5f1df631bbae2f509",
-	"lastModifiedBy":1,
+	"lastModifiedBy":-1,
 	"lcName":"knowledge indexer | crawl website with documents download",
-	"modifiedTime":1758963906310,
+	"modifiedTime":1759371982502,
 	"name":"Knowledge Indexer | Crawl Website with Documents Download",
 	"nodes":[
 		{
@@ -399,7 +422,7 @@
 						"websiteFetchLimit":"{{ IWZGH.outputs.websiteFetchLimit }}",
 						"fileDownloadLimit":"=IF({{ IWZGH.outputs.downloadFilesAndIndex }},{{ IWZGH.outputs.downloadFilesAndIndexLimit }},0)"
 					},
-					"userEmail":"{{ n_ljn4J.outputs.username }}",
+					"userEmail":"{{ n_ljn4J.outputs.contactDetails.email }}",
 					"url_list":{
 						"source":"{{ IWZGH.outputs.url_list }}",
 						"ua:type":"mappedArray",
@@ -409,6 +432,63 @@
 			},
 			"skip":false,
 			"subTitle":"Recursive Website Crawler",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":442,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"O66xp-1",
+			"id":"n_0i9lF",
+			"index":8,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_o0yZa.outputs.success }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"false"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":516,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_0i9lF@O66xp-1@y",
+			"id":"n_v8FwC",
+			"index":9,
+			"inputs":{
+				"automationId":"68b827559a4a9d0149caa07d",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"errorMessage":"Indexing Failed for some of the webpages/files."
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
 		},
@@ -424,7 +504,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"O66xp-1",
 			"id":"Bonax",
-			"index":8,
+			"index":10,
 			"inputs":{
 				"result":{
 					"success":true
@@ -436,7 +516,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1,
+	"ownerUserId":43069,
 	"runtimeConnectionAppNames":[
 		"scraperapi"
 	],
@@ -444,9 +524,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -454,5 +534,5 @@
 		}
 	},
 	"standard":true,
-	"version":149
+	"version":139
 }
