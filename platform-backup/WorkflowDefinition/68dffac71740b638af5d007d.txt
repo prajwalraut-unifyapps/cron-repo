@@ -5,12 +5,12 @@
 	"createdTime":1759509191525,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759509304031,
+		"deployedAt":1759510246233,
 		"deployedBy":1,
-		"deployedDefinitionId":"68dffb371740b638af5d0163",
+		"deployedDefinitionId":"68dffee6b538595991a85191",
 		"status":"DEPLOYED",
-		"version":1,
-		"workflowVersion":2
+		"version":2,
+		"workflowVersion":3
 	},
 	"edges":[
 		{
@@ -24,11 +24,26 @@
 			"fromNodeId":"n_gyMnk",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_8J8Ig",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_8J8Ig",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_r5ScI",
 			"type":"loop"
 		},
 		{
 			"fromNodeId":"n_r5ScI",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8J8Ig",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_8J8Ig",
 			"name":"loopback",
 			"priority":0,
 			"skip":false,
@@ -46,7 +61,7 @@
 	"id":"68dffac71740b638af5d007d",
 	"lastModifiedBy":1,
 	"lcName":"sub-streamconcurrencytest",
-	"modifiedTime":1759510243095,
+	"modifiedTime":1759510626733,
 	"name":"sub-streamConcurrencyTest",
 	"nodes":[
 		{
@@ -105,6 +120,29 @@
 		},
 		{
 			"context":{
+				"appName":"loop",
+				"resourceVersion":0,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_gyMnk@_4FpRJ-1@l",
+			"id":"n_8J8Ig",
+			"index":3,
+			"inputs":{
+				"repeatMode":"SINGLE",
+				"listSource":"{{ n_gyMnk.outputs.item }}",
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
 				"appName":"streams_by_unifyapps",
 				"resourceVersion":1831,
 				"resourceName":"streams_by_unifyapps_publish_event",
@@ -113,15 +151,15 @@
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"n_gyMnk@_4FpRJ-1@l",
+			"groupId":"n_8J8Ig@n_gyMnk@_4FpRJ-1@l@l",
 			"id":"n_r5ScI",
-			"index":3,
+			"index":4,
 			"inputs":{
 				"streamId":"e_68dffafca997901cb8b4851d",
 				"skipInputValidation":true,
 				"event":{
-					"event":"{{ n_gyMnk.outputs.item[0].eventId }}",
-					"group":"{{ n_gyMnk.outputs.item[0].group }}",
+					"event":"{{ n_8J8Ig.outputs.item.eventId }}",
+					"group":"{{ n_8J8Ig.outputs.item.group }}",
 					"dlqReason":"test_reason"
 				}
 			},
@@ -139,7 +177,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_4FpRJ-1",
 			"id":"n_hUVne",
-			"index":4,
+			"index":5,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -163,5 +201,5 @@
 	"tags":[
 		
 	],
-	"version":3
+	"version":4
 }
