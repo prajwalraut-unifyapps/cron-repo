@@ -7,46 +7,206 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_sNYMX",
+			"fromNodeId":"n_EUm8U",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_R4HW8",
+			"toNodeId":"n_P0boh",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_P0boh",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_c2gva",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_P0boh",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_VwFfG",
 			"type":"next"
 		}
 	],
 	"id":"68df59683437ae2d114b8434",
 	"lastModifiedBy":1,
 	"lcName":"tag_naming_rules_description_117594674099660",
-	"modifiedTime":1759467880110,
+	"modifiedTime":1759467900726,
 	"name":"Tag_naming_rules_description_117594674099660",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1722,
+				"resourceName":"callables_from_api"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_sNYMX-1",
-			"id":"_sNYMX",
-			"index":0,
+			"id":"n_EUm8U",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"input":{
+								"type":"string",
+								"title":"input"
+							}
+						},
+						"additionalProperties":false,
+						"required":[
+							"input"
+						]
+					}
+				},
+				"endpointType":"REST",
+				"response":[
+					{
+						"name":"success",
+						"status":200,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						},
+						"body":{
+							"type":"object",
+							"properties":{
+								"output":{
+									"type":"string",
+									"title":"output"
+								}
+							},
+							"additionalProperties":false,
+							"required":[
+								"output"
+							]
+						}
+					},
+					{
+						"name":"Fail",
+						"status":"400 - Bad Request",
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						},
+						"body":{
+							"type":"object",
+							"properties":{
+								"output":{
+									"type":"string",
+									"title":"output"
+								}
+							},
+							"additionalProperties":false,
+							"required":[
+								"output"
+							]
+						}
+					}
+				],
+				"streamingResponse":false
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via API",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":121,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_sNYMX-1",
-			"id":"_R4HW8",
-			"index":0,
+			"id":"n_P0boh",
+			"index":2,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_EUm8U.outputs.body.input }}",
+						"filter":{
+							"operator":"STARTS_WITH",
+							"value":"test"
+						}
+					}
+				],
+				"operator":"AND"
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1724,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_P0boh@_sNYMX-1@y",
+			"id":"n_c2gva",
+			"index":3,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_success",
+				"body":{
+					"output":"passed"
+				},
+				"status":200
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1724,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_P0boh@_sNYMX-1@n",
+			"id":"n_VwFfG",
+			"index":4,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"400 - Bad Request_Fail",
+				"body":{
+					"output":"failed"
+				},
+				"status":"400 - Bad Request"
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +220,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
