@@ -7,46 +7,197 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_hG636",
+			"fromNodeId":"n_YNT2e",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_BInY4",
+			"toNodeId":"n_GGRph",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_GGRph",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_sMBme",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_sMBme",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_lm89C",
+			"type":"scope"
+		},
+		{
+			"fromNodeId":"n_lm89C",
+			"name":"scope-loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_sMBme",
 			"type":"next"
 		}
 	],
 	"id":"68df57ca3437ae2d114b7508",
 	"lastModifiedBy":1,
 	"lcName":"schedulartriggerscopefalse_11759467410336",
-	"modifiedTime":1759467466332,
+	"modifiedTime":1759467484216,
 	"name":"schedularTriggerScopeFalse_11759467410336",
 	"nodes":[
 		{
+			"context":{
+				"appName":"schedule",
+				"resourceVersion":122,
+				"resourceName":"schedule_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_hG636-1",
-			"id":"_hG636",
-			"index":0,
+			"id":"n_YNT2e",
+			"index":1,
+			"inputs":{
+				"cron":"INTERVAL",
+				"sequential":false,
+				"interval":1,
+				"frequency":"MINUTES"
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Schedule",
+			"title":"New recurring event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"SCHEDULED"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1643,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_hG636-1",
-			"id":"_BInY4",
-			"index":0,
+			"id":"n_GGRph",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"input_number":{
+							"type":"number",
+							"title":"input_number"
+						},
+						"input_string":{
+							"type":"string",
+							"title":"input_string"
+						}
+					},
+					"required":[
+						"input_number",
+						"input_string"
+					]
+				}
+			},
+			"inputs":{
+				"input_string":"ACE",
+				"input_number":0
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"input_number":{
+							"type":"number",
+							"title":"input_number"
+						},
+						"input_string":{
+							"type":"string",
+							"title":"input_string"
+						}
+					},
+					"required":[
+						"input_number",
+						"input_string"
+					]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"scope",
+				"resourceVersion":122,
+				"resourceName":"scope_trigger_scope",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_hG636-1",
+			"id":"n_sMBme",
+			"index":3,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"{{ n_GGRph.outputs.input_string }}",
+							"filter":{
+								"operator":"NOT_CONTAINS",
+								"value":"A"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"subTitle":"Scope",
+			"title":"Trigger Scope",
+			"type":"SCOPE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1640,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION",
+				"scopeNodeId":"n_sMBme"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_sMBme@_hG636-1@s",
+			"id":"n_lm89C",
+			"index":4,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_GGRph.outputs.input_number }}",
+						"value":20
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +211,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
