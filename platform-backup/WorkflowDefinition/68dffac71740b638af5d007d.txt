@@ -9,14 +9,36 @@
 			"fromNodeId":"n_R9oI2",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_rV6tO",
+			"toNodeId":"n_gyMnk",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_gyMnk",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_r5ScI",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_r5ScI",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_gyMnk",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_gyMnk",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_hUVne",
 			"type":"next"
 		}
 	],
 	"id":"68dffac71740b638af5d007d",
 	"lastModifiedBy":1,
 	"lcName":"sub-streamconcurrencytest",
-	"modifiedTime":1759509212424,
+	"modifiedTime":1759509300225,
 	"name":"sub-streamConcurrencyTest",
 	"nodes":[
 		{
@@ -48,15 +70,72 @@
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":0,
+				"resourceName":"streams_by_unifyapps_poll_events",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_4FpRJ-1",
-			"id":"_rV6tO",
+			"id":"n_gyMnk",
 			"index":2,
+			"inputs":{
+				"streamId":"e_68dff4beec3a3e5f8690823a",
+				"repeatMode":"BATCH",
+				"batchSize":100,
+				"consumerGroup":"abcd",
+				"offsetReset":"earliest",
+				"commitOption":"COMMIT_AFTER_READ"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Streams by UnifyApps",
+			"title":"Polls for new events from stream",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":1831,
+				"resourceName":"streams_by_unifyapps_publish_event",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_gyMnk@_4FpRJ-1@l",
+			"id":"n_r5ScI",
+			"index":3,
+			"inputs":{
+				"streamId":"e_68dffafca997901cb8b4851d",
+				"skipInputValidation":false,
+				"event":{
+					"event":"{{ n_gyMnk.outputs.item[0].eventId }}",
+					"group":"{{ n_gyMnk.outputs.item[0].group }}",
+					"dlqReason":"test_reason"
+				}
+			},
+			"skip":false,
+			"subTitle":"Streams by UnifyApps",
+			"title":"Publish event to stream",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_4FpRJ-1",
+			"id":"n_hUVne",
+			"index":4,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
@@ -76,5 +155,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
