@@ -5,12 +5,12 @@
 	"createdTime":1747000742687,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759425275589,
+		"deployedAt":1759607725361,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68deb2fb1c55b7419376d6cc",
+		"deployedDefinitionId":"68e17baddaffd5540cf3bbcf",
 		"status":"DEPLOYED",
-		"version":82,
-		"workflowVersion":124
+		"version":84,
+		"workflowVersion":126
 	},
 	"edges":[
 		{
@@ -58,6 +58,13 @@
 		{
 			"fromNodeId":"aGHss",
 			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_UbnIr",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_UbnIr",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"mSSo4",
@@ -178,8 +185,15 @@
 			"name":"yes",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"qmcv4",
+			"toNodeId":"_FJi2N",
 			"type":"if"
+		},
+		{
+			"fromNodeId":"_FJi2N",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"qmcv4",
+			"type":"next"
 		},
 		{
 			"fromNodeId":"qmcv4",
@@ -231,7 +245,7 @@
 	"id":"67bdf597ba32d908560a680f",
 	"lastModifiedBy":1,
 	"lcName":"generic create case (streaming response)",
-	"modifiedTime":1759485485434,
+	"modifiedTime":1759614981205,
 	"name":"Generic Create Case (Streaming Response)",
 	"nodes":[
 		{
@@ -279,6 +293,10 @@
 						"deepResearchEnabled":{
 							"type":"boolean",
 							"title":"Deep Research Enabled"
+						},
+						"responseGenerationStatus":{
+							"type":"string",
+							"title":"Response Generation Status"
 						}
 					}
 				},
@@ -751,11 +769,12 @@
 			"index":6,
 			"inputs":{
 				"result":{
+					"messageId":"{{ 7TbGa.outputs.messageId }}",
 					"delta":{
 						"path":"*",
 						"data":"{{ Cv4iw.outputs.result.fanMessage }}"
 					},
-					"messageId":"{{ 7TbGa.outputs.messageId }}"
+					"responseGenerationStatus":"pending"
 				},
 				"completed":false
 			},
@@ -797,6 +816,30 @@
 		{
 			"context":{
 				"appName":"callables",
+				"resourceVersion":63,
+				"resourceName":"callables_return_to_automation_streaming",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"aGHss@oZEgn-1@n",
+			"id":"_UbnIr",
+			"index":8,
+			"inputs":{
+				"result":{
+					"responseGenerationStatus":"completed"
+				},
+				"completed":false
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Add response to automation stream",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
 				"resourceVersion":132,
 				"resourceName":"callables_return_to_automation_streaming",
 				"type":"APPLICATION"
@@ -806,7 +849,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"aGHss@oZEgn-1@n",
 			"id":"mSSo4",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"completed":true
 			},
@@ -824,7 +867,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"aGHss@oZEgn-1@n",
 			"id":"n_UqxyN",
-			"index":9,
+			"index":10,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -842,7 +885,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"oZEgn-1",
 			"id":"n_xaIPv",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -891,7 +934,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"oZEgn-1",
 			"id":"n_O6Uzu",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"filters":[
 					{
@@ -928,7 +971,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_O6Uzu@oZEgn-1@y",
 			"id":"_yjzTx",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
@@ -944,6 +987,7 @@
 					"operator":"AND"
 				},
 				"object_type":"e_ai_agent_streaming_detail",
+				"skipIfBlank":false,
 				"updateFields":[
 					{
 						"fieldName":"properties.waitingInstanceId",
@@ -951,16 +995,17 @@
 						"setValue":"{{ __RUN__.outputs.executionId }}"
 					},
 					{
+						"fieldName":"properties.waitingInstanceRunTimeType",
 						"actionType":"SET",
-						"setValue":"{{ __RUN__.outputs.workflowRunTimeType }}",
-						"fieldName":"properties.waitingInstanceRunTimeType"
+						"setValue":"{{ __RUN__.outputs.workflowRunTimeType }}"
 					}
 				],
 				"skipIfEmpty":false,
 				"page":{
 					"offset":0,
 					"limit":20
-				}
+				},
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"Update listener",
@@ -979,7 +1024,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_O6Uzu@oZEgn-1@n",
 			"id":"n_CKMC3",
-			"index":13,
+			"index":14,
 			"inputs":{
 				"writeThroughSessionVariables":false,
 				"object_type":"e_ai_agent_streaming_detail",
@@ -1012,7 +1057,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"oZEgn-1",
 			"id":"Rk2bL",
-			"index":14,
+			"index":15,
 			"inputs":{
 				"filters":[
 					{
@@ -1048,12 +1093,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"Rk2bL@oZEgn-1@y",
 			"id":"_VAY8l",
-			"index":15,
+			"index":16,
 			"inputs":{
 				"result":{
 					"delta":{
 						"path":"streaming failed"
-					}
+					},
+					"responseGenerationStatus":"completed"
 				},
 				"completed":false
 			},
@@ -1074,7 +1120,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Rk2bL@oZEgn-1@y",
 			"id":"_kASXa",
-			"index":16,
+			"index":17,
 			"inputs":{
 				"result":{
 					"delta":{
@@ -1097,7 +1143,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Rk2bL@oZEgn-1@y",
 			"id":"_2USRG",
-			"index":17,
+			"index":18,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -1115,7 +1161,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"oZEgn-1",
 			"id":"SHlhb",
-			"index":18,
+			"index":19,
 			"inputs":{
 				"signal_payload":{
 					"payload":{
@@ -1150,6 +1196,10 @@
 							"deepResearchEnabled":{
 								"type":"boolean",
 								"title":"Deep Research Enabled"
+							},
+							"responseGenerationStatus":{
+								"type":"string",
+								"title":"Response Generation Status"
 							}
 						}
 					}
@@ -1172,7 +1222,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"SHlhb@oZEgn-1@l",
 			"id":"MbaR4",
-			"index":19,
+			"index":20,
 			"inputs":{
 				"filters":[
 					{
@@ -1201,8 +1251,32 @@
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"MbaR4@SHlhb@oZEgn-1@l@y",
+			"id":"_FJi2N",
+			"index":21,
+			"inputs":{
+				"result":{
+					"responseGenerationStatus":"completed"
+				},
+				"completed":false
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Add response to automation stream",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":100,
+				"resourceName":"callables_return_to_automation_streaming",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"MbaR4@SHlhb@oZEgn-1@l@y",
 			"id":"qmcv4",
-			"index":20,
+			"index":22,
 			"inputs":{
 				"completed":true
 			},
@@ -1220,7 +1294,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"MbaR4@SHlhb@oZEgn-1@l@y",
 			"id":"kqWK8",
-			"index":21,
+			"index":23,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -1238,7 +1312,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"SHlhb@oZEgn-1@l",
 			"id":"bmRsZ",
-			"index":22,
+			"index":24,
 			"inputs":{
 				"result":{
 					"messageId":"{{ SHlhb.outputs.payload.messageId }}",
@@ -1247,7 +1321,8 @@
 						"data":"{{ SHlhb.outputs.payload.delta.data }}",
 						"op":"{{ SHlhb.outputs.payload.delta.op }}"
 					},
-					"deepResearchEnabled":"{{ SHlhb.outputs.payload.deepResearchEnabled }}"
+					"deepResearchEnabled":"{{ SHlhb.outputs.payload.deepResearchEnabled }}",
+					"responseGenerationStatus":"pending"
 				},
 				"completed":false
 			},
@@ -1273,7 +1348,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"oZEgn-1",
 			"id":"244Pq",
-			"index":23,
+			"index":25,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
@@ -1321,7 +1396,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"oZEgn-1",
 			"id":"m5FeP",
-			"index":24,
+			"index":26,
 			"inputs":{
 				"completed":true
 			},
@@ -1348,5 +1423,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":125
+	"version":127
 }
