@@ -40,7 +40,7 @@
 			"name":"no",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_HiLhW",
+			"toNodeId":"n_6KsI3",
 			"type":"next"
 		},
 		{
@@ -52,7 +52,7 @@
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_HiLhW",
+			"fromNodeId":"n_6KsI3",
 			"name":"loopback",
 			"priority":0,
 			"skip":false,
@@ -70,17 +70,22 @@
 	"id":"68e12d74d5d88d4123c81639",
 	"lastModifiedBy":1,
 	"lcName":"forloop",
-	"modifiedTime":1759594226439,
+	"modifiedTime":1759597201354,
 	"name":"forLoop",
 	"nodes":[
 		{
+			"additional":{
+				"xsdSchemaConfig":{
+					"root":{}
+				}
+			},
 			"context":{
 				"appName":"callables",
 				"resourceVersion":1784,
 				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_v8SjI-1",
 			"id":"n_cBF9y",
@@ -89,29 +94,23 @@
 				"result":{
 					"type":"object",
 					"additionalProperties":false,
-					"required":[
-						"output"
-					],
 					"properties":{
 						"output":{
-							"type":"string",
-							"title":"Output"
+							"type":"integer",
+							"title":"output"
 						}
 					}
 				},
 				"setup":{
 					"type":"object",
 					"additionalProperties":false,
-					"required":[
-						"NoOfIterations"
-					],
 					"properties":{
-						"NoOfIterations":{
+						"input":{
 							"type":"array",
 							"items":{
-								"type":"number"
+								"type":"integer"
 							},
-							"title":"NoOfIterations"
+							"title":"input"
 						}
 					}
 				}
@@ -132,14 +131,13 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_v8SjI-1",
 			"id":"n_Jd7ev",
 			"index":2,
 			"inputs":{
 				"repeatMode":"SINGLE",
-				"listSource":"{{ n_cBF9y.outputs.NoOfIterations }}",
 				"captureIterations":true
 			},
 			"skip":false,
@@ -178,6 +176,9 @@
 			"type":"IF_ELSE"
 		},
 		{
+			"additional":{
+				"xsdSchemaConfig":{}
+			},
 			"context":{
 				"appName":"variable_by_unifyapps",
 				"resourceVersion":1711,
@@ -198,18 +199,15 @@
 					"additionalProperties":false,
 					"type":"object",
 					"properties":{
-						"var1":{
+						"result1":{
 							"type":"integer",
-							"title":"Var 1"
+							"title":"result1"
 						}
-					},
-					"required":[
-						"var1"
-					]
+					}
 				}
 			},
 			"inputs":{
-				"var1":"{{ n_Jd7ev.outputs.item }}"
+				"result1":"{{ n_Jd7ev.outputs.item }}"
 			},
 			"outputSchema":{
 				"dynamic":false,
@@ -217,14 +215,11 @@
 					"additionalProperties":false,
 					"type":"object",
 					"properties":{
-						"var1":{
+						"result1":{
 							"type":"integer",
-							"title":"Var 1"
+							"title":"result1"
 						}
-					},
-					"required":[
-						"var1"
-					]
+					}
 				}
 			},
 			"skip":false,
@@ -234,58 +229,24 @@
 		},
 		{
 			"context":{
-				"appName":"variable_by_unifyapps",
-				"resourceVersion":1711,
-				"resourceName":"variable_by_unifyapps_create_variables",
+				"appName":"continue",
+				"resourceVersion":129,
+				"resourceName":"continue",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_nRthZ@n_Jd7ev@_v8SjI-1@l@n",
-			"id":"n_HiLhW",
+			"id":"n_6KsI3",
 			"index":5,
-			"inputSchema":{
-				"type":"SCHEMA_AND_LAYOUT",
-				"dynamic":false,
-				"layout":{},
-				"schema":{
-					"additionalProperties":false,
-					"type":"object",
-					"properties":{
-						"var1":{
-							"type":"integer",
-							"title":"Var 1"
-						}
-					},
-					"required":[
-						"var1"
-					]
-				}
-			},
 			"inputs":{
-				"var1":"{{ n_Jd7ev.outputs.item }}"
-			},
-			"outputSchema":{
-				"dynamic":false,
-				"schema":{
-					"additionalProperties":false,
-					"type":"object",
-					"properties":{
-						"var1":{
-							"type":"integer",
-							"title":"Var 1"
-						}
-					},
-					"required":[
-						"var1"
-					]
-				}
+				"loop":"n_Jd7ev"
 			},
 			"skip":false,
-			"subTitle":"Variable by UnifyApps",
-			"title":"Create variables",
-			"type":"ACTION"
+			"subTitle":"Continue",
+			"title":"Continue",
+			"type":"CONTINUE"
 		},
 		{
 			"context":{
@@ -302,7 +263,7 @@
 			"index":6,
 			"inputs":{
 				"result":{
-					"output":"=sum({{ n_WNfGv.outputs.var1 }},{{ n_HiLhW.outputs.var1 }})"
+					"output":"{{ n_WNfGv.outputs.result1 }}"
 				}
 			},
 			"skip":false,
@@ -328,5 +289,5 @@
 	"tags":[
 		
 	],
-	"version":9
+	"version":10
 }
