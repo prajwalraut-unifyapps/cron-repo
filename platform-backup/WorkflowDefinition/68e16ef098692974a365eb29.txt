@@ -7,46 +7,146 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_mCGF1",
+			"fromNodeId":"n_awd3e",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_PFzpr",
+			"toNodeId":"n_abFkJ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_abFkJ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_5WMZI",
 			"type":"next"
 		}
 	],
 	"id":"68e16ef098692974a365eb29",
 	"lastModifiedBy":1,
 	"lcName":"analytics_node_filter_ends_with_117596033317900",
-	"modifiedTime":1759604464285,
+	"modifiedTime":1759604490929,
 	"name":"Analytics_Node_Filter_Ends_With_117596033317900",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1784,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_mCGF1-1",
-			"id":"_mCGF1",
-			"index":0,
+			"id":"n_awd3e",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"output",
+						"total"
+					],
+					"properties":{
+						"output":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"output"
+						},
+						"total":{
+							"type":"integer",
+							"title":"total"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":1681,
+				"resourceName":"analytics_by_unifyapps_query_reports",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_mCGF1-1",
-			"id":"_PFzpr",
-			"index":0,
+			"id":"n_abFkJ",
+			"index":2,
+			"inputs":{
+				"projections":[
+					{
+						"name":"ENTITY_product_store_analytics_node=::=product_name",
+						"aggregationFunction":"GROUP",
+						"alias":"Product_Name",
+						"includePercentageChange":false
+					}
+				],
+				"filter":{
+					"filters":[
+						{
+							"property":"ENTITY_product_store_analytics_node=::=product_name",
+							"filter":{
+								"operator":"ENDS_WITH",
+								"value":"e"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"entityType":"ENTITY_product_store_analytics_node",
+				"includeTotalHits":true,
+				"sorts":[
+					{
+						"field":"Product_Name",
+						"order":"DESC"
+					}
+				],
+				"group":"ENTITY_REPORTING"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Analytics by UnifyApps",
+			"title":"Analytics Query",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1787,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_mCGF1-1",
+			"id":"n_5WMZI",
+			"index":3,
+			"inputs":{
+				"result":{
+					"output":"{{ n_abFkJ.outputs.objects }}",
+					"total":"{{ n_abFkJ.outputs.total }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +160,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
