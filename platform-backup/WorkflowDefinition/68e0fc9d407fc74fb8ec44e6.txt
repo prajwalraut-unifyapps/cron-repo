@@ -9,19 +9,102 @@
 			"fromNodeId":"n_pQu77",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_6tLoP",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_6tLoP",
+			"name":"1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_6tLoP@1",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_6tLoP@1",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_ZAAml",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_6tLoP",
+			"name":"2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_6tLoP@2",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_6tLoP@2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_XRMc8",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_6tLoP",
+			"name":"3",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_6tLoP@3",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_6tLoP@3",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_8gV8g",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_ZAAml",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8a019",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_XRMc8",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8a019",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_8gV8g",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8a019",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_6tLoP",
+			"name":"default",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8a019",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_8a019",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Kzv5a",
 			"type":"next"
 		}
 	],
 	"id":"68e0fc9d407fc74fb8ec44e6",
 	"lastModifiedBy":23949,
 	"lcName":"multi tenancy | move all assets",
-	"modifiedTime":1759577847073,
+	"modifiedTime":1759579810446,
 	"name":"Multi Tenancy | Move All assets",
 	"nodes":[
 		{
 			"context":{
-				"appName":"callables"
+				"appName":"callables",
+				"resourceVersion":1010,
+				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
 			"dirty":true,
@@ -29,13 +112,101 @@
 			"groupId":"_WUbts-1",
 			"id":"n_pQu77",
 			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"Result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"environmentIdList":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Environment Id List"
+						}
+					}
+				}
+			},
 			"skip":false,
 			"subTitle":"Callable",
-			"title":"Select a trigger event",
+			"title":"Trigger via automation",
 			"trigger":{
 				"type":"CALLABLE"
 			},
 			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"branch",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_WUbts-1",
+			"id":"n_6tLoP",
+			"index":2,
+			"inputs":{
+				"branches":[
+					{
+						"id":"1",
+						"inputs":{
+							"name":"Branch 1"
+						}
+					},
+					{
+						"id":"2",
+						"inputs":{
+							"name":"Branch 2"
+						}
+					},
+					{
+						"id":"3",
+						"inputs":{
+							"name":"Branch 3"
+						}
+					},
+					{
+						"id":"default"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Branch",
+			"title":"",
+			"type":"BRANCH"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceVersion":0,
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_6tLoP@_WUbts-1@1",
+			"id":"n_6tLoP@1",
+			"index":3,
+			"inputs":{
+				"name":"Branch 1"
+			},
+			"skip":false,
+			"title":"",
+			"type":"BRANCH_CONDITION"
 		},
 		{
 			"context":{
@@ -47,11 +218,11 @@
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"_WUbts-1",
+			"groupId":"n_6tLoP@_WUbts-1@1",
 			"id":"n_ZAAml",
-			"index":2,
+			"index":4,
 			"inputs":{
-				"automationId":"68e10013ea707a2087a6fc55",
+				"automationId":"68e1088c70c2f233effd889c",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
@@ -61,6 +232,134 @@
 			"subTitle":"Application, Packages and Modules with dependencies",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceVersion":0,
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_6tLoP@_WUbts-1@2",
+			"id":"n_6tLoP@2",
+			"index":5,
+			"inputs":{
+				"name":"Branch 2"
+			},
+			"skip":false,
+			"title":"",
+			"type":"BRANCH_CONDITION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1066,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_6tLoP@_WUbts-1@2",
+			"id":"n_XRMc8",
+			"index":6,
+			"inputs":{
+				"automationId":"68e1088c70c2f233effd889c",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1"
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceVersion":0,
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_6tLoP@_WUbts-1@3",
+			"id":"n_6tLoP@3",
+			"index":7,
+			"inputs":{
+				"name":"Branch 3"
+			},
+			"skip":false,
+			"title":"",
+			"type":"BRANCH_CONDITION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1066,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_6tLoP@_WUbts-1@3",
+			"id":"_8gV8g",
+			"index":8,
+			"inputs":{
+				"automationId":"68e10bbf5ea3946cb581ceb5",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_WUbts-1",
+			"id":"n_8a019",
+			"index":9,
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Select an action",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1046,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_WUbts-1",
+			"id":"n_Kzv5a",
+			"index":10,
+			"inputs":{
+				"result":{
+					"result":"success"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":23949,
@@ -80,5 +379,5 @@
 	"tags":[
 		
 	],
-	"version":3
+	"version":7
 }
