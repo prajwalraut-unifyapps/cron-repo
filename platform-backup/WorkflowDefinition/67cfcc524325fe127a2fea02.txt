@@ -5,12 +5,12 @@
 	"createdTime":1747034403326,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759425352620,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68deb3481c55b7419376d8ba",
+		"deployedAt":1759614932527,
+		"deployedBy":1,
+		"deployedDefinitionId":"68e197d45045f405579aeda0",
 		"status":"DEPLOYED",
-		"version":70,
-		"workflowVersion":100
+		"version":73,
+		"workflowVersion":103
 	},
 	"edges":[
 		{
@@ -124,7 +124,7 @@
 	"id":"67cfcc524325fe127a2fea02",
 	"lastModifiedBy":1,
 	"lcName":"[ms teams] index attachments",
-	"modifiedTime":1759485456243,
+	"modifiedTime":1759685277637,
 	"name":"[MS Teams] Index attachments",
 	"nodes":[
 		{
@@ -459,6 +459,10 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"chunkMetadata"
+					],
 					"properties":{
 						"chunkMetadata":{
 							"type":"object",
@@ -466,14 +470,19 @@
 							"additionalProperties":false,
 							"title":"Chunk Metadata"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"chunkMetadata"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"messageId",
+						"appName",
+						"referenceUrl",
+						"author",
+						"creationDateTime",
+						"fileName"
+					],
 					"properties":{
 						"messageId":{
 							"type":"string",
@@ -499,19 +508,11 @@
 							"type":"string",
 							"title":"File Name"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"messageId",
-						"appName",
-						"referenceUrl",
-						"author",
-						"creationDateTime",
-						"fileName"
-					]
+					}
 				},
-				"compile_static":false,
 				"code":"def chunk_metadata = [:]\nchunk_metadata << (binding.hasVariable('messageId') && messageId ? [\"messageId\": messageId] : [:])\nchunk_metadata << (binding.hasVariable('appName') && appName ? [\"appName\": appName] : [:])\nchunk_metadata << (binding.hasVariable('referenceUrl') && referenceUrl ? [\"referenceUrl\": referenceUrl] : [:])\nchunk_metadata << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nchunk_metadata << (binding.hasVariable('creationDateTime') && creationDateTime ? [\"date\": java.time.Instant.parse(creationDateTime).toEpochMilli()] : [:])\nchunk_metadata << (binding.hasVariable('fileName') && fileName ? [\"fileName\": fileName] : [:])\nreturn [\"chunkMetadata\":chunk_metadata]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"appName":"microsoft_teams",
 					"referenceUrl":"{{ whPBc.outputs.downloadUrl }}",
@@ -630,35 +631,13 @@
 			"inputs":{
 				"filters":[
 					{
-						"property":"{{ whPBc.outputs.file.mimeType }}",
+						"property":"{{ R2iXy.outputs.chunks }}",
 						"filter":{
-							"operator":"NOT_EQUAL",
-							"value":"application/pdf"
-						}
-					},
-					{
-						"property":"{{ whPBc.outputs.file.mimeType }}",
-						"filter":{
-							"operator":"NOT_CONTAINS",
-							"value":"pdf"
-						}
-					},
-					{
-						"property":"{{ whPBc.outputs.file.mimeType }}",
-						"filter":{
-							"operator":"NOT_CONTAINS",
-							"value":"sheet"
-						}
-					},
-					{
-						"property":"{{ whPBc.outputs.file.mimeType }}",
-						"filter":{
-							"operator":"NOT_CONTAINS",
-							"value":"excel"
+							"operator":"EXISTS"
 						}
 					}
 				],
-				"operator":"OR"
+				"operator":"AND"
 			},
 			"skip":false,
 			"subTitle":"Condition",
@@ -761,9 +740,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -771,5 +750,5 @@
 		}
 	},
 	"standard":true,
-	"version":101
+	"version":104
 }
