@@ -70,7 +70,7 @@
 	"id":"6849acdc4896ec086878e64d",
 	"lastModifiedBy":1,
 	"lcName":"people indexer | okta",
-	"modifiedTime":1759695682838,
+	"modifiedTime":1759695693013,
 	"name":"People Indexer | Okta",
 	"nodes":[
 		{
@@ -214,7 +214,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"I8BVP-1",
 			"id":"_HM2zo",
@@ -222,6 +222,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"hasMore":{
 							"type":"boolean",
@@ -233,23 +235,22 @@
 							"additionalProperties":false,
 							"title":"Cursor"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"nextUrl":{
 							"type":"string",
 							"title":"Next Url"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"def getAfterCursor(nextUrl) {\n    def uri = new URI(nextUrl)\n    def queryParams = uri.query?.split('&')?.find { it.startsWith('after=') }\n    return queryParams ? queryParams.split('=')[1] : null\n}\n\ndef nextUrl = binding.hasVariable(\"nextUrl\") ? nextUrl : null\nreturn [\n    \"cursor\" : [\"nextCursor\" : (nextUrl != null ? getAfterCursor(nextUrl) : null)],\n    \"hasMore\" : nextUrl != null\n]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"nextUrl":"{{ _gpOAa.outputs.nextUrl }}"
 				}
@@ -302,5 +303,5 @@
 		}
 	},
 	"standard":true,
-	"version":58
+	"version":59
 }
