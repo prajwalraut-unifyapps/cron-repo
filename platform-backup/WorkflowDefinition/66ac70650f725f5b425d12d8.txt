@@ -5,12 +5,12 @@
 	"createdTime":1747000715279,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759572937504,
+		"deployedAt":1759614993055,
 		"deployedBy":1,
-		"deployedDefinitionId":"68e0f3c9d910fc16a4951904",
+		"deployedDefinitionId":"68e198115045f405579af09e",
 		"status":"DEPLOYED",
-		"version":85,
-		"workflowVersion":752
+		"version":88,
+		"workflowVersion":755
 	},
 	"description":"All LLM calls related to ai agent goes through this automation",
 	"edges":[
@@ -81,6 +81,29 @@
 		},
 		{
 			"fromNodeId":"_AdLmL",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_VqlW2",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_VqlW2",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_fE8bT",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_fE8bT",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"lBUmq",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_VqlW2",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"lBUmq",
@@ -400,7 +423,7 @@
 	"id":"66ac70650f725f5b425d12d8",
 	"lastModifiedBy":1,
 	"lcName":"call llm (ai agent)",
-	"modifiedTime":1759583686372,
+	"modifiedTime":1759685380409,
 	"name":"Call LLM (AI Agent)",
 	"nodes":[
 		{
@@ -418,6 +441,8 @@
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"llmResponse":{
 							"type":"string",
@@ -478,12 +503,14 @@
 							"type":"string",
 							"title":"Thinking Signature"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"systemPrompt"
+					],
 					"properties":{
 						"aiAgentId":{
 							"type":"string",
@@ -631,12 +658,12 @@
 						"isMultipleToolCallEnabled":{
 							"type":"boolean",
 							"title":"Is Multiple Tool Call Enabled"
+						},
+						"useProviderWebSearch":{
+							"type":"boolean",
+							"title":"useProviderWebSearch"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"systemPrompt"
-					]
+					}
 				}
 			},
 			"skip":false,
@@ -663,19 +690,20 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"now"
+					],
 					"properties":{
 						"now":{
 							"type":"integer",
 							"title":"Now"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"now"
-					]
+					}
 				},
+				"code":"return ['now': System.currentTimeMillis()]",
 				"compile_static":false,
-				"code":"return ['now': System.currentTimeMillis()]"
+				"captureStdOutput":false
 			},
 			"skip":false,
 			"subTitle":"startTime",
@@ -706,6 +734,7 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
 					"properties":{
 						"tools":{
 							"type":"array",
@@ -740,11 +769,11 @@
 							},
 							"title":"tools"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
 					"properties":{
 						"tools":{
 							"type":"array",
@@ -779,11 +808,11 @@
 							},
 							"title":"tools"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
-				"compile_static":false,
 				"code":"def uniqueTools = []\ndef toolNames = [] as Set\nif (!binding.hasVariable(\"tools\")){\n    return []\n}\ntools.each { tool ->\n    if (!toolNames.contains(tool?.function?.name)) {\n        uniqueTools << tool\n        toolNames << tool.function.name\n    }\n}\nreturn [\"tools\": uniqueTools]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"tools":{
 						"source":"{{ EE8de.outputs.tools }}",
@@ -1328,6 +1357,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"topK":{
 							"type":"integer",
@@ -1390,12 +1421,12 @@
 							"title":"Thinking Config",
 							"required":[]
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"settingsFromModel":{
 							"type":"object",
@@ -1511,13 +1542,12 @@
 							"title":"customHttpEndpoint",
 							"required":[]
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"def toReturn = [:]\ndef sm = [:]\nif(binding.hasVariable('settingsFromModel')){\n  sm = settingsFromModel\n}\ndef es = [:]\nif(binding.hasVariable('externalSettings')){\n   es = externalSettings\n}\ndef che = [:]\nif(binding.hasVariable('customHttpEndpoint')){\n   che = customHttpEndpoint\n}\n\ndef defaultValues = [\n  \"topK\" : 0, \n  \"topP\": 0, \n  \"maxOutputTokens\": 102400, \n  \"presencePenalty\": 0, \n  \"frequencyPenalty\": 0, \n  \"temperature\": 0,\n  \"customBaseUrl\": \"\",\n  \"customPath\": \"/v1/chat/completions\",\n  \"customHeadersList\": [],\n  \"auth_key\":\"\",\n  \"thinkingConfig\": [\n    \"includeThoughts\": false,\n    \"thinkingBudget\": 0\n  ]\n]\n\ndef metrics = [\n  \"topK\", \n  \"topP\", \n  \"maxOutputTokens\", \n  \"presencePenalty\", \n  \"frequencyPenalty\", \n  \"temperature\",\n  \"customBaseUrl\",\n  \"customPath\",\n  \"customHeadersList\",\n  \"auth_key\",\n  \"thinkingConfig\"\n]\n\nfor(metric in metrics) {\n  if(es[metric] != null) {\n    toReturn[metric] = es[metric]\n  } else if(sm[metric] != null) {\n    toReturn[metric] = sm[metric]\n  } else if(che[metric] != null) {\n    toReturn[metric] = che[metric]\n  } else {\n    toReturn[metric] = defaultValues[metric]\n  }\n}\n\n// Extract the authorization key from customHeadersList, if present\nif (che.containsKey('customHeadersList') && che.customHeadersList != null) {\n  che.customHeadersList.each { header ->\n    if (header?.key?.equalsIgnoreCase(\"Authorization\")) {\n      toReturn[\"auth_key\"] = header?.value\n    }\n  }\n}\n\nreturn toReturn",
+				"compile_static":false,
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"settingsFromModel":{
 						"topK":"{{ n_rQhLl.outputs.properties.settings.topK }}",
@@ -1561,6 +1591,90 @@
 		{
 			"context":{
 				"appName":"if_else",
+				"resourceVersion":442,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"2b3FF-1",
+			"id":"n_VqlW2",
+			"index":10,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ EE8de.outputs.useProviderWebSearch }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"true"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"useProviderWebSearch",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":0,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_VqlW2@2b3FF-1@y",
+			"id":"n_fE8bT",
+			"index":11,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"plugins":{
+							"type":"array",
+							"items":{
+								"type":"object"
+							},
+							"title":"plugins"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"provider":{
+							"type":"string",
+							"title":"provider"
+						},
+						"baseUrl":{
+							"type":"string",
+							"title":"baseUrl"
+						}
+					}
+				},
+				"code":"def tools = binding.hasVariable('tools')?binding.getVariable('tools'):[]\ndef provider = binding.hasVariable('provider') ? binding.getVariable('provider') as String : ''\ndef baseUrl  = binding.hasVariable('baseUrl')  ? binding.getVariable('baseUrl')  as String : ''\n\ndef uniqueTools = []\ntools.each { tool ->\n  if (tool?.function?.name != \"WebSearch\") {\n    uniqueTools << tool\n  }\n}\n\nif (provider == 'custom_http_openai_type_payload' && baseUrl.contains('openrouter')) {\n  return [\n    plugins: [\n      [id: 'web']\n    ],\n    tools:uniqueTools\n  ]\n}\nelse{\n  return [\n    tools:tools\n  ]\n}",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"provider":"{{ n_rQhLl.outputs.properties.provider }}",
+					"baseUrl":"{{ n_rQhLl.outputs.properties.customHttpEndpoint.baseUrl }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"plugins",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
 				"resourceVersion":82,
 				"resourceName":"if_else_condition",
 				"type":"APPLICATION"
@@ -1570,7 +1684,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"2b3FF-1",
 			"id":"lBUmq",
-			"index":10,
+			"index":12,
 			"inputs":{
 				"filters":[
 					{
@@ -1583,7 +1697,7 @@
 				"operator":"AND"
 			},
 			"skip":false,
-			"subTitle":"Condition",
+			"subTitle":"retryCount",
 			"title":"Condition",
 			"type":"IF_ELSE"
 		},
@@ -1599,7 +1713,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"lBUmq@2b3FF-1@y",
 			"id":"nohe2",
-			"index":11,
+			"index":13,
 			"inputs":{
 				"variables":[
 					{
@@ -1623,7 +1737,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"2b3FF-1",
 			"id":"_NVWeC",
-			"index":12,
+			"index":14,
 			"inputs":{
 				"branches":[
 					{
@@ -1720,7 +1834,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NVWeC@2b3FF-1@1",
 			"id":"_NVWeC@1",
-			"index":13,
+			"index":15,
 			"inputs":{
 				"name":"anthropic",
 				"conditions":{
@@ -1781,7 +1895,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NVWeC@2b3FF-1@1",
 			"id":"_QyrqK",
-			"index":14,
+			"index":16,
 			"inputs":{
 				"callableInterfaceId":"__ua__call_llm_model_interface",
 				"runtimeConnections":{
@@ -1858,7 +1972,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"_NVWeC@2b3FF-1@1",
 			"id":"b4zCi",
-			"index":15,
+			"index":17,
 			"inputs":{
 				"automationId":"680bb38e89c13d6ab6b7babe",
 				"runtimeConnections":{},
@@ -1926,7 +2040,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NVWeC@2b3FF-1@1",
 			"id":"_MOfK3",
-			"index":16,
+			"index":18,
 			"inputs":{
 				"variables":[
 					{
@@ -1986,7 +2100,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NVWeC@2b3FF-1@1",
 			"id":"kASo0",
-			"index":17,
+			"index":19,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -2016,7 +2130,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NVWeC@2b3FF-1@3",
 			"id":"_NVWeC@3",
-			"index":18,
+			"index":20,
 			"inputs":{
 				"name":"bedrock",
 				"conditions":{
@@ -2077,7 +2191,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NVWeC@2b3FF-1@3",
 			"id":"2lchf",
-			"index":19,
+			"index":21,
 			"inputs":{
 				"automationId":"67b5fae75142a26fcdaba936",
 				"runtimeConnections":{},
@@ -2138,7 +2252,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NVWeC@2b3FF-1@3",
 			"id":"_wBEir",
-			"index":20,
+			"index":22,
 			"inputs":{
 				"callableInterfaceId":"__ua__call_llm_model_interface",
 				"runtimeConnections":{
@@ -2224,7 +2338,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_NVWeC@2b3FF-1@3",
 			"id":"hcX8G",
-			"index":21,
+			"index":23,
 			"inputs":{
 				"filters":[
 					{
@@ -2273,7 +2387,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hcX8G@_NVWeC@2b3FF-1@3@y",
 			"id":"cJQ5u",
-			"index":22,
+			"index":24,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -2401,7 +2515,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hcX8G@_NVWeC@2b3FF-1@3@y",
 			"id":"8znN4",
-			"index":23,
+			"index":25,
 			"inputs":{
 				"callableInterfaceId":"__ua__call_llm_model_interface",
 				"runtimeConnections":{
@@ -2477,7 +2591,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"hcX8G@_NVWeC@2b3FF-1@3@y",
 			"id":"39eRv",
-			"index":24,
+			"index":26,
 			"inputs":{
 				"automationId":"680bb38e89c13d6ab6b7babe",
 				"runtimeConnections":{},
@@ -2539,7 +2653,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hcX8G@_NVWeC@2b3FF-1@3@y",
 			"id":"d5mrL",
-			"index":25,
+			"index":27,
 			"inputs":{
 				"variables":[
 					{
@@ -2599,7 +2713,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hcX8G@_NVWeC@2b3FF-1@3@y",
 			"id":"R33oE",
-			"index":26,
+			"index":28,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -2629,7 +2743,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"hcX8G@_NVWeC@2b3FF-1@3@n",
 			"id":"2d2Iw",
-			"index":27,
+			"index":29,
 			"inputs":{
 				"automationId":"680bb38e89c13d6ab6b7babe",
 				"runtimeConnections":{},
@@ -2697,7 +2811,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hcX8G@_NVWeC@2b3FF-1@3@n",
 			"id":"_I6Wds",
-			"index":28,
+			"index":30,
 			"inputs":{
 				"variables":[
 					{
@@ -2757,7 +2871,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"hcX8G@_NVWeC@2b3FF-1@3@n",
 			"id":"Fa9Zn",
-			"index":29,
+			"index":31,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -2787,7 +2901,7 @@
 			"fallbackMode":"MANUAL",
 			"groupId":"_NVWeC@2b3FF-1@default",
 			"id":"NgK8L",
-			"index":30,
+			"index":32,
 			"inputs":{
 				"callableInterfaceId":"__ua__call_llm_model_interface",
 				"runtimeConnections":{
@@ -3441,6 +3555,11 @@
 								"parameters":"{{ tFPm9.outputs.result.tools[0].function.parameters }}"
 							}
 						}
+					},
+					"plugins":{
+						"source":"{{ n_fE8bT.outputs.result.plugins }}",
+						"ua:type":"mappedArray",
+						"items":"{{ n_fE8bT.outputs.result.plugins[0] }}"
 					}
 				}
 			},
@@ -3494,7 +3613,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"NgK8L@_NVWeC@2b3FF-1@default@success",
 			"id":"wS3r8",
-			"index":31,
+			"index":33,
 			"inputs":{
 				"automationId":"680bb38e89c13d6ab6b7babe",
 				"runtimeConnections":{},
@@ -3562,7 +3681,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"NgK8L@_NVWeC@2b3FF-1@default@success",
 			"id":"d1NGP",
-			"index":32,
+			"index":34,
 			"inputs":{
 				"variables":[
 					{
@@ -3623,7 +3742,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"NgK8L@_NVWeC@2b3FF-1@default@success",
 			"id":"nw9FK",
-			"index":33,
+			"index":35,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -3654,7 +3773,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"NgK8L@_NVWeC@2b3FF-1@default@error",
 			"id":"BVlUI",
-			"index":34,
+			"index":36,
 			"inputs":{
 				"filters":[
 					{
@@ -3684,7 +3803,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"BVlUI@NgK8L@_NVWeC@2b3FF-1@default@error@y",
 			"id":"n_MZncg",
-			"index":35,
+			"index":37,
 			"inputs":{
 				"automationId":"68b827559a4a9d0149caa07d",
 				"runtimeConnections":{},
@@ -3738,7 +3857,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"NgK8L@_NVWeC@2b3FF-1@default@error",
 			"id":"5bp5f",
-			"index":36,
+			"index":38,
 			"inputs":{
 				"automationId":"66ac70650f725f5b425d12d8",
 				"runtimeConnections":{},
@@ -3806,7 +3925,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"NgK8L@_NVWeC@2b3FF-1@default@error",
 			"id":"hH8bw",
-			"index":37,
+			"index":39,
 			"inputs":{
 				"automationId":"680bb38e89c13d6ab6b7babe",
 				"runtimeConnections":{},
@@ -3874,7 +3993,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"NgK8L@_NVWeC@2b3FF-1@default@error",
 			"id":"ixnJH",
-			"index":38,
+			"index":40,
 			"inputs":{
 				"variables":[
 					{
@@ -3934,7 +4053,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"NgK8L@_NVWeC@2b3FF-1@default@error",
 			"id":"1uRxK",
-			"index":39,
+			"index":41,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -3964,7 +4083,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"2b3FF-1",
 			"id":"_KVTMx",
-			"index":40,
+			"index":42,
 			"inputs":{
 				"filters":[
 					{
@@ -3994,7 +4113,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KVTMx@2b3FF-1@y",
 			"id":"6adYg",
-			"index":41,
+			"index":43,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -4042,7 +4161,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KVTMx@2b3FF-1@y",
 			"id":"_ptMKL",
-			"index":42,
+			"index":44,
 			"inputs":{
 				"variables":[
 					{
@@ -4068,7 +4187,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"2b3FF-1",
 			"id":"BXNis",
-			"index":43,
+			"index":45,
 			"inputs":{
 				"variableSchema":{
 					"type":"object",
@@ -4099,7 +4218,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"2b3FF-1",
 			"id":"27dr9",
-			"index":44,
+			"index":46,
 			"inputs":{
 				"result":{
 					"tools":{
@@ -4133,9 +4252,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -4146,5 +4265,5 @@
 		"AI Agent",
 		"Internal"
 	],
-	"version":753
+	"version":756
 }
