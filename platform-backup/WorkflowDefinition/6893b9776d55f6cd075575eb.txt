@@ -5,12 +5,12 @@
 	"createdTime":1756369498410,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759757181309,
+		"deployedAt":1759757325257,
 		"deployedBy":1,
-		"deployedDefinitionId":"68e3c37d884102285c28711c",
+		"deployedDefinitionId":"68e3c40d884102285c287843",
 		"status":"DEPLOYED",
-		"version":60,
-		"workflowVersion":71
+		"version":61,
+		"workflowVersion":72
 	},
 	"edges":[
 		{
@@ -98,7 +98,7 @@
 	"id":"6893b9776d55f6cd075575eb",
 	"lastModifiedBy":1,
 	"lcName":"fetch trending documents ",
-	"modifiedTime":1759757322211,
+	"modifiedTime":1759761490503,
 	"name":"Fetch Trending Documents ",
 	"nodes":[
 		{
@@ -490,7 +490,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_0kAlG@_AXVrP-1@l",
 			"id":"n_Rig8e",
@@ -563,14 +563,16 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
+			"dirty":true,
+			"fallbackMode":"CONTINUE",
 			"groupId":"n_0kAlG@_AXVrP-1@l",
 			"id":"n_jMonc",
 			"index":8,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"citation":{
 							"type":"object",
@@ -578,12 +580,15 @@
 							"additionalProperties":false,
 							"title":"Citation"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"author",
+						"mimeType"
+					],
 					"properties":{
 						"citation":{
 							"type":"object",
@@ -599,18 +604,67 @@
 							"type":"string",
 							"title":"Mime Type"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"author",
-						"mimeType"
-					]
+					}
 				},
-				"compile_static":false,
 				"code":"if(binding.hasVariable('citation')) {\n  if(binding.hasVariable('author')) {\n  citation.put(\"author\", author)\n  }\n  if(citation.get(\"fileType\")!= null) {\n    citation.put(\"mimeType\", citation.get(\"fileType\"))\n    if(citation.get(\"knowledgeSourceType\") == null)\n     citation.put(\"knowledgeSourceType\", \"FILE\")\n  }\n}\n\nreturn [\"citation\": citation]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"citation":"{{ n_QTDa6.outputs.citationData[0] }}",
 					"author":"{{ n_Rig8e.outputs.properties.authorEmail }}"
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"CONTINUE",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
 				}
 			},
 			"skip":false,
@@ -626,7 +680,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_0kAlG@_AXVrP-1@l",
 			"id":"_6bGU7",
@@ -634,6 +688,7 @@
 			"inputs":{
 				"itemToAdd":"{{ n_jMonc.outputs.result.citation }}",
 				"insertLocation":"END",
+				"nonThreadSafeAddition":false,
 				"listName":"{{ n_yj7WR.outputs.items[0] }}"
 			},
 			"skip":false,
@@ -683,5 +738,5 @@
 		}
 	},
 	"standard":true,
-	"version":72
+	"version":73
 }
