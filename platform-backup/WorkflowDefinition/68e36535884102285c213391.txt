@@ -7,46 +7,202 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_0TfSc",
+			"fromNodeId":"n_3EI2E",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_tOFXe",
+			"toNodeId":"n_0F4iC",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_0F4iC",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_xqmRr",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_xqmRr",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_eSd6V",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_eSd6V",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_xqmRr",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_xqmRr",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Ho7wb",
 			"type":"next"
 		}
 	],
 	"id":"68e36535884102285c213391",
 	"lastModifiedBy":1,
 	"lcName":"whileloopcontains11759733038795",
-	"modifiedTime":1759733045040,
+	"modifiedTime":1759733082911,
 	"name":"whileLoopContains11759733038795",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":131,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_0TfSc-1",
-			"id":"_0TfSc",
-			"index":0,
+			"id":"n_3EI2E",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1836,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_0TfSc-1",
-			"id":"_tOFXe",
-			"index":0,
+			"id":"n_0F4iC",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"string",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
+			"inputs":{
+				"i":"0"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"string",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":135,
+				"resourceName":"loop_while",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_0TfSc-1",
+			"id":"n_xqmRr",
+			"index":3,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"{{ n_0F4iC.outputs.i }}",
+							"filter":{
+								"operator":"CONTAINS",
+								"value":"0"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"break",
+				"resourceVersion":134,
+				"resourceName":"break",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_xqmRr@_0TfSc-1@l",
+			"id":"n_eSd6V",
+			"index":4,
+			"inputs":{
+				"loop":"n_xqmRr"
+			},
+			"skip":false,
+			"subTitle":"Break",
+			"title":"Break",
+			"type":"BREAK"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_0TfSc-1",
+			"id":"n_Ho7wb",
+			"index":5,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +216,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
