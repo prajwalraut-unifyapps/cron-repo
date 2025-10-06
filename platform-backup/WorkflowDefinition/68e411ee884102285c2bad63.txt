@@ -7,46 +7,143 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_jAIY4",
+			"fromNodeId":"n_WqJTX",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_zw5zn",
+			"toNodeId":"n_m8XMd",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_m8XMd",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_QmLzG",
 			"type":"next"
 		}
 	],
 	"id":"68e411ee884102285c2bad63",
 	"lastModifiedBy":1,
 	"lcName":"verify_api_request_timeout_117597762599160",
-	"modifiedTime":1759777262417,
+	"modifiedTime":1759777282978,
 	"name":"Verify_API_Request_Timeout_117597762599160",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1901,
+				"resourceName":"callables_from_api"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_jAIY4-1",
-			"id":"_jAIY4",
-			"index":0,
+			"id":"n_WqJTX",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"String1":{
+								"type":"string",
+								"title":"String1"
+							},
+							"String2":{
+								"type":"string",
+								"title":"String2"
+							}
+						},
+						"additionalProperties":false
+					}
+				},
+				"endpointType":"REST",
+				"response":[
+					{
+						"name":"200",
+						"status":200,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						},
+						"body":{
+							"type":"object",
+							"properties":{
+								"response":{
+									"type":"string",
+									"title":"response"
+								}
+							},
+							"additionalProperties":false,
+							"required":[
+								"response"
+							]
+						}
+					}
+				],
+				"streamingResponse":false
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via API",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"delay",
+				"resourceVersion":134,
+				"resourceName":"delay_for",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_jAIY4-1",
-			"id":"_zw5zn",
-			"index":0,
+			"id":"n_m8XMd",
+			"index":2,
+			"inputs":{
+				"duration":5,
+				"unit":"SECONDS"
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Delay",
+			"title":"Set delay duration",
+			"type":"DELAY"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1903,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_jAIY4-1",
+			"id":"n_QmLzG",
+			"index":3,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_200",
+				"body":{
+					"response":"My name is {{ n_WqJTX.outputs.body.String1 }}and profession is {{ n_WqJTX.outputs.body.String2 }}"
+				},
+				"status":200
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +157,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
