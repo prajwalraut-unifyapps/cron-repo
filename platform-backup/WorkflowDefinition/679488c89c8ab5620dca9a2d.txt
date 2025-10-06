@@ -5,12 +5,12 @@
 	"createdTime":1747000713370,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759425257812,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68deb2e91c55b7419376d64d",
+		"deployedAt":1759727040558,
+		"deployedBy":1,
+		"deployedDefinitionId":"68e34dc0884102285c1fb0c8",
 		"status":"DEPLOYED",
-		"version":86,
-		"workflowVersion":101
+		"version":92,
+		"workflowVersion":107
 	},
 	"edges":[
 		{
@@ -36,36 +36,6 @@
 		},
 		{
 			"fromNodeId":"Oqpz0",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"0Ddqq",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"0Ddqq",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"LL5YS",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"LL5YS",
-			"name":"yes",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"mlF3Y",
-			"type":"if"
-		},
-		{
-			"fromNodeId":"mlF3Y",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"2Hliz",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"LL5YS",
-			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"2Hliz",
@@ -105,11 +75,41 @@
 			"fromNodeId":"QABRo",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"xBlW5",
+			"toNodeId":"0Ddqq",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"plXOU",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"0Ddqq",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"0Ddqq",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"LL5YS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"LL5YS",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"mlF3Y",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"mlF3Y",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"xBlW5",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"LL5YS",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"xBlW5",
@@ -157,9 +157,9 @@
 		]
 	},
 	"id":"679488c89c8ab5620dca9a2d",
-	"lastModifiedBy":1,
+	"lastModifiedBy":-1,
 	"lcName":"invokeagent tool",
-	"modifiedTime":1759485569758,
+	"modifiedTime":1759781154115,
 	"name":"InvokeAgent Tool",
 	"nodes":[
 		{
@@ -173,7 +173,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Ef7LG-1",
 			"id":"0RCNc",
-			"index":0,
+			"index":1,
 			"inputs":{
 				"result":{
 					"additionalProperties":false,
@@ -255,7 +255,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Ef7LG-1",
 			"id":"KzToS",
-			"index":0,
+			"index":2,
 			"inputs":{
 				"variableSchema":{
 					"type":"object",
@@ -294,7 +294,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Ef7LG-1",
 			"id":"yOgsC",
-			"index":0,
+			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -550,10 +550,15 @@
 			"fallbackMode":"STOP",
 			"groupId":"Ef7LG-1",
 			"id":"Oqpz0",
-			"index":0,
+			"index":4,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"agentName",
+						"query"
+					],
 					"properties":{
 						"agentName":{
 							"type":"string",
@@ -563,15 +568,14 @@
 							"type":"string",
 							"title":"Query"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"agentName",
-						"query"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"toolInputs"
+					],
 					"properties":{
 						"toolInputs":{
 							"type":"object",
@@ -579,14 +583,11 @@
 							"additionalProperties":false,
 							"title":"Tool Inputs"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"toolInputs"
-					]
+					}
 				},
-				"compile_static":false,
 				"code":"if(!binding.hasVariable('toolInputs')){\n  return [:]\n}\nreturn [\"agentName\": toolInputs.agentName, \"query\": toolInputs.query]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"toolInputs":"{{ 0RCNc.outputs.toolInputs }}"
 				}
@@ -594,6 +595,142 @@
 			"skip":false,
 			"subTitle":"Get Agent Name and query",
 			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":2,
+				"resourceName":"storage_by_unifyapps_get_record_by_id",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"Ef7LG-1",
+			"id":"2Hliz",
+			"index":5,
+			"inputs":{
+				"object_type":"e_ai_agent_team",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
+				"id":"{{ 0RCNc.outputs.triggeredByAgentId }}",
+				"readThroughSessionVariables":true
+			},
+			"skip":false,
+			"subTitle":"team",
+			"title":"Fetch record by ID",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":230,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"Ef7LG-1",
+			"id":"YbOTF",
+			"index":6,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ 2Hliz.outputs.id }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"team old object ?",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":230,
+				"resourceName":"variable_by_unifyapps_add_items_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"YbOTF@Ef7LG-1@y",
+			"id":"QABRo",
+			"index":7,
+			"inputs":{
+				"insertLocation":"END",
+				"itemsToAdd":{
+					"ua:type":"mappedArray",
+					"source":"{{ 2Hliz.outputs.properties.associatedAgentIds }}",
+					"items":"{{ 2Hliz.outputs.properties.associatedAgentIds[0] }}"
+				},
+				"listName":"{{ yOgsC.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Add items to list",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":458,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"YbOTF@Ef7LG-1@n",
+			"id":"n_4BRCH",
+			"index":8,
+			"inputs":{
+				"automationId":"67a48d37f8f1744841dabb63",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"aiAgentId":"{{ 0RCNc.outputs.triggeredByAgentId }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":230,
+				"resourceName":"variable_by_unifyapps_add_items_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"YbOTF@Ef7LG-1@n",
+			"id":"plXOU",
+			"index":9,
+			"inputs":{
+				"insertLocation":"END",
+				"itemsToAdd":{
+					"ua:type":"mappedArray",
+					"source":"{{ n_4BRCH.outputs.properties.multiAgentConfig.associatedAgentIds }}",
+					"items":"{{ n_4BRCH.outputs.properties.multiAgentConfig.associatedAgentIds[0] }}"
+				},
+				"listName":"{{ yOgsC.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Add items to list",
 			"type":"ACTION"
 		},
 		{
@@ -608,7 +745,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Ef7LG-1",
 			"id":"0Ddqq",
-			"index":0,
+			"index":10,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -625,6 +762,13 @@
 								"operator":"NOT_EQUAL",
 								"value":"true"
 							}
+						},
+						{
+							"property":"id",
+							"filter":{
+								"operator":"IN",
+								"value":"{{ yOgsC.outputs.items }}"
+							}
 						}
 					],
 					"operator":"AND"
@@ -632,6 +776,7 @@
 				"object_type":"ai_agent",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"page":{
 					"paginateBy":"OFFSET",
 					"limit":20
@@ -659,7 +804,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Ef7LG-1",
 			"id":"LL5YS",
-			"index":0,
+			"index":11,
 			"inputs":{
 				"filters":[
 					{
@@ -688,7 +833,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"LL5YS@Ef7LG-1@y",
 			"id":"mlF3Y",
-			"index":0,
+			"index":12,
 			"inputs":{
 				"result":{
 					"success":false
@@ -698,131 +843,6 @@
 			"subTitle":"Callable",
 			"title":"Respond to automation",
 			"type":"STOP"
-		},
-		{
-			"context":{
-				"appName":"storage_by_unifyapps",
-				"resourceVersion":2,
-				"resourceName":"storage_by_unifyapps_get_record_by_id",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"Ef7LG-1",
-			"id":"2Hliz",
-			"index":0,
-			"inputs":{
-				"object_type":"e_ai_agent_team",
-				"includeRoleMappings":false,
-				"includeCurrentUserPermissions":false,
-				"id":"{{ 0RCNc.outputs.triggeredByAgentId }}",
-				"readThroughSessionVariables":true
-			},
-			"skip":false,
-			"subTitle":"team",
-			"title":"Fetch record by ID",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"if_else",
-				"resourceVersion":230,
-				"resourceName":"if_else_condition",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"Ef7LG-1",
-			"id":"YbOTF",
-			"index":0,
-			"inputs":{},
-			"skip":false,
-			"subTitle":"team old object ?",
-			"title":"Condition",
-			"type":"IF_ELSE"
-		},
-		{
-			"context":{
-				"appName":"variable_by_unifyapps",
-				"resourceVersion":230,
-				"resourceName":"variable_by_unifyapps_add_items_to_list",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"YbOTF@Ef7LG-1@y",
-			"id":"QABRo",
-			"index":0,
-			"inputs":{
-				"insertLocation":"END",
-				"itemsToAdd":{
-					"ua:type":"mappedArray",
-					"source":"{{ 2Hliz.outputs.properties.associatedAgentIds }}",
-					"items":"{{ 2Hliz.outputs.properties.associatedAgentIds[0] }}"
-				},
-				"listName":"{{ yOgsC.outputs.items[0] }}"
-			},
-			"skip":false,
-			"subTitle":"Variable by UnifyApps",
-			"title":"Add items to list",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"callables",
-				"resourceVersion":458,
-				"resourceName":"callables_call_automation",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"YbOTF@Ef7LG-1@n",
-			"id":"n_4BRCH",
-			"index":0,
-			"inputs":{
-				"automationId":"67a48d37f8f1744841dabb63",
-				"runtimeConnections":{},
-				"synchronous":true,
-				"version":"-1",
-				"parameters":{
-					"aiAgentId":"{{ 0RCNc.outputs.triggeredByAgentId }}"
-				}
-			},
-			"skip":false,
-			"subTitle":"Callable",
-			"title":"Call automation",
-			"type":"CALL_WORKFLOW"
-		},
-		{
-			"context":{
-				"appName":"variable_by_unifyapps",
-				"resourceVersion":230,
-				"resourceName":"variable_by_unifyapps_add_items_to_list",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"YbOTF@Ef7LG-1@n",
-			"id":"plXOU",
-			"index":0,
-			"inputs":{
-				"insertLocation":"END",
-				"itemsToAdd":{
-					"ua:type":"mappedArray",
-					"source":"{{ n_4BRCH.outputs.properties.multiAgentConfig.associatedAgentIds }}",
-					"items":"{{ n_4BRCH.outputs.properties.multiAgentConfig.associatedAgentIds[0] }}"
-				},
-				"listName":"{{ yOgsC.outputs.items[0] }}"
-			},
-			"skip":false,
-			"subTitle":"Variable by UnifyApps",
-			"title":"Add items to list",
-			"type":"ACTION"
 		},
 		{
 			"context":{
@@ -836,7 +856,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Ef7LG-1",
 			"id":"xBlW5",
-			"index":0,
+			"index":13,
 			"inputs":{
 				"filters":[
 					{
@@ -866,7 +886,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"xBlW5@Ef7LG-1@n",
 			"id":"lpOlx",
-			"index":0,
+			"index":14,
 			"inputs":{
 				"result":{
 					"success":false
@@ -889,7 +909,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Ef7LG-1",
 			"id":"j4HDl",
-			"index":0,
+			"index":15,
 			"inputs":{
 				"automationId":"679621731a248f0b3415bddd",
 				"runtimeConnections":{},
@@ -920,7 +940,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Ef7LG-1",
 			"id":"Y47o5",
-			"index":0,
+			"index":16,
 			"inputs":{
 				"result":{
 					"toolOutput":"{{ j4HDl.outputs.agentResponse }}",
@@ -938,9 +958,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -951,5 +971,5 @@
 		"AI Agent",
 		"Team"
 	],
-	"version":102
+	"version":108
 }
