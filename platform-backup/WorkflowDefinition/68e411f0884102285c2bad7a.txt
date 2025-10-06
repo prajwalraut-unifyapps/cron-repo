@@ -4,49 +4,201 @@
 	],
 	"createdTime":1759777264618,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1759777276714,
+		"deployedBy":1,
+		"deployedDefinitionId":"68e411fc884102285c2bae2a",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":1
+	},
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_YYo8s",
+			"fromNodeId":"n_BBdm8",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_5LMo0",
+			"toNodeId":"n_YLApL",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_YLApL",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Ux1Az",
+			"type":"scope"
+		},
+		{
+			"fromNodeId":"n_Ux1Az",
+			"name":"scope-loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_YLApL",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_YLApL",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_JVHem",
 			"type":"next"
 		}
 	],
 	"id":"68e411f0884102285c2bad7a",
 	"lastModifiedBy":1,
 	"lcName":"scopewithgroupofconditions_11759776262719",
-	"modifiedTime":1759777264618,
+	"modifiedTime":1759777288442,
 	"name":"ScopeWithGroupOfConditions_11759776262719",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1899,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_YYo8s-1",
-			"id":"_YYo8s",
-			"index":0,
+			"id":"n_BBdm8",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"output_String"
+					],
+					"properties":{
+						"output_String":{
+							"type":"string",
+							"title":"output_String"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"input_String",
+						"input_String2"
+					],
+					"properties":{
+						"input_String":{
+							"type":"string",
+							"title":"input_String"
+						},
+						"input_String2":{
+							"type":"string",
+							"title":"input_String2"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"scope",
+				"resourceVersion":132,
+				"resourceName":"scope_trigger_scope",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_YYo8s-1",
-			"id":"_5LMo0",
-			"index":0,
+			"id":"n_YLApL",
+			"index":2,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"{{ n_BBdm8.outputs.input_String }}",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"Unifyapps"
+							}
+						},
+						{
+							"filters":[
+								{
+									"property":"{{ n_BBdm8.outputs.input_String2 }}",
+									"filter":{
+										"operator":"EQUAL",
+										"value":"2"
+									}
+								}
+							],
+							"operator":"AND"
+						}
+					],
+					"operator":"AND"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Scope",
+			"title":"Trigger Scope",
+			"type":"SCOPE"
+		},
+		{
+			"context":{
+				"appName":"test_http",
+				"resourceVersion":1916,
+				"connectionId":"66b0ee649c311126267a17b7",
+				"resourceName":"test_http_post_api",
+				"type":"APPLICATION",
+				"scopeNodeId":"n_YLApL"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_YLApL@_YYo8s-1@s",
+			"id":"n_Ux1Az",
+			"index":3,
+			"inputs":{
+				"field1":"workflow continues",
+				"field2":false
+			},
+			"skip":false,
+			"subTitle":"Test HTTP API",
+			"title":"Test HTTP Post API",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1902,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_YYo8s-1",
+			"id":"n_JVHem",
+			"index":4,
+			"inputs":{
+				"result":{
+					"output_String":"{{ n_BBdm8.outputs.input_String }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +212,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":2
 }
