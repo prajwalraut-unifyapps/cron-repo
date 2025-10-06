@@ -7,46 +7,202 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_FnffF",
+			"fromNodeId":"n_6tCVN",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_zbT2Z",
+			"toNodeId":"n_PCbKh",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_PCbKh",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_5yvOc",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_5yvOc",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_6gOLm",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_6gOLm",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_5yvOc",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_5yvOc",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_ThLbl",
 			"type":"next"
 		}
 	],
 	"id":"68e3656f884102285c213795",
 	"lastModifiedBy":1,
 	"lcName":"whileloopnotin11759733038795",
-	"modifiedTime":1759733103205,
+	"modifiedTime":1759733134618,
 	"name":"whileLoopNotIn11759733038795",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":131,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_FnffF-1",
-			"id":"_FnffF",
-			"index":0,
+			"id":"n_6tCVN",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1836,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_FnffF-1",
-			"id":"_zbT2Z",
-			"index":0,
+			"id":"n_PCbKh",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"string",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
+			"inputs":{
+				"i":"0"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"string",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":135,
+				"resourceName":"loop_while",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_FnffF-1",
+			"id":"n_5yvOc",
+			"index":3,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"{{ n_PCbKh.outputs.i }}",
+							"filter":{
+								"operator":"NOT_IN",
+								"value":"10"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"break",
+				"resourceVersion":134,
+				"resourceName":"break",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_5yvOc@_FnffF-1@l",
+			"id":"n_6gOLm",
+			"index":4,
+			"inputs":{
+				"loop":"n_5yvOc"
+			},
+			"skip":false,
+			"subTitle":"Break",
+			"title":"Break",
+			"type":"BREAK"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_FnffF-1",
+			"id":"n_ThLbl",
+			"index":5,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +216,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
