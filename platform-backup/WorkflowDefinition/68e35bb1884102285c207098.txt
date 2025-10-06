@@ -16,13 +16,6 @@
 			"fromNodeId":"n_KYsLP",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_us1gR",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_us1gR",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"n_4Unhj",
 			"type":"next"
 		},
@@ -42,6 +35,13 @@
 			"type":"if"
 		},
 		{
+			"fromNodeId":"n_cSMx9",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_mXCmG",
+			"type":"next"
+		},
+		{
 			"fromNodeId":"n_htIB5",
 			"name":"no",
 			"priority":0,
@@ -50,7 +50,7 @@
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_cSMx9",
+			"fromNodeId":"n_mXCmG",
 			"name":"loopback",
 			"priority":0,
 			"skip":false,
@@ -76,7 +76,7 @@
 	"id":"68e35bb1884102285c207098",
 	"lastModifiedBy":1,
 	"lcName":"test",
-	"modifiedTime":1759731295217,
+	"modifiedTime":1759731424313,
 	"name":"test",
 	"nodes":[
 		{
@@ -131,6 +131,9 @@
 			"type":"START"
 		},
 		{
+			"additional":{
+				"xsdSchemaConfig":{}
+			},
 			"context":{
 				"appName":"variable_by_unifyapps",
 				"resourceVersion":1836,
@@ -151,83 +154,32 @@
 					"additionalProperties":false,
 					"type":"object",
 					"properties":{
-						"count":{
-							"type":"integer",
-							"title":"count"
+						"isFound":{
+							"type":"boolean",
+							"title":"Is Found"
 						}
 					},
 					"required":[
-						"count"
+						"isFound"
 					]
 				}
 			},
-			"inputs":{},
+			"inputs":{
+				"isFound":true
+			},
 			"outputSchema":{
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
 					"type":"object",
 					"properties":{
-						"count":{
-							"type":"integer",
-							"title":"count"
+						"isFound":{
+							"type":"boolean",
+							"title":"Is Found"
 						}
 					},
 					"required":[
-						"count"
-					]
-				}
-			},
-			"skip":false,
-			"subTitle":"Variable by UnifyApps",
-			"title":"Create variables",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"variable_by_unifyapps",
-				"resourceVersion":1836,
-				"resourceName":"variable_by_unifyapps_create_variables",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":true,
-			"fallbackMode":"STOP",
-			"groupId":"_7lXlt-1",
-			"id":"n_us1gR",
-			"index":3,
-			"inputSchema":{
-				"type":"SCHEMA_AND_LAYOUT",
-				"dynamic":false,
-				"layout":{},
-				"schema":{
-					"additionalProperties":false,
-					"type":"object",
-					"properties":{
-						"secondVariable":{
-							"type":"integer",
-							"title":"Second Variable"
-						}
-					},
-					"required":[
-						"secondVariable"
-					]
-				}
-			},
-			"inputs":{},
-			"outputSchema":{
-				"dynamic":false,
-				"schema":{
-					"additionalProperties":false,
-					"type":"object",
-					"properties":{
-						"secondVariable":{
-							"type":"integer",
-							"title":"Second Variable"
-						}
-					},
-					"required":[
-						"secondVariable"
+						"isFound"
 					]
 				}
 			},
@@ -248,7 +200,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_7lXlt-1",
 			"id":"n_4Unhj",
-			"index":4,
+			"index":3,
 			"inputs":{
 				"listSource":"{{ n_DUCRX.outputs.name }}",
 				"captureIterations":true
@@ -270,7 +222,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_4Unhj@_7lXlt-1@l",
 			"id":"n_htIB5",
-			"index":5,
+			"index":4,
 			"inputs":{
 				"filters":[
 					{
@@ -300,7 +252,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_htIB5@n_4Unhj@_7lXlt-1@l@y",
 			"id":"n_cSMx9",
-			"index":6,
+			"index":5,
 			"inputs":{
 				"variables":[
 					{
@@ -313,6 +265,25 @@
 			"subTitle":"Variable by UnifyApps",
 			"title":"Update variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"break",
+				"resourceVersion":134,
+				"resourceName":"break",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_htIB5@n_4Unhj@_7lXlt-1@l@y",
+			"id":"n_mXCmG",
+			"index":6,
+			"inputs":{},
+			"skip":false,
+			"subTitle":"Break",
+			"title":"Break",
+			"type":"BREAK"
 		},
 		{
 			"context":{
@@ -330,8 +301,8 @@
 			"inputs":{
 				"variables":[
 					{
-						"source":"{{ n_us1gR.outputs.secondVariable }}",
-						"value":"=SUM({{ n_us1gR.outputs.secondVariable }}, 1)"
+						"source":"{{ n_KYsLP.outputs.isFound }}",
+						"value":false
 					}
 				]
 			},
@@ -355,7 +326,7 @@
 			"index":8,
 			"inputs":{
 				"result":{
-					"num":"{{ n_uXwHq.outputs.secondVariable }}"
+					"num":"{{ n_KYsLP.outputs.isFound }}"
 				}
 			},
 			"skip":false,
@@ -381,5 +352,5 @@
 	"tags":[
 		
 	],
-	"version":3
+	"version":4
 }
