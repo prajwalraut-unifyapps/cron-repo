@@ -7,46 +7,202 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_Hue9v",
+			"fromNodeId":"n_TKLXx",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_ZRhp2",
+			"toNodeId":"n_Ka6FR",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Ka6FR",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_QWIYj",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_QWIYj",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_32Lxs",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_32Lxs",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_QWIYj",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_QWIYj",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_UNNn4",
 			"type":"next"
 		}
 	],
 	"id":"68e366b0884102285c214c4b",
 	"lastModifiedBy":1,
 	"lcName":"whilelooplessthanorequalto11759733297491",
-	"modifiedTime":1759733424666,
+	"modifiedTime":1759733460492,
 	"name":"whileLoopLessThanOrEqualTo11759733297491",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":131,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Hue9v-1",
-			"id":"_Hue9v",
-			"index":0,
+			"id":"n_TKLXx",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1836,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Hue9v-1",
-			"id":"_ZRhp2",
-			"index":0,
+			"id":"n_Ka6FR",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"string",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
+			"inputs":{
+				"i":"0"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"string",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":135,
+				"resourceName":"loop_while",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Hue9v-1",
+			"id":"n_QWIYj",
+			"index":3,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"{{ n_Ka6FR.outputs.i }}",
+							"filter":{
+								"operator":"LTE",
+								"value":"0"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"break",
+				"resourceVersion":134,
+				"resourceName":"break",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_QWIYj@_Hue9v-1@l",
+			"id":"n_32Lxs",
+			"index":4,
+			"inputs":{
+				"loop":"n_QWIYj"
+			},
+			"skip":false,
+			"subTitle":"Break",
+			"title":"Break",
+			"type":"BREAK"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Hue9v-1",
+			"id":"n_UNNn4",
+			"index":5,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +216,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
