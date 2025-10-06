@@ -5,12 +5,12 @@
 	"createdTime":1754459078359,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759324089142,
+		"deployedAt":1759727045710,
 		"deployedBy":1,
-		"deployedDefinitionId":"68dd27b8a15f9e7fa5e229d1",
+		"deployedDefinitionId":"68e34dc5884102285c1fb0e8",
 		"status":"DEPLOYED",
-		"version":62,
-		"workflowVersion":75
+		"version":69,
+		"workflowVersion":82
 	},
 	"edges":[
 		{
@@ -31,11 +31,11 @@
 			"fromNodeId":"_PMUwM",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"fc5LR",
+			"toNodeId":"n_LSZUw",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"fc5LR",
+			"fromNodeId":"n_LSZUw",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"LnUU4",
@@ -244,15 +244,16 @@
 			"fromNodeId":"n_WO2Rx",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_Wjjil",
+			"toNodeId":"n_gjz5J",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"_Wjjil",
+			"fromNodeId":"n_gjz5J",
+			"name":"yes",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"rp0ma",
-			"type":"next"
+			"type":"if"
 		},
 		{
 			"fromNodeId":"rp0ma",
@@ -270,6 +271,21 @@
 		},
 		{
 			"fromNodeId":"4pZYn",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_Wjjil",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_gjz5J",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_Wjjil",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_Wjjil",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"af1tm",
@@ -356,7 +372,7 @@
 	"id":"6872176cfef791295f36a002",
 	"lastModifiedBy":-1,
 	"lcName":"executesql tool",
-	"modifiedTime":1759425248504,
+	"modifiedTime":1759781145435,
 	"name":"ExecuteSQL Tool",
 	"nodes":[
 		{
@@ -634,7 +650,7 @@
 		{
 			"context":{
 				"appName":"callables",
-				"resourceVersion":124,
+				"resourceVersion":524,
 				"resourceName":"callables_call_automation",
 				"type":"APPLICATION"
 			},
@@ -642,23 +658,19 @@
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"kFhpo-1",
-			"id":"fc5LR",
+			"id":"n_LSZUw",
 			"index":4,
 			"inputs":{
-				"automationId":"67c89525ab51f86320c5f5f1",
+				"automationId":"67a48d37f8f1744841dabb63",
 				"runtimeConnections":{},
-				"synchronous":false,
+				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"caseId":"{{ GpPp2.outputs.caseId }}",
-					"queries":{
-						"items":"{{ _GK3Mq.outputs.result.responsibility_key }} SQL : {{ _GK3Mq.outputs.result.sql_query }}",
-						"ua:type":"mappedArray"
-					}
+					"aiAgentId":"{{ GpPp2.outputs.triggeredByAgentId }}"
 				}
 			},
-			"skip":true,
-			"subTitle":"searching",
+			"skip":false,
+			"subTitle":"Callable",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
 		},
@@ -678,6 +690,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"limited_sql":{
 							"type":"string",
@@ -687,12 +701,12 @@
 							"type":"boolean",
 							"title":"userLimits"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"sql_query":{
 							"type":"string",
@@ -702,15 +716,14 @@
 							"type":"integer",
 							"title":"Max Row Limit"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"import java.util.regex.Pattern\n\ndef pattern = Pattern.compile(\"\\\\blimit\\\\b\", Pattern.CASE_INSENSITIVE)\ndef matcher = pattern.matcher(sql_query)\ndef userLimits = matcher.find()\n\ndef limit = 25\nif(binding.hasVariable(\"max_row_limit\")){\n    limit = max_row_limit + 5\n}\ndef limit_str = limit.toString()\n\ndef result\nif (userLimits) {\n    result = [\n        limited_sql: (String) sql_query.toString(),\n        userLimits: true\n    ]\n} else {\n    String sql = sql_query.replaceAll(/[ \\t\\n;]+$/, '').toString()\n    result = [\n        limited_sql: (String) \"${sql} LIMIT ${limit_str}\",\n        userLimits: false\n    ]\n}\n\nreturn result",
 				"compile_static":false,
-				"code":"import java.util.regex.Pattern\n\ndef pattern = Pattern.compile(\"\\\\blimit\\\\b\", Pattern.CASE_INSENSITIVE)\ndef matcher = pattern.matcher(sql_query)\ndef userLimits = matcher.find()\n\ndef limit = 50\nif(binding.hasVariable(\"max_row_limit\")){\n    limit = max_row_limit + 5\n}\ndef limit_str = limit.toString()\n\ndef result\nif (userLimits) {\n    result = [\n        limited_sql: (String) sql_query.toString(),\n        userLimits: true\n    ]\n} else {\n    String sql = sql_query.replaceAll(/[ \\t\\n;]+$/, '').toString()\n    result = [\n        limited_sql: (String) \"${sql} LIMIT ${limit_str}\",\n        userLimits: false\n    ]\n}\n\nreturn result",
+				"captureStdOutput":false,
 				"parameters":{
-					"max_row_limit":20,
-					"sql_query":"{{ _GK3Mq.outputs.result.sql_query }}"
+					"sql_query":"{{ _GK3Mq.outputs.result.sql_query }}",
+					"max_row_limit":"{{ n_LSZUw.outputs.properties.preProcessingSettings.maxRowLimitForSQL }}"
 				}
 			},
 			"skip":false,
@@ -1789,56 +1802,34 @@
 			"type":"ACTION"
 		},
 		{
-			"additional":{
-				"visibleOptionalFields":[
-					"root.updateFields.items.fieldName",
-					"root.updateFields.items.actionType"
-				]
-			},
 			"context":{
-				"appName":"storage_by_unifyapps",
-				"resourceVersion":316,
-				"resourceName":"storage_by_unifyapps_update_record_fields_by_id",
+				"appName":"if_else",
+				"resourceVersion":444,
+				"resourceName":"if_else_condition",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"kFhpo-1",
-			"id":"_Wjjil",
+			"id":"n_gjz5J",
 			"index":28,
 			"inputs":{
-				"recordId":"{{ GpPp2.outputs.agentResponseMessageId }}",
-				"writeThroughSessionVariables":true,
-				"object_type":"service_hub_message",
-				"skipPermissionCheck":false,
-				"updateFields":[
+				"filters":[
 					{
-						"fieldName":"properties.additional.IsDataRAGExecuted",
-						"actionType":"SET",
-						"setValue":"True"
-					},
-					{
-						"fieldName":"properties.additional.sqlQuery",
-						"actionType":"SET",
-						"setValue":"{{ BWDmq.outputs.finalSQLquery }}"
-					},
-					{
-						"fieldName":"properties.additional.hasMoreData",
-						"actionType":"SET",
-						"setValue":"{{ nJq8F.outputs.hasMoreData }}"
-					},
-					{
-						"fieldName":"properties.additional.usedMetadata",
-						"actionType":"SET",
-						"setValue":"{{ n_WO2Rx.outputs.result.result }}"
+						"property":"{{ n_LSZUw.outputs.properties.textToSQLSettings.sourcesNeeded }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"true"
+						}
 					}
-				]
+				],
+				"operator":"AND"
 			},
 			"skip":false,
-			"subTitle":"Storage by UnifyApps",
-			"title":"Update an existing record's fields",
-			"type":"ACTION"
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
 		},
 		{
 			"additional":{
@@ -1857,12 +1848,14 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"kFhpo-1",
+			"groupId":"n_gjz5J@kFhpo-1@y",
 			"id":"rp0ma",
 			"index":29,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"chunks":{
 							"type":"array",
@@ -1873,12 +1866,12 @@
 							},
 							"title":"Chunks"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"metadata":{
 							"type":"array",
@@ -1903,12 +1896,11 @@
 							},
 							"title":"metadata"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"def extractBeforeLastUnderscore = { String str ->\n    if(str == \"storage_by_unifyapps\"){\n      return str\n    }\n    int lastUnderscoreIndex = str.lastIndexOf('_')\n    if (lastUnderscoreIndex != -1) {\n        return str.substring(0, lastUnderscoreIndex)\n    } else {\n        return str // Return original string if no underscore is found\n    }\n}\n\ndef chunks = metadata\n    .unique { a, b -> a.table_name <=> b.table_name ?: a.platform_name <=> b.platform_name }\n    .collect { [ name: it.tableNameUI == null ? it.table_name: it.tableNameUI, appName: extractBeforeLastUnderscore(it.platform_name) ] }\n\nreturn [\"chunks\":chunks]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"metadata":{
 						"ua:type":"mappedArray",
@@ -1936,7 +1928,7 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"kFhpo-1",
+			"groupId":"n_gjz5J@kFhpo-1@y",
 			"id":"JxHiB",
 			"index":30,
 			"inputs":{
@@ -1969,7 +1961,7 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"kFhpo-1",
+			"groupId":"n_gjz5J@kFhpo-1@y",
 			"id":"4pZYn",
 			"index":31,
 			"inputs":{
@@ -1992,6 +1984,60 @@
 			"type":"CALL_WORKFLOW"
 		},
 		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.updateFields.items.fieldName",
+					"root.updateFields.items.actionType"
+				]
+			},
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":316,
+				"resourceName":"storage_by_unifyapps_update_record_fields_by_id",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"kFhpo-1",
+			"id":"_Wjjil",
+			"index":32,
+			"inputs":{
+				"recordId":"{{ GpPp2.outputs.agentResponseMessageId }}",
+				"writeThroughSessionVariables":true,
+				"object_type":"service_hub_message",
+				"skipIfBlank":false,
+				"skipPermissionCheck":false,
+				"updateFields":[
+					{
+						"fieldName":"properties.additional.IsDataRAGExecuted",
+						"actionType":"SET",
+						"setValue":"True"
+					},
+					{
+						"fieldName":"properties.additional.sqlQuery",
+						"actionType":"SET",
+						"setValue":"{{ BWDmq.outputs.finalSQLquery }}"
+					},
+					{
+						"fieldName":"properties.additional.hasMoreData",
+						"actionType":"SET",
+						"setValue":"{{ nJq8F.outputs.hasMoreData }}"
+					},
+					{
+						"fieldName":"properties.additional.usedMetadata",
+						"actionType":"SET",
+						"setValue":"{{ n_WO2Rx.outputs.result.result }}"
+					}
+				],
+				"unsetIfNull":false
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Update an existing record's fields",
+			"type":"ACTION"
+		},
+		{
 			"context":{
 				"appName":"if_else",
 				"resourceVersion":71,
@@ -2003,7 +2049,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"kFhpo-1",
 			"id":"af1tm",
-			"index":32,
+			"index":33,
 			"inputs":{
 				"filters":[
 					{
@@ -2032,7 +2078,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"af1tm@kFhpo-1@y",
 			"id":"SgyMl",
-			"index":33,
+			"index":34,
 			"inputs":{
 				"sequenceName":"{{ GpPp2.outputs.caseId }}_ChunkNumber"
 			},
@@ -2059,14 +2105,18 @@
 			"fallbackMode":"STOP",
 			"groupId":"af1tm@kFhpo-1@y",
 			"id":"vHto4",
-			"index":34,
+			"index":35,
 			"inputs":{
 				"writeThroughSessionVariables":false,
 				"object_type":"citation_store",
+				"skipIfBlank":false,
 				"record":{
-					"hasMoreData":"{{ nJq8F.outputs.hasMoreData }}",
-					"tableIsPublished":false,
+					"caseId":"{{ GpPp2.outputs.caseId }}",
 					"chunkNumber":"{{ SgyMl.outputs.result }}",
+					"sqlQuery":"{{ BWDmq.outputs.finalSQLquery }}",
+					"hasMoreData":"{{ nJq8F.outputs.hasMoreData }}",
+					"sqlQueryPlatformName":"{{ _GK3Mq.outputs.result.platformName }}",
+					"tableIsPublished":false,
 					"columnData":{
 						"source":"{{ o9ReY.outputs.columnNames }}",
 						"ua:type":"mappedArray",
@@ -2077,10 +2127,7 @@
 						"ua:type":"mappedArray",
 						"items":"{{ o9ReY.outputs.rows[0] }}"
 					},
-					"sqlQuery":"{{ BWDmq.outputs.finalSQLquery }}",
-					"metadata":"{{ rp0ma.outputs.result.chunks[0] }}",
-					"caseId":"{{ GpPp2.outputs.caseId }}",
-					"sqlQueryPlatformName":"{{ _GK3Mq.outputs.result.platformName }}"
+					"metadata":"{{ rp0ma.outputs.result.chunks[0] }}"
 				}
 			},
 			"skip":false,
@@ -2107,21 +2154,23 @@
 			"fallbackMode":"STOP",
 			"groupId":"kFhpo-1",
 			"id":"_yAylI",
-			"index":35,
+			"index":36,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"finalOutput":{
 							"type":"string",
 							"title":"Final Output"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"columnData":{
 							"type":"array",
@@ -2147,13 +2196,14 @@
 							"type":"boolean",
 							"title":"Has More Data"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"// // List<Map<String, Object>> chunkMetadataArray = []\n\n// if(!binding.hasVariable(\"columnData\") || !binding.hasVariable(\"rowData\")) return [\"finalOutput\" : \"\"]\n// def columns = (List<String>) binding.getProperty(\"columnData\")\n// def rows = (List<Map<String, Object>>) binding.getProperty(\"rowData\") \n\n// // def markdown = []\n// def markdown = ''\n// markdown += \"#### SQL Output <chartId=\\\"\" + binding.getProperty(\"chartId\") + \"\\\">\\n####\\n\"\n// markdown += \"<data>\\n\"\n// markdown += '| ' + columns.collect { it.toString() }.join(' | ') + ' |\\n'\n// markdown += '| ' + columns.collect { '---' }.join(' | ') + ' |\\n'\n// rows.each { row ->\n//     Map mapRow = row as Map\n//     markdown += '| ' + columns.collect { mapRow.containsKey(it) ? mapRow[it] : '' }.join(' | ') + ' |\\n'\n// }\n// markdown += \"</data>\\n\\n\"\n\n// // markdown += \"If this data seems relevant to what user has asked, user has explicitly asked for a table/chart/tabular representation/visual representation for this and the data is plottable and sending charts or tables is relevant for this query, then [IMPORTANT] make a tool call to \\\"GenerateChartWithBlocks\\\" with appropriate chartId and do not mention the table in markdown format in the final answer.\"\n// // if (binding.getProperty(\"hasMoreData\")) {\n// //     markdown += \"This sql output only contains a limited (truncated) number of rows and does not represent the full data. DO NOT make any conclusions or statements about the total count, minimum, maximum, or other aggregate statistics based solely on this sample as it is a truncated form of data. DO NOT pass any such conclusions based solely on the truncated data in the FINAL ANSWER.\"\n// // }\n// // if (binding.getProperty(\"hasMoreData\")) {\n// //         markdown += \"This sql output only contains a limited (truncated) number of rows and does not represent the full data. DO NOT make any conclusions or statements about the total count, minimum, maximum, or other aggregate statistics based solely on this sample as it is a truncated form of data. DO NOT pass any such conclusions based solely on the truncated data in the FINAL ANSWER. [STRICTLY] If the data is plottable or the user asks for visualization, make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId and \\\"blockType\\\": \\\"Table\\\". If user asks explicitly about some other visual representation than table, then, politely deny by stating that chart can not be published due to \"\n// //     }\n// //     else{\n// //         markdown += \"If the user asks for a table, chart, or visualization, ONLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId;  If this data seems relevant to what user has asked and the data is plottable and sending charts/tables is relevant for this query, then make a tool call to \\\"GenerateChartWithBlocks\\\" with appropriate chartId.\"\n// //     }\n\n// if (binding.getProperty(\"hasMoreData\")) {\n//     markdown += \"\"\"Note: This SQL output contains only a limited (truncated) number of rows and does not represent the complete dataset. - Do NOT draw aggregate or conclusions from this data. - [VERY IMPORTANT] If the user requests a chart, table, or data visualization, STRICTLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId and \\\"blockType\": \"Table\\\". - If the user explicitly asks for a non-table visual representation, politely inform them that the chart type requested cannot be published. And just make a tool call to GenerateChartWithBlocks with TABLE as blockType.\"\"\"\n// } else {\n//     markdown += \"\"\" If the data is plottable or user requests a table, chart, or visualization, ONLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId.\"\"\"\n// }\n\n// return [\n//     \"finalOutput\" : (markdown == null || markdown.trim().isEmpty()) ? null : markdown.trim()\n// ]\n\n// List<Map<String, Object>> chunkMetadataArray = []\n\nif(!binding.hasVariable(\"columnData\") || !binding.hasVariable(\"rowData\")) return [\"finalOutput\" : \"\"]\ndef columns = (List<String>) binding.getProperty(\"columnData\")\ndef rows = (List<Map<String, Object>>) binding.getProperty(\"rowData\") \nrows = rows.take(25)\n// def markdown = []\ndef markdown = ''\nmarkdown += \"#### SQL Output <chartId=\\\"\" + binding.getProperty(\"chartId\") + \"\\\">\\n####\\n\"\nmarkdown += \"<data>\\n\"\nmarkdown += '| ' + columns.collect { it.toString() }.join(' | ') + ' |\\n'\nmarkdown += '| ' + columns.collect { '---' }.join(' | ') + ' |\\n'\nrows.each { row ->\n    Map mapRow = row as Map\n    markdown += '| ' + columns.collect { mapRow.containsKey(it) ? mapRow[it] : '' }.join(' | ') + ' |\\n'\n}\nmarkdown += \"</data>\\n\\n\"\n\n// markdown += \"If this data seems relevant to what user has asked, user has explicitly asked for a table/chart/tabular representation/visual representation for this and the data is plottable and sending charts or tables is relevant for this query, then [IMPORTANT] make a tool call to \\\"GenerateChartWithBlocks\\\" with appropriate chartId and do not mention the table in markdown format in the final answer.\"\n// if (binding.getProperty(\"hasMoreData\")) {\n//     markdown += \"This sql output only contains a limited (truncated) number of rows and does not represent the full data. DO NOT make any conclusions or statements about the total count, minimum, maximum, or other aggregate statistics based solely on this sample as it is a truncated form of data. DO NOT pass any such conclusions based solely on the truncated data in the FINAL ANSWER.\"\n// }\n// if (binding.getProperty(\"hasMoreData\")) {\n//         markdown += \"This sql output only contains a limited (truncated) number of rows and does not represent the full data. DO NOT make any conclusions or statements about the total count, minimum, maximum, or other aggregate statistics based solely on this sample as it is a truncated form of data. DO NOT pass any such conclusions based solely on the truncated data in the FINAL ANSWER. [STRICTLY] If the data is plottable or the user asks for visualization, make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId and \\\"blockType\\\": \\\"Table\\\". If user asks explicitly about some other visual representation than table, then, politely deny by stating that chart can not be published due to \"\n//     }\n//     else{\n//         markdown += \"If the user asks for a table, chart, or visualization, ONLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId;  If this data seems relevant to what user has asked and the data is plottable and sending charts/tables is relevant for this query, then make a tool call to \\\"GenerateChartWithBlocks\\\" with appropriate chartId.\"\n//     }\n\n// if (binding.getProperty(\"hasMoreData\")) {\n//     markdown += \"\"\"Note: This SQL output contains only a limited (truncated) number of rows and does not represent the complete dataset. - Do NOT draw aggregate or conclusions from this data. - [VERY IMPORTANT] If the user requests a chart, table, or data visualization, STRICTLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId and \\\"blockType\": \"Table\\\". - If the user explicitly asks for a non-table visual representation, politely inform them that the chart type requested cannot be published. And just make a tool call to GenerateChartWithBlocks with TABLE as blockType.\"\"\"\n// } else {\n//     markdown += \"\"\" If the data is plottable or user requests a table, chart, or visualization, ONLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId.\"\"\"\n// }\n\n\nif (binding.getProperty(\"hasMoreData\")) {\n    markdown += \"\"\"Note: This SQL output contains only a limited (truncated) number of rows and does not represent the complete dataset. - Do NOT draw aggregate or conclusions from this data.\"\"\"\n    // \\\"blockType\": \"Table\\\". - If the user explicitly asks for a non-table visual representation, politely inform them that the chart type requested cannot be published. And just make a tool call to GenerateChartWithBlocks with TABLE as blockType.\"\"\"\n}\nmarkdown += \"\"\" If the data is plottable or user requests a table, chart, or visualization, ONLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId.\"\"\"\n\nreturn [\n    \"finalOutput\" : (markdown == null || markdown.trim().isEmpty()) ? null : markdown.trim()\n]",
 				"compile_static":true,
-				"code":"// // List<Map<String, Object>> chunkMetadataArray = []\n\n// if(!binding.hasVariable(\"columnData\") || !binding.hasVariable(\"rowData\")) return [\"finalOutput\" : \"\"]\n// def columns = (List<String>) binding.getProperty(\"columnData\")\n// def rows = (List<Map<String, Object>>) binding.getProperty(\"rowData\") \n\n// // def markdown = []\n// def markdown = ''\n// markdown += \"#### SQL Output <chartId=\\\"\" + binding.getProperty(\"chartId\") + \"\\\">\\n####\\n\"\n// markdown += \"<data>\\n\"\n// markdown += '| ' + columns.collect { it.toString() }.join(' | ') + ' |\\n'\n// markdown += '| ' + columns.collect { '---' }.join(' | ') + ' |\\n'\n// rows.each { row ->\n//     Map mapRow = row as Map\n//     markdown += '| ' + columns.collect { mapRow.containsKey(it) ? mapRow[it] : '' }.join(' | ') + ' |\\n'\n// }\n// markdown += \"</data>\\n\\n\"\n\n// // markdown += \"If this data seems relevant to what user has asked, user has explicitly asked for a table/chart/tabular representation/visual representation for this and the data is plottable and sending charts or tables is relevant for this query, then [IMPORTANT] make a tool call to \\\"GenerateChartWithBlocks\\\" with appropriate chartId and do not mention the table in markdown format in the final answer.\"\n// // if (binding.getProperty(\"hasMoreData\")) {\n// //     markdown += \"This sql output only contains a limited (truncated) number of rows and does not represent the full data. DO NOT make any conclusions or statements about the total count, minimum, maximum, or other aggregate statistics based solely on this sample as it is a truncated form of data. DO NOT pass any such conclusions based solely on the truncated data in the FINAL ANSWER.\"\n// // }\n// // if (binding.getProperty(\"hasMoreData\")) {\n// //         markdown += \"This sql output only contains a limited (truncated) number of rows and does not represent the full data. DO NOT make any conclusions or statements about the total count, minimum, maximum, or other aggregate statistics based solely on this sample as it is a truncated form of data. DO NOT pass any such conclusions based solely on the truncated data in the FINAL ANSWER. [STRICTLY] If the data is plottable or the user asks for visualization, make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId and \\\"blockType\\\": \\\"Table\\\". If user asks explicitly about some other visual representation than table, then, politely deny by stating that chart can not be published due to \"\n// //     }\n// //     else{\n// //         markdown += \"If the user asks for a table, chart, or visualization, ONLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId;  If this data seems relevant to what user has asked and the data is plottable and sending charts/tables is relevant for this query, then make a tool call to \\\"GenerateChartWithBlocks\\\" with appropriate chartId.\"\n// //     }\n\n// if (binding.getProperty(\"hasMoreData\")) {\n//     markdown += \"\"\"Note: This SQL output contains only a limited (truncated) number of rows and does not represent the complete dataset. - Do NOT draw aggregate or conclusions from this data. - [VERY IMPORTANT] If the user requests a chart, table, or data visualization, STRICTLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId and \\\"blockType\": \"Table\\\". - If the user explicitly asks for a non-table visual representation, politely inform them that the chart type requested cannot be published. And just make a tool call to GenerateChartWithBlocks with TABLE as blockType.\"\"\"\n// } else {\n//     markdown += \"\"\" If the data is plottable or user requests a table, chart, or visualization, ONLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId.\"\"\"\n// }\n\n// return [\n//     \"finalOutput\" : (markdown == null || markdown.trim().isEmpty()) ? null : markdown.trim()\n// ]\n\n// List<Map<String, Object>> chunkMetadataArray = []\n\nif(!binding.hasVariable(\"columnData\") || !binding.hasVariable(\"rowData\")) return [\"finalOutput\" : \"\"]\ndef columns = (List<String>) binding.getProperty(\"columnData\")\ndef rows = (List<Map<String, Object>>) binding.getProperty(\"rowData\") \nrows = rows.take(25)\n// def markdown = []\ndef markdown = ''\nmarkdown += \"#### SQL Output <chartId=\\\"\" + binding.getProperty(\"chartId\") + \"\\\">\\n####\\n\"\nmarkdown += \"<data>\\n\"\nmarkdown += '| ' + columns.collect { it.toString() }.join(' | ') + ' |\\n'\nmarkdown += '| ' + columns.collect { '---' }.join(' | ') + ' |\\n'\nrows.each { row ->\n    Map mapRow = row as Map\n    markdown += '| ' + columns.collect { mapRow.containsKey(it) ? mapRow[it] : '' }.join(' | ') + ' |\\n'\n}\nmarkdown += \"</data>\\n\\n\"\n\n// markdown += \"If this data seems relevant to what user has asked, user has explicitly asked for a table/chart/tabular representation/visual representation for this and the data is plottable and sending charts or tables is relevant for this query, then [IMPORTANT] make a tool call to \\\"GenerateChartWithBlocks\\\" with appropriate chartId and do not mention the table in markdown format in the final answer.\"\n// if (binding.getProperty(\"hasMoreData\")) {\n//     markdown += \"This sql output only contains a limited (truncated) number of rows and does not represent the full data. DO NOT make any conclusions or statements about the total count, minimum, maximum, or other aggregate statistics based solely on this sample as it is a truncated form of data. DO NOT pass any such conclusions based solely on the truncated data in the FINAL ANSWER.\"\n// }\n// if (binding.getProperty(\"hasMoreData\")) {\n//         markdown += \"This sql output only contains a limited (truncated) number of rows and does not represent the full data. DO NOT make any conclusions or statements about the total count, minimum, maximum, or other aggregate statistics based solely on this sample as it is a truncated form of data. DO NOT pass any such conclusions based solely on the truncated data in the FINAL ANSWER. [STRICTLY] If the data is plottable or the user asks for visualization, make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId and \\\"blockType\\\": \\\"Table\\\". If user asks explicitly about some other visual representation than table, then, politely deny by stating that chart can not be published due to \"\n//     }\n//     else{\n//         markdown += \"If the user asks for a table, chart, or visualization, ONLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId;  If this data seems relevant to what user has asked and the data is plottable and sending charts/tables is relevant for this query, then make a tool call to \\\"GenerateChartWithBlocks\\\" with appropriate chartId.\"\n//     }\n\n// if (binding.getProperty(\"hasMoreData\")) {\n//     markdown += \"\"\"Note: This SQL output contains only a limited (truncated) number of rows and does not represent the complete dataset. - Do NOT draw aggregate or conclusions from this data. - [VERY IMPORTANT] If the user requests a chart, table, or data visualization, STRICTLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId and \\\"blockType\": \"Table\\\". - If the user explicitly asks for a non-table visual representation, politely inform them that the chart type requested cannot be published. And just make a tool call to GenerateChartWithBlocks with TABLE as blockType.\"\"\"\n// } else {\n//     markdown += \"\"\" If the data is plottable or user requests a table, chart, or visualization, ONLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId.\"\"\"\n// }\n\n\nif (binding.getProperty(\"hasMoreData\")) {\n    markdown += \"\"\"Note: This SQL output contains only a limited (truncated) number of rows and does not represent the complete dataset. - Do NOT draw aggregate or conclusions from this data. [STRICTLY] As table is already published, dont try to republish table as it would result in duplicate information.\"\"\"\n    // \\\"blockType\": \"Table\\\". - If the user explicitly asks for a non-table visual representation, politely inform them that the chart type requested cannot be published. And just make a tool call to GenerateChartWithBlocks with TABLE as blockType.\"\"\"\n} else {\n    markdown += \"\"\" If the data is plottable or user requests a table, chart, or visualization, ONLY make a tool call to \\\"GenerateChartWithBlocks\\\" with the given chartId.\"\"\"\n}\n\n\nreturn [\n    \"finalOutput\" : (markdown == null || markdown.trim().isEmpty()) ? null : markdown.trim()\n]",
+				"captureStdOutput":false,
 				"parameters":{
+					"chartId":"{{ SgyMl.outputs.result }}",
+					"hasMoreData":"{{ nJq8F.outputs.hasMoreData }}",
 					"columnData":{
 						"source":"{{ o9ReY.outputs.columnNames }}",
 						"ua:type":"mappedArray",
@@ -2163,9 +2213,7 @@
 						"source":"{{ o9ReY.outputs.rows }}",
 						"ua:type":"mappedArray",
 						"items":"{{ o9ReY.outputs.rows[0] }}"
-					},
-					"chartId":"{{ SgyMl.outputs.result }}",
-					"hasMoreData":"{{ nJq8F.outputs.hasMoreData }}"
+					}
 				}
 			},
 			"skip":false,
@@ -2185,11 +2233,18 @@
 			"fallbackMode":"STOP",
 			"groupId":"kFhpo-1",
 			"id":"n_IbUJ4",
-			"index":36,
+			"index":37,
 			"inputs":{
 				"filters":[
 					{
 						"property":"{{ nJq8F.outputs.hasMoreData }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"true"
+						}
+					},
+					{
+						"property":"{{ n_LSZUw.outputs.properties.textToSQLSettings.DirectlyPublishTableIfHasMoreData }}",
 						"filter":{
 							"operator":"EQUAL",
 							"value":"true"
@@ -2215,7 +2270,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_IbUJ4@kFhpo-1@y",
 			"id":"n_l4M3Q",
-			"index":37,
+			"index":38,
 			"inputs":{
 				"automationId":"687a0640e048686b002fee4f",
 				"runtimeConnections":{},
@@ -2248,7 +2303,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_IbUJ4@kFhpo-1@y",
 			"id":"n_YQP58",
-			"index":38,
+			"index":39,
 			"inputs":{
 				"result":{
 					"success":"{{ n_l4M3Q.outputs.success }}",
@@ -2272,7 +2327,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"kFhpo-1",
 			"id":"_UuNZv",
-			"index":39,
+			"index":40,
 			"inputs":{
 				"result":{
 					"success":true,
@@ -2299,5 +2354,5 @@
 		}
 	},
 	"standard":true,
-	"version":76
+	"version":83
 }
