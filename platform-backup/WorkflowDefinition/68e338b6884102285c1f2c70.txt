@@ -4,10 +4,40 @@
 	],
 	"createdTime":1759721654921,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1759721677327,
+		"deployedBy":1,
+		"deployedDefinitionId":"68e338cc884102285c1f2cf4",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":1
+	},
 	"description":"description",
 	"edges":[
 		{
 			"fromNodeId":"n_jz8T5",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_1uhAH",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_1uhAH",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Y5Dyw",
+			"type":"scope"
+		},
+		{
+			"fromNodeId":"n_Y5Dyw",
+			"name":"scope-loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_1uhAH",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_1uhAH",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_Tq3ZN",
@@ -17,7 +47,7 @@
 	"id":"68e338b6884102285c1f2c70",
 	"lastModifiedBy":1,
 	"lcName":"scopewithtwotrueconditions_11759721535466",
-	"modifiedTime":1759721673719,
+	"modifiedTime":1759721695711,
 	"name":"ScopeWithTwoTrueConditions_11759721535466",
 	"nodes":[
 		{
@@ -50,12 +80,17 @@
 					"type":"object",
 					"additionalProperties":false,
 					"required":[
-						"input_String"
+						"input_String",
+						"input_String2"
 					],
 					"properties":{
 						"input_String":{
 							"type":"string",
 							"title":"input_String"
+						},
+						"input_String2":{
+							"type":"string",
+							"title":"input_String2"
 						}
 					}
 				}
@@ -70,6 +105,69 @@
 		},
 		{
 			"context":{
+				"appName":"scope",
+				"resourceVersion":132,
+				"resourceName":"scope_trigger_scope",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_5VVeZ-1",
+			"id":"n_1uhAH",
+			"index":2,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"{{ n_jz8T5.outputs.input_String }}",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"Unifyapps"
+							}
+						},
+						{
+							"property":"{{ n_jz8T5.outputs.input_String2 }}",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"2"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"subTitle":"Scope",
+			"title":"Trigger Scope",
+			"type":"SCOPE"
+		},
+		{
+			"context":{
+				"appName":"test_http",
+				"resourceVersion":1911,
+				"connectionId":"66b0ee649c311126267a17b7",
+				"resourceName":"test_http_post_api",
+				"type":"APPLICATION",
+				"scopeNodeId":"n_1uhAH"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_1uhAH@_5VVeZ-1@s",
+			"id":"n_Y5Dyw",
+			"index":3,
+			"inputs":{
+				"field1":"workflow continues",
+				"field2":false
+			},
+			"skip":false,
+			"subTitle":"Test HTTP API",
+			"title":"Test HTTP Post API",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":1897,
 				"resourceName":"callables_return_to_automation",
@@ -80,7 +178,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_5VVeZ-1",
 			"id":"n_Tq3ZN",
-			"index":2,
+			"index":4,
 			"inputs":{
 				"result":{
 					"output_String":"{{ n_jz8T5.outputs.input_String }}"
@@ -109,5 +207,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
