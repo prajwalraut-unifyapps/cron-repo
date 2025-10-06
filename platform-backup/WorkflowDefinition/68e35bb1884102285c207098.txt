@@ -16,11 +16,11 @@
 			"fromNodeId":"n_KYsLP",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_uXwHq",
+			"toNodeId":"n_us1gR",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_uXwHq",
+			"fromNodeId":"n_us1gR",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_4Unhj",
@@ -76,7 +76,7 @@
 	"id":"68e35bb1884102285c207098",
 	"lastModifiedBy":1,
 	"lcName":"test",
-	"modifiedTime":1759731029552,
+	"modifiedTime":1759731295217,
 	"name":"test",
 	"nodes":[
 		{
@@ -113,7 +113,10 @@
 					],
 					"properties":{
 						"name":{
-							"type":"string",
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
 							"title":"name"
 						}
 					}
@@ -191,7 +194,7 @@
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_7lXlt-1",
-			"id":"n_uXwHq",
+			"id":"n_us1gR",
 			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
@@ -236,8 +239,8 @@
 		{
 			"context":{
 				"appName":"loop",
-				"resourceVersion":91,
-				"resourceName":"loop_for",
+				"resourceVersion":134,
+				"resourceName":"loop_for_each",
 				"type":"APPLICATION"
 			},
 			"debug":false,
@@ -247,14 +250,12 @@
 			"id":"n_4Unhj",
 			"index":4,
 			"inputs":{
-				"start":0,
-				"limit":"=LEN({{ n_DUCRX.outputs.name }})",
-				"step":1,
-				"captureIterations":false
+				"listSource":"{{ n_DUCRX.outputs.name }}",
+				"captureIterations":true
 			},
 			"skip":false,
 			"subTitle":"Loop",
-			"title":"For loop",
+			"title":"For each loop",
 			"type":"LOOP"
 		},
 		{
@@ -273,10 +274,10 @@
 			"inputs":{
 				"filters":[
 					{
-						"property":"=MID({{ n_DUCRX.outputs.name }}, SEQUENCE(LEN({{ n_DUCRX.outputs.name }})), {{ n_4Unhj.outputs.index }})",
+						"property":"{{ n_4Unhj.outputs.item }}",
 						"filter":{
 							"operator":"EQUAL",
-							"value":"a"
+							"value":"Automation"
 						}
 					}
 				],
@@ -329,8 +330,8 @@
 			"inputs":{
 				"variables":[
 					{
-						"source":"{{ n_uXwHq.outputs.secondVariable }}",
-						"value":"=SUM({{ n_uXwHq.outputs.secondVariable }}, 1)"
+						"source":"{{ n_us1gR.outputs.secondVariable }}",
+						"value":"=SUM({{ n_us1gR.outputs.secondVariable }}, 1)"
 					}
 				]
 			},
@@ -380,5 +381,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
