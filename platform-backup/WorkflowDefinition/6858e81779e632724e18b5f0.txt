@@ -5,12 +5,12 @@
 	"createdTime":1755674328516,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759735519302,
-		"deployedBy":1,
-		"deployedDefinitionId":"68e36edf884102285c21f037",
+		"deployedAt":1759781130800,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68e4210a1a71840450af5399",
 		"status":"DEPLOYED",
-		"version":82,
-		"workflowVersion":144
+		"version":83,
+		"workflowVersion":145
 	},
 	"edges":[
 		{
@@ -38,6 +38,57 @@
 			"fromNodeId":"n_D5EY4",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_C0pnP",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_C0pnP",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_qK4vr",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_qK4vr",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_OlGjl",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_OlGjl",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8iwHM",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_8iwHM",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_RN6FC",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_RN6FC",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_y1lIz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_fDhLj",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_y1lIz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_C0pnP",
+			"name":"no",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_y1lIz",
 			"type":"next"
 		},
@@ -60,14 +111,6 @@
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_fDhLj",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_fDhLj",
-			"name":"loopback",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_y1lIz",
 			"type":"next"
 		},
 		{
@@ -160,7 +203,7 @@
 			"fromNodeId":"n_MX5WZ",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_zYD3a",
+			"toNodeId":"_7HqWi",
 			"type":"next"
 		}
 	],
@@ -175,9 +218,9 @@
 		]
 	},
 	"id":"6858e81779e632724e18b5f0",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":1,
 	"lcName":"fetch recent searches",
-	"modifiedTime":1759781130684,
+	"modifiedTime":1759811933412,
 	"name":"Fetch Recent Searches",
 	"nodes":[
 		{
@@ -253,7 +296,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_DmOAG",
@@ -534,7 +577,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_U74gX",
@@ -542,30 +585,38 @@
 			"inputs":{
 				"output":{
 					"type":"object",
-					"properties":{
-						"aiAgentId":{
-							"type":"string",
-							"title":"Ai Agent Id"
-						}
-					},
 					"additionalProperties":false,
-					"required":[]
+					"required":[],
+					"properties":{
+						"filter":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Filter"
+						}
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"aiAgentId":{
 							"type":"string",
 							"title":"Ai Agent Id"
+						},
+						"ownerUserId":{
+							"type":"string",
+							"title":"Owner User Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"def agentId = \"enterprise_search_agent\"\n\nif (binding.hasVariable('aiAgentId')) {\n    agentId = aiAgentId\n}\n\ndef ownerId = 1\n\nif (binding.hasVariable('ownerUserId')) {\n    ownerId = ownerUserId\n}\n\ndef filters = [\n    op: 'AND',\n    values: [\n        [\n            field: 'ownerUserId',\n            op: 'EQUAL',\n            values: [ownerId]  \n        ],\n        [\n            op: 'OR',\n            values: [\n                [\n                    field: 'properties.aiAgentId',\n                    op: 'EQUAL',\n                    values: [agentId] \n                ],\n                [\n                    field: 'properties.aiAgentId.__raw__',\n                    op: 'EQUAL',\n                    values: [agentId]\n                ]\n            ]\n        ]\n    ]\n]\n\nreturn ['filter': filters]\n",
 				"compile_static":false,
-				"code":"def agentId = \"enterprise_search_agent\"\n\nif(binding.hasVariable('aiAgentId')){\n  return [\"aiAgentId\": aiAgentId]\n}\n\nreturn [\"aiAgentId\": agentId]",
+				"captureStdOutput":false,
 				"parameters":{
-					"aiAgentId":"{{ n_xmCMt.outputs.aiAgentId }}"
+					"aiAgentId":"{{ n_xmCMt.outputs.aiAgentId }}",
+					"ownerUserId":"{{ __RUN__.outputs.userId }}"
 				}
 			},
 			"skip":false,
@@ -581,7 +632,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_D5EY4",
@@ -590,17 +641,8 @@
 				"triggerInputCondition":{
 					"filters":[
 						{
-							"property":"ownerUserId",
-							"filter":{
-								"operator":"EQUAL",
-								"value":"{{ __RUN__.outputs.userId }}"
-							}
-						},
-						{
-							"property":"properties_aiAgentId",
-							"filter":{
-								"operator":"EQUAL",
-								"value":"{{ n_U74gX.outputs.result.aiAgentId }}"
+							"resolvedFilter":{
+								"filter":"{{ n_U74gX.outputs.result.filter }}"
 							}
 						}
 					],
@@ -621,7 +663,8 @@
 				"translationsOption":"DEFAULT",
 				"page":{
 					"paginateBy":"OFFSET",
-					"limit":50
+					"limit":50,
+					"offset":0
 				},
 				"numberOfRecordsToFetch":"MULTIPLE",
 				"readThroughSessionVariables":false,
@@ -634,17 +677,214 @@
 		},
 		{
 			"context":{
+				"appName":"if_else",
+				"resourceVersion":10,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_ZeTgv-1",
+			"id":"n_C0pnP",
+			"index":5,
+			"inputs":{
+				"filters":[
+					{
+						"property":"=LEN({{ n_D5EY4.outputs.objects }})",
+						"filter":{
+							"operator":"GTE",
+							"value":"50"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":383,
+				"resourceName":"storage_by_unifyapps_delete_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"CONTINUE",
+			"groupId":"n_C0pnP@_ZeTgv-1@y",
+			"id":"n_qK4vr",
+			"index":6,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"resolvedFilter":{
+								"filter":"{{ n_U74gX.outputs.result.filter }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"writeThroughSessionVariables":false,
+				"object_type":"ai_agent_user_query",
+				"numberOfRecordsToDelete":"MULTIPLE",
+				"page":{
+					"limit":40,
+					"offset":0
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"CONTINUE",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Delete records",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"delay",
+				"resourceVersion":118,
+				"resourceName":"delay_for",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_C0pnP@_ZeTgv-1@y",
+			"id":"n_OlGjl",
+			"index":7,
+			"inputs":{
+				"duration":1,
+				"unit":"SECONDS"
+			},
+			"skip":false,
+			"subTitle":"Delay",
+			"title":"Set delay duration",
+			"type":"DELAY"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1212,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_C0pnP@_ZeTgv-1@y",
+			"id":"n_8iwHM",
+			"index":8,
+			"inputs":{
+				"automationId":"6858e81779e632724e18b5f0",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"query":"{{ n_xmCMt.outputs.query }}",
+					"aiAgentId":"{{ n_xmCMt.outputs.aiAgentId }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":454,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_C0pnP@_ZeTgv-1@y",
+			"id":"_RN6FC",
+			"index":9,
+			"inputs":{
+				"result":{
+					"objects":{
+						"ua:type":"mappedArray",
+						"items":{
+							"type":"{{ n_8iwHM.outputs.objects[0].type }}",
+							"data":"{{ n_8iwHM.outputs.objects[0].data }}"
+						},
+						"source":"{{ n_8iwHM.outputs.objects }}"
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		},
+		{
+			"context":{
 				"appName":"loop",
 				"resourceVersion":453,
 				"resourceName":"loop_for_each",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_y1lIz",
-			"index":5,
+			"index":10,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ n_D5EY4.outputs.objects }}",
@@ -663,11 +903,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_y1lIz@_ZeTgv-1@l",
 			"id":"n_MBbPf",
-			"index":6,
+			"index":11,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -736,11 +976,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_y1lIz@_ZeTgv-1@l",
 			"id":"n_LnJsQ",
-			"index":7,
+			"index":12,
 			"inputs":{
 				"loop":"n_y1lIz",
 				"conditions":{
@@ -769,11 +1009,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_y1lIz@_ZeTgv-1@l",
 			"id":"n_fDhLj",
-			"index":8,
+			"index":13,
 			"inputs":{
 				"itemToAdd":{
 					"type":"RECENT_SEARCHES",
@@ -795,11 +1035,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_JCbOt",
-			"index":9,
+			"index":14,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1051,11 +1291,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_SUw3P",
-			"index":10,
+			"index":15,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1328,11 +1568,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"_IGikt",
-			"index":11,
+			"index":16,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -1379,11 +1619,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_UenuP",
-			"index":12,
+			"index":17,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ _IGikt.outputs.objects }}",
@@ -1402,11 +1642,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_UenuP@_ZeTgv-1@l",
 			"id":"n_WYYUZ",
-			"index":13,
+			"index":18,
 			"inputs":{
 				"itemToAdd":"{{ n_UenuP.outputs.item.properties.chunkId }}",
 				"insertLocation":"END",
@@ -1425,11 +1665,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_UenuP@_ZeTgv-1@l",
 			"id":"n_qNbjr",
-			"index":14,
+			"index":19,
 			"inputs":{
 				"itemToAdd":{
 					"chunkId":"{{ n_UenuP.outputs.item.properties.chunkId }}",
@@ -1451,11 +1691,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_8ZSQp",
-			"index":15,
+			"index":20,
 			"inputs":{
 				"automationId":"685914facb8d060a8c7b1481",
 				"runtimeConnections":{},
@@ -1487,11 +1727,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_oYpu1",
-			"index":16,
+			"index":21,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ n_8ZSQp.outputs.citationData }}",
@@ -1510,11 +1750,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_oYpu1@_ZeTgv-1@l",
 			"id":"n_21lQU",
-			"index":17,
+			"index":22,
 			"inputs":{
 				"itemToAdd":{
 					"recentSearches":"{{ n_oYpu1.outputs.item }}",
@@ -1541,11 +1781,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
 			"id":"n_MX5WZ",
-			"index":18,
+			"index":23,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1614,11 +1854,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ZeTgv-1",
-			"id":"n_zYD3a",
-			"index":19,
+			"id":"_7HqWi",
+			"index":24,
 			"inputs":{
 				"result":{
 					"objects":{
@@ -1655,5 +1895,5 @@
 	"tags":[
 		
 	],
-	"version":145
+	"version":146
 }
