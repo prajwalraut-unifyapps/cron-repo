@@ -7,46 +7,382 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_MJs7Z",
+			"fromNodeId":"n_cTtSw",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_EkM0d",
+			"toNodeId":"n_bvglD",
 			"type":"next"
 		}
 	],
 	"id":"68e5630bcb47412c0555e2af",
 	"lastModifiedBy":1,
 	"lcName":"create list using map from step and making changes in the mapped fields in the previous step, the changes are done on the fields as well_117598627200260",
-	"modifiedTime":1759863563720,
+	"modifiedTime":1759863577941,
 	"name":"Create list Using Map from step and making changes in the mapped fields in the previous step, the changes are done on the fields as well_117598627200260",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":132,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_MJs7Z-1",
-			"id":"_MJs7Z",
-			"index":0,
+			"id":"n_cTtSw",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"inputString":{
+								"type":"object",
+								"properties":{
+									"name":{
+										"type":"object",
+										"properties":{
+											"FirstName":{
+												"type":"string",
+												"title":"FirstName"
+											},
+											"LastName":{
+												"type":"string",
+												"title":"LastName"
+											}
+										},
+										"title":"name",
+										"additionalProperties":false
+									},
+									"id":{
+										"type":"integer",
+										"title":"id"
+									}
+								},
+								"title":"inputString",
+								"additionalProperties":false
+							},
+							"inputNumber":{
+								"type":"number",
+								"title":"inputNumber"
+							},
+							"inputInteger":{
+								"type":"integer",
+								"title":"inputInteger"
+							}
+						},
+						"additionalProperties":false
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1892,
+				"resourceName":"variable_by_unifyapps_create_list",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_MJs7Z-1",
-			"id":"_EkM0d",
-			"index":0,
+			"id":"n_bvglD",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{
+					"createList":{
+						"ui:title":"",
+						"ua:type":{
+							"ui:widget":"hidden"
+						},
+						"items":{
+							"ui:title":"Initial list items",
+							"ui:description":"Set the initial values of the list (defaults to empty)"
+						},
+						"ui:order":[
+							"*",
+							"items"
+						]
+					},
+					"ua:title":{
+						"ui:widget":"hidden"
+					},
+					"ua:list_type":{
+						"ui:widget":"hidden"
+					}
+				},
+				"schema":{
+					"allOf":[
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"OBJECT"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"items":{
+												"type":"object",
+												"properties":{}
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"STRING"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of String"
+											},
+											"items":{
+												"type":"string"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"INTEGER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Integers"
+											},
+											"items":{
+												"type":"integer"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"NUMBER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Numbers"
+											},
+											"items":{
+												"type":"number"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"BOOLEAN"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Booleans"
+											},
+											"items":{
+												"type":"boolean"
+											}
+										}
+									}
+								}
+							}
+						}
+					],
+					"format":"ua:list",
+					"type":"object",
+					"properties":{
+						"ua:title":{
+							"type":"string"
+						},
+						"ua:list_type":{
+							"type":"string",
+							"title":"List Type",
+							"oneOf":[
+								{
+									"const":"OBJECT",
+									"title":"Object"
+								},
+								{
+									"const":"STRING",
+									"title":"String"
+								},
+								{
+									"const":"NUMBER",
+									"title":"Number"
+								},
+								{
+									"const":"INTEGER",
+									"title":"Integer"
+								},
+								{
+									"const":"BOOLEAN",
+									"title":"Boolean"
+								}
+							],
+							"default":"OBJECT"
+						},
+						"createList":{
+							"type":"object",
+							"properties":{
+								"ua:type":{
+									"type":"string",
+									"default":"mappedArray"
+								},
+								"source":{
+									"type":"string",
+									"format":"ua:source",
+									"title":"List Item Source"
+								},
+								"items":{
+									"type":"object",
+									"properties":{
+										"name":{
+											"type":"object",
+											"properties":{
+												"FirstName":{
+													"type":"string",
+													"title":"FirstName"
+												},
+												"LastName":{
+													"type":"string",
+													"title":"LastName"
+												}
+											},
+											"title":"name",
+											"additionalProperties":false
+										},
+										"id":{
+											"type":"integer",
+											"title":"id"
+										}
+									},
+									"title":"inputString",
+									"additionalProperties":false,
+									"ua:__linkedVariable__":"n_cTtSw.outputs.body.inputString"
+								}
+							}
+						}
+					}
+				}
+			},
+			"inputs":{
+				"createList":{
+					"ua:type":"mappedArray"
+				},
+				"ua:title":"List",
+				"ua:list_type":"OBJECT"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"type":"object",
+					"properties":{
+						"items":{
+							"type":"array",
+							"title":"List",
+							"disableActions":true,
+							"items":{
+								"type":"object",
+								"properties":{
+									"name":{
+										"type":"object",
+										"properties":{
+											"FirstName":{
+												"type":"string",
+												"title":"FirstName"
+											},
+											"LastName":{
+												"type":"string",
+												"title":"LastName"
+											}
+										},
+										"title":"name",
+										"additionalProperties":false
+									},
+									"id":{
+										"type":"integer",
+										"title":"id"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create list",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +396,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
