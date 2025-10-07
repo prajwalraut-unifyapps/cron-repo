@@ -7,46 +7,169 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_p1DVj",
+			"fromNodeId":"n_zARuT",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_ksARM",
+			"toNodeId":"n_LKzcp",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_LKzcp",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_13hAn",
 			"type":"next"
 		}
 	],
 	"id":"68e562d5cb47412c0555e15c",
 	"lastModifiedBy":1,
 	"lcName":"analytics_node_with_distinct_max_min_group_functions_with_filters_two_sortings_117598627145490",
-	"modifiedTime":1759863509622,
+	"modifiedTime":1759863530370,
 	"name":"Analytics_Node_With_Distinct_Max_Min_Group_Functions_With_Filters_Two_Sortings_117598627145490",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1953,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_p1DVj-1",
-			"id":"_p1DVj",
-			"index":0,
+			"id":"n_zARuT",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"output",
+						"total"
+					],
+					"properties":{
+						"output":{
+							"type":"string",
+							"title":"output"
+						},
+						"total":{
+							"type":"integer",
+							"title":"total"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":1826,
+				"resourceName":"analytics_by_unifyapps_query_reports",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_p1DVj-1",
-			"id":"_ksARM",
-			"index":0,
+			"id":"n_LKzcp",
+			"index":2,
+			"inputs":{
+				"projections":[
+					{
+						"name":"ENTITY_analytics_node_testcases_imp=::=department",
+						"aggregationFunction":"GROUP",
+						"alias":"Department",
+						"includePercentageChange":false
+					},
+					{
+						"name":"ENTITY_analytics_node_testcases_imp=::=salary",
+						"aggregationFunction":"MIN",
+						"alias":"Min_Salary",
+						"includePercentageChange":false
+					},
+					{
+						"name":"ENTITY_analytics_node_testcases_imp=::=salary",
+						"aggregationFunction":"MAX",
+						"alias":"Max_Salary",
+						"includePercentageChange":false
+					}
+				],
+				"filter":{
+					"filters":[
+						{
+							"property":"ENTITY_analytics_node_testcases_imp=::=name",
+							"filter":{
+								"operator":"EXISTS"
+							}
+						},
+						{
+							"property":"ENTITY_analytics_node_testcases_imp=::=married",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"false"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"entityType":"ENTITY_analytics_node_testcases_imp",
+				"includeTotalHits":true,
+				"sorts":[
+					{
+						"field":"Min_Salary",
+						"order":"ASC"
+					},
+					{
+						"field":"Max_Salary",
+						"order":"DESC"
+					}
+				],
+				"timeFilter":{
+					"until":1818699948126
+				},
+				"group":"ENTITY_REPORTING"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Analytics by UnifyApps",
+			"title":"Analytics Query",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1956,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_p1DVj-1",
+			"id":"n_13hAn",
+			"index":3,
+			"inputs":{
+				"result":{
+					"output":"{{ n_LKzcp.outputs.objects }}",
+					"total":"{{ n_LKzcp.outputs.total }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +183,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
