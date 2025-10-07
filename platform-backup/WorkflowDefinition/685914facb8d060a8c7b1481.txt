@@ -5,12 +5,12 @@
 	"createdTime":1751469809392,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759756112447,
-		"deployedBy":1,
-		"deployedDefinitionId":"68e3bf50884102285c283040",
+		"deployedAt":1759781095862,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68e420e71a71840450af5250",
 		"status":"DEPLOYED",
-		"version":96,
-		"workflowVersion":191
+		"version":98,
+		"workflowVersion":193
 	},
 	"edges":[
 		{
@@ -308,7 +308,7 @@
 	"id":"685914facb8d060a8c7b1481",
 	"lastModifiedBy":1,
 	"lcName":"generate citation data from chunk ids",
-	"modifiedTime":1759756231621,
+	"modifiedTime":1759812136321,
 	"name":"Generate citation data from chunk IDs",
 	"nodes":[
 		{
@@ -1077,7 +1077,7 @@
 						}
 					}
 				},
-				"code":"def modifiedChunks = []\n\nif(!binding.hasVariable('chunks')){\n    return [\"modifiedChunks\": []]\n}\n\nfor (chunk in chunks) {\n    if (chunk.containsKey('properties')) {\n        def props = chunk.properties\n        def metadata = props.chunkMetadata.findAll { k, v -> !(k in [\"content\", \"chunkContents\"]) }\n        def uniqueEntityId = props.uniqueEntityId\n        metadata.put(\"uniqueEntityId\", uniqueEntityId)\n        def newProps = [\n            \"chunkNumber\": props.chunkNumber,\n            \"metadata\"   : metadata,\n            \"chunkContent\"    : props.text,\n            \"chunkId\": chunk.id,\n            \"knowledgeType\": props.knowledgeType\n        ]\n        modifiedChunks << [\"properties\": newProps]\n        continue\n    }\n\n    def chunkNumber = chunk.remove(\"chunkNumber\")\n    def chunkContent = (chunk.chunkContents ?: []).join(\"\\n\")\n\n    def metadata = chunk.findAll { k, v -> !(k in [\"chunkContents\", \"content\"]) }\n\n    def properties = [\n        \"chunkNumber\": chunkNumber,\n        \"metadata\"   : metadata,\n        \"chunkContent\"    : chunkContent\n    ]\n\n    modifiedChunks << [\"properties\": properties]\n}\n\nreturn [\"modifiedChunks\": modifiedChunks]\n",
+				"code":"def modifiedChunks = []\n\nif(!binding.hasVariable('chunks')){\n    return [\"modifiedChunks\": []]\n}\n\nfor (chunk in chunks) {\n    if (chunk.containsKey('properties')) {\n        def props = chunk.properties\n        def metadata = props.chunkMetadata.findAll { k, v -> !(k in [\"content\", \"chunkContents\"]) }\n        def uniqueEntityId = props.uniqueEntityId\n        metadata.put(\"uniqueEntityId\", uniqueEntityId)\n        def newProps = [\n            \"chunkNumber\": props.chunkNumber,\n            \"metadata\"   : metadata,\n            \"chunkContent\"    : props.text,\n            \"chunkId\": chunk.id\n        ]\n        modifiedChunks << [\"properties\": newProps]\n        continue\n    }\n\n    def chunkNumber = chunk.remove(\"chunkNumber\")\n    def chunkContent = (chunk.chunkContents ?: []).join(\"\\n\")\n\n    def metadata = chunk.findAll { k, v -> !(k in [\"chunkContents\", \"content\"]) }\n\n    def properties = [\n        \"chunkNumber\": chunkNumber,\n        \"metadata\"   : metadata,\n        \"chunkContent\"    : chunkContent\n    ]\n\n    modifiedChunks << [\"properties\": properties]\n}\n\nreturn [\"modifiedChunks\": modifiedChunks]\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -1895,7 +1895,7 @@
 						}
 					}
 				},
-				"code":"Map<String, Object> references = new HashMap<>()\nList<Object> finalReferenceList = new ArrayList<>()\nboolean containsImage = false\n\n// Master cleaner: runs all cleanup steps in order\ndef cleanContent = { String text ->\n    if (!text) return \"\"\n\n    def out = text\n\n    // Remove Chunk Document Topic and trim zero-width spaces\n    out = out\n        .replaceAll(/(?s)Chunk Document Topic:.*?Chunk Context:/, \"\")\n        .replaceAll(/(?m)^Chunk Context:.*\\n?/, \"\")\n        .replaceAll(/^[\\s\\u200B-\\u200D\\uFEFF]+|[\\s\\u200B-\\u200D\\uFEFF]+$/, \"\")\n\n    // Remove duplicate symbols\n    out = out.replaceAll(/([.#\\-*%_])\\1+/, '')\n\n    // Replace \"chunk\" with \"document\"\n    out = out.replaceAll(\"chunk\", \"document\")\n\n    // Remove <metadata>...</metadata> blocks\n    out = out.replaceAll(/(?s)<metadata>.*?<\\/metadata>/, \"\").trim()\n\n    // Strip repeated curly braces\n    def sb = new StringBuilder()\n    int i = 0\n    while (i < out.length()) {\n        char c = out.charAt(i)\n        if (c == '{' || c == '}') {\n            sb.append(c)\n            while (i + 1 < out.length() && out.charAt(i + 1) == c) {\n                i++\n            }\n        } else {\n            sb.append(c)\n        }\n        i++\n    }\n    out = sb.toString()\n\n    // Remove wrapping braces\n    def outer = ~/(?s)^\\s*\\{+\\s*(.*?)\\s*\\}+\\s*$/\n    while (out ==~ outer) {\n        out = out.replaceAll(outer, '$1')\n    }\n\n    return out\n}\n\nif (!binding.hasVariable(\"chunks\")) {\n    return [:]\n}\n\nint ctr = 0\nfor (chunk in chunks) {\n    if (chunk == null) continue\n\n    ctr++\n    def metadata = chunk?.properties?.chunkMetadata ?: chunk?.properties?.metadata ?: [:]\n    def chunkContent = chunk?.properties?.chunkContent\n\n    def finalContent = cleanContent(chunkContent ?: \"\")\n\n    if (chunk?.properties?.chunkMetadata?.imgFile || chunk?.properties?.metadata?.imgFile) {\n        containsImage = true\n    }\n\n    def chunkIdentifier = metadata.get(\"uniqueEntityId\") ?: metadata.get(\"name\") ?: \"CHUNK_$ctr\"\n\n    def chunkNumber = chunk?.properties?.chunkNumber\n    if (!chunkNumber && chunk?.chunkNumber) {\n        chunkNumber = chunk?.chunkNumber\n    }\n    def chunkId = chunk.properties?.chunkId\n\n    def chunkContents = []\n    def chunkDetails = []\n    def existingChunkMetadata = references.get(chunkIdentifier)\n\n    if (existingChunkMetadata != null) {\n        chunkContents.addAll(existingChunkMetadata[\"chunkContents\"] ?: [])\n        chunkDetails.addAll(existingChunkMetadata[\"chunkDetails\"] ?: [])\n    }\n\n    chunkContents.add(finalContent)\n    chunkDetails.add([\n        \"chunkNumber\": chunkNumber,\n        \"chunkContent\": finalContent,\n        \"chunkId\": chunkId\n    ])\n\n    metadata[\"chunkDetails\"] = chunkDetails\n    metadata[\"knowledgeType\"] = chunk?.properties?.knowledgeType ?: metadata?.knowledgeType ?: \"chunk\"\n    metadata[\"chunkNumber\"] = chunkNumber\n    references.put(chunkIdentifier, metadata)\n}\n\nfinalReferenceList.addAll(references.values())\n\nreturn [\n    \"references\": finalReferenceList,\n    \"containsImage\": containsImage\n]\n",
+				"code":"Map<String, Object> references = new HashMap<>()\nList<Object> finalReferenceList = new ArrayList<>()\nboolean containsImage = false\n\n// Master cleaner: runs all cleanup steps in order\ndef cleanContent = { String text ->\n    if (!text) return \"\"\n\n    def out = text\n\n    // Remove Chunk Document Topic and trim zero-width spaces\n    out = out\n        .replaceAll(/(?s)Chunk Document Topic:.*?Chunk Context:/, \"\")\n        .replaceAll(/(?m)^Chunk Context:.*\\n?/, \"\")\n        .replaceAll(/^[\\s\\u200B-\\u200D\\uFEFF]+|[\\s\\u200B-\\u200D\\uFEFF]+$/, \"\")\n\n    // Remove duplicate symbols\n    out = out.replaceAll(/([.#\\-*%_])\\1+/, '')\n\n    // Replace \"chunk\" with \"document\"\n    out = out.replaceAll(\"chunk\", \"document\")\n\n    // Remove <metadata>...</metadata> blocks\n    out = out.replaceAll(/(?s)<metadata>.*?<\\/metadata>/, \"\").trim()\n\n    // Strip repeated curly braces\n    def sb = new StringBuilder()\n    int i = 0\n    while (i < out.length()) {\n        char c = out.charAt(i)\n        if (c == '{' || c == '}') {\n            sb.append(c)\n            while (i + 1 < out.length() && out.charAt(i + 1) == c) {\n                i++\n            }\n        } else {\n            sb.append(c)\n        }\n        i++\n    }\n    out = sb.toString()\n\n    // Remove wrapping braces\n    def outer = ~/(?s)^\\s*\\{+\\s*(.*?)\\s*\\}+\\s*$/\n    while (out ==~ outer) {\n        out = out.replaceAll(outer, '$1')\n    }\n\n    return out\n}\n\nif (!binding.hasVariable(\"chunks\")) {\n    return [:]\n}\n\nint ctr = 0\nfor (chunk in chunks) {\n    if (chunk == null) continue\n\n    ctr++\n    def metadata = chunk?.properties?.chunkMetadata ?: chunk?.properties?.metadata ?: [:]\n    def chunkContent = chunk?.properties?.chunkContent\n\n    def finalContent = cleanContent(chunkContent ?: \"\")\n\n    if (chunk?.properties?.chunkMetadata?.imgFile || chunk?.properties?.metadata?.imgFile) {\n        containsImage = true\n    }\n\n    def chunkIdentifier = metadata.get(\"uniqueEntityId\") ?: metadata.get(\"name\") ?: \"CHUNK_${ctr}\"\n\n    def chunkNumber = chunk?.properties?.chunkNumber\n    if (!chunkNumber && chunk?.chunkNumber) {\n        chunkNumber = chunk?.chunkNumber\n    }\n    def chunkId = chunk.properties?.chunkId\n\n    def chunkContents = []\n    def chunkDetails = []\n    def existingChunkMetadata = references.get(chunkIdentifier)\n\n    if (existingChunkMetadata != null) {\n        chunkContents.addAll(existingChunkMetadata[\"chunkContents\"] ?: [])\n        chunkDetails.addAll(existingChunkMetadata[\"chunkDetails\"] ?: [])\n    }\n\n    chunkContents.add(finalContent)\n    chunkDetails.add([\n        \"chunkNumber\": chunkNumber,\n        \"chunkContent\": finalContent,\n        \"chunkId\": chunkId\n    ])\n\n    metadata[\"chunkDetails\"] = chunkDetails\n    metadata[\"knowledgeType\"] = chunk?.properties?.knowledgeType ?: metadata?.knowledgeType ?: \"chunk\"\n    metadata[\"chunkNumber\"] = chunkNumber\n    references.put(chunkIdentifier, metadata)\n}\n\nfinalReferenceList.addAll(references.values())\n\nreturn [\n    \"references\": finalReferenceList,\n    \"containsImage\": containsImage\n]\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -2284,9 +2284,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -2297,5 +2297,5 @@
 	"tags":[
 		
 	],
-	"version":192
+	"version":194
 }
