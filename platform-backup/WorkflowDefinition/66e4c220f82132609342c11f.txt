@@ -3,15 +3,15 @@
 		"microsoft_outlook",
 		"storage_by_unifyapps"
 	],
-	"createdTime":1726267936786,
+	"createdTime":1747000739239,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759813987491,
-		"deployedBy":44096,
-		"deployedDefinitionId":"68e4a16312cf004c97b712f4",
+		"deployedAt":1759865254374,
+		"deployedBy":1,
+		"deployedDefinitionId":"68e569a64ce00132533e76a9",
 		"status":"DEPLOYED",
-		"version":106,
-		"workflowVersion":151
+		"version":95,
+		"workflowVersion":175
 	},
 	"edges":[
 		{
@@ -401,9 +401,9 @@
 		]
 	},
 	"id":"66e4c220f82132609342c11f",
-	"lastModifiedBy":44096,
+	"lastModifiedBy":-1,
 	"lcName":"execute custom ai agent action",
-	"modifiedTime":1759815762102,
+	"modifiedTime":1759868433350,
 	"name":"Execute Custom AI Agent Action",
 	"nodes":[
 		{
@@ -1415,7 +1415,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"M9090-1",
 			"id":"RYwQe",
@@ -1423,10 +1423,6 @@
 			"inputs":{
 				"output":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"modifiedInputs"
-					],
 					"properties":{
 						"modifiedInputs":{
 							"type":"object",
@@ -1434,15 +1430,14 @@
 							"additionalProperties":false,
 							"title":"Modified Inputs"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[
+						"modifiedInputs"
+					]
 				},
 				"input":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"inputs",
-						"dynamicFieldsPath"
-					],
 					"properties":{
 						"inputs":{
 							"type":"object",
@@ -1457,11 +1452,15 @@
 							},
 							"title":"Dynamic Fields Path"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[
+						"inputs",
+						"dynamicFieldsPath"
+					]
 				},
-				"code":"def getValueByPath(map, path) {\n    def keys = path.split(\"\\\\.\")\n    def value = map\n    for (key in keys) {\n        if (!(value instanceof Map) || !value.containsKey(key)) {\n            return null\n        }\n        value = value[key]\n    }\n    return value\n}\n\ndef paths;\nif(!binding.hasVariable('dynamicFieldsPath'))\n{\n    return [\"modifiedInputs\" : inputs]\n}\n\npaths = dynamicFieldsPath\npaths.each { path ->\n    def value = getValueByPath(inputs, path)\n    if (value != null) {\n        def topKey = path.contains(\".\") ? path.split(\"\\\\.\").last() : path\n        inputs[topKey] = value\n    }\n}\n\npaths.each { path ->\n    if (path.contains(\".\")) {\n        def keys = path.split(\"\\\\.\")\n        def parentKey = keys[0]\n        def childKey = keys[-1]\n        if (inputs[parentKey] instanceof Map) {\n            inputs[parentKey].remove(childKey)\n            if (inputs[parentKey].isEmpty()) {\n                inputs.remove(parentKey)\n            }\n        }\n    }\n}\n\nreturn [\"modifiedInputs\" : inputs]",
 				"compile_static":false,
-				"captureStdOutput":false,
+				"code":"def getValueByPath(map, path) {\n    def keys = path.split(\"\\\\.\")\n    def value = map\n    for (key in keys) {\n        if (!(value instanceof Map) || !value.containsKey(key)) {\n            return null\n        }\n        value = value[key]\n    }\n    return value\n}\n\ndef paths;\nif(!binding.hasVariable('dynamicFieldsPath'))\n{\n    return [\"modifiedInputs\" : inputs]\n}\n\npaths = dynamicFieldsPath\npaths.each { path ->\n    def value = getValueByPath(inputs, path)\n    if (value != null) {\n        def topKey = path.contains(\".\") ? path.split(\"\\\\.\").last() : path\n        inputs[topKey] = value\n    }\n}\n\npaths.each { path ->\n    if (path.contains(\".\")) {\n        def keys = path.split(\"\\\\.\")\n        def parentKey = keys[0]\n        def childKey = keys[-1]\n        if (inputs[parentKey] instanceof Map) {\n            inputs[parentKey].remove(childKey)\n            if (inputs[parentKey].isEmpty()) {\n                inputs.remove(parentKey)\n            }\n        }\n    }\n}\n\nreturn [\"modifiedInputs\" : inputs]",
 				"parameters":{
 					"inputs":"{{ BzoBD.outputs.result.inputs }}",
 					"dynamicFieldsPath":{
@@ -1978,7 +1977,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_A15oq@M9090-1@n",
 			"id":"vcLLc",
@@ -2230,7 +2229,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1866,
+	"ownerUserId":1,
 	"runtimeConnectionAppNames":[
 		"microsoft_outlook"
 	],
@@ -2251,5 +2250,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":152
+	"version":176
 }
