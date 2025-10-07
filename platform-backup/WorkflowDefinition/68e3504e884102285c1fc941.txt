@@ -23,17 +23,22 @@
 	"id":"68e3504e884102285c1fc941",
 	"lastModifiedBy":1,
 	"lcName":"filetourl",
-	"modifiedTime":1759821677992,
+	"modifiedTime":1759822922319,
 	"name":"filetourl",
 	"nodes":[
 		{
+			"additional":{
+				"xsdSchemaConfig":{
+					"root":{}
+				}
+			},
 			"context":{
 				"appName":"callables",
 				"resourceVersion":1897,
 				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_JhLuI-1",
 			"id":"n_JQv9W",
@@ -51,6 +56,34 @@
 							"title":"R"
 						}
 					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"a":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"name":{
+										"type":"string",
+										"title":"name"
+									},
+									"department":{
+										"type":"string",
+										"title":"department"
+									},
+									"age":{
+										"type":"integer",
+										"title":"age"
+									}
+								},
+								"additionalProperties":false
+							},
+							"title":"a"
+						}
+					}
 				}
 			},
 			"skip":false,
@@ -64,18 +97,30 @@
 		{
 			"context":{
 				"appName":"utility_by_unifyapps",
-				"resourceVersion":2575,
-				"resourceName":"utility_by_unifyapps_sequence_generator",
+				"resourceVersion":2576,
+				"resourceName":"utility_by_unifyapps_filter_list",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_JhLuI-1",
 			"id":"n_kQ0ff",
 			"index":2,
 			"inputs":{
-				"sequenceName":"OrderCharacterSeq"
+				"filter":{
+					"filters":[
+						{
+							"property":"{{ n_JQv9W.outputs.a[0].name }}",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"Alice"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"listSource":"{{ n_JQv9W.outputs.a }}"
 			},
 			"options":{
 				"bulkheadConfig":{
@@ -129,7 +174,7 @@
 			},
 			"skip":false,
 			"subTitle":"Utility by UnifyApps",
-			"title":"Sequence Generator",
+			"title":"Filter List of Data",
 			"type":"ACTION"
 		},
 		{
@@ -140,14 +185,14 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_JhLuI-1",
 			"id":"n_jiMff",
 			"index":3,
 			"inputs":{
 				"result":{
-					"r":"{{ n_kQ0ff.outputs.result }}"
+					"r":"{{ n_kQ0ff.outputs.filteredList }}"
 				}
 			},
 			"skip":false,
@@ -173,5 +218,5 @@
 	"tags":[
 		
 	],
-	"version":63
+	"version":64
 }
