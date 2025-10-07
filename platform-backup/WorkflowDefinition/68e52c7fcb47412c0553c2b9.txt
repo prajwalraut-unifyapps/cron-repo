@@ -1,51 +1,158 @@
 {
 	"appsUsed":[
-		
+		"parallel"
 	],
 	"createdTime":1759849599104,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_F7hqS",
+			"fromNodeId":"n_uebfa",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_uYKPC",
+			"toNodeId":"n_6t6zQ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_6t6zQ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_T3xxX",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_T3xxX",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Cameb",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Cameb",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_2R06H",
 			"type":"next"
 		}
 	],
 	"id":"68e52c7fcb47412c0553c2b9",
 	"lastModifiedBy":1,
 	"lcName":"dhadhe",
-	"modifiedTime":1759849599104,
+	"modifiedTime":1759853775680,
 	"name":"dhadhe",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":132,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_F7hqS-1",
-			"id":"_F7hqS",
-			"index":0,
+			"id":"n_uebfa",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"parallel",
+				"resourceVersion":4871,
+				"connectionId":"68e53b2d3bc8a34bd7a271a7",
+				"resourceName":"parallel_ingest_query",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_F7hqS-1",
-			"id":"_uYKPC",
-			"index":0,
+			"id":"n_6t6zQ",
+			"index":2,
+			"inputs":{
+				"query":"Find all AI companies that raised Series A funding in 2024"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Parallel",
+			"title":"Ingest query",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"parallel",
+				"resourceVersion":4871,
+				"connectionId":"68e53b2d3bc8a34bd7a271a7",
+				"resourceName":"parallel_start_findall_run",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_F7hqS-1",
+			"id":"n_T3xxX",
+			"index":3,
+			"inputs":{
+				"result_limit":50,
+				"findall_spec":"{{ n_6t6zQ.outputs.findall_spec }}",
+				"processor":"base"
+			},
+			"skip":false,
+			"subTitle":"Parallel",
+			"title":"Start findAll run",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"parallel",
+				"resourceVersion":4871,
+				"connectionId":"68e53b2d3bc8a34bd7a271a7",
+				"resourceName":"parallel_get_findall_run_status",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_F7hqS-1",
+			"id":"n_Cameb",
+			"index":4,
+			"inputs":{
+				"findall_id":"{{ n_T3xxX.outputs.findall_id }}"
+			},
+			"skip":false,
+			"subTitle":"Parallel",
+			"title":"Get findAll run status",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_F7hqS-1",
+			"id":"n_2R06H",
+			"index":5,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +166,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
