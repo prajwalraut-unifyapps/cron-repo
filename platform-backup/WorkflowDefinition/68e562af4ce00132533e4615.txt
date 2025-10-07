@@ -7,46 +7,185 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_OvVJN",
+			"fromNodeId":"n_5NPpF",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_FJ3xb",
+			"toNodeId":"n_Ldj4t",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Ldj4t",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_RIY6O",
 			"type":"next"
 		}
 	],
 	"id":"68e562af4ce00132533e4615",
 	"lastModifiedBy":1,
 	"lcName":"analytics_node_with_multiple_functions_with_filters_sorting_117598627145490",
-	"modifiedTime":1759863471643,
+	"modifiedTime":1759863499164,
 	"name":"Analytics_Node_With_Multiple_Functions_With_Filters_Sorting_117598627145490",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1953,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_OvVJN-1",
-			"id":"_OvVJN",
-			"index":0,
+			"id":"n_5NPpF",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"output",
+						"total"
+					],
+					"properties":{
+						"output":{
+							"type":"string",
+							"title":"output"
+						},
+						"total":{
+							"type":"integer",
+							"title":"total"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":1826,
+				"resourceName":"analytics_by_unifyapps_query_reports",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_OvVJN-1",
-			"id":"_FJ3xb",
-			"index":0,
+			"id":"n_Ldj4t",
+			"index":2,
+			"inputs":{
+				"projections":[
+					{
+						"name":"ENTITY_analytics_node_testcases_imp=::=department",
+						"aggregationFunction":"GROUP",
+						"alias":"Department",
+						"includePercentageChange":false
+					},
+					{
+						"name":"ENTITY_analytics_node_testcases_imp=::=city",
+						"aggregationFunction":"GROUP",
+						"alias":"City",
+						"includePercentageChange":false
+					},
+					{
+						"name":"ENTITY_analytics_node_testcases_imp=::=name",
+						"aggregationFunction":"COUNT",
+						"alias":"Name",
+						"includePercentageChange":false
+					},
+					{
+						"name":"ENTITY_analytics_node_testcases_imp=::=salary",
+						"aggregationFunction":"AVG",
+						"alias":"Avg_Salary",
+						"includePercentageChange":false
+					},
+					{
+						"name":"ENTITY_analytics_node_testcases_imp=::=salary",
+						"aggregationFunction":"MAX",
+						"alias":"Max_Salary",
+						"includePercentageChange":false
+					}
+				],
+				"filter":{
+					"filters":[
+						{
+							"property":"ENTITY_analytics_node_testcases_imp=::=age",
+							"filter":{
+								"operator":"GT",
+								"value":"21"
+							}
+						},
+						{
+							"property":"ENTITY_analytics_node_testcases_imp=::=gender",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"male"
+							}
+						},
+						{
+							"property":"ENTITY_analytics_node_testcases_imp=::=married",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"false"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"entityType":"ENTITY_analytics_node_testcases_imp",
+				"includeTotalHits":true,
+				"sorts":[
+					{
+						"field":"Name",
+						"order":"DESC"
+					}
+				],
+				"timeFilter":{
+					"until":1818699948126
+				},
+				"group":"ENTITY_REPORTING"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Analytics by UnifyApps",
+			"title":"Analytics Query",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1956,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_OvVJN-1",
+			"id":"n_RIY6O",
+			"index":3,
+			"inputs":{
+				"result":{
+					"output":"{{ n_Ldj4t.outputs.objects }}",
+					"total":"{{ n_Ldj4t.outputs.total }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +199,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
