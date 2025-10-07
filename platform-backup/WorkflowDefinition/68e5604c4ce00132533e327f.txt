@@ -7,46 +7,286 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_mNuvU",
+			"fromNodeId":"n_k0L4D",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_HOR0l",
+			"toNodeId":"n_dcCfP",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_dcCfP",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_aHGK1",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_aHGK1",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_6QP7Y",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_aHGK1",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_vgqAV",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_6QP7Y",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_LLKKG",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_vgqAV",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_LLKKG",
 			"type":"next"
 		}
 	],
 	"id":"68e5604c4ce00132533e327f",
 	"lastModifiedBy":1,
 	"lcName":"variable by unifyapps create a variable string 11759862684645",
-	"modifiedTime":1759862860599,
+	"modifiedTime":1759862891203,
 	"name":"Variable By unifyapps Create a variable string 11759862684645",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1955,
+				"resourceName":"callables_from_api"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_mNuvU-1",
-			"id":"_mNuvU",
-			"index":0,
+			"id":"n_k0L4D",
+			"index":1,
+			"inputs":{
+				"request":{
+					"queryParams":{
+						"type":"object",
+						"additionalProperties":false,
+						"required":[],
+						"properties":{
+							"input_Field":{
+								"type":"string",
+								"title":"input_Field"
+							}
+						}
+					},
+					"contentType":"application/json"
+				},
+				"endpointType":"REST",
+				"response":[
+					{
+						"name":"resp",
+						"status":200,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						},
+						"body":{
+							"type":"object",
+							"properties":{
+								"response":{
+									"type":"object",
+									"properties":{},
+									"additionalProperties":false,
+									"title":"response"
+								}
+							},
+							"additionalProperties":false,
+							"required":[
+								"response"
+							]
+						}
+					}
+				],
+				"streamingResponse":false
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via API",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1895,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_mNuvU-1",
-			"id":"_HOR0l",
-			"index":0,
+			"id":"n_dcCfP",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"Input":{
+							"type":"string",
+							"title":"Input"
+						}
+					},
+					"required":[
+						"Input"
+					]
+				}
+			},
+			"inputs":{
+				"Input":"{{ n_k0L4D.outputs.queryParams.input_Field }}"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"Input":{
+							"type":"string",
+							"title":"Input"
+						}
+					},
+					"required":[
+						"Input"
+					]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":132,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_mNuvU-1",
+			"id":"n_aHGK1",
+			"index":3,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_k0L4D.outputs.queryParams.input_Field }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1892,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_aHGK1@_mNuvU-1@y",
+			"id":"n_6QP7Y",
+			"index":4,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_dcCfP.outputs.Input }}",
+						"value":"TrueName"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1892,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_aHGK1@_mNuvU-1@n",
+			"id":"n_vgqAV",
+			"index":5,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_dcCfP.outputs.Input }}",
+						"value":"FalseName"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1957,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_mNuvU-1",
+			"id":"n_LLKKG",
+			"index":6,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_resp",
+				"body":{
+					"response":"{{ n_dcCfP.outputs.Input }}"
+				},
+				"status":200
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +300,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
