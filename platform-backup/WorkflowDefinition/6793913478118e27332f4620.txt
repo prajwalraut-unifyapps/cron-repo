@@ -5,12 +5,12 @@
 	"createdTime":1747000743379,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759837511739,
+		"deployedAt":1759844552341,
 		"deployedBy":1,
-		"deployedDefinitionId":"68e4fd47f9bdca4aede2aa55",
+		"deployedDefinitionId":"68e518c8cb47412c055353f8",
 		"status":"DEPLOYED",
-		"version":103,
-		"workflowVersion":128
+		"version":104,
+		"workflowVersion":129
 	},
 	"edges":[
 		{
@@ -206,9 +206,9 @@
 		]
 	},
 	"id":"6793913478118e27332f4620",
-	"lastModifiedBy":1,
+	"lastModifiedBy":0,
 	"lcName":"session file indexer",
-	"modifiedTime":1759844552220,
+	"modifiedTime":1759854360081,
 	"name":"Session File Indexer",
 	"nodes":[
 		{
@@ -257,6 +257,10 @@
 						"addToAgentId":{
 							"type":"string",
 							"title":"Add To Agent Id"
+						},
+						"addToKnowledgeSet":{
+							"type":"string",
+							"title":"Add To Knowledge Set"
 						}
 					},
 					"additionalProperties":false,
@@ -450,6 +454,10 @@
 						"addToAgentId":{
 							"type":"string",
 							"title":"Add To Agent Id"
+						},
+						"addToKnowledgeSet":{
+							"type":"string",
+							"title":"Add To Knowledge Set"
 						}
 					},
 					"additionalProperties":false,
@@ -458,11 +466,12 @@
 					]
 				},
 				"compile_static":false,
-				"code":"def fileExtensionToMimeType = [\n    \"xlsx\"  : \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n    \"xlsm\"  : \"application/vnd.ms-excel.sheet.macroEnabled.12\",\n    \"csv\"   : \"text/csv\",\n    \"docx\"  : \"application/vnd.openxmlformats-officedocument.wordprocessingml.document\",\n    \"doc\"   : \"application/msword\",\n    \"txt\"   : \"text/plain\",\n    \"pptx\"  : \"application/vnd.openxmlformats-officedocument.presentationml.presentation\",\n    \"ppt\"   : \"application/vnd.ms-powerpoint\",\n    \"pdf\"   : \"application/pdf\"\n]\n\ndef sourcePath = file.get('source')\ndef fileExtension = sourcePath.tokenize('.')[-1]\n\ndef mimeType = fileExtensionToMimeType[fileExtension]\n\ndef chars = ('A'..'Z') + ('a'..'z') + ('0'..'9')\ndef random = new Random()\ndef randomString = (1..6).collect { chars[random.nextInt(chars.size())] }.join()\n\nreturn[\n        'isUrl': file.sourceType == \"URL\",\n        'url': file.get('source'),\n        'mimeType': mimeType,\n        'name':file.get(\"name\"),\n        \"accessibleTo\": binding.hasVariable(\"addToAgentId\")? [\"ai_agent/\" + addToAgentId] : [\"service_hub_case/\" + caseId],\n        'randomString' : randomString\n]",
+				"code":"def fileExtensionToMimeType = [\n    \"xlsx\"  : \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n    \"xlsm\"  : \"application/vnd.ms-excel.sheet.macroEnabled.12\",\n    \"csv\"   : \"text/csv\",\n    \"docx\"  : \"application/vnd.openxmlformats-officedocument.wordprocessingml.document\",\n    \"doc\"   : \"application/msword\",\n    \"txt\"   : \"text/plain\",\n    \"pptx\"  : \"application/vnd.openxmlformats-officedocument.presentationml.presentation\",\n    \"ppt\"   : \"application/vnd.ms-powerpoint\",\n    \"pdf\"   : \"application/pdf\"\n]\n\ndef sourcePath = file.get('source')\ndef fileExtension = sourcePath.tokenize('.')[-1]\n\ndef mimeType = fileExtensionToMimeType[fileExtension]\n\ndef chars = ('A'..'Z') + ('a'..'z') + ('0'..'9')\ndef random = new Random()\ndef randomString = (1..6).collect { chars[random.nextInt(chars.size())] }.join()\nString accessibleTo = \"\";\nif(binding.hasVariable('addToAgentId')) {\n    accessibleTo = \"ai_agent/\" + addToAgentId\n}\nelse if(binding.hasVariable('addToKnowledgeSet')) {\n    accessibleTo = \"knowledge_set/\" + addToKnowledgeSet\n} else {\n     accessibleTo = \"service_hub_case/\" + caseId\n}\n\nreturn[\n        'isUrl': file.sourceType == \"URL\",\n        'url': file.get('source'),\n        'mimeType': mimeType,\n        'name':file.get(\"name\"),\n        \"accessibleTo\": [accessibleTo],\n        'randomString' : randomString\n]",
 				"parameters":{
 					"file":"{{ 9wNwo.outputs.file }}",
 					"caseId":"{{ 9wNwo.outputs.caseId }}",
-					"addToAgentId":"{{ 9wNwo.outputs.addToAgentId }}"
+					"addToAgentId":"{{ 9wNwo.outputs.addToAgentId }}",
+					"addToKnowledgeSet":"{{ 9wNwo.outputs.addToKnowledgeSet }}"
 				}
 			},
 			"skip":false,
@@ -744,6 +753,7 @@
 					"newIndexingFlowEnabled":false,
 					"forwardGrabberScheduled":false,
 					"realtimeIndexingEnabled":false,
+					"knowledgeScheduleEnabled":false,
 					"accessibleTo":{
 						"source":"{{ OYJGP.outputs.result.accessibleTo }}",
 						"ua:type":"mappedArray",
@@ -812,7 +822,6 @@
 					"operator":"AND"
 				},
 				"object_type":"knowledge",
-				"skipIfBlank":false,
 				"updateFields":[
 					{
 						"fieldName":"properties.additionalDetails.embeddingModel",
@@ -824,8 +833,7 @@
 				"page":{
 					"offset":0,
 					"limit":20
-				},
-				"unsetIfNull":false
+				}
 			},
 			"skip":false,
 			"subTitle":"update",
@@ -906,7 +914,7 @@
 					]
 				},
 				"compile_static":false,
-				"code":"def chunkMetadata = [:]\nif(binding.hasVariable('fileDetails')) chunkMetadata.putAll(fileDetails)\nchunkMetadata.put(\"referenceUrl\", path)\nreturn [ \"chunkMetadata\" : chunkMetadata]",
+				"code":"def chunkMetadata = [:]\nif(binding.hasVariable('fileDetails')) chunkMetadata.putAll(fileDetails)\nchunkMetadata.put(\"referenceUrl\", path)\nchunkMetadata.put('date' , System.currentTimeMillis())\nreturn [ \"chunkMetadata\" : chunkMetadata]",
 				"isAsync":false,
 				"parameters":{
 					"path":"{{ _63ZMo.outputs.path }}",
@@ -938,14 +946,14 @@
 				"version":"-1",
 				"parameters":{
 					"fileDetails":"{{ Ogj2K.outputs.file }}",
-					"knowledgeId":"{{ H7ng4.outputs.id }}",
 					"mimeType":"{{ OYJGP.outputs.result.mimeType }}",
-					"chunkMetadata":"{{ _YCIwl.outputs.result.chunkMetadata }}",
-					"uniqueEntityId":"{{ 9wNwo.outputs.addToAgentId }}_{{ 9wNwo.outputs.caseId }}_{{ OYJGP.outputs.result.randomString }}",
+					"knowledgeId":"{{ H7ng4.outputs.id }}",
 					"sharedWithIds":{
 						"items":"GLOBAL",
 						"ua:type":"mappedArray"
-					}
+					},
+					"chunkMetadata":"{{ _YCIwl.outputs.result.chunkMetadata }}",
+					"uniqueEntityId":"{{ 9wNwo.outputs.addToAgentId }}_{{ 9wNwo.outputs.caseId }}_{{ OYJGP.outputs.result.randomString }}"
 				}
 			},
 			"skip":false,
@@ -1171,9 +1179,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -1184,5 +1192,5 @@
 		"AI Agent",
 		"Knowledge"
 	],
-	"version":129
+	"version":130
 }
