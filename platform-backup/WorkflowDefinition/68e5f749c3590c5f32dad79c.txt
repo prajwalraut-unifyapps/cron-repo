@@ -30,6 +30,22 @@
 			"type":"error"
 		},
 		{
+			"fromNodeId":"n_HlLBB",
+			"name":"success",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_C2aeG",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_HlLBB",
+			"name":"error",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_kEqaD",
+			"type":"error"
+		},
+		{
 			"fromNodeId":"n_b4Rij",
 			"priority":0,
 			"skip":false,
@@ -37,7 +53,14 @@
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_HlLBB",
+			"fromNodeId":"n_C2aeG",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_UcCea",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_kEqaD",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_UcCea",
@@ -47,7 +70,7 @@
 	"id":"68e5f749c3590c5f32dad79c",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2pmpfzrgruk",
-	"modifiedTime":1759901566907,
+	"modifiedTime":1759901600012,
 	"name":"cacheQA2pmPFZrgRUk",
 	"nodes":[
 		{
@@ -57,7 +80,7 @@
 				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_e1Bo6-1",
 			"id":"n_C7lEC",
@@ -121,7 +144,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"MANUAL",
 			"groupId":"_e1Bo6-1",
 			"id":"n_wEz1f",
@@ -196,7 +219,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_wEz1f@_e1Bo6-1@success",
 			"id":"n_b4Rij",
@@ -220,16 +243,113 @@
 			},
 			"debug":false,
 			"dirty":true,
-			"fallbackMode":"STOP",
+			"fallbackMode":"MANUAL",
 			"groupId":"n_wEz1f@_e1Bo6-1@error",
 			"id":"n_HlLBB",
 			"index":4,
 			"inputs":{
 				"contactId":"{{ n_C7lEC.outputs.contactId }}"
 			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"MANUAL",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
 			"skip":false,
 			"subTitle":"Freshdesk",
 			"title":"Get contact",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":9625,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_contact",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_HlLBB@n_wEz1f@_e1Bo6-1@error@success",
+			"id":"n_C2aeG",
+			"index":5,
+			"inputs":{
+				"contactId":"{{ n_C7lEC.outputs.contactIdTwo }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get contact",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":9625,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_company",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_HlLBB@n_wEz1f@_e1Bo6-1@error@error",
+			"id":"n_kEqaD",
+			"index":6,
+			"inputs":{
+				"companyId":"{{ n_C7lEC.outputs.companyIdTwo }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get company",
 			"type":"ACTION"
 		},
 		{
@@ -240,11 +360,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_e1Bo6-1",
 			"id":"n_UcCea",
-			"index":5,
+			"index":7,
 			"inputs":{
 				"result":{
 					"result":"{{ n_HlLBB.outputs.name }}"
@@ -273,5 +393,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
