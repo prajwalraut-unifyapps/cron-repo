@@ -4,22 +4,91 @@
 	],
 	"createdTime":1759905541661,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1759905802797,
+		"deployedBy":1,
+		"deployedDefinitionId":"68e6080a596c5f00a4c81536",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":2
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_EvOuV",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_lTBRA",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_lTBRA",
+			"name":"1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_lTBRA@1",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_lTBRA@1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_9CiEv",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_lTBRA",
+			"name":"2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_lTBRA@2",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_lTBRA@2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_LXc3S",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_9CiEv",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_DWmAQ",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_LXc3S",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_DWmAQ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_lTBRA",
+			"name":"default",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_DWmAQ",
+			"type":"branch"
 		}
 	],
 	"id":"68e60705c3590c5f32dbcaeb",
 	"lastModifiedBy":1,
 	"lcName":"dnt_customhttpapplicationrestmultipartstatuscodesautomation",
-	"modifiedTime":1759905794158,
+	"modifiedTime":1759920694874,
 	"name":"Dnt_CustomHttpApplicationRestMultipartStatusCodesAutomation",
 	"nodes":[
 		{
+			"additional":{
+				"xsdSchemaConfig":{
+					"root":{
+						"response":[
+							{}
+						]
+					}
+				}
+			},
 			"context":{
 				"appName":"callables",
 				"resourceVersion":2007,
@@ -54,19 +123,14 @@
 						"contentType":"application/json",
 						"textBody":{
 							"type":"string"
-						},
-						"body":{
-							"type":"object",
-							"properties":{
-								"Output":{
-									"type":"string",
-									"title":"Output"
-								}
-							},
-							"additionalProperties":false,
-							"required":[
-								"Output"
-							]
+						}
+					},
+					{
+						"name":"201",
+						"status":201,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
 						}
 					}
 				],
@@ -82,17 +146,138 @@
 		},
 		{
 			"context":{
-				"appName":"callables",
-				"resourceVersion":2009,
-				"resourceName":"callables_return_response_to_api",
+				"appName":"branch",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Cn3Vw-1",
-			"id":"n_DWmAQ",
+			"id":"n_lTBRA",
 			"index":2,
+			"inputs":{
+				"branches":[
+					{
+						"id":"1",
+						"inputs":{
+							"name":"RestMultipart_StatusCode 200",
+							"conditions":{
+								"filters":[
+									{
+										"property":"{{ n_EvOuV.outputs.queryParams.status }}",
+										"filter":{
+											"operator":"EQUAL",
+											"value":"200"
+										}
+									}
+								],
+								"operator":"AND"
+							}
+						}
+					},
+					{
+						"id":"2",
+						"inputs":{
+							"name":"Branch 2"
+						}
+					},
+					{
+						"id":"default"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Branch",
+			"title":"",
+			"type":"BRANCH"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceVersion":0,
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_lTBRA@_Cn3Vw-1@1",
+			"id":"n_lTBRA@1",
+			"index":3,
+			"inputs":{
+				"name":"RestMultipart_StatusCode 200",
+				"conditions":{
+					"filters":[
+						{
+							"property":"{{ n_EvOuV.outputs.queryParams.status }}",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"200"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"title":"",
+			"type":"BRANCH_CONDITION"
+		},
+		{
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_lTBRA@_Cn3Vw-1@1",
+			"id":"n_9CiEv",
+			"index":4,
+			"skip":false,
+			"title":"Select an app and action",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceVersion":0,
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_lTBRA@_Cn3Vw-1@2",
+			"id":"n_lTBRA@2",
+			"index":5,
+			"inputs":{
+				"name":"Branch 2"
+			},
+			"skip":false,
+			"title":"",
+			"type":"BRANCH_CONDITION"
+		},
+		{
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_lTBRA@_Cn3Vw-1@2",
+			"id":"n_LXc3S",
+			"index":6,
+			"skip":false,
+			"title":"Select an app and action",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2009,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_Cn3Vw-1",
+			"id":"n_DWmAQ",
+			"index":7,
 			"inputs":{
 				"streamingCompleted":true,
 				"responseName":"200_200",
@@ -124,5 +309,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
