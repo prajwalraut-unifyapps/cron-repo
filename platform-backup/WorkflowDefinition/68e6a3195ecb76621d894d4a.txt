@@ -6,41 +6,67 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"n_RHQ8f",
+			"fromNodeId":"n_6KYzx",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_1FAtT",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_1FAtT",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8O28C",
 			"type":"next"
 		}
 	],
 	"id":"68e6a3195ecb76621d894d4a",
 	"lastModifiedBy":44108,
 	"lcName":"md5 encryption",
-	"modifiedTime":1759945533296,
+	"modifiedTime":1759946490756,
 	"name":"MD5 encryption",
 	"nodes":[
 		{
 			"context":{
-				"appName":"webhooks",
-				"resourceVersion":833,
-				"resourceName":"webhooks_default"
+				"appName":"callables",
+				"resourceVersion":1023,
+				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_T7ugF-1",
-			"id":"n_RHQ8f",
+			"id":"n_6KYzx",
 			"index":1,
 			"inputs":{
-				"request":{
-					"contentType":"application/json"
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"hashText":{
+							"type":"string",
+							"title":"Hash Text"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"text":{
+							"type":"string",
+							"title":"Text"
+						}
+					}
 				}
 			},
 			"skip":false,
-			"subTitle":"Webhook",
-			"title":"New event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"WEBHOOK"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
@@ -58,14 +84,62 @@
 			"id":"n_1FAtT",
 			"index":2,
 			"inputs":{
-				"code":"import java.security.MessageDigest\n\nString createMD5(String input) {\n    // Get MD5 digest instance\n    MessageDigest md5 = MessageDigest.getInstance(\"MD5\")\n\n    // Compute the hash bytes\n    byte[] hashBytes = md5.digest(input.getBytes(\"UTF-8\"))\n\n    // Convert bytes to hexadecimal string (uppercase)\n    StringBuilder sb = new StringBuilder()\n    hashBytes.each { byte b ->\n        sb.append(String.format(\"%02X\", b))\n    }\n\n    return sb.toString()\n}\n\nreturn [\"cipher\" : createMD5(\"hello\")]",
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"cipher":{
+							"type":"string",
+							"title":"Cipher"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"text":{
+							"type":"string",
+							"title":"Text"
+						}
+					}
+				},
+				"code":"import java.security.MessageDigest\n\nString createMD5(String input) {\n    MessageDigest md5 = MessageDigest.getInstance(\"MD5\")\n\n    byte[] hashBytes = md5.digest(input.getBytes(\"UTF-8\"))\n    StringBuilder sb = new StringBuilder()\n    hashBytes.each { byte b ->\n        sb.append(String.format(\"%02X\", b))\n    }\n    return sb.toString()\n}\n\nreturn [\"cipher\" : createMD5(text)]",
 				"compile_static":false,
-				"captureStdOutput":false
+				"captureStdOutput":false,
+				"parameters":{
+					"text":"{{ n_6KYzx.outputs.text }}"
+				}
 			},
 			"skip":false,
 			"subTitle":"Code by UnifyApps",
 			"title":"Execute Groovy code",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1059,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_T7ugF-1",
+			"id":"n_8O28C",
+			"index":3,
+			"inputs":{
+				"result":{
+					"hashText":"{{ n_1FAtT.outputs.result.cipher }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":44108,
@@ -85,5 +159,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
