@@ -4,27 +4,139 @@
 	],
 	"createdTime":1759898902804,
 	"deleted":false,
+	"description":"",
 	"edges":[
-		
+		{
+			"fromNodeId":"XftPW",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"anPhp",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"anPhp",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"T3qpZ",
+			"type":"next"
+		}
 	],
 	"id":"68e5ed16c3590c5f32da53be",
 	"lastModifiedBy":1,
 	"lcName":"backend_automationub7a8b2zhsog",
-	"modifiedTime":1759898902804,
+	"modifiedTime":1759898903622,
 	"name":"Backend_AutomationUb7a8b2ZHsOg",
 	"nodes":[
-		
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":24,
+				"resourceName":"callables_from_automation"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"XftPW-1",
+			"id":"XftPW",
+			"index":0,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"properties":{
+						"output":{
+							"type":"string",
+							"title":"output"
+						}
+					},
+					"additionalProperties":false,
+					"required":[]
+				}
+			},
+			"skip":false,
+			"title":"Trigger from automation",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":47,
+				"resourceName":"analytics_by_unifyapps_query_reports",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"XftPW-1",
+			"id":"anPhp",
+			"index":0,
+			"inputs":{
+				"projections":[
+					{
+						"aggregationFunction":"GROUP",
+						"includePercentageChange":false,
+						"name":"COLLECTION_PATH",
+						"alias":"Collection_Path"
+					}
+				],
+				"filter":{
+					"filters":[
+						{
+							"property":"HTTP_METHOD",
+							"filter":{
+								"operator":"NOT_CONTAINS",
+								"value":"POST"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"entityType":"API_ENDPOINT",
+				"sorts":[
+					{
+						"field":"Collection_Path",
+						"order":"ASC"
+					}
+				],
+				"group":"PLATFORM"
+			},
+			"skip":false,
+			"subTitle":"Analytics by UnifyApps",
+			"title":"Analytics Query",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":21,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"XftPW-1",
+			"id":"T3qpZ",
+			"index":0,
+			"inputs":{
+				"result":{
+					"output":"{{ anPhp.outputs.objects }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Return data to automation",
+			"type":"STOP"
+		}
 	],
 	"ownerUserId":1,
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
-		"enableVariableLogging":true,
-		"route":{
-			"default":false,
-			"tierName":"global"
-		}
+		"enableVariableLogging":true
 	},
 	"standard":false,
-	"version":0
+	"version":1
 }
