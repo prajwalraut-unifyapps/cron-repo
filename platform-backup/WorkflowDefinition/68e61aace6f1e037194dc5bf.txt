@@ -7,46 +7,223 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_MQTK1",
+			"fromNodeId":"n_4stbN",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_unxd0",
+			"toNodeId":"n_bDFMg",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_bDFMg",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Po536",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_Po536",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_bDFMg",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_bDFMg",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_ETjns",
 			"type":"next"
 		}
 	],
 	"id":"68e61aace6f1e037194dc5bf",
 	"lastModifiedBy":1,
 	"lcName":"parentnode-condition-117599100297240",
-	"modifiedTime":1759910572413,
+	"modifiedTime":1759910591329,
 	"name":"parentnode-condition-117599100297240",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":133,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_MQTK1-1",
-			"id":"_MQTK1",
-			"index":0,
+			"id":"n_4stbN",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"name":{
+								"type":"array",
+								"items":{
+									"type":"object",
+									"properties":{
+										"n1":{
+											"type":"integer",
+											"title":"n1"
+										}
+									},
+									"additionalProperties":false
+								},
+								"title":"name"
+							}
+						},
+						"additionalProperties":false
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":136,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_MQTK1-1",
-			"id":"_unxd0",
-			"index":0,
+			"id":"n_bDFMg",
+			"index":2,
+			"inputs":{
+				"repeatMode":"SINGLE",
+				"listSource":"{{ n_4stbN.outputs.body.name }}",
+				"captureIterations":true
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":223,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_bDFMg@_MQTK1-1@l",
+			"id":"n_Po536",
+			"index":3,
+			"inputs":{
+				"automationId":"68e61a9ae6f1e037194dc550",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"Field_input":"1"
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"cacheKey":"{{ n_bDFMg.outputs.item.n1 }}",
+					"enabled":true,
+					"filter":{
+						"filters":[
+							{
+								"filter":{
+									"operator":"EQUAL",
+									"value":"1"
+								},
+								"property":"{{ n_bDFMg.outputs.item.n1 }}"
+							}
+						],
+						"operator":"AND"
+					},
+					"timeToLive":"5",
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_MQTK1-1",
+			"id":"n_ETjns",
+			"index":4,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +237,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
