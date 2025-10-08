@@ -6,46 +6,217 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_eowvw",
+			"fromNodeId":"n_B7OeQ",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_j5CwL",
+			"toNodeId":"n_dwgAp",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_dwgAp",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_cKjkN",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_cKjkN",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_6Tq1Z",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_6Tq1Z",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_cKjkN",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_cKjkN",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Sg9Z5",
 			"type":"next"
 		}
 	],
 	"id":"68e5f97dc3590c5f32db03e7",
 	"lastModifiedBy":1,
 	"lcName":"loopslocalpygygxyhsq",
-	"modifiedTime":1759902077618,
+	"modifiedTime":1759902103417,
 	"name":"loopsLocalpyGYgxyHsQ",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2005,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_eowvw-1",
-			"id":"_eowvw",
-			"index":0,
+			"id":"n_B7OeQ",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"output":{
+							"type":"string",
+							"title":"output"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"A":{
+							"type":"integer",
+							"title":"A"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1941,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_eowvw-1",
-			"id":"_j5CwL",
-			"index":0,
+			"id":"n_dwgAp",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"count":{
+							"type":"integer",
+							"title":"count"
+						}
+					}
+				}
+			},
+			"inputs":{
+				"count":0
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"count":{
+							"type":"integer",
+							"title":"count"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":93,
+				"resourceName":"loop_for",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_eowvw-1",
+			"id":"n_cKjkN",
+			"index":3,
+			"inputs":{
+				"start":0,
+				"limit":"{{ n_B7OeQ.outputs.A }}",
+				"step":1,
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1938,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_cKjkN@_eowvw-1@l",
+			"id":"n_6Tq1Z",
+			"index":4,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_dwgAp.outputs.count }}",
+						"value":"=SUM({{ n_dwgAp.outputs.count }},1)"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2008,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_eowvw-1",
+			"id":"n_Sg9Z5",
+			"index":5,
+			"inputs":{
+				"result":{
+					"output":"{{ n_dwgAp.outputs.count }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +230,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
