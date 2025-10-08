@@ -9,14 +9,14 @@
 			"fromNodeId":"_evM94",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_nGC0w",
+			"toNodeId":"n_OaXDd",
 			"type":"next"
 		}
 	],
 	"id":"68e67484f06d7d1582c4cc9b",
 	"lastModifiedBy":76193,
 	"lcName":"test_python",
-	"modifiedTime":1759933572726,
+	"modifiedTime":1759933652993,
 	"name":"test_python",
 	"nodes":[
 		{
@@ -25,7 +25,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_evM94-1",
 			"id":"_evM94",
-			"index":0,
+			"index":1,
 			"skip":false,
 			"title":"Select a trigger event",
 			"trigger":{
@@ -34,18 +34,35 @@
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":928,
+				"resourceName":"code_by_unifyapps_python",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_evM94-1",
-			"id":"_nGC0w",
-			"index":0,
+			"id":"n_OaXDd",
+			"index":2,
+			"inputs":{
+				"configurationMode":"DEFAULT",
+				"code":"import json\r\nfrom datetime import datetime\r\n\r\ndef main(req_body):\r\n\r\n    mandatory_fields=['BusinessUnit', 'Bank', \r\n        'ReceiptDate', 'ReceiptMethod', 'Amount', 'Currency',\r\n        'TransactionNumbers','RemittanceBankAccount']\r\n\r\n    try:\r\n        if isinstance(req_body, str):\r\n            data = json.loads(req_body)\r\n        elif isinstance(req_body, dict):\r\n            data = req_body\r\n        else:\r\n            raise ValueError(\"Invalid input type\")\r\n    except Exception:\r\n        return {\"Overall Status\": \"Error\", \"error_lines\": [\"Invalid JSON format\"]}\r\n\r\n    if 'bulkData' not in data:\r\n        return {\"Overall Status\": \"Error\", \"error_lines\": [\"Missing 'bulkData' in request\"]}\r\n\r\n    bulk_data = req_body\r\n\r\n    if not mandatory_fields:\r\n        if bulk_data and isinstance(bulk_data[0], dict):\r\n            mandatory_fields = list(bulk_data[0].keys())\r\n        else:\r\n            return {\"Overall Status\": \"Error\", \"error_lines\": [\"No records found in 'bulkData'\"]}\r\n\r\n    result = validate_data_from_df(bulk_data, mandatory_fields)\r\n    return result\r\n\r\n\r\ndef validate_data_from_df(data,mandatory_fields):\r\n   \r\n    required_fields = mandatory_fields\r\n    row_errors = []\r\n\r\n    for index, row in enumerate(data):\r\n        row_number = index + 2\r\n\r\n        # Check for missing fields\r\n        missing_fields = [field for field in required_fields if field not in row]\r\n        if missing_fields:\r\n            row_errors.append(f'Row {row_number}: Missing fields: {\", \".join(missing_fields)}')\r\n            continue\r\n\r\n        # Check for empty fields\r\n        for field in mandatory_fields:\r\n            if not row.get(field) or str(row[field]).strip() == \"\":\r\n                row_errors.append(f'Row {row_number}: {field} is empty')\r\n\r\n        # Check numeric field if present\r\n        if 'CustomerAccountNumber' in row and not is_number(row.get('CustomerAccountNumber')):\r\n            row_errors.append(f'Row {row_number}: CustomerAccountNumber must be a number')\r\n\r\n        # Validate date format\r\n        if ReceiptDate_validate(row.get('ReceiptDate')):\r\n            row_errors.append(f'Row {row_number}: ReceiptDate has invalid format (expected YYYY-MM-DD)')\r\n\r\n    if row_errors:\r\n        return {\r\n            \"Overall Status\": \"Error\",\r\n            \"error_lines\": row_errors\r\n        }\r\n\r\n    return {\r\n        \"Overall Status\": \"Success\",\r\n        \"error_lines\": []\r\n    }\r\n\r\ndef ReceiptDate_validate(date_string):\r\n    try:\r\n        datetime.strptime(date_string, '%Y-%m-%d')\r\n        return False\r\n    except Exception:\r\n        return True\r\n\r\ndef is_number(value):\r\n    try:\r\n        float(str(value).strip())\r\n        return True\r\n    except:\r\n        return False\r\n        \r\nif __name__ == \"__main__\":\r\n    sample_request = {\r\n        \"bulkData\": [\r\n    {\r\n      \"@odata.etag\": \"\",\r\n      \"ItemInternalId\": \"09cc1842-4cb1-4618-bd2b-2d7a8c5e6c0e\",\r\n      \"Index\": \"1\",\r\n      \"Bank\": \"JPMorgan Chase Bank N.A.\",\r\n      \"BusinessUnit\": \"Virtusa Corporation-US\",\r\n      \"RemittanceBankAccount\": \"\",\r\n      \"ReceiptDate\": \"\",\r\n      \"ReceiptNumber\": \"TestDev1234\",\r\n      \"ReceiptMethod\": \"US_VCORP\",\r\n      \"Amount\": \"391500\",\r\n      \"Currency\": \"USD\",\r\n      \"CustomerAccountNumber\": \"1003\",\r\n      \"TransactionNumbers\": \"\",\r\n      \"Status\": \"\",\r\n      \"StatusComment\": \"\"\r\n    }\r\n  ]\r\n    }\r\n\r\nresult = {main(sample_request)}\r\n ",
+				"isAsync":false,
+				"python_version":"3.12",
+				"captureStdOutput":false
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Python script",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":76193,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +76,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
