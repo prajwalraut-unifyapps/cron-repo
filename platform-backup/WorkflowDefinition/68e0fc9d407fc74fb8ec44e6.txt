@@ -220,11 +220,26 @@
 			"fromNodeId":"n_dbGfT",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_oMses",
+			"toNodeId":"n_IaArG",
 			"type":"next"
 		},
 		{
+			"fromNodeId":"n_IaArG",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_oMses",
+			"type":"loop"
+		},
+		{
 			"fromNodeId":"n_oMses",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_IaArG",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_IaArG",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_Kzv5a",
@@ -234,7 +249,7 @@
 	"id":"68e0fc9d407fc74fb8ec44e6",
 	"lastModifiedBy":23949,
 	"lcName":"multi tenancy | move all assets",
-	"modifiedTime":1759942347791,
+	"modifiedTime":1759942399686,
 	"name":"Multi Tenancy | Move All assets",
 	"nodes":[
 		{
@@ -1280,6 +1295,30 @@
 			"type":"ACTION"
 		},
 		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":865,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_WUbts-1",
+			"id":"n_IaArG",
+			"index":24,
+			"inputs":{
+				"repeatMode":"BATCH",
+				"listSource":"{{ n_dbGfT.outputs.result.modifiedAssets }}",
+				"captureIterations":false,
+				"batchSize":100
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
 			"additional":{
 				"visibleOptionalFields":[
 					"root.assetDetails.items.assetVersion"
@@ -1292,20 +1331,20 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"_WUbts-1",
+			"groupId":"n_IaArG@_WUbts-1@l",
 			"id":"n_oMses",
-			"index":24,
+			"index":25,
 			"inputs":{
 				"assetDetails":{
-					"source":"{{ n_dbGfT.outputs.result.modifiedAssets }}",
 					"ua:type":"mappedArray",
 					"items":{
-						"assetClass":"{{ n_dbGfT.outputs.result.modifiedAssets[0].assetClass }}",
-						"assetId":"{{ n_dbGfT.outputs.result.modifiedAssets[0].assetId }}",
-						"assetVersion":"{{ n_dbGfT.outputs.result.modifiedAssets[0].assetVersion }}"
-					}
+						"assetClass":"{{ n_IaArG.outputs.item[0].assetClass }}",
+						"assetId":"{{ n_IaArG.outputs.item[0].assetId }}",
+						"assetVersion":"{{ n_IaArG.outputs.item[0].assetVersion }}"
+					},
+					"source":"{{ n_IaArG.outputs.item }}"
 				},
 				"envIds":{
 					"source":"{{ n_doBgk.outputs.objects }}",
@@ -1331,7 +1370,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"n_Kzv5a",
-			"index":25,
+			"index":26,
 			"inputs":{
 				"result":{
 					"result":"success"
@@ -1360,5 +1399,5 @@
 	"tags":[
 		
 	],
-	"version":21
+	"version":22
 }
