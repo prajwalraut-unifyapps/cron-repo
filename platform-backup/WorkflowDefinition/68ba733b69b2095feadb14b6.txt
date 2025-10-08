@@ -5,12 +5,12 @@
 	"createdTime":1757705830051,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759865136588,
-		"deployedBy":1,
-		"deployedDefinitionId":"68e569304ce00132533e715b",
+		"deployedAt":1759868384293,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68e575e0c3590c5f32d44a47",
 		"status":"DEPLOYED",
-		"version":33,
-		"workflowVersion":75
+		"version":34,
+		"workflowVersion":76
 	},
 	"edges":[
 		{
@@ -103,9 +103,9 @@
 		]
 	},
 	"id":"68ba733b69b2095feadb14b6",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":1,
 	"lcName":"knowledge downloader | sharepoint | all folders",
-	"modifiedTime":1759868384204,
+	"modifiedTime":1759904365590,
 	"name":"Knowledge downloader | Sharepoint | All folders",
 	"nodes":[
 		{
@@ -258,7 +258,9 @@
 				"output":{
 					"type":"object",
 					"additionalProperties":false,
-					"required":[],
+					"required":[
+						"siteType"
+					],
 					"properties":{
 						"siteName":{
 							"type":"string",
@@ -279,6 +281,10 @@
 						"folderPath":{
 							"type":"string",
 							"title":"Folder Path"
+						},
+						"siteType":{
+							"type":"string",
+							"title":"Site Type"
 						}
 					}
 				},
@@ -297,9 +303,10 @@
 						}
 					}
 				},
-				"code":"import java.net.URLEncoder\n\nif(!binding.hasVariable('inputs')){\n  return [:]\n}\n\n// def encodeUrl(String url) {\n//     def encoded = URLEncoder.encode(url, 'UTF-8')\n//     return encoded.replace('+', '%20')\n// }\n\n// if (inputs?.folderPath?.context && inputs?.folderPath?.context  != null) {\n//     def newId = new StringBuilder()\n\n//     for (text in inputs.folderPath.context) {\n//             newId.append('/')\n//             newId.append(text.name)\n//         }\n\n//     if (newId.length() > 0) {\n//         inputs.folderPath[\"id\"] = newId.toString()\n//     }\n\n//     return inputs\n// }\n\ndef toReturn = [:]\n\nif(inputs?.folderPath?.id !=null){\n  toReturn.put(\"folderPath\", inputs.folderPath.id)\n}\nif(inputs?.recursive != null)\n{\n  toReturn.put(\"recursive\", inputs.recursive)\n}\nif(inputs?.nameContains != null)\n{\n  toReturn.put(\"nameContains\", inputs.nameContains)\n}\nif(inputs?.siteName != null)\n{\n  toReturn.put(\"siteName\", inputs.siteName)\n}\nif(inputs?.author != null)\n{\n  toReturn.put(\"author\", inputs.author)\n}\n\nreturn toReturn",
+				"code":"import java.net.URLEncoder\n\nif(!binding.hasVariable('inputs')){\n  return [:]\n}\n\n// def encodeUrl(String url) {\n//     def encoded = URLEncoder.encode(url, 'UTF-8')\n//     return encoded.replace('+', '%20')\n// }\n\n// if (inputs?.folderPath?.context && inputs?.folderPath?.context  != null) {\n//     def newId = new StringBuilder()\n\n//     for (text in inputs.folderPath.context) {\n//             newId.append('/')\n//             newId.append(text.name)\n//         }\n\n//     if (newId.length() > 0) {\n//         inputs.folderPath[\"id\"] = newId.toString()\n//     }\n\n//     return inputs\n// }\n\ndef toReturn = [:]\n\nif(inputs?.folderPath?.id !=null){\n  toReturn.put(\"folderPath\", inputs.folderPath.id)\n}\nif(inputs?.recursive != null)\n{\n  toReturn.put(\"recursive\", inputs.recursive)\n}\nif(inputs?.nameContains != null)\n{\n  toReturn.put(\"nameContains\", inputs.nameContains)\n}\nif(inputs?.siteName != null)\n{\n  toReturn.put(\"siteName\", inputs.siteName)\n}\nif(inputs?.siteType != null)\n{\n  toReturn.put(\"siteType\", inputs.siteType)\n}\nif(inputs?.author != null)\n{\n  toReturn.put(\"author\", inputs.author)\n}\n\nreturn toReturn",
 				"compile_static":false,
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"inputs":"{{ n_iVPtk.outputs.inputs }}"
 				}
@@ -639,7 +646,8 @@
 					"recursive":"{{ _B7QXL.outputs.result.recursive }}",
 					"siteName":"{{ _B7QXL.outputs.result.siteName }}",
 					"folderPath":"{{ _B7QXL.outputs.result.folderPath }}",
-					"connectionId":"{{ n_iVPtk.outputs.knowledge.applicationInfo.context.connectionId }}"
+					"connectionId":"{{ n_iVPtk.outputs.knowledge.applicationInfo.context.connectionId }}",
+					"siteType":"{{ _B7QXL.outputs.result.siteType }}"
 				}
 			},
 			"skip":false,
@@ -920,9 +928,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
+	"standard":false,
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":76
+	"version":77
 }
