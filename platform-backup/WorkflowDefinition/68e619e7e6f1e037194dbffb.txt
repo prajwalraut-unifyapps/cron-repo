@@ -7,46 +7,206 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_93QEF",
+			"fromNodeId":"n_Xoq0a",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_Dg5f5",
+			"toNodeId":"n_JUXva",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_JUXva",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_THYEm",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_THYEm",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_JUXva",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_JUXva",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_6T1AY",
 			"type":"next"
 		}
 	],
 	"id":"68e619e7e6f1e037194dbffb",
 	"lastModifiedBy":1,
 	"lcName":"parentnode-cacheoff-117599100297240",
-	"modifiedTime":1759910375269,
+	"modifiedTime":1759910391334,
 	"name":"parentnode-cacheoff-117599100297240",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":133,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_93QEF-1",
-			"id":"_93QEF",
-			"index":0,
+			"id":"n_Xoq0a",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"name":{
+								"type":"array",
+								"items":{
+									"type":"object",
+									"properties":{
+										"n1":{
+											"type":"integer",
+											"title":"n1"
+										}
+									},
+									"additionalProperties":false
+								},
+								"title":"name"
+							}
+						},
+						"additionalProperties":false
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":136,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_93QEF-1",
-			"id":"_Dg5f5",
-			"index":0,
+			"id":"n_JUXva",
+			"index":2,
+			"inputs":{
+				"repeatMode":"SINGLE",
+				"listSource":"{{ n_Xoq0a.outputs.body.name }}",
+				"captureIterations":true
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":222,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_JUXva@_93QEF-1@l",
+			"id":"n_THYEm",
+			"index":3,
+			"inputs":{
+				"automationId":"68e619d6e6f1e037194dbf93",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"Field_input":"1"
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_93QEF-1",
+			"id":"n_6T1AY",
+			"index":4,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +220,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
