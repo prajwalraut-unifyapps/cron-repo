@@ -76,9 +76,9 @@
 		]
 	},
 	"id":"68c26b221bf81b3daae99f39",
-	"lastModifiedBy":0,
+	"lastModifiedBy":-1,
 	"lcName":"eval | metrics | calculate derived metric score",
-	"modifiedTime":1759934346194,
+	"modifiedTime":1759948479198,
 	"name":"Eval | Metrics | Calculate Derived Metric Score",
 	"nodes":[
 		{
@@ -288,9 +288,8 @@
 						}
 					}
 				},
-				"code":"def base_metrics = binding.hasVariable('base_metrics') ? base_metrics : []\ndef metricScores = binding.hasVariable('metricScores') ? metricScores : []\n\n// Build metricId -> score map\ndef metricIdToScoreMap = metricScores.findAll { it.score != null && it.score != -1 } //remove for -1 also (HITL)\n                                     .collectEntries { [(it.metricId): it.score] }\n\n// Check if all base_metrics exist in the map\ndef canCalculateScore = base_metrics.every { metricIdToScoreMap.containsKey(it) }\n\nreturn [\n    canCalculateScore   : canCalculateScore,\n    metricIdToScoreMap  : canCalculateScore ? metricIdToScoreMap : [:]\n]\n",
+				"code":"def base_metrics = binding.hasVariable('base_metrics') ? base_metrics : []\ndef metricScores = binding.hasVariable('metricScores') ? metricScores : []\n\n// Build metricId -> score map\ndef metricIdToScoreMap = metricScores.collectEntries { [(it.metricId): it.score] }\n\n// Check if all base_metrics exist in the map\ndef canCalculateScore = base_metrics.every { metricIdToScoreMap.containsKey(it) }\n\nreturn [\n    canCalculateScore   : canCalculateScore,\n    metricIdToScoreMap  : canCalculateScore ? metricIdToScoreMap : [:]\n]\n",
 				"compile_static":false,
-				"captureStdOutput":false,
 				"parameters":{
 					"base_metrics":{
 						"source":"{{ n_5GGHR.outputs.properties.metricConfig.base_metrics }}",
@@ -434,5 +433,5 @@
 	"tags":[
 		
 	],
-	"version":45
+	"version":46
 }
