@@ -96,57 +96,6 @@
 			"fromNodeId":"n_vXFJz",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_pVMhd",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_pVMhd",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_feENT",
-			"type":"loop"
-		},
-		{
-			"fromNodeId":"n_feENT",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_RmXd9",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_RmXd9",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_bnMsV",
-			"type":"loop"
-		},
-		{
-			"fromNodeId":"n_bnMsV",
-			"name":"loopback",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_RmXd9",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_RmXd9",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_v7zdl",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_v7zdl",
-			"name":"loopback",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_pVMhd",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_pVMhd",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"n_1rXuq",
 			"type":"next"
 		}
@@ -154,7 +103,7 @@
 	"id":"68e76c950e377b0bdc8c35d4",
 	"lastModifiedBy":45011,
 	"lcName":"multi tenancy v2 | move all api resources",
-	"modifiedTime":1759998235704,
+	"modifiedTime":1759998256080,
 	"name":"Multi Tenancy V2 | Move All API Resources",
 	"nodes":[
 		{
@@ -793,182 +742,6 @@
 		},
 		{
 			"context":{
-				"appName":"loop",
-				"resourceVersion":0,
-				"resourceName":"loop_while",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"_tT02q-1",
-			"id":"n_pVMhd",
-			"index":11,
-			"inputs":{
-				"condition":{
-					"filters":[
-						{
-							"property":"{{ n_pNNqv.outputs.hasMore }}",
-							"filter":{
-								"operator":"EQUAL",
-								"value":"true"
-							}
-						}
-					],
-					"operator":"AND"
-				},
-				"captureIterations":false
-			},
-			"skip":false,
-			"subTitle":"Loop",
-			"title":"While loop",
-			"type":"LOOP"
-		},
-		{
-			"context":{
-				"appName":"standard_entities",
-				"resourceVersion":1193,
-				"resourceName":"standard_entities_fetch_entities",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":true,
-			"fallbackMode":"STOP",
-			"groupId":"n_pVMhd@_tT02q-1@l",
-			"id":"n_feENT",
-			"index":12,
-			"inputs":{
-				"projections":[
-					{
-						"name":"id",
-						"aggregationFunction":"GROUP"
-					},
-					{
-						"name":"deployed",
-						"aggregationFunction":"GROUP"
-					}
-				],
-				"filter":{
-					"filters":[
-						{
-							"property":"deployed",
-							"filter":{
-								"operator":"EXISTS"
-							}
-						}
-					],
-					"operator":"AND"
-				},
-				"entityType":"APIEndpoint",
-				"page":{
-					"offset":"{{ n_pNNqv.outputs.offset }}",
-					"limit":"{{ n_pNNqv.outputs.limit }}"
-				},
-				"sorts":[
-					{
-						"field":"mTm",
-						"order":"ASC"
-					}
-				]
-			},
-			"skip":false,
-			"subTitle":"Standard entities by UnifyApps",
-			"title":"Fetch entities",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"loop",
-				"resourceVersion":865,
-				"resourceName":"loop_for_each",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_pVMhd@_tT02q-1@l",
-			"id":"n_RmXd9",
-			"index":13,
-			"inputs":{
-				"repeatMode":"SINGLE",
-				"listSource":"{{ n_feENT.outputs.objects }}",
-				"captureIterations":false
-			},
-			"skip":false,
-			"subTitle":"Loop",
-			"title":"For each loop",
-			"type":"LOOP"
-		},
-		{
-			"additional":{
-				"visibleOptionalFields":[
-					"root.itemsToAdd.items.assetClass",
-					"root.itemsToAdd.items.assetId",
-					"root.itemsToAdd.items.assetVersion"
-				]
-			},
-			"context":{
-				"appName":"variable_by_unifyapps",
-				"resourceVersion":931,
-				"resourceName":"variable_by_unifyapps_add_items_to_list",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_RmXd9@n_pVMhd@_tT02q-1@l@l",
-			"id":"n_bnMsV",
-			"index":14,
-			"inputs":{
-				"insertLocation":"END",
-				"itemsToAdd":{
-					"ua:type":"mappedArray",
-					"source":"{{ n_feENT.outputs.objects }}",
-					"items":{
-						"assetClass":"WORKLOW_DEFINITION",
-						"assetId":"{{ n_feENT.outputs.objects[0].columns.id }}",
-						"assetVersion":"=IF(deployed, LAST_DEPLOYED, LAST_SAVED)"
-					}
-				},
-				"listName":"{{ n_uIfRr.outputs.items[0] }}"
-			},
-			"skip":false,
-			"subTitle":"Variable by UnifyApps",
-			"title":"Add items to list",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"variable_by_unifyapps",
-				"resourceVersion":944,
-				"resourceName":"variable_by_unifyapps_update_variables",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_pVMhd@_tT02q-1@l",
-			"id":"n_v7zdl",
-			"index":15,
-			"inputs":{
-				"variables":[
-					{
-						"source":"{{ n_pNNqv.outputs.hasMore }}",
-						"value":"{{ n_feENT.outputs.hasMore }}"
-					},
-					{
-						"source":"{{ n_pNNqv.outputs.offset }}",
-						"value":"=({{ n_pNNqv.outputs.offset }}+{{ n_pNNqv.outputs.limit }})"
-					}
-				]
-			},
-			"skip":false,
-			"subTitle":"Variable by UnifyApps",
-			"title":"Update variables",
-			"type":"ACTION"
-		},
-		{
-			"context":{
 				"appName":"callables",
 				"resourceVersion":1046,
 				"resourceName":"callables_return_to_automation",
@@ -979,7 +752,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_1rXuq",
-			"index":16,
+			"index":11,
 			"inputs":{
 				"result":{
 					"workflowAssets":{
@@ -1016,5 +789,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
