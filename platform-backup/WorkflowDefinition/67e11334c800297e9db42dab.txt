@@ -5,12 +5,12 @@
 	"createdTime":1747000734880,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759920819266,
-		"deployedBy":1,
-		"deployedDefinitionId":"68e642b3dfe75258e837f6a9",
+		"deployedAt":1759948613926,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68e6af45a991021e3f9ae290",
 		"status":"DEPLOYED",
-		"version":106,
-		"workflowVersion":152
+		"version":107,
+		"workflowVersion":154
 	},
 	"edges":[
 		{
@@ -405,9 +405,9 @@
 		]
 	},
 	"id":"67e11334c800297e9db42dab",
-	"lastModifiedBy":0,
+	"lastModifiedBy":1,
 	"lcName":"eval | dataset | generate from csv",
-	"modifiedTime":1759934343918,
+	"modifiedTime":1760008751447,
 	"name":"Eval | Dataset | Generate from CSV",
 	"nodes":[
 		{
@@ -1169,8 +1169,10 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
-						"sortedRows":{
+						"groupedRows":{
 							"type":"array",
 							"items":{
 								"type":"object",
@@ -1185,14 +1187,14 @@
 								"additionalProperties":false,
 								"required":[]
 							},
-							"title":"Sorted Rows"
+							"title":"Grouped Rows"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"rows":{
 							"type":"array",
@@ -1203,12 +1205,11 @@
 							},
 							"title":"Rows"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"def rows = binding.hasVariable('rows') ? rows : []\n\ndef groupedRows = []\ndef added = []\n\nrows.each { row ->\n    def convId = row.row.conversationId\n    if (!added.contains(convId)) {\n        // Add all rows with this conversationId in order\n        rows.findAll { it.row.conversationId == convId }.each { groupedRows << it }\n        added << convId\n    }\n}\n\nreturn [\"groupedRows\": groupedRows]\n",
 				"compile_static":false,
-				"code":"def rows = binding.hasVariable('rows') ? rows : []\n\nsortedRows = rows.sort { it.row.conversationId }\nreturn [\"sortedRows\" : sortedRows]",
+				"captureStdOutput":false,
 				"parameters":{
 					"rows":{
 						"source":"{{ n_wBpCt.outputs.items }}",
@@ -1320,7 +1321,7 @@
 			"index":14,
 			"inputs":{
 				"repeatMode":"SINGLE",
-				"listSource":"{{ n_wBpCt.outputs.items }}",
+				"listSource":"{{ n_67KWL.outputs.result.groupedRows }}",
 				"captureIterations":false
 			},
 			"skip":false,
@@ -1344,6 +1345,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"expected_tools":{
 							"type":"string",
@@ -1353,12 +1356,12 @@
 							"type":"string",
 							"title":"Tools Called"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"item":{
 							"type":"object",
@@ -1372,12 +1375,11 @@
 							"additionalProperties":false,
 							"title":"Entity Field To File Field Map"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"def item = binding.hasVariable('item') ? binding.getVariable('item') : [:]\ndef entityFieldToFileFieldMap = binding.hasVariable('entityFieldToFileFieldMap') ? binding.getVariable('entityFieldToFileFieldMap') : [:]\n\ndef expectedToolsKey = entityFieldToFileFieldMap['expected_tools'] ?: 'expected_tools'\ndef toolsCalledKey = entityFieldToFileFieldMap['tools_called'] ?: 'tools_called'\n\n\n// def isPresent = item.containsKey(expectedToolsKey)\n// def isString = isPresent && (item[expectedToolsKey] instanceof String)\ndef expected_tools = item.containsKey(expectedToolsKey) ? item[expectedToolsKey] : \"\"\ndef tools_called = item.containsKey(toolsCalledKey) ? item[toolsCalledKey] : \"\"\n\nreturn [\n    expected_tools: expected_tools,\n    tools_called : tools_called\n]\n",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"entityFieldToFileFieldMap":"{{ n_GQqQ0.outputs.result.entityFieldToFileFieldMap }}",
 					"item":"{{ n_hao4h.outputs.item.row }}"
@@ -2139,6 +2141,7 @@
 				},
 				"code":"def fakeConvIdToRealConvIdMap = binding.hasVariable('fakeConvIdToRealConvIdMap') ? fakeConvIdToRealConvIdMap : [:]\ndef fakeConvIdToAgentRoleMap = binding.hasVariable('fakeConvIdToAgentRoleMap') ? fakeConvIdToAgentRoleMap : [:]\n\ndef realConvIdToAgentRoleList = fakeConvIdToRealConvIdMap.collect { fakeConvId, realConvId ->\n    [\n        realConvId : realConvId,\n        agent_role : fakeConvIdToAgentRoleMap[fakeConvId] ?: \"\"\n    ]\n}\n\nreturn [\"realConvIdToAgentRoleList\" : realConvIdToAgentRoleList]\n",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"fakeConvIdToRealConvIdMap":"{{ n_zZcCJ.outputs.fakeConvIdToRealConvIdMap }}",
 					"fakeConvIdToAgentRoleMap":"{{ n_zZcCJ.outputs.fakeConvIdToAgentRoleMap }}"
@@ -2195,6 +2198,7 @@
 				"recordId":"{{ n_7MHfQ.outputs.item.realConvId }}",
 				"writeThroughSessionVariables":false,
 				"object_type":"conversational_test_case",
+				"skipIfBlank":false,
 				"skipPermissionCheck":false,
 				"updateFields":[
 					{
@@ -2202,7 +2206,8 @@
 						"actionType":"SET",
 						"setValue":"{{ n_7MHfQ.outputs.item.agent_role }}"
 					}
-				]
+				],
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"Storage by UnifyApps",
@@ -2225,32 +2230,33 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"userId"
+					],
 					"properties":{
 						"userId":{
 							"type":"string",
 							"title":"User Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"userId"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"userId"
+					],
 					"properties":{
 						"userId":{
 							"type":"string",
 							"title":"User Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"userId"
-					]
+					}
 				},
-				"compile_static":false,
 				"code":"return [userId:userId.toString()]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"userId":"{{ __RUN__.outputs.userId }}"
 				}
@@ -2670,6 +2676,6 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
-	"version":153
+	"standard":false,
+	"version":155
 }
