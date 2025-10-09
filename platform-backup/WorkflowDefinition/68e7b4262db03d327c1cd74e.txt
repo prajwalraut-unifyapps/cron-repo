@@ -45,26 +45,18 @@
 			"fromNodeId":"n_feENT",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_RmXd9",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_RmXd9",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"n_bnMsV",
-			"type":"loop"
+			"type":"next"
 		},
 		{
 			"fromNodeId":"n_bnMsV",
-			"name":"loopback",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_RmXd9",
+			"toNodeId":"n_iq93A",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_RmXd9",
+			"fromNodeId":"n_iq93A",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_v7zdl",
@@ -89,7 +81,7 @@
 	"id":"68e7b4262db03d327c1cd74e",
 	"lastModifiedBy":45011,
 	"lcName":"multi tenancy v2 | fetch all callable interface",
-	"modifiedTime":1760029825375,
+	"modifiedTime":1760029894480,
 	"name":"Multi Tenancy V2 | Fetch All Callable Interface",
 	"nodes":[
 		{
@@ -554,7 +546,7 @@
 				},
 				"sorts":[
 					{
-						"field":"mTm",
+						"field":"id",
 						"order":"ASC"
 					}
 				]
@@ -563,29 +555,6 @@
 			"subTitle":"Standard entities by UnifyApps",
 			"title":"Fetch entities",
 			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"loop",
-				"resourceVersion":865,
-				"resourceName":"loop_for_each",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":true,
-			"fallbackMode":"STOP",
-			"groupId":"n_pVMhd@_tT02q-1@l",
-			"id":"n_RmXd9",
-			"index":6,
-			"inputs":{
-				"repeatMode":"SINGLE",
-				"listSource":"{{ n_feENT.outputs.objects }}",
-				"captureIterations":false
-			},
-			"skip":false,
-			"subTitle":"Loop",
-			"title":"For each loop",
-			"type":"LOOP"
 		},
 		{
 			"additional":{
@@ -604,9 +573,9 @@
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"n_RmXd9@n_pVMhd@_tT02q-1@l@l",
+			"groupId":"n_pVMhd@_tT02q-1@l",
 			"id":"n_bnMsV",
-			"index":7,
+			"index":6,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -623,6 +592,39 @@
 			"subTitle":"Variable by UnifyApps",
 			"title":"Add items to list",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"break",
+				"resourceVersion":817,
+				"resourceName":"break",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_pVMhd@_tT02q-1@l",
+			"id":"n_iq93A",
+			"index":7,
+			"inputs":{
+				"loop":"n_pVMhd",
+				"conditions":{
+					"filters":[
+						{
+							"property":"=LEN({{ n_feENT.outputs.objects }})",
+							"filter":{
+								"operator":"LT",
+								"value":"{{ n_pNNqv.outputs.limit }}"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"subTitle":"Break",
+			"title":"Break",
+			"type":"BREAK"
 		},
 		{
 			"context":{
@@ -703,5 +705,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
