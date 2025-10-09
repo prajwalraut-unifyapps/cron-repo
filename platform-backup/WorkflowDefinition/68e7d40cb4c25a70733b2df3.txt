@@ -31,7 +31,7 @@
 	"id":"68e7d40cb4c25a70733b2df3",
 	"lastModifiedBy":49915,
 	"lcName":"eval | metrics | language mismatch",
-	"modifiedTime":1760025493078,
+	"modifiedTime":1760026014365,
 	"name":"Eval | Metrics | Language Mismatch",
 	"nodes":[
 		{
@@ -137,7 +137,7 @@
 					}
 				},
 				"configurationMode":"TEMPLATE",
-				"code":"import fasttext\nfrom huggingface_hub import hf_hub_download\n\n# Load GlotLID model once globally\nmodel_path = hf_hub_download(repo_id=\"cis-lmu/glotlid\", filename=\"model.bin\")\nmodel = fasttext.load_model(model_path)\n\ndef detect_language(text: str):\n    \"\"\"Detect language using GlotLID and return (lang_label, confidence).\"\"\"\n    if not text or not text.strip():\n        return None, None\n    labels, scores = model.predict(text)\n    lang_label = labels[0].replace(\"__label__\", \"\")\n    confidence = float(scores[0])\n    return lang_label, confidence\n\ndef compare_languages(expected_output: str, actual_output: str):\n    \"\"\"Compare two texts by language and return score + reason.\"\"\"\n    # Handle null or empty inputs\n    if not expected_output and not actual_output:\n        return {\n            \"score\": 0,\n            \"reason\": \"Both expected_output and actual_output are null or empty.\"\n        }\n    if not expected_output:\n        return {\n            \"score\": 0,\n            \"reason\": \"expected_output is null or empty.\"\n        }\n    if not actual_output:\n        return {\n            \"score\": 0,\n            \"reason\": \"actual_output is null or empty.\"\n        }\n\n    expected_lang, _ = detect_language(expected_output)\n    actual_lang, _ = detect_language(actual_output)\n\n    # Handle detection failure (just in case)\n    if not expected_lang or not actual_lang:\n        return {\n            \"score\": 0,\n            \"reason\": f\"Could not detect language for one or both inputs \"\n                      f\"(expected: {expected_lang}, actual: {actual_lang}).\"\n        }\n\n    same_language = expected_lang == actual_lang\n    score = 1 if same_language else 0\n    reason = (\n        f\"Yes, they match — both are in {expected_lang}.\"\n        if same_language\n        else f\"No, they mismatch — expected_output is in {expected_lang} and actual_output is in {actual_lang}.\"\n    )\n\n    return {\n        \"score\": score,\n        \"reason\": reason\n    }\n\n# Example usage:\nif __name__ == \"__main__\":\n    result = compare_languages(expected_output, actual_output)\n",
+				"code":"import fasttext\nfrom huggingface_hub import hf_hub_download\n\nmodel_path = hf_hub_download(repo_id=\"cis-lmu/glotlid\", filename=\"model.bin\")\nmodel = fasttext.load_model(model_path)\n\ndef detect_language(text: str):\n    \"\"\"Detect language using GlotLID and return (lang_label, confidence).\"\"\"\n    if not text or not text.strip():\n        return None, None\n    labels, scores = model.predict(text)\n    lang_label = labels[0].replace(\"__label__\", \"\")\n    confidence = float(scores[0])\n    return lang_label, confidence\n\ndef compare_languages(expected_output: str, actual_output: str):\n    \"\"\"Compare two texts by language and return score + reason.\"\"\"\n    # Handle null or empty inputs\n    if not expected_output and not actual_output:\n        return {\n            \"score\": 0,\n            \"reason\": \"Both expected_output and actual_output are null or empty.\"\n        }\n    if not expected_output:\n        return {\n            \"score\": 0,\n            \"reason\": \"expected_output is null or empty.\"\n        }\n    if not actual_output:\n        return {\n            \"score\": 0,\n            \"reason\": \"actual_output is null or empty.\"\n        }\n\n    expected_lang, _ = detect_language(expected_output)\n    actual_lang, _ = detect_language(actual_output)\n\n    # Handle detection failure (just in case)\n    if not expected_lang or not actual_lang:\n        return {\n            \"score\": 0,\n            \"reason\": f\"Could not detect language for one or both inputs \"\n                      f\"(expected: {expected_lang}, actual: {actual_lang}).\"\n        }\n\n    same_language = expected_lang == actual_lang\n    score = 1 if same_language else 0\n    reason = (\n        f\"Yes, they match — both are in {expected_lang}.\"\n        if same_language\n        else f\"No, they mismatch — expected_output is in {expected_lang} and actual_output is in {actual_lang}.\"\n    )\n\n    return {\n        \"score\": score,\n        \"reason\": reason\n    }\n\n# Example usage:\nif __name__ == \"__main__\":\n    result = compare_languages(expected_output, actual_output)\n",
 				"isAsync":false,
 				"python_version":"3.12",
 				"entityId":"e_68e7bac14b67eb65738a3c11",
@@ -194,5 +194,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
