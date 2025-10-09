@@ -5,12 +5,12 @@
 	"createdTime":1759987267245,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760016090848,
+		"deployedAt":1760016105498,
 		"deployedBy":43498,
-		"deployedDefinitionId":"68e7b6da2db03d327c1ce4e0",
+		"deployedDefinitionId":"68e7b6e92db03d327c1ce530",
 		"status":"DEPLOYED",
-		"version":1,
-		"workflowVersion":18
+		"version":2,
+		"workflowVersion":19
 	},
 	"edges":[
 		{
@@ -337,6 +337,13 @@
 			"fromNodeId":"_ChT56",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"_4c1ZS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_4c1ZS",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_dbGfT",
 			"type":"next"
 		},
@@ -371,9 +378,9 @@
 		}
 	],
 	"id":"68e7464399f9fc69e110e3db",
-	"lastModifiedBy":43498,
+	"lastModifiedBy":45011,
 	"lcName":"multi tenancy v2 | move all assets",
-	"modifiedTime":1760016103817,
+	"modifiedTime":1760016359594,
 	"name":"Multi Tenancy V2 | Move All assets",
 	"nodes":[
 		{
@@ -1268,7 +1275,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_6tLoP@_WUbts-1@9",
 			"id":"n_o677U",
@@ -1282,7 +1289,7 @@
 				"parameters":{}
 			},
 			"skip":false,
-			"subTitle":"Callable",
+			"subTitle":"Fetch all Callable Interface",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
 		},
@@ -1314,7 +1321,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_6tLoP@_WUbts-1@10",
 			"id":"n_WyJjS",
@@ -1328,7 +1335,7 @@
 				"parameters":{}
 			},
 			"skip":false,
-			"subTitle":"Callable",
+			"subTitle":"Fetch all Permission Group",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
 		},
@@ -1340,7 +1347,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_6tLoP@_WUbts-1@11",
 			"id":"n_6tLoP@11",
@@ -1369,11 +1376,12 @@
 				"automationId":"68e7ae801ee11761a1249464",
 				"runtimeConnections":{},
 				"synchronous":true,
+				"triggerWorkflowWithRuntimeType":"DEFAULT",
 				"version":"-1",
 				"parameters":{}
 			},
 			"skip":false,
-			"subTitle":"Callable",
+			"subTitle":"Fetch all Segment Definition Assets",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
 		},
@@ -1671,7 +1679,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"_ChT56",
@@ -1690,7 +1698,46 @@
 				"listName":"{{ n_T4baR.outputs.items[0] }}"
 			},
 			"skip":false,
-			"subTitle":"Add Role Definition Assets to List",
+			"subTitle":"Add Callable Interface Assets to List",
+			"title":"Add items to list",
+			"type":"ACTION"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.itemsToAdd.items.assetId",
+					"root.itemsToAdd.items.assetClass",
+					"root.itemsToAdd.items.assetVersion",
+					"root.itemsToAdd.items.assetSetting.recordsSelection"
+				]
+			},
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":931,
+				"resourceName":"variable_by_unifyapps_add_items_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_WUbts-1",
+			"id":"_4c1ZS",
+			"index":35,
+			"inputs":{
+				"insertLocation":"END",
+				"itemsToAdd":{
+					"ua:type":"mappedArray",
+					"source":"{{ n_WyJjS.outputs.permissionGroupAssets }}",
+					"items":{
+						"assetId":"{{ n_WyJjS.outputs.permissionGroupAssets[0].assetId }}",
+						"assetClass":"{{ n_WyJjS.outputs.permissionGroupAssets[0].assetClass }}",
+						"assetVersion":"{{ n_WyJjS.outputs.permissionGroupAssets[0].assetVersion }}"
+					}
+				},
+				"listName":"{{ n_T4baR.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Add Permission Group Assets to List",
 			"title":"Add items to list",
 			"type":"ACTION"
 		},
@@ -1714,7 +1761,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"n_dbGfT",
-			"index":35,
+			"index":36,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1806,7 +1853,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"n_IaArG",
-			"index":36,
+			"index":37,
 			"inputs":{
 				"repeatMode":"BATCH",
 				"listSource":"{{ n_dbGfT.outputs.result.modifiedAssets }}",
@@ -1835,7 +1882,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_IaArG@_WUbts-1@l",
 			"id":"n_oMses",
-			"index":37,
+			"index":38,
 			"inputs":{
 				"assetDetails":{
 					"ua:type":"mappedArray",
@@ -1870,7 +1917,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"n_Kzv5a",
-			"index":38,
+			"index":39,
 			"inputs":{
 				"result":{
 					"result":"success"
@@ -1899,5 +1946,5 @@
 	"tags":[
 		
 	],
-	"version":19
+	"version":20
 }
