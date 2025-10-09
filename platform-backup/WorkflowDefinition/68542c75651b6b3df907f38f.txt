@@ -5,12 +5,12 @@
 	"createdTime":1751469683393,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759920923881,
-		"deployedBy":1,
-		"deployedDefinitionId":"68e6431b3b62b9403f74c216",
+		"deployedAt":1759948430716,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68e6ae8ea991021e3f9aa795",
 		"status":"DEPLOYED",
-		"version":73,
-		"workflowVersion":106
+		"version":74,
+		"workflowVersion":107
 	},
 	"edges":[
 		{
@@ -154,9 +154,9 @@
 		]
 	},
 	"id":"68542c75651b6b3df907f38f",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":1,
 	"lcName":"knowledge indexer",
-	"modifiedTime":1759948430583,
+	"modifiedTime":1759992280907,
 	"name":"Knowledge Indexer",
 	"nodes":[
 		{
@@ -417,17 +417,19 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"timeStampEpoch":{
 							"type":"integer",
 							"title":"Time Stamp Epoch"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"cursor":{
 							"type":"object",
@@ -435,12 +437,11 @@
 							"additionalProperties":false,
 							"title":"Cursor"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"return [\"timeStampEpoch\" : binding.hasVariable(\"cursor\") ? cursor.get('timeStampEpoch',0) : 0]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"cursor":"{{ n_LpgxV.outputs.cursor }}"
 				}
@@ -551,6 +552,13 @@
 							"filter":{
 								"operator":"EQUAL",
 								"value":"{{ n_SgZeg.outputs.indexingVersion }}"
+							}
+						},
+						{
+							"property":"properties_isDeleted",
+							"filter":{
+								"operator":"NOT_EQUAL",
+								"value":"true"
 							}
 						}
 					],
@@ -844,6 +852,7 @@
 				"recordId":"{{ n_LpgxV.outputs.id }}",
 				"writeThroughSessionVariables":false,
 				"object_type":"knowledge_state_cursor",
+				"skipIfBlank":false,
 				"skipPermissionCheck":false,
 				"updateFields":[
 					{
@@ -851,7 +860,8 @@
 						"actionType":"SET",
 						"setValue":"{{ n_I4dpr.outputs.result.cursor }}"
 					}
-				]
+				],
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"Update Cursor",
@@ -897,9 +907,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
+	"standard":false,
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":107
+	"version":108
 }
