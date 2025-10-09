@@ -5,26 +5,264 @@
 	"createdTime":1759989786626,
 	"deleted":false,
 	"edges":[
-		
+		{
+			"fromNodeId":"VIug1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"WPoPb",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"WPoPb",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"k7FrG",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"WPoPb",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"TNWLp",
+			"type":"next"
+		}
 	],
 	"id":"68e7501ae505883c87262d14",
 	"lastModifiedBy":1,
 	"lcName":"backend_automation1759989786027",
-	"modifiedTime":1759989786626,
+	"modifiedTime":1759989787517,
 	"name":"Backend_Automation1759989786027",
 	"nodes":[
-		
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":95,
+				"resourceName":"callables_from_api"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"VIug1-1",
+			"id":"VIug1",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"pathParams":{
+						"type":"object",
+						"properties":{
+							"stringOne":{
+								"type":"string",
+								"title":"stringOne"
+							},
+							"stringTwo":{
+								"type":"string",
+								"title":"stringTwo"
+							},
+							"numberOne":{
+								"type":"number",
+								"title":"numberOne"
+							},
+							"numberTwo":{
+								"type":"number",
+								"title":"numberTwo"
+							},
+							"boolOne":{
+								"type":"boolean",
+								"title":"boolOne"
+							},
+							"boolTwo":{
+								"type":"boolean",
+								"title":"boolTwo"
+							}
+						},
+						"additionalProperties":false,
+						"required":[]
+					}
+				},
+				"endpointType":"REST",
+				"response":[
+					{
+						"status":400,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						},
+						"name":"400",
+						"body":{
+							"type":"object",
+							"properties":{
+								"message":{
+									"type":"string",
+									"title":"message"
+								}
+							},
+							"additionalProperties":false,
+							"required":[]
+						}
+					},
+					{
+						"status":200,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						},
+						"name":"200",
+						"body":{
+							"type":"object",
+							"properties":{
+								"stringOne":{
+									"type":"string",
+									"title":"stringOne"
+								},
+								"stringTwo":{
+									"type":"string",
+									"title":"stringTwo"
+								},
+								"numberOne":{
+									"type":"number",
+									"title":"numberOne"
+								},
+								"numberTwo":{
+									"type":"number",
+									"title":"numberTwo"
+								},
+								"booleanOne":{
+									"type":"boolean",
+									"title":"booleanOne"
+								},
+								"booleanTwo":{
+									"type":"boolean",
+									"title":"booleanTwo"
+								}
+							},
+							"additionalProperties":false,
+							"required":[]
+						}
+					}
+				],
+				"streamingResponse":false
+			},
+			"skip":false,
+			"title":"Trigger via API",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":22,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"VIug1-1",
+			"id":"WPoPb",
+			"index":2,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ VIug1.outputs.pathParams.stringTwo }}",
+						"filter":{
+							"operator":"STARTS_WITH",
+							"value":"fail"
+						}
+					},
+					{
+						"property":"{{ VIug1.outputs.pathParams.numberTwo }}",
+						"filter":{
+							"operator":"LT",
+							"value":"0"
+						}
+					},
+					{
+						"property":"{{ VIug1.outputs.pathParams.boolTwo }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"false"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":26,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"WPoPb@VIug1-1@y",
+			"id":"k7FrG",
+			"index":3,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"400_400",
+				"body":{
+					"message":"STR2, NUM2, BOOL2 cannot be empty"
+				},
+				"status":400
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":26,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"WPoPb@VIug1-1@n",
+			"id":"TNWLp",
+			"index":4,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_200",
+				"body":{
+					"stringOne":"=UPPER({{ VIug1.outputs.pathParams.stringOne }})",
+					"stringTwo":"=UPPER({{ VIug1.outputs.pathParams.stringTwo }})",
+					"numberOne":"{{ VIug1.outputs.pathParams.numberOne }}",
+					"numberTwo":"{{ VIug1.outputs.pathParams.numberTwo }}",
+					"booleanOne":"{{ VIug1.outputs.pathParams.boolOne }}",
+					"booleanTwo":"{{ VIug1.outputs.pathParams.boolTwo }}"
+				},
+				"status":200
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
+		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
-		"enableVariableLogging":true,
-		"route":{
-			"default":false,
-			"tierName":"global"
-		}
+		"enableVariableLogging":true
 	},
 	"standard":false,
-	"version":0
+	"version":1
 }
