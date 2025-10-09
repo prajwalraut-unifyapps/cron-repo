@@ -5,26 +5,245 @@
 	"createdTime":1759991749709,
 	"deleted":false,
 	"edges":[
-		
+		{
+			"fromNodeId":"_7Y53f",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_UsynH",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_UsynH",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_EP8ms",
+			"type":"next"
+		}
 	],
 	"id":"68e757c5e505883c872673f0",
 	"lastModifiedBy":1,
 	"lcName":"backend_automation1759991749034",
-	"modifiedTime":1759991749709,
+	"modifiedTime":1759991750532,
 	"name":"Backend_Automation1759991749034",
 	"nodes":[
-		
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":25,
+				"resourceName":"callables_from_automation"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_6vcCv-1",
+			"id":"_7Y53f",
+			"index":0,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"Result"
+						}
+					},
+					"additionalProperties":false,
+					"required":[]
+				},
+				"setup":{
+					"type":"object",
+					"properties":{
+						"num":{
+							"type":"integer",
+							"title":"Num"
+						}
+					},
+					"additionalProperties":false,
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Trigger from automation",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"custom_http_endpoint",
+				"resourceVersion":4,
+				"resourceName":"custom_http_endpoint_execute_soap",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_6vcCv-1",
+			"id":"_UsynH",
+			"index":0,
+			"inputs":{
+				"requestTimeoutInSecs":-1,
+				"httpMethod":"POST",
+				"body":{
+					"tns:NumberToWords":{
+						"tns:ubiNum":"{{ _7Y53f.outputs.num }}"
+					}
+				},
+				"version":"v1.2",
+				"path":"/webservicesserver/numberconversion.wso",
+				"responseSchema":{
+					"type":"object",
+					"properties":{
+						"NumberToWordsResponse":{
+							"type":"object",
+							"properties":{
+								"NumberToWordsResult":{
+									"type":"string",
+									"title":"NumberToWordsResult"
+								}
+							},
+							"title":"NumberToWordsResponse",
+							"additionalProperties":false
+						}
+					},
+					"title":"NumberToWordsSoapResponse_m",
+					"additionalProperties":false,
+					"definitions":{
+						"NumberToWordsSoapResponse_m":{
+							"type":"object",
+							"properties":{
+								"NumberToWordsResponse":{
+									"$ref":"#/definitions/NumberToWordsResponse",
+									"title":"NumberToWordsResponse"
+								}
+							},
+							"title":"NumberToWordsSoapResponse_m",
+							"additionalProperties":false
+						},
+						"NumberToWordsResponse":{
+							"type":"object",
+							"properties":{
+								"NumberToWordsResult":{
+									"type":"string",
+									"title":"NumberToWordsResult"
+								}
+							},
+							"title":"NumberToWordsResponse",
+							"additionalProperties":false
+						}
+					}
+				},
+				"baseUrl":"https://www.dataaccess.com",
+				"bodySchema":{
+					"type":"object",
+					"properties":{
+						"tns:NumberToWords":{
+							"type":"object",
+							"properties":{
+								"tns:ubiNum":{
+									"type":"integer",
+									"title":"tns:ubiNum"
+								}
+							},
+							"title":"tns:NumberToWords",
+							"additionalProperties":false
+						}
+					},
+					"title":"tns:NumberToWordsSoapRequest_m",
+					"additionalProperties":false,
+					"definitions":{
+						"tns:NumberToWordsSoapRequest_m":{
+							"type":"object",
+							"properties":{
+								"tns:NumberToWords":{
+									"$ref":"#/definitions/tns:NumberToWords",
+									"title":"tns:NumberToWords"
+								}
+							},
+							"title":"tns:NumberToWordsSoapRequest_m",
+							"additionalProperties":false
+						},
+						"tns:NumberToWords":{
+							"type":"object",
+							"properties":{
+								"tns:ubiNum":{
+									"type":"integer",
+									"title":"tns:ubiNum"
+								}
+							},
+							"title":"tns:NumberToWords",
+							"additionalProperties":false
+						}
+					}
+				},
+				"responseContentType":"application/soap+xml",
+				"targetNamespace":"http://www.dataaccess.com/webservicesserver/",
+				"authType":"CUSTOM",
+				"requestContentType":"application/soap+xml",
+				"parameters":{},
+				"namespaces":[
+					{
+						"value":"http://schemas.xmlsoap.org/wsdl/",
+						"key":"wsdl"
+					},
+					{
+						"value":"http://www.dataaccess.com/webservicesserver/",
+						"key":"tns"
+					},
+					{
+						"value":"http://schemas.xmlsoap.org/wsdl/soap12/",
+						"key":"soap12"
+					},
+					{
+						"value":"http://www.w3.org/2001/XMLSchema",
+						"key":"xs"
+					},
+					{
+						"value":"http://schemas.xmlsoap.org/wsdl/soap/envelope",
+						"key":"soap"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Custom HTTP Endpoint",
+			"title":"Execute SOAP request",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":25,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_6vcCv-1",
+			"id":"_EP8ms",
+			"index":0,
+			"inputs":{
+				"result":{
+					"result":"{{ _UsynH.outputs.result.NumberToWordsResponse.NumberToWordsResult }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		}
 	],
 	"ownerUserId":1,
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
-		"enableVariableLogging":true,
-		"route":{
-			"default":false,
-			"tierName":"global"
-		}
+		"enableVariableLogging":true
 	},
 	"standard":false,
-	"version":0
+	"tags":[
+		
+	],
+	"version":1
 }
