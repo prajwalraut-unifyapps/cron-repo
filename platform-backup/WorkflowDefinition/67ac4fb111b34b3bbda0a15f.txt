@@ -5,12 +5,12 @@
 	"createdTime":1747034395761,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759948627174,
+		"deployedAt":1760039482757,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68e6af53a991021e3f9ae348",
+		"deployedDefinitionId":"68e8123ae4155b0b0f32374c",
 		"status":"DEPLOYED",
-		"version":90,
-		"workflowVersion":105
+		"version":96,
+		"workflowVersion":113
 	},
 	"edges":[
 		{
@@ -45,6 +45,13 @@
 			"fromNodeId":"bOD0A",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_wp0MR",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_wp0MR",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"F6utN",
 			"type":"next"
 		},
@@ -68,11 +75,11 @@
 			"name":"no",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"2dNyS",
+			"toNodeId":"n_VV8kI",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"2dNyS",
+			"fromNodeId":"n_VV8kI",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"3uRZN",
@@ -144,9 +151,9 @@
 		]
 	},
 	"id":"67ac4fb111b34b3bbda0a15f",
-	"lastModifiedBy":1,
+	"lastModifiedBy":0,
 	"lcName":"knowledge indexer | outlook | index an attachment",
-	"modifiedTime":1760012181008,
+	"modifiedTime":1760039866010,
 	"name":"Knowledge Indexer | Outlook | Index an attachment",
 	"nodes":[
 		{
@@ -160,7 +167,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"iEyEj-1",
 			"id":"8Dd9H",
-			"index":0,
+			"index":1,
 			"inputs":{
 				"result":{
 					"type":"object",
@@ -216,7 +223,7 @@
 			"context":{
 				"appName":"microsoft_outlook",
 				"resourceVersion":158,
-				"connectionId":"67bc20f086c3312e346556d1",
+				"connectionId":"68d04bc50b46f9518aed91d0",
 				"resourceName":"microsoft_outlook_get_message_attachments",
 				"type":"APPLICATION"
 			},
@@ -225,7 +232,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"iEyEj-1",
 			"id":"rAFb0",
-			"index":0,
+			"index":2,
 			"inputs":{
 				"messageId":"{{ 8Dd9H.outputs.messageId }}"
 			},
@@ -246,7 +253,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"iEyEj-1",
 			"id":"61WrC",
-			"index":0,
+			"index":3,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ rAFb0.outputs.value }}"
@@ -260,7 +267,7 @@
 			"context":{
 				"appName":"microsoft_outlook",
 				"resourceVersion":154,
-				"connectionId":"67bc20f086c3312e346556d1",
+				"connectionId":"68d04bc50b46f9518aed91d0",
 				"resourceName":"microsoft_outlook_get_attachments",
 				"type":"APPLICATION"
 			},
@@ -269,7 +276,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"61WrC@iEyEj-1@l",
 			"id":"TttY9",
-			"index":0,
+			"index":4,
 			"inputs":{
 				"messageId":"{{ 8Dd9H.outputs.messageId }}",
 				"attachmentId":"{{ 61WrC.outputs.item.id }}"
@@ -291,14 +298,37 @@
 			"fallbackMode":"STOP",
 			"groupId":"61WrC@iEyEj-1@l",
 			"id":"bOD0A",
-			"index":0,
+			"index":5,
 			"inputs":{
 				"file":"{{ TttY9.outputs.file }}",
-				"expiryTime":48
+				"expiryTime":1
 			},
 			"skip":false,
 			"subTitle":"Utility by UnifyApps",
 			"title":"Generate public file URL",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"files_by_unifyapps",
+				"resourceVersion":348,
+				"resourceName":"files_by_unifyapps_upload_file",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"61WrC@iEyEj-1@l",
+			"id":"n_wp0MR",
+			"index":6,
+			"inputs":{
+				"fileName":"{{ 61WrC.outputs.item.name }}",
+				"url":"{{ bOD0A.outputs.url }}",
+				"option":"url"
+			},
+			"skip":false,
+			"subTitle":"Files by UnifyApps",
+			"title":"Upload file",
 			"type":"ACTION"
 		},
 		{
@@ -313,7 +343,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"61WrC@iEyEj-1@l",
 			"id":"F6utN",
-			"index":0,
+			"index":7,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -392,7 +422,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"61WrC@iEyEj-1@l",
 			"id":"ebQYS",
-			"index":0,
+			"index":8,
 			"inputs":{
 				"filters":[
 					{
@@ -422,7 +452,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ebQYS@61WrC@iEyEj-1@l@y",
 			"id":"Fobax",
-			"index":0,
+			"index":9,
 			"inputs":{
 				"loop":"61WrC"
 			},
@@ -434,39 +464,43 @@
 		{
 			"context":{
 				"appName":"callables",
-				"resourceVersion":67,
-				"resourceName":"callables_call_automation",
+				"resourceVersion":63,
+				"resourceName":"callables_call_automation_batch",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"ebQYS@61WrC@iEyEj-1@l@n",
-			"id":"2dNyS",
-			"index":0,
+			"id":"n_VV8kI",
+			"index":10,
 			"inputs":{
 				"automationId":"6708d0a1e5c64343ba9b24c8",
 				"runtimeConnections":{},
 				"synchronous":true,
-				"version":"-1",
-				"parameters":{
-					"fileDetails":"{{ TttY9.outputs.file }}",
-					"knowledgeId":"{{ 8Dd9H.outputs.knowledgeId }}",
-					"mimeType":"{{ TttY9.outputs.file.fileType }}",
-					"sharedWithIds":{
-						"source":"{{ 8Dd9H.outputs.emailGrants }}",
-						"ua:type":"mappedArray",
-						"items":"{{ 8Dd9H.outputs.emailGrants[0] }}"
+				"distributeWorkflowLoad":false,
+				"parametersList":{
+					"items":{
+						"knowledgeId":"{{ 8Dd9H.outputs.knowledgeId }}",
+						"sharedWithIds":{
+							"source":"{{ 8Dd9H.outputs.emailGrants }}",
+							"ua:type":"mappedArray",
+							"items":"{{ 8Dd9H.outputs.emailGrants[0] }}"
+						},
+						"chunkMetadata":"{{ F6utN.outputs.result.chunkMetadata }}",
+						"knowledgeVersion":"{{ 8Dd9H.outputs.readVersion }}",
+						"authorEmail":"{{ 8Dd9H.outputs.fromEmail }}",
+						"uniqueEntityId":"{{ 61WrC.outputs.item.id }}",
+						"fileDetails":"{{ n_wp0MR.outputs.fileDetails }}",
+						"mimeType":"{{ n_wp0MR.outputs.fileDetails.fileType }}"
 					},
-					"chunkMetadata":"{{ F6utN.outputs.result.chunkMetadata }}",
-					"knowledgeVersion":"{{ 8Dd9H.outputs.readVersion }}",
-					"authorEmail":"{{ 8Dd9H.outputs.fromEmail }}",
-					"uniqueEntityId":"{{ 61WrC.outputs.item.id }}"
-				}
+					"ua:type":"mappedArray"
+				},
+				"version":"-1"
 			},
 			"skip":false,
 			"subTitle":"Callable",
-			"title":"Call automation",
+			"title":"Call automation (batch)",
 			"type":"CALL_WORKFLOW"
 		},
 		{
@@ -481,7 +515,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ebQYS@61WrC@iEyEj-1@l@n",
 			"id":"3uRZN",
-			"index":0,
+			"index":11,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -516,9 +550,9 @@
 				"code":"return [\n  'isPresent' : binding.hasVariable('chunks') ? true : false\n]",
 				"parameters":{
 					"chunks":{
-						"source":"{{ 2dNyS.outputs.chunks }}",
 						"ua:type":"mappedArray",
-						"items":"{{ 2dNyS.outputs.chunks[0] }}"
+						"source":"{{ n_VV8kI.outputs.result[0].chunks }}",
+						"items":"{{ n_VV8kI.outputs.result[0].chunks[0] }}"
 					}
 				}
 			},
@@ -539,7 +573,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ebQYS@61WrC@iEyEj-1@l@n",
 			"id":"OfEFa",
-			"index":0,
+			"index":12,
 			"inputs":{
 				"filters":[
 					{
@@ -569,7 +603,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"OfEFa@ebQYS@61WrC@iEyEj-1@l@n@y",
 			"id":"SX0iw",
-			"index":0,
+			"index":13,
 			"inputs":{
 				"automationId":"66af3ff4cd79b321cb478a37",
 				"runtimeConnections":{},
@@ -577,17 +611,17 @@
 				"version":"-1",
 				"parameters":{
 					"chunks":{
-						"source":"{{ 2dNyS.outputs.chunks }}",
 						"ua:type":"mappedArray",
 						"items":{
-							"data":"{{ 2dNyS.outputs.chunks[0].text }}",
 							"sharedWithIds":{
 								"source":"{{ 8Dd9H.outputs.emailGrants }}",
 								"ua:type":"mappedArray",
 								"items":"{{ 8Dd9H.outputs.emailGrants[0] }}"
 							},
-							"chunkMetadata":"{{ F6utN.outputs.result.chunkMetadata }}"
-						}
+							"data":"{{ n_VV8kI.outputs.result[0].chunks[0].text }}",
+							"chunkMetadata":"{{ n_VV8kI.outputs.result[0].chunks[0].metadata }}"
+						},
+						"source":"{{ n_VV8kI.outputs.result[0].chunks }}"
 					},
 					"authorEmail":"{{ 8Dd9H.outputs.fromEmail }}",
 					"knowledgeVersion":"{{ 8Dd9H.outputs.readVersion }}",
@@ -613,7 +647,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"OfEFa@ebQYS@61WrC@iEyEj-1@l@n@n",
 			"id":"8oRDB",
-			"index":0,
+			"index":14,
 			"inputs":{
 				"loop":"61WrC"
 			},
@@ -634,7 +668,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"iEyEj-1",
 			"id":"2dULv",
-			"index":0,
+			"index":15,
 			"inputs":{
 				"result":{
 					"success":true
@@ -654,9 +688,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -667,5 +701,5 @@
 	"tags":[
 		
 	],
-	"version":106
+	"version":114
 }
