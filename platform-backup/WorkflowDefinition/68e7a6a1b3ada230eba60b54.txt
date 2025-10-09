@@ -4,6 +4,14 @@
 	],
 	"createdTime":1760011937163,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760012368634,
+		"deployedBy":45011,
+		"deployedDefinitionId":"68e7a850b3ada230eba61b4e",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":2
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_tWXv8",
@@ -37,26 +45,18 @@
 			"fromNodeId":"n_feENT",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_RmXd9",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_RmXd9",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"n_bnMsV",
-			"type":"loop"
+			"type":"next"
 		},
 		{
 			"fromNodeId":"n_bnMsV",
-			"name":"loopback",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_RmXd9",
+			"toNodeId":"n_iq93A",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_RmXd9",
+			"fromNodeId":"n_iq93A",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_v7zdl",
@@ -81,7 +81,7 @@
 	"id":"68e7a6a1b3ada230eba60b54",
 	"lastModifiedBy":45011,
 	"lcName":"multi tenancy v2 | fetch all user group",
-	"modifiedTime":1760012326271,
+	"modifiedTime":1760028278782,
 	"name":"Multi Tenancy V2 | Fetch All User Group",
 	"nodes":[
 		{
@@ -149,7 +149,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_pNNqv",
@@ -162,10 +162,6 @@
 					"additionalProperties":false,
 					"type":"object",
 					"properties":{
-						"hasMore":{
-							"type":"boolean",
-							"title":"Has More"
-						},
 						"offset":{
 							"type":"integer",
 							"title":"Offset"
@@ -180,8 +176,7 @@
 			},
 			"inputs":{
 				"offset":0,
-				"hasMore":true,
-				"limit":1000
+				"limit":100
 			},
 			"outputSchema":{
 				"dynamic":false,
@@ -189,10 +184,6 @@
 					"additionalProperties":false,
 					"type":"object",
 					"properties":{
-						"hasMore":{
-							"type":"boolean",
-							"title":"Has More"
-						},
 						"offset":{
 							"type":"integer",
 							"title":"Offset"
@@ -503,7 +494,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_pVMhd",
@@ -512,10 +503,10 @@
 				"condition":{
 					"filters":[
 						{
-							"property":"{{ n_pNNqv.outputs.hasMore }}",
+							"property":"1",
 							"filter":{
 								"operator":"EQUAL",
-								"value":"true"
+								"value":"1"
 							}
 						}
 					],
@@ -555,7 +546,7 @@
 				},
 				"sorts":[
 					{
-						"field":"mTm",
+						"field":"id",
 						"order":"ASC"
 					}
 				]
@@ -564,29 +555,6 @@
 			"subTitle":"Standard entities by UnifyApps",
 			"title":"Fetch entities",
 			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"loop",
-				"resourceVersion":865,
-				"resourceName":"loop_for_each",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_pVMhd@_tT02q-1@l",
-			"id":"n_RmXd9",
-			"index":6,
-			"inputs":{
-				"repeatMode":"SINGLE",
-				"listSource":"{{ n_feENT.outputs.objects }}",
-				"captureIterations":false
-			},
-			"skip":false,
-			"subTitle":"Loop",
-			"title":"For each loop",
-			"type":"LOOP"
 		},
 		{
 			"additional":{
@@ -605,9 +573,9 @@
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"n_RmXd9@n_pVMhd@_tT02q-1@l@l",
+			"groupId":"n_pVMhd@_tT02q-1@l",
 			"id":"n_bnMsV",
-			"index":7,
+			"index":6,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -627,13 +595,46 @@
 		},
 		{
 			"context":{
+				"appName":"break",
+				"resourceVersion":817,
+				"resourceName":"break",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_pVMhd@_tT02q-1@l",
+			"id":"n_iq93A",
+			"index":7,
+			"inputs":{
+				"loop":"n_pVMhd",
+				"conditions":{
+					"filters":[
+						{
+							"property":"=LEN({{ n_feENT.outputs.objects }})",
+							"filter":{
+								"operator":"LT",
+								"value":"{{ n_pNNqv.outputs.limit }}"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"subTitle":"Break",
+			"title":"Break",
+			"type":"BREAK"
+		},
+		{
+			"context":{
 				"appName":"variable_by_unifyapps",
 				"resourceVersion":944,
 				"resourceName":"variable_by_unifyapps_update_variables",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_pVMhd@_tT02q-1@l",
 			"id":"n_v7zdl",
@@ -641,7 +642,7 @@
 			"inputs":{
 				"variables":[
 					{
-						"source":"{{ n_pNNqv.outputs.hasMore }}",
+						"source":"",
 						"value":"{{ n_feENT.outputs.hasMore }}"
 					},
 					{
@@ -704,5 +705,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":3
 }
