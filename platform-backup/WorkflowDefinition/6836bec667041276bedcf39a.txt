@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1748530221625,
+	"createdTime":1751383765831,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759332579011,
-		"deployedBy":44109,
-		"deployedDefinitionId":"68dd48e21771724d5d255daf",
+		"deployedAt":1760039497546,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68e81249e4155b0b0f323803",
 		"status":"DEPLOYED",
-		"version":56,
-		"workflowVersion":71
+		"version":106,
+		"workflowVersion":122
 	},
 	"edges":[
 		{
@@ -110,9 +110,9 @@
 		]
 	},
 	"id":"6836bec667041276bedcf39a",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"handle stream completion",
-	"modifiedTime":1759371984281,
+	"modifiedTime":1760039883587,
 	"name":"Handle Stream Completion",
 	"nodes":[
 		{
@@ -196,6 +196,7 @@
 				"object_type":"e_ai_agent_streaming_detail",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"page":{
 					"paginateBy":"OFFSET",
 					"limit":20
@@ -266,6 +267,7 @@
 			"index":3,
 			"inputs":{
 				"object_type":"e_ai_agent_streaming_detail",
+				"skipIfBlank":false,
 				"updates":{
 					"source":"{{ tsNbs.outputs.objects }}",
 					"ua:type":"mappedArray",
@@ -279,7 +281,8 @@
 							}
 						]
 					}
-				}
+				},
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"Storage by UnifyApps",
@@ -314,7 +317,10 @@
 				"visibleOptionalFields":[
 					"root.signal_payload.payload.messageId",
 					"root.signal_payload.payload.delta.path",
-					"root.signal_payload.payload.delta.data"
+					"root.signal_payload.payload.delta.data",
+					"root.signal_payload.payload.delta.op",
+					"root.signal_payload.payload.deepResearchEnabled",
+					"root.signal_payload.payload.responseGenerationStatus"
 				]
 			},
 			"context":{
@@ -335,12 +341,13 @@
 				"waitingInstanceRuntimeType":"{{ n_frosY.outputs.item.properties.waitingInstanceRunTimeType }}",
 				"waitingInstanceId":"{{ n_frosY.outputs.item.properties.waitingInstanceId }}",
 				"signal_payload":{
+					"completed":false,
 					"payload":{
 						"delta":{
 							"path":"stream_completed"
-						}
-					},
-					"completed":false
+						},
+						"responseGenerationStatus":"completed"
+					}
 				},
 				"nodeId":"SHlhb"
 			},
@@ -354,7 +361,10 @@
 				"visibleOptionalFields":[
 					"root.signal_payload.payload.messageId",
 					"root.signal_payload.payload.delta.path",
-					"root.signal_payload.payload.delta.data"
+					"root.signal_payload.payload.delta.data",
+					"root.signal_payload.payload.delta.op",
+					"root.signal_payload.payload.deepResearchEnabled",
+					"root.signal_payload.payload.responseGenerationStatus"
 				]
 			},
 			"context":{
@@ -375,12 +385,13 @@
 				"waitingInstanceRuntimeType":"{{ n_frosY.outputs.item.properties.waitingInstanceRunTimeType }}",
 				"waitingInstanceId":"{{ n_frosY.outputs.item.properties.waitingInstanceId }}",
 				"signal_payload":{
+					"completed":false,
 					"payload":{
 						"delta":{
 							"path":"stream_completed"
-						}
-					},
-					"completed":false
+						},
+						"responseGenerationStatus":"completed"
+					}
 				},
 				"nodeId":"SHlhb"
 			},
@@ -497,6 +508,11 @@
 						"fieldName":"properties.additional.generatingResponse",
 						"actionType":"SET",
 						"setValue":"false"
+					},
+					{
+						"fieldName":"properties.additional.responseGenerationStatus",
+						"actionType":"SET",
+						"setValue":"completed"
 					}
 				],
 				"unsetIfNull":false
@@ -533,7 +549,7 @@
 						}
 					}
 				},
-				"code":"return [ 'payload': [\n  \"responseGenerationCompleted\": true\n] ]",
+				"code":"return [ 'payload': [\n  \"responseGenerationStatus\": \"completed\"\n] ]",
 				"compile_static":false,
 				"captureStdOutput":false
 			},
@@ -590,7 +606,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":635,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -607,5 +623,5 @@
 	"tags":[
 		
 	],
-	"version":72
+	"version":123
 }
