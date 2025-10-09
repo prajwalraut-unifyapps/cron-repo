@@ -4,27 +4,155 @@
 	],
 	"createdTime":1759990429964,
 	"deleted":false,
+	"description":"",
 	"edges":[
-		
+		{
+			"fromNodeId":"ymFix",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"gd6RM",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"gd6RM",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"QQ5ZP",
+			"type":"next"
+		}
 	],
 	"id":"68e7529de505883c87264a5f",
 	"lastModifiedBy":1,
 	"lcName":"backend_automation1759990429363",
-	"modifiedTime":1759990429964,
+	"modifiedTime":1759990430827,
 	"name":"Backend_Automation1759990429363",
 	"nodes":[
-		
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":21,
+				"resourceName":"callables_from_api"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"ymFix-1",
+			"id":"ymFix",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"pathParams":{
+						"type":"object",
+						"properties":{
+							"name":{
+								"type":"string",
+								"title":"name"
+							}
+						},
+						"additionalProperties":false,
+						"required":[]
+					}
+				},
+				"endpointType":"REST",
+				"response":[
+					{
+						"status":200,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						},
+						"name":"200",
+						"body":{
+							"type":"object",
+							"properties":{
+								"data":{
+									"type":"object",
+									"properties":{
+										"name":{
+											"type":"string",
+											"title":"name"
+										}
+									},
+									"additionalProperties":false,
+									"title":"data",
+									"required":[]
+								}
+							},
+							"additionalProperties":false,
+							"required":[]
+						}
+					}
+				],
+				"streamingResponse":false
+			},
+			"skip":false,
+			"title":"Trigger via API",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"delay",
+				"resourceVersion":23,
+				"resourceName":"delay_for",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ymFix-1",
+			"id":"gd6RM",
+			"index":2,
+			"inputs":{
+				"duration":10,
+				"unit":"SECONDS"
+			},
+			"skip":false,
+			"subTitle":"Delay",
+			"title":"Delay for",
+			"type":"DELAY"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":26,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"ymFix-1",
+			"id":"QQ5ZP",
+			"index":3,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_200",
+				"body":{
+					"data":{
+						"name":"=UPPER({{ ymFix.outputs.pathParams.name }})"
+					}
+				},
+				"status":200
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
+		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
-		"enableVariableLogging":true,
-		"route":{
-			"default":false,
-			"tierName":"global"
-		}
+		"enableVariableLogging":true
 	},
 	"standard":false,
-	"version":0
+	"version":1
 }
