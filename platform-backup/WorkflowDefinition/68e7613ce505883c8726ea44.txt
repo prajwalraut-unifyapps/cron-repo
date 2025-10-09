@@ -7,46 +7,202 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_OOE5z",
+			"fromNodeId":"n_cS2ZM",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_g0k2K",
+			"toNodeId":"n_61UfT",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_61UfT",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_QWb78",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_QWb78",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_707Dj",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_707Dj",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_QWb78",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_QWb78",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_LQZ0K",
 			"type":"next"
 		}
 	],
 	"id":"68e7613ce505883c8726ea44",
 	"lastModifiedBy":1,
 	"lcName":"whileloopstartswith11759994160491",
-	"modifiedTime":1759994172132,
+	"modifiedTime":1759994219303,
 	"name":"whileLoopStartsWith11759994160491",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":134,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_OOE5z-1",
-			"id":"_OOE5z",
-			"index":0,
+			"id":"n_cS2ZM",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2022,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_OOE5z-1",
-			"id":"_g0k2K",
-			"index":0,
+			"id":"n_61UfT",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"string",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
+			"inputs":{
+				"i":"0"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"string",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":138,
+				"resourceName":"loop_while",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_OOE5z-1",
+			"id":"n_QWb78",
+			"index":3,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"{{ n_61UfT.outputs.i }}",
+							"filter":{
+								"operator":"STARTS_WITH",
+								"value":"0"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"break",
+				"resourceVersion":137,
+				"resourceName":"break",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_QWb78@_OOE5z-1@l",
+			"id":"n_707Dj",
+			"index":4,
+			"inputs":{
+				"loop":"n_QWb78"
+			},
+			"skip":false,
+			"subTitle":"Break",
+			"title":"Break",
+			"type":"BREAK"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_OOE5z-1",
+			"id":"n_LQZ0K",
+			"index":5,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +216,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
