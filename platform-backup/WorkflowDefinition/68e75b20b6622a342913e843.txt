@@ -14,119 +14,136 @@
 	},
 	"edges":[
 		{
-			"fromNodeId":"n_6RYnO",
+			"fromNodeId":"n_3ifEp",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_oKSct",
+			"toNodeId":"n_U1Yfc",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_oKSct",
+			"fromNodeId":"n_U1Yfc",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_WZvrr",
+			"toNodeId":"n_Ea3qI",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_Ea3qI",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_U1Yfc",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_U1Yfc",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_osFuv",
 			"type":"next"
 		}
 	],
 	"id":"68e75b20b6622a342913e843",
-	"lastModifiedBy":24420,
-	"lcName":"test dnd",
-	"modifiedTime":1759992843916,
-	"name":"test dnd",
+	"lastModifiedBy":517,
+	"lcName":"test",
+	"modifiedTime":1759992865374,
+	"name":"test",
 	"nodes":[
 		{
 			"context":{
-				"appName":"callables",
-				"resourceVersion":1023,
-				"resourceName":"callables_from_automation"
+				"appName":"webhooks",
+				"resourceVersion":833,
+				"resourceName":"webhooks_default"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_csAVe-1",
-			"id":"n_6RYnO",
+			"id":"n_3ifEp",
 			"index":1,
 			"inputs":{
-				"result":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"a"
-					],
-					"properties":{
-						"a":{
-							"type":"string",
-							"title":"A"
-						}
-					}
-				},
-				"setup":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"a"
-					],
-					"properties":{
-						"a":{
-							"type":"object",
-							"properties":{},
-							"additionalProperties":false,
-							"title":"A"
-						}
-					}
+				"request":{
+					"contentType":"application/json"
 				}
 			},
 			"skip":false,
-			"subTitle":"Callable",
-			"title":"Trigger via automation",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"CALLABLE"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
 			"context":{
-				"appName":"utility_by_unifyapps",
-				"resourceVersion":1049,
-				"resourceName":"utility_by_unifyapps_generate_public_url",
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":937,
+				"resourceName":"streams_by_unifyapps_poll_events",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_csAVe-1",
-			"id":"n_oKSct",
+			"id":"n_U1Yfc",
 			"index":2,
 			"inputs":{
-				"file":"{{ n_6RYnO.outputs.a }}",
-				"expiryTime":1
+				"streamId":"e_68e013d6dc6c2b4d40587f06",
+				"repeatMode":"SINGLE",
+				"captureIterations":true,
+				"batchSize":1,
+				"consumerGroup":"kbhjasdkjhbf",
+				"commitOption":"MANUAL_COMMIT"
 			},
 			"skip":false,
-			"subTitle":"Utility by UnifyApps",
-			"title":"Generate public file URL",
+			"subTitle":"Streams by UnifyApps",
+			"title":"Polls for new events from stream",
+			"type":"LOOP"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.offsetsToCommit.items.partition",
+					"root.offsetsToCommit.items.offset"
+				]
+			},
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":161,
+				"resourceName":"streams_by_unifyapps_commit_offsets",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_U1Yfc@_csAVe-1@l",
+			"id":"n_Ea3qI",
+			"index":3,
+			"inputs":{
+				"streamId":"e_68e013d6dc6c2b4d40587f06",
+				"consumerGroup":"kbhjasdkjhbf",
+				"offsetsToCommit":[
+					{}
+				]
+			},
+			"skip":false,
+			"subTitle":"Streams by UnifyApps",
+			"title":"Commits offsets",
 			"type":"ACTION"
 		},
 		{
 			"context":{
-				"appName":"callables",
-				"resourceVersion":1059,
-				"resourceName":"callables_return_to_automation",
-				"type":"APPLICATION"
+				"appName":"stop"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_csAVe-1",
-			"id":"n_WZvrr",
-			"index":3,
-			"inputs":{
-				"result":{
-					"a":"a"
-				}
-			},
+			"id":"n_osFuv",
+			"index":4,
 			"skip":false,
-			"subTitle":"Callable",
-			"title":"Respond to automation",
+			"subTitle":"Stop",
+			"title":"Stop",
 			"type":"STOP"
 		}
 	],
@@ -147,5 +164,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
