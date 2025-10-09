@@ -4,27 +4,133 @@
 	],
 	"createdTime":1759989357904,
 	"deleted":false,
+	"description":"",
 	"edges":[
-		
+		{
+			"fromNodeId":"czdLN",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"eKPyl",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"eKPyl",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"Ez4FZ",
+			"type":"next"
+		}
 	],
 	"id":"68e74e6de505883c87261b0c",
 	"lastModifiedBy":1,
 	"lcName":"backend_automationmr530ic1numm",
-	"modifiedTime":1759989357904,
+	"modifiedTime":1759989358729,
 	"name":"Backend_AutomationMR530ic1nuMM",
 	"nodes":[
-		
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":24,
+				"resourceName":"callables_from_automation"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"czdLN-1",
+			"id":"czdLN",
+			"index":0,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"properties":{
+						"output":{
+							"type":"string",
+							"title":"output"
+						}
+					},
+					"additionalProperties":false,
+					"required":[]
+				}
+			},
+			"skip":false,
+			"title":"Trigger from automation",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":47,
+				"resourceName":"analytics_by_unifyapps_query_reports",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"czdLN-1",
+			"id":"eKPyl",
+			"index":0,
+			"inputs":{
+				"projections":[
+					{
+						"aggregationFunction":"COUNT",
+						"includePercentageChange":false,
+						"name":"RECORDS_SKIPPED_COUNT",
+						"alias":"Load_Skipped"
+					}
+				],
+				"filter":{
+					"filters":[
+						{
+							"property":"JOB_ID",
+							"filter":{
+								"operator":"NOT_REGEX",
+								"value":".*71"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"entityType":"PIPELINE_EVENT_STATUS",
+				"group":"PLATFORM"
+			},
+			"skip":false,
+			"subTitle":"Analytics by UnifyApps",
+			"title":"Analytics Query",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":21,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"czdLN-1",
+			"id":"Ez4FZ",
+			"index":0,
+			"inputs":{
+				"result":{
+					"output":"{{ eKPyl.outputs.objects }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Return data to automation",
+			"type":"STOP"
+		}
 	],
 	"ownerUserId":1,
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
-		"enableVariableLogging":true,
-		"route":{
-			"default":false,
-			"tierName":"global"
-		}
+		"enableVariableLogging":true
 	},
 	"standard":false,
-	"version":0
+	"version":1
 }
