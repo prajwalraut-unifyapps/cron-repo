@@ -5,12 +5,12 @@
 	"createdTime":1757705899245,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759904368914,
-		"deployedBy":1,
-		"deployedDefinitionId":"68e60270c3590c5f32db8768",
+		"deployedAt":1759948631350,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68e6af57a991021e3f9ae369",
 		"status":"DEPLOYED",
-		"version":6,
-		"workflowVersion":64
+		"version":8,
+		"workflowVersion":66
 	},
 	"edges":[
 		{
@@ -37,36 +37,6 @@
 		},
 		{
 			"fromNodeId":"n_Vkf89",
-			"name":"no",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_83flu",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_83flu",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_i1E8M",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_i1E8M",
-			"name":"yes",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"_JRY8y",
-			"type":"if"
-		},
-		{
-			"fromNodeId":"_JRY8y",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_LoEnZ",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_i1E8M",
 			"name":"no",
 			"priority":0,
 			"skip":false,
@@ -150,7 +120,7 @@
 	"id":"68be6d8ca57c5841acb1facb",
 	"lastModifiedBy":1,
 	"lcName":"knowledge downloader | sharepoint | file",
-	"modifiedTime":1759920777655,
+	"modifiedTime":1760012154938,
 	"name":"Knowledge Downloader | Sharepoint | File",
 	"nodes":[
 		{
@@ -180,9 +150,7 @@
 				"setup":{
 					"type":"object",
 					"additionalProperties":false,
-					"required":[
-						"siteType"
-					],
+					"required":[],
 					"properties":{
 						"siteName":{
 							"type":"string",
@@ -215,10 +183,6 @@
 						"grabberType":{
 							"type":"string",
 							"title":"Grabber Type"
-						},
-						"siteType":{
-							"type":"string",
-							"title":"Site Type"
 						}
 					}
 				}
@@ -253,8 +217,7 @@
 				"version":"-1",
 				"parameters":{
 					"filePath":"{{ n_SQS3w.outputs.folderPath }}/{{ n_SQS3w.outputs.fileName }}",
-					"sitename":"{{ n_SQS3w.outputs.siteName }}",
-					"siteType":"{{ n_SQS3w.outputs.siteType }}"
+					"sitename":"{{ n_SQS3w.outputs.siteName }}"
 				}
 			},
 			"skip":false,
@@ -328,107 +291,6 @@
 		},
 		{
 			"context":{
-				"appName":"code_by_unifyapps",
-				"resourceVersion":526,
-				"resourceName":"code_by_unifyapps_groovy",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_Vkf89@_liiWT-1@n",
-			"id":"n_83flu",
-			"index":5,
-			"inputs":{
-				"output":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[],
-					"properties":{
-						"isSkip":{
-							"type":"boolean",
-							"title":"Is Skip"
-						}
-					}
-				},
-				"input":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[],
-					"properties":{
-						"parentFolderPath":{
-							"type":"string",
-							"title":"Parent Folder Path"
-						}
-					}
-				},
-				"code":"def isSkip = false\n\nif (binding.hasVariable('parentFolderPath')) {\n  if (parentFolderPath.startsWith('/Shared Documents/Forms')) {\n    isSkip = true\n  }\n}\n\nreturn [\"isSkip\": isSkip]\n",
-				"compile_static":false,
-				"captureStdOutput":false,
-				"parameters":{
-					"parentFolderPath":"{{ n_SQS3w.outputs.folderPath }}"
-				}
-			},
-			"skip":false,
-			"subTitle":"Code by UnifyApps",
-			"title":"Execute Groovy code",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"if_else",
-				"resourceVersion":447,
-				"resourceName":"if_else_condition",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_Vkf89@_liiWT-1@n",
-			"id":"n_i1E8M",
-			"index":6,
-			"inputs":{
-				"filters":[
-					{
-						"property":"{{ n_83flu.outputs.result.isSkip }}",
-						"filter":{
-							"operator":"EQUAL",
-							"value":"true"
-						}
-					}
-				],
-				"operator":"AND"
-			},
-			"skip":false,
-			"subTitle":"Condition",
-			"title":"Condition",
-			"type":"IF_ELSE"
-		},
-		{
-			"context":{
-				"appName":"callables",
-				"resourceVersion":457,
-				"resourceName":"callables_return_to_automation",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_i1E8M@n_Vkf89@_liiWT-1@n@y",
-			"id":"_JRY8y",
-			"index":7,
-			"inputs":{
-				"result":{
-					"success":false
-				}
-			},
-			"skip":false,
-			"subTitle":"Callable",
-			"title":"Respond to automation",
-			"type":"STOP"
-		},
-		{
-			"context":{
 				"appName":"microsoft_sharepoint",
 				"resourceVersion":3481,
 				"connectionId":"68bedcd8db830c4cc9f025a3",
@@ -440,12 +302,11 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Vkf89@_liiWT-1@n",
 			"id":"n_LoEnZ",
-			"index":8,
+			"index":5,
 			"inputs":{
 				"site_name":"{{ n_SQS3w.outputs.siteName }}",
 				"parent_folder":"{{ n_SQS3w.outputs.folderPath }}",
-				"file_name":"{{ n_SQS3w.outputs.fileName }}",
-				"siteType":"{{ n_SQS3w.outputs.siteType }}"
+				"file_name":"{{ n_SQS3w.outputs.fileName }}"
 			},
 			"options":{
 				"bulkheadConfig":{
@@ -499,9 +360,6 @@
 					"metricConfigs":[
 						
 					]
-				},
-				"timeoutConfig":{
-					"enabled":false
 				}
 			},
 			"skip":false,
@@ -522,12 +380,11 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Vkf89@_liiWT-1@n",
 			"id":"n_pDmAV",
-			"index":9,
+			"index":6,
 			"inputs":{
 				"site_name":"{{ n_SQS3w.outputs.siteName }}",
 				"parent_folder":"{{ n_SQS3w.outputs.folderPath }}",
-				"file_name":"{{ n_SQS3w.outputs.fileName }}",
-				"siteType":"{{ n_SQS3w.outputs.siteType }}"
+				"file_name":"{{ n_SQS3w.outputs.fileName }}"
 			},
 			"options":{
 				"bulkheadConfig":{
@@ -599,7 +456,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Vkf89@_liiWT-1@n",
 			"id":"n_pqz10",
-			"index":10,
+			"index":7,
 			"inputs":{
 				"file":"{{ n_LoEnZ.outputs.file }}",
 				"expiryTime":1
@@ -621,7 +478,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Vkf89@_liiWT-1@n",
 			"id":"n_E08zJ",
-			"index":11,
+			"index":8,
 			"inputs":{
 				"fileName":"{{ n_pDmAV.outputs.d.Name }}",
 				"url":"{{ n_pqz10.outputs.url }}",
@@ -645,11 +502,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Vkf89@_liiWT-1@n",
 			"id":"n_tDI7r",
-			"index":12,
+			"index":9,
 			"inputs":{
 				"site_name":"{{ n_SQS3w.outputs.siteName }}",
-				"file_path":"{{ n_SQS3w.outputs.folderPath }}/{{ n_SQS3w.outputs.fileName }}",
-				"siteType":"{{ n_SQS3w.outputs.siteType }}"
+				"file_path":"{{ n_SQS3w.outputs.folderPath }}/{{ n_SQS3w.outputs.fileName }}"
 			},
 			"options":{
 				"bulkheadConfig":{
@@ -721,7 +577,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Vkf89@_liiWT-1@n",
 			"id":"n_v6WnA",
-			"index":13,
+			"index":10,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -786,7 +642,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Vkf89@_liiWT-1@n",
 			"id":"n_eHH6p",
-			"index":14,
+			"index":11,
 			"inputs":{
 				"automationId":"68c1aac1d4d9f629c192ff08",
 				"runtimeConnections":{},
@@ -813,7 +669,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Vkf89@_liiWT-1@n",
 			"id":"n_J6fua",
-			"index":15,
+			"index":12,
 			"inputs":{
 				"automationId":"6867a54b78989b484e92345e",
 				"runtimeConnections":{},
@@ -851,7 +707,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_liiWT-1",
 			"id":"n_9We9R",
-			"index":16,
+			"index":13,
 			"inputs":{
 				"result":{
 					"success":true
@@ -880,9 +736,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":false,
+	"standard":true,
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":65
+	"version":67
 }
