@@ -81,7 +81,7 @@
 	"id":"68e7b5aa2db03d327c1cdf3a",
 	"lastModifiedBy":45011,
 	"lcName":"multi tenancy v2 | fetch all permission group",
-	"modifiedTime":1760015786052,
+	"modifiedTime":1760015959505,
 	"name":"Multi Tenancy V2 | Fetch All Permission Group",
 	"nodes":[
 		{
@@ -96,7 +96,7 @@
 				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_tWXv8",
@@ -107,7 +107,7 @@
 					"additionalProperties":false,
 					"required":[],
 					"properties":{
-						"callableInterfaceAssets":{
+						"permissionGroupAssets":{
 							"type":"array",
 							"items":{
 								"type":"object",
@@ -128,7 +128,7 @@
 								"additionalProperties":false,
 								"required":[]
 							},
-							"title":"Callable Interface Assets"
+							"title":"Permission Group Assets"
 						}
 					}
 				}
@@ -184,7 +184,6 @@
 				"limit":100
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"additionalProperties":false,
@@ -219,7 +218,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_uIfRr",
@@ -457,18 +456,17 @@
 				"createList":{
 					"ua:type":"mappedArray"
 				},
-				"ua:title":"Callable Interface Asset List",
+				"ua:title":"Permission Group Asset List",
 				"ua:list_type":"OBJECT"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
 					"properties":{
 						"items":{
 							"type":"array",
-							"title":"Callable Interface Asset List",
+							"title":"Permission Group Asset List",
 							"disableActions":true,
 							"items":{
 								"type":"object",
@@ -538,7 +536,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_pVMhd@_tT02q-1@l",
 			"id":"n_feENT",
@@ -546,11 +544,22 @@
 			"inputs":{
 				"projections":[
 					{
-						"name":"id",
+						"name":"_id",
 						"aggregationFunction":"GROUP"
 					}
 				],
-				"entityType":"CallableInterface",
+				"filter":{
+					"filters":[
+						{
+							"property":"applicationId",
+							"filter":{
+								"operator":"EXISTS"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"entityType":"PermissionGroup",
 				"page":{
 					"offset":"{{ n_pNNqv.outputs.offset }}",
 					"limit":"{{ n_pNNqv.outputs.limit }}"
@@ -605,7 +614,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_RmXd9@n_pVMhd@_tT02q-1@l@l",
 			"id":"n_bnMsV",
@@ -616,7 +625,7 @@
 					"ua:type":"mappedArray",
 					"source":"{{ n_feENT.outputs.objects }}",
 					"items":{
-						"assetClass":"CALLABLE_INTERFACE",
+						"assetClass":"PERMISSION_GROUP",
 						"assetId":"{{ n_feENT.outputs.objects[0].columns.id }}"
 					}
 				},
@@ -665,16 +674,16 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_1rXuq",
 			"index":9,
 			"inputs":{
 				"result":{
-					"callableInterfaceAssets":{
-						"source":"{{ n_uIfRr.outputs.items }}",
+					"permissionGroupAssets":{
 						"ua:type":"mappedArray",
+						"source":"{{ n_uIfRr.outputs.items }}",
 						"items":{
 							"assetId":"{{ n_uIfRr.outputs.items[0].assetId }}",
 							"assetClass":"{{ n_uIfRr.outputs.items[0].assetClass }}",
@@ -706,5 +715,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
