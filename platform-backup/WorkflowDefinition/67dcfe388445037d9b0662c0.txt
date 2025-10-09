@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1742627478170,
+	"createdTime":1753422208440,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759495179087,
-		"deployedBy":44109,
-		"deployedDefinitionId":"68dfc40aee7bed4bfee8f627",
+		"deployedAt":1759948574675,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68e6af1ea991021e3f9adfbb",
 		"status":"DEPLOYED",
-		"version":61,
-		"workflowVersion":114
+		"version":94,
+		"workflowVersion":151
 	},
 	"edges":[
 		{
@@ -104,9 +104,9 @@
 		]
 	},
 	"id":"67dcfe388445037d9b0662c0",
-	"lastModifiedBy":39717,
+	"lastModifiedBy":1,
 	"lcName":"test agent streaming",
-	"modifiedTime":1760007792417,
+	"modifiedTime":1760012209270,
 	"name":"Test Agent Streaming",
 	"nodes":[
 		{
@@ -301,10 +301,6 @@
 								"deepResearch":{
 									"type":"boolean",
 									"title":"Deep Research"
-								},
-								"documentVision":{
-									"type":"boolean",
-									"title":"Document Vision"
 								}
 							},
 							"additionalProperties":false,
@@ -443,28 +439,6 @@
 					"copilotType":"{{ 3V1Pq.outputs.copilotType }}",
 					"message":"{{ 3V1Pq.outputs.message }}",
 					"caseId":"{{ 3V1Pq.outputs.caseId }}",
-					"role":"{{ 3V1Pq.outputs.role }}",
-					"goal":"{{ 3V1Pq.outputs.goal }}",
-					"background":"{{ 3V1Pq.outputs.background }}",
-					"instructions":"{{ 3V1Pq.outputs.instructions }}",
-					"agentVariables":"{{ 3V1Pq.outputs.agentVariables }}",
-					"defaultTools":{
-						"webSearch":"{{ 3V1Pq.outputs.defaultTools.webSearch }}",
-						"deepResearch":"{{ 3V1Pq.outputs.defaultTools.deepResearch }}",
-						"documentVision":"{{ 3V1Pq.outputs.defaultTools.documentVision }}"
-					},
-					"settings":{
-						"taskExecutionModel":"{{ 3V1Pq.outputs.settings.taskExecutionModel }}"
-					},
-					"formData":{
-						"id":"{{ 3V1Pq.outputs.formData.id }}",
-						"data":"{{ 3V1Pq.outputs.formData.data }}",
-						"brandMessageId":"{{ 3V1Pq.outputs.formData.brandMessageId }}"
-					},
-					"agentVersion":"{{ 3V1Pq.outputs.agentVersion }}",
-					"workflowInputs":"{{ 3V1Pq.outputs.workflowInputs }}",
-					"spaceId":"{{ 3V1Pq.outputs.spaceId }}",
-					"messageId":"{{ 3V1Pq.outputs.messageId }}",
 					"attachments":{
 						"source":"{{ 3V1Pq.outputs.attachments }}",
 						"ua:type":"mappedArray",
@@ -495,6 +469,10 @@
 						"ua:type":"mappedArray",
 						"items":"{{ 3V1Pq.outputs.toolIds[0] }}"
 					},
+					"role":"{{ 3V1Pq.outputs.role }}",
+					"goal":"{{ 3V1Pq.outputs.goal }}",
+					"background":"{{ 3V1Pq.outputs.background }}",
+					"instructions":"{{ 3V1Pq.outputs.instructions }}",
 					"steps":{
 						"source":"{{ 3V1Pq.outputs.steps }}",
 						"ua:type":"mappedArray",
@@ -512,7 +490,24 @@
 						"ua:type":"mappedArray",
 						"items":"{{ 3V1Pq.outputs.knowledgeSetIds[0] }}"
 					},
-					"deployedVersion":"{{ 3V1Pq.outputs.deployedVersion }}"
+					"defaultTools":{
+						"webSearch":"{{ 3V1Pq.outputs.defaultTools.webSearch }}",
+						"deepResearch":"{{ 3V1Pq.outputs.defaultTools.deepResearch }}"
+					},
+					"settings":{
+						"taskExecutionModel":"{{ 3V1Pq.outputs.settings.taskExecutionModel }}"
+					},
+					"agentVariables":"{{ 3V1Pq.outputs.agentVariables }}",
+					"deployedVersion":"{{ 3V1Pq.outputs.deployedVersion }}",
+					"formData":{
+						"id":"{{ 3V1Pq.outputs.formData.id }}",
+						"data":"{{ 3V1Pq.outputs.formData.data }}",
+						"brandMessageId":"{{ 3V1Pq.outputs.formData.brandMessageId }}"
+					},
+					"agentVersion":"{{ 3V1Pq.outputs.agentVersion }}",
+					"workflowInputs":"{{ 3V1Pq.outputs.workflowInputs }}",
+					"spaceId":"{{ 3V1Pq.outputs.spaceId }}",
+					"messageId":"{{ 3V1Pq.outputs.messageId }}"
 				}
 			},
 			"skip":false,
@@ -562,8 +557,6 @@
 			"inputs":{
 				"output":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"fanMessage":{
 							"type":"object",
@@ -571,15 +564,12 @@
 							"additionalProperties":false,
 							"title":"Fan Message"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
 				"input":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"messageId",
-						"caseId"
-					],
 					"properties":{
 						"messageId":{
 							"type":"string",
@@ -603,16 +593,20 @@
 							"additionalProperties":false,
 							"title":"Additional"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[
+						"messageId",
+						"caseId"
+					]
 				},
-				"code":"def text = \"\"\ndef messages = []\n\ndef fanMessage = [\"messageType\":\"Fan\",\"messageId\": messageId, \"caseId\": caseId, \"createdTime\": createdTime,\"fromCustomerUserId\":fromCustomerUserId, \"message\": messages]\n\n// if(binding.hasVariable(\"internalMessageType\")&& internalMessageType != null && internalMessageType.trim()!= \"\") {\n//   fanMessage << [\"additional\":[\"internalMessageType\":\"THOUGHT\"]]\n// }\n\nif(binding.hasVariable(\"additional\")&& additional != null  ) {\n  fanMessage << [\"additional\":additional]\n}\n\n\n\nreturn [\"fanMessage\": fanMessage]\n",
 				"compile_static":false,
-				"captureStdOutput":false,
+				"code":"def text = \"\"\ndef messages = []\n\ndef fanMessage = [\"messageType\":\"Fan\",\"messageId\": messageId, \"caseId\": caseId, \"createdTime\": createdTime,\"fromCustomerUserId\":fromCustomerUserId, \"message\": messages]\n\n// if(binding.hasVariable(\"internalMessageType\")&& internalMessageType != null && internalMessageType.trim()!= \"\") {\n//   fanMessage << [\"additional\":[\"internalMessageType\":\"THOUGHT\"]]\n// }\n\nif(binding.hasVariable(\"additional\")&& additional != null  ) {\n  fanMessage << [\"additional\":additional]\n}\n\n\n\nreturn [\"fanMessage\": fanMessage]\n",
 				"parameters":{
 					"messageId":"{{ ZPXM8.outputs.messageId }}",
 					"caseId":"{{ ZPXM8.outputs.caseId }}",
 					"createdTime":"{{ ZPXM8.outputs.messageCreatedTime }}",
-					"fromCustomerUserId":"{{ ZPXM8.outputs.fromCustomerUserId }}",
+					"fromCustomerUserId":"{{ 3V1Pq.outputs.aiAgentId }}",
 					"additional":"{{ CsEc8.outputs.properties.additional }}"
 				}
 			},
@@ -864,22 +858,22 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1866,
+	"ownerUserId":1,
 	"schemaReferences":[
 		"entity|e_code_snippet|e_67a2172ddff5de75934bd167"
 	],
 	"settings":{
-		"enableNodeLevelLogging":true,
-		"enableRunLogging":true,
-		"enableVariableLogging":true,
+		"enableNodeLevelLogging":false,
+		"enableRunLogging":false,
+		"enableVariableLogging":false,
 		"route":{
 			"default":false,
 			"tierName":"global"
 		}
 	},
-	"standard":false,
+	"standard":true,
 	"tags":[
 		"AI Agent"
 	],
-	"version":115
+	"version":152
 }
