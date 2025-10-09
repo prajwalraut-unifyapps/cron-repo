@@ -6,46 +6,300 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_5CCfw",
+			"fromNodeId":"n_r2USm",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_RA33R",
+			"toNodeId":"n_ehut1",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_ehut1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8Q2HZ",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_8Q2HZ",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Gg0W3",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_Gg0W3",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_yEjbs",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_yEjbs",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Gg0W3",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_8Q2HZ",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_zVVTJ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Gg0W3",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_ehut1",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_zVVTJ",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_ehut1",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_ehut1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_M6Ukw",
 			"type":"next"
 		}
 	],
 	"id":"68e71fece505883c87236542",
 	"lastModifiedBy":1,
 	"lcName":"loopslocaljtidoxoeiv",
-	"modifiedTime":1759977452404,
+	"modifiedTime":1759977486932,
 	"name":"loopsLocalJTIDoxoEiv",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2092,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_5CCfw-1",
-			"id":"_5CCfw",
-			"index":0,
+			"id":"n_r2USm",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"output":{
+							"type":"string",
+							"title":"output"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"input":{
+							"type":"array",
+							"items":{
+								"type":"integer"
+							},
+							"title":"input"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":137,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_5CCfw-1",
-			"id":"_RA33R",
-			"index":0,
+			"id":"n_ehut1",
+			"index":2,
+			"inputs":{
+				"repeatMode":"SINGLE",
+				"listSource":"{{ n_r2USm.outputs.input }}",
+				"captureIterations":true
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":134,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_ehut1@_5CCfw-1@l",
+			"id":"n_8Q2HZ",
+			"index":3,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_ehut1.outputs.item }}",
+						"filter":{
+							"operator":"LTE",
+							"value":"10"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":94,
+				"resourceName":"loop_for",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_8Q2HZ@n_ehut1@_5CCfw-1@l@y",
+			"id":"n_Gg0W3",
+			"index":4,
+			"inputs":{
+				"start":0,
+				"limit":5,
+				"step":1,
+				"captureIterations":false
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2022,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_Gg0W3@n_8Q2HZ@n_ehut1@_5CCfw-1@l@y@l",
+			"id":"n_yEjbs",
+			"index":5,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"a":{
+							"type":"integer",
+							"title":"a"
+						}
+					}
+				}
+			},
+			"inputs":{
+				"a":"=SUM({{ n_Gg0W3.outputs.index }},{{ n_ehut1.outputs.item }})"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"a":{
+							"type":"integer",
+							"title":"a"
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"continue",
+				"resourceVersion":134,
+				"resourceName":"continue",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_8Q2HZ@n_ehut1@_5CCfw-1@l@n",
+			"id":"n_zVVTJ",
+			"index":6,
+			"inputs":{
+				"loop":"n_ehut1"
+			},
+			"skip":false,
+			"subTitle":"Continue",
+			"title":"Continue",
+			"type":"CONTINUE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2095,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_5CCfw-1",
+			"id":"n_M6Ukw",
+			"index":7,
+			"inputs":{
+				"result":{
+					"output":"{{ n_yEjbs.outputs.a }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +313,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
