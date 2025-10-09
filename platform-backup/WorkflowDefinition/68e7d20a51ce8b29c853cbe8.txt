@@ -18,12 +18,63 @@
 			"skip":false,
 			"toNodeId":"n_BAdpA",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_BAdpA",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_7pw7i",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_7pw7i",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_5plbI",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_7pw7i",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_0PjTp",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_5plbI",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_9YlLK",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_c9x1w",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_9YlLK",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_0PjTp",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_9YlLK",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_9YlLK",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_c9x1w",
+			"type":"loop"
 		}
 	],
 	"id":"68e7d20a51ce8b29c853cbe8",
 	"lastModifiedBy":43498,
 	"lcName":"multi tenancy v2 | child tenant publisher",
-	"modifiedTime":1760029235518,
+	"modifiedTime":1760029320994,
 	"name":"Multi Tenancy V2 | Child Tenant Publisher",
 	"nodes":[
 		{
@@ -328,8 +379,7 @@
 									},
 									"required":[
 										"AssetType",
-										"AssetId",
-										"AssetVersion"
+										"AssetId"
 									]
 								}
 							}
@@ -371,8 +421,7 @@
 								},
 								"required":[
 									"AssetType",
-									"AssetId",
-									"AssetVersion"
+									"AssetId"
 								]
 							}
 						}
@@ -382,6 +431,110 @@
 			"skip":false,
 			"subTitle":"Variable by UnifyApps",
 			"title":"Create list",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_pzv6d-1",
+			"id":"n_7pw7i",
+			"index":4,
+			"inputs":{},
+			"skip":false,
+			"subTitle":"ChangeType",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"standard_entities",
+				"resourceVersion":794,
+				"resourceName":"standard_entities_get_dependencies",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_7pw7i@_pzv6d-1@y",
+			"id":"n_5plbI",
+			"index":5,
+			"inputs":{
+				"assetDetail":{
+					"assetClass":"{{ n_Z7R79.outputs.assetClass }}",
+					"assetId":"{{ n_Z7R79.outputs.id }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Standard entities by UnifyApps",
+			"title":"Get dependencies",
+			"type":"ACTION"
+		},
+		{
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_7pw7i@_pzv6d-1@n",
+			"id":"n_0PjTp",
+			"index":6,
+			"skip":false,
+			"title":"Select an app and action",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":865,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_pzv6d-1",
+			"id":"n_9YlLK",
+			"index":7,
+			"inputs":{
+				"repeatMode":"SINGLE",
+				"listSource":"{{ n_5plbI.outputs.dependencies }}",
+				"captureIterations":false
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":996,
+				"resourceName":"variable_by_unifyapps_add_item_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_9YlLK@_pzv6d-1@l",
+			"id":"n_c9x1w",
+			"index":8,
+			"inputs":{
+				"itemToAdd":{
+					"AssetType":"{{ n_9YlLK.outputs.item.assetClass }}",
+					"AssetId":"{{ n_9YlLK.outputs.item.assetId }}",
+					"AssetVersion":"{{ n_9YlLK.outputs.item.assetVersion }}"
+				},
+				"insertLocation":"END",
+				"listName":"{{ n_BAdpA.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Add item to list",
 			"type":"ACTION"
 		}
 	],
@@ -402,5 +555,5 @@
 	"tags":[
 		
 	],
-	"version":4
+	"version":5
 }
