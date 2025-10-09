@@ -5,26 +5,143 @@
 	"createdTime":1759988393704,
 	"deleted":false,
 	"edges":[
-		
+		{
+			"fromNodeId":"BTBm6",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"009N6",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"009N6",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"nzuXn",
+			"type":"next"
+		}
 	],
 	"id":"68e74aa9e505883c8725d6ca",
 	"lastModifiedBy":1,
 	"lcName":"backend_automation1759988392940",
-	"modifiedTime":1759988393704,
+	"modifiedTime":1759988394814,
 	"name":"Backend_Automation1759988392940",
 	"nodes":[
-		
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":14,
+				"resourceName":"callables_from_automation"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"BTBm6-1",
+			"id":"BTBm6",
+			"index":0,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"properties":{
+						"bool":{
+							"type":"boolean",
+							"title":"bool"
+						}
+					},
+					"required":[]
+				},
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"{{ BTBm6.outputs.str }}",
+							"filter":{
+								"operator":"EXISTS"
+							}
+						},
+						{
+							"property":"=LEN({{ BTBm6.outputs.str }})",
+							"filter":{
+								"operator":"GT",
+								"value":"2"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"setup":{
+					"type":"object",
+					"properties":{
+						"str":{
+							"type":"string",
+							"title":"str"
+						}
+					},
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"CALLABLE",
+			"title":"Trigger from automation",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":15,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"BTBm6-1",
+			"id":"009N6",
+			"index":0,
+			"inputs":{
+				"automationId":"68e74aa5e505883c8725d699",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"parameters":{
+					"str":"{{ BTBm6.outputs.str }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":10,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"BTBm6-1",
+			"id":"nzuXn",
+			"index":0,
+			"inputs":{
+				"result":{
+					"bool":"{{ 009N6.outputs.isPallindrome }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Return data to automation",
+			"type":"STOP"
+		}
 	],
 	"ownerUserId":1,
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
-		"enableVariableLogging":true,
-		"route":{
-			"default":false,
-			"tierName":"global"
-		}
+		"enableVariableLogging":true
 	},
 	"standard":false,
-	"version":0
+	"version":1
 }
