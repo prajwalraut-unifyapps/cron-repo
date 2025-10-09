@@ -6,46 +6,104 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_zVQve",
+			"fromNodeId":"n_XmgaU",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_PT821",
+			"toNodeId":"n_YUM3Z",
 			"type":"next"
 		}
 	],
 	"id":"68e784a9b786eb06894c13e0",
 	"lastModifiedBy":32562,
 	"lcName":"browserusesmooth",
-	"modifiedTime":1760003241208,
+	"modifiedTime":1760003451598,
 	"name":"BrowserUseSmooth",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":833,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_zVQve-1",
-			"id":"_zVQve",
-			"index":0,
+			"id":"n_XmgaU",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":928,
+				"resourceName":"code_by_unifyapps_python",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_zVQve-1",
-			"id":"_PT821",
-			"index":0,
+			"id":"n_YUM3Z",
+			"index":2,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"taskId":{
+							"type":"string",
+							"title":"Task Id"
+						},
+						"liveUrl":{
+							"type":"string",
+							"title":"Live Url"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"query":{
+							"type":"string",
+							"title":"Query"
+						}
+					}
+				},
+				"configurationMode":"TEMPLATE",
+				"code":"from smooth import SmoothClient\nfrom pydantic import BaseModel\n\nclass MyResponseModel(BaseModel):\n    pass\n\nprint(f\"Creating Client\")\n\nsmooth_client = SmoothClient(api_key=\"cmzr-W90Pqb4ferMG8sF-_jLHGdcpYBI5xlZoWALpbeo7JOOv7Zg5Q6cl0EOPBThpc3FhLqGhE5HhaKJGBV24iL17SaHZP47r727GROouv1DhA-fWZ5A955_TH8aL\")\n\nprint(f\"Executing Query: {query}\")\n\ntask = smooth_client.run(\n    query,\n    MyResponseModel,\n    device = \"desktop\",\n)\n\nprint(f\"Sending Result: {task.id()}\")\n\nresult = {\n  \"taskId\": task.id(),\n  \"liveUrl\": task.live_url(embed=True)\n}\n\nprint(f\"Sent Result: {task.id()}\")",
+				"isAsync":false,
+				"python_version":"3.12",
+				"entityId":"e_68e784a2b3d6d4405ac540ac",
+				"captureStdOutput":false,
+				"parameters":{
+					"query":"Go to google flights and find the cheapest flight from London to Paris today"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Python script",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":32562,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +117,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
