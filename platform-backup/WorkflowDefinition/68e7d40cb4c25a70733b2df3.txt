@@ -4,9 +4,24 @@
 	],
 	"createdTime":1760023564796,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760023877984,
+		"deployedBy":49915,
+		"deployedDefinitionId":"68e7d545b4c25a70733b2f78",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":1
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_q0UCu",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_0wzeW",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_0wzeW",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_PtmSs",
@@ -16,7 +31,7 @@
 	"id":"68e7d40cb4c25a70733b2df3",
 	"lastModifiedBy":49915,
 	"lcName":"eval | metrics | language mismatch",
-	"modifiedTime":1760023876125,
+	"modifiedTime":1760025493078,
 	"name":"Eval | Metrics | Language Mismatch",
 	"nodes":[
 		{
@@ -79,6 +94,66 @@
 		},
 		{
 			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":928,
+				"resourceName":"code_by_unifyapps_python",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_C344e-1",
+			"id":"n_0wzeW",
+			"index":2,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"score":{
+							"type":"number",
+							"title":"Score"
+						},
+						"reason":{
+							"type":"string",
+							"title":"Reason"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"expected_output":{
+							"type":"string",
+							"title":"Expected Output"
+						},
+						"actual_output":{
+							"type":"string",
+							"title":"Actual Output"
+						}
+					}
+				},
+				"configurationMode":"TEMPLATE",
+				"code":"import fasttext\nfrom huggingface_hub import hf_hub_download\n\n# Load GlotLID model once globally\nmodel_path = hf_hub_download(repo_id=\"cis-lmu/glotlid\", filename=\"model.bin\")\nmodel = fasttext.load_model(model_path)\n\ndef detect_language(text: str):\n    \"\"\"Detect language using GlotLID and return (lang_label, confidence).\"\"\"\n    if not text or not text.strip():\n        return None, None\n    labels, scores = model.predict(text)\n    lang_label = labels[0].replace(\"__label__\", \"\")\n    confidence = float(scores[0])\n    return lang_label, confidence\n\ndef compare_languages(expected_output: str, actual_output: str):\n    \"\"\"Compare two texts by language and return score + reason.\"\"\"\n    # Handle null or empty inputs\n    if not expected_output and not actual_output:\n        return {\n            \"score\": 0,\n            \"reason\": \"Both expected_output and actual_output are null or empty.\"\n        }\n    if not expected_output:\n        return {\n            \"score\": 0,\n            \"reason\": \"expected_output is null or empty.\"\n        }\n    if not actual_output:\n        return {\n            \"score\": 0,\n            \"reason\": \"actual_output is null or empty.\"\n        }\n\n    expected_lang, _ = detect_language(expected_output)\n    actual_lang, _ = detect_language(actual_output)\n\n    # Handle detection failure (just in case)\n    if not expected_lang or not actual_lang:\n        return {\n            \"score\": 0,\n            \"reason\": f\"Could not detect language for one or both inputs \"\n                      f\"(expected: {expected_lang}, actual: {actual_lang}).\"\n        }\n\n    same_language = expected_lang == actual_lang\n    score = 1 if same_language else 0\n    reason = (\n        f\"Yes, they match — both are in {expected_lang}.\"\n        if same_language\n        else f\"No, they mismatch — expected_output is in {expected_lang} and actual_output is in {actual_lang}.\"\n    )\n\n    return {\n        \"score\": score,\n        \"reason\": reason\n    }\n\n# Example usage:\nif __name__ == \"__main__\":\n    result = compare_languages(expected_output, actual_output)\n",
+				"isAsync":false,
+				"python_version":"3.12",
+				"entityId":"e_68e7bac14b67eb65738a3c11",
+				"captureStdOutput":false,
+				"parameters":{
+					"expected_output":"{{ n_q0UCu.outputs.expected_output }}",
+					"actual_output":"{{ n_q0UCu.outputs.actual_output }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Python script",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"ai_evaluator_by_unifyapps",
 				"resourceVersion":526,
 				"resourceName":"ai_evaluator_by_unifyapps_return_response_to_metric_evaluation",
@@ -89,8 +164,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"_C344e-1",
 			"id":"n_PtmSs",
-			"index":2,
-			"inputs":{},
+			"index":3,
+			"inputs":{
+				"result":{
+					"score":"{{ n_0wzeW.outputs.result.score }}",
+					"reason":"{{ n_0wzeW.outputs.result.reason }}"
+				}
+			},
 			"skip":false,
 			"subTitle":"AI Evaluator by UnifyApps",
 			"title":"Respond to metric evaluation",
@@ -114,5 +194,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
