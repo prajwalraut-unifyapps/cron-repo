@@ -5,12 +5,12 @@
 	"createdTime":1759987412668,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759989240773,
+		"deployedAt":1759989353151,
 		"deployedBy":45011,
-		"deployedDefinitionId":"68e74df8c83a71253642ca4a",
+		"deployedDefinitionId":"68e74e6999f9fc69e110f718",
 		"status":"DEPLOYED",
-		"version":1,
-		"workflowVersion":2
+		"version":2,
+		"workflowVersion":3
 	},
 	"edges":[
 		{
@@ -89,7 +89,7 @@
 	"id":"68e746d499f9fc69e110e5e6",
 	"lastModifiedBy":45011,
 	"lcName":"multi tenancy v2 | move all entitytype",
-	"modifiedTime":1759989346558,
+	"modifiedTime":1760009094926,
 	"name":"Multi Tenancy V2 | Move All EntityType",
 	"nodes":[
 		{
@@ -131,6 +131,19 @@
 									"assetVersion":{
 										"type":"string",
 										"title":"Asset Version"
+									},
+									"assetSetting":{
+										"type":"object",
+										"properties":{
+											"recordsSelection":{
+												"type":"string",
+												"title":"Records Selection",
+												"default":"ALL_RECORDS"
+											}
+										},
+										"additionalProperties":false,
+										"title":"Asset Setting",
+										"required":[]
 									}
 								},
 								"additionalProperties":false,
@@ -451,6 +464,19 @@
 										"assetVersion":{
 											"type":"string",
 											"title":"Asset Version"
+										},
+										"assetSetting":{
+											"type":"object",
+											"properties":{
+												"recordsSelection":{
+													"type":"string",
+													"title":"Records Selection",
+													"default":"ALL_RECORDS"
+												}
+											},
+											"additionalProperties":false,
+											"title":"Asset Setting",
+											"required":[]
 										}
 									},
 									"required":[]
@@ -462,7 +488,12 @@
 			},
 			"inputs":{
 				"createList":{
-					"ua:type":"mappedArray"
+					"ua:type":"mappedArray",
+					"items":{
+						"assetSetting":{
+							"recordsSelection":"ALL_RECORDS"
+						}
+					}
 				},
 				"ua:title":"EntityType List",
 				"ua:list_type":"OBJECT"
@@ -490,6 +521,19 @@
 									"assetVersion":{
 										"type":"string",
 										"title":"Asset Version"
+									},
+									"assetSetting":{
+										"type":"object",
+										"properties":{
+											"recordsSelection":{
+												"type":"string",
+												"title":"Records Selection",
+												"default":"ALL_RECORDS"
+											}
+										},
+										"additionalProperties":false,
+										"title":"Asset Setting",
+										"required":[]
 									}
 								},
 								"required":[]
@@ -544,7 +588,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_pVMhd@_tT02q-1@l",
 			"id":"n_feENT",
@@ -581,7 +625,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_pVMhd@_tT02q-1@l",
 			"id":"n_RmXd9",
@@ -601,7 +645,8 @@
 				"visibleOptionalFields":[
 					"root.itemsToAdd.items.assetClass",
 					"root.itemsToAdd.items.assetId",
-					"root.itemsToAdd.items.assetVersion"
+					"root.itemsToAdd.items.assetVersion",
+					"root.itemsToAdd.items.assetSetting.recordsSelection"
 				]
 			},
 			"context":{
@@ -623,7 +668,10 @@
 					"source":"{{ n_feENT.outputs.objects }}",
 					"items":{
 						"assetClass":"ENTITY_TYPE",
-						"assetId":"{{ n_feENT.outputs.objects[0].columns.id }}"
+						"assetId":"{{ n_feENT.outputs.objects[0].columns.id }}",
+						"assetSetting":{
+							"recordsSelection":"ALL_RECORDS"
+						}
 					}
 				},
 				"listName":"{{ n_uIfRr.outputs.items[0] }}"
@@ -641,7 +689,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_pVMhd@_tT02q-1@l",
 			"id":"n_v7zdl",
@@ -684,7 +732,10 @@
 						"items":{
 							"assetId":"{{ n_uIfRr.outputs.items[0].assetId }}",
 							"assetClass":"{{ n_uIfRr.outputs.items[0].assetClass }}",
-							"assetVersion":"{{ n_uIfRr.outputs.items[0].assetVersion }}"
+							"assetVersion":"{{ n_uIfRr.outputs.items[0].assetVersion }}",
+							"assetSetting":{
+								"recordsSelection":"{{ n_uIfRr.outputs.items[0].assetSetting.recordsSelection }}"
+							}
 						}
 					}
 				}
@@ -712,5 +763,5 @@
 	"tags":[
 		
 	],
-	"version":3
+	"version":4
 }
