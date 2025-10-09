@@ -16,6 +16,13 @@
 			"fromNodeId":"n_WpMBZ",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_e7eqh",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_e7eqh",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_BVvKI",
 			"type":"next"
 		},
@@ -28,6 +35,13 @@
 		},
 		{
 			"fromNodeId":"n_349XB",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8SydT",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_8SydT",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_9WfYT",
@@ -74,7 +88,7 @@
 	"id":"68daa4861b5ffe5e5230141e",
 	"lastModifiedBy":1,
 	"lcName":"test12",
-	"modifiedTime":1760009440615,
+	"modifiedTime":1760009571812,
 	"name":"test12",
 	"nodes":[
 		{
@@ -435,25 +449,80 @@
 		},
 		{
 			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2023,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_KSRUZ-1",
+			"id":"n_e7eqh",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"integer",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
+			"inputs":{
+				"i":0
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"integer",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"loop",
 				"resourceVersion":27,
 				"resourceName":"loop_while",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_KSRUZ-1",
 			"id":"n_BVvKI",
-			"index":3,
+			"index":4,
 			"inputs":{
 				"condition":{
 					"filters":[
 						{
-							"property":"1",
+							"property":"{{ n_e7eqh.outputs.i }}",
 							"filter":{
-								"operator":"EQUAL",
-								"value":"1"
+								"operator":"LT",
+								"value":"5"
 							}
 						}
 					],
@@ -478,7 +547,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_BVvKI@_KSRUZ-1@l",
 			"id":"n_349XB",
-			"index":4,
+			"index":5,
 			"inputs":{
 				"itemToAdd":{
 					"id":"{{ n_2F9jW.outputs.id }}",
@@ -496,6 +565,32 @@
 		},
 		{
 			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2020,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_BVvKI@_KSRUZ-1@l",
+			"id":"n_8SydT",
+			"index":6,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_e7eqh.outputs.i }}",
+						"value":"=SUM({{ n_e7eqh.outputs.i }},1)"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"break",
 				"resourceVersion":27,
 				"resourceName":"break",
@@ -506,7 +601,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_BVvKI@_KSRUZ-1@l",
 			"id":"n_9WfYT",
-			"index":5,
+			"index":7,
 			"inputs":{
 				"loop":"n_BVvKI",
 				"conditions":{
@@ -539,7 +634,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KSRUZ-1",
 			"id":"n_XUsvp",
-			"index":6,
+			"index":8,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ n_WpMBZ.outputs.items }}",
@@ -564,7 +659,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_XUsvp@_KSRUZ-1@l",
 			"id":"n_EO50F",
-			"index":7,
+			"index":9,
 			"inputs":{
 				"field1":"{{ n_XUsvp.outputs.item }}",
 				"field2":false
@@ -586,7 +681,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KSRUZ-1",
 			"id":"_xQsWq",
-			"index":8,
+			"index":10,
 			"inputs":{
 				"result":{
 					"id":"{{ n_WpMBZ.outputs.items[0].id }}",
@@ -618,5 +713,5 @@
 	"tags":[
 		
 	],
-	"version":37
+	"version":38
 }
