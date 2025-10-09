@@ -6,46 +6,147 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_ykNQC",
+			"fromNodeId":"n_XkScG",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_dP0Hf",
+			"toNodeId":"n_GF53E",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_GF53E",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_PudHg",
 			"type":"next"
 		}
 	],
 	"id":"68e7f56ce4155b0b0f315e5b",
 	"lastModifiedBy":1,
 	"lcName":"utilitybyunifyappsqa2knvypwxqyg",
-	"modifiedTime":1760032108096,
+	"modifiedTime":1760032145040,
 	"name":"UtilityByUnifyAppsQA2KNvYpWXqyg",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2111,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ykNQC-1",
-			"id":"_ykNQC",
-			"index":0,
+			"id":"n_XkScG",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"r":{
+							"type":"string",
+							"title":"r"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"a":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"name":{
+										"type":"string",
+										"title":"name"
+									},
+									"department":{
+										"type":"string",
+										"title":"department"
+									},
+									"age":{
+										"type":"integer",
+										"title":"age"
+									}
+								},
+								"additionalProperties":false
+							},
+							"title":"a"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":2834,
+				"resourceName":"utility_by_unifyapps_filter_list",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_ykNQC-1",
-			"id":"_dP0Hf",
-			"index":0,
+			"id":"n_GF53E",
+			"index":2,
+			"inputs":{
+				"filter":{
+					"filters":[
+						{
+							"property":"{{ n_XkScG.outputs.a[0].name }}",
+							"filter":{
+								"operator":"CONTAINS",
+								"value":"lice"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"listSource":"{{ n_XkScG.outputs.a }}"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Utility by UnifyApps",
+			"title":"Filter List of Data",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2114,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_ykNQC-1",
+			"id":"n_PudHg",
+			"index":3,
+			"inputs":{
+				"result":{
+					"r":"{{ n_GF53E.outputs.filteredList[0] }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +160,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
