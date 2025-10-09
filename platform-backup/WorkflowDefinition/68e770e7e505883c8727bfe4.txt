@@ -6,46 +6,172 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_gWODH",
+			"fromNodeId":"n_R9qL6",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_qVgR3",
+			"toNodeId":"n_8w7Qv",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_8w7Qv",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_wlFY3",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_wlFY3",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_CA1le",
 			"type":"next"
 		}
 	],
 	"id":"68e770e7e505883c8727bfe4",
 	"lastModifiedBy":1,
 	"lcName":"testbatchsql",
-	"modifiedTime":1759998183516,
+	"modifiedTime":1760000631861,
 	"name":"testBatchsql",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":134,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_gWODH-1",
-			"id":"_gWODH",
-			"index":0,
+			"id":"n_R9qL6",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":0,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_gWODH-1",
-			"id":"_qVgR3",
-			"index":0,
+			"id":"n_8w7Qv",
+			"index":2,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"query"
+					],
+					"properties":{
+						"query":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Query"
+						}
+					}
+				},
+				"code":"return [\n  query : [\n    \"SHOW ROUTINE LOAD FOR ROUTINE_LOAD_WORKFLOW_NODE_EXECUTION\",\n    \"SHOW ROUTINE LOAD FOR ROUTINE_LOAD_WORKFLOW_EXECUTION\"\n  ]\n]",
+				"compile_static":false,
+				"captureStdOutput":false
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"custom_http_endpoint",
+				"resourceVersion":1936,
+				"resourceName":"custom_http_endpoint_execute",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_gWODH-1",
+			"id":"n_wlFY3",
+			"index":3,
+			"inputs":{
+				"isAsync":false,
+				"enableProxy":false,
+				"requestTimeoutInSecs":-1,
+				"httpMethod":"POST",
+				"body":{
+					"source":"{{ n_8w7Qv.outputs.result.query }}",
+					"ua:type":"mappedArray",
+					"items":{
+						"sql":"{{ n_8w7Qv.outputs.result.query[0] }}"
+					}
+				},
+				"connectionType":"DIRECT",
+				"sslVerify":false,
+				"path":"/internal/sql-report/runSQL-batch/query/1?resourceType=PLATFORM",
+				"baseUrl":"http://internal-global-svc:80",
+				"httpVersion":"HTTP_2",
+				"bodySchema":{
+					"type":"array",
+					"items":{
+						"type":"object",
+						"properties":{
+							"sql":{
+								"type":"string",
+								"title":"sql"
+							}
+						},
+						"additionalProperties":false
+					}
+				},
+				"responseContentType":"application/json",
+				"followRedirects":"NORMAL",
+				"authType":"CUSTOM",
+				"requestContentType":"application/json",
+				"ignoreTrailingSlashes":false,
+				"certificateType":"CERT_STRING"
+			},
+			"skip":false,
+			"subTitle":"Custom HTTP Endpoint",
+			"title":"Execute REST request",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_gWODH-1",
+			"id":"n_CA1le",
+			"index":4,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +185,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
