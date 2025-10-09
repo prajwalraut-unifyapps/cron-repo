@@ -1,51 +1,184 @@
 {
 	"appsUsed":[
-		
+		"slack"
 	],
 	"createdTime":1759982530904,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_DKIpn",
+			"fromNodeId":"n_uqk7y",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_MwjYf",
+			"toNodeId":"n_8pCJS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_8pCJS",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_GeR0r",
 			"type":"next"
 		}
 	],
 	"id":"68e733c2e505883c8724b104",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2axpbshlvsj",
-	"modifiedTime":1759982530904,
+	"modifiedTime":1759982564521,
 	"name":"cacheQA2AXpBShlvSJ",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2092,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_DKIpn-1",
-			"id":"_DKIpn",
-			"index":0,
+			"id":"n_uqk7y",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"message":{
+							"type":"string",
+							"title":"message"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"channel":{
+							"type":"string",
+							"title":"channel"
+						},
+						"purpose":{
+							"type":"string",
+							"title":"purpose"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"slack",
+				"resourceVersion":7880,
+				"connectionId":"682adda0b3d1743888ec45db",
+				"resourceName":"slack_conversation_set_purpose",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_DKIpn-1",
-			"id":"_MwjYf",
-			"index":0,
+			"id":"n_8pCJS",
+			"index":2,
+			"inputs":{
+				"purpose":"{{ n_uqk7y.outputs.purpose }}",
+				"channel":"{{ n_uqk7y.outputs.channel }}"
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"duration":"1",
+					"enabled":true,
+					"threshold":"5",
+					"unit":"MINUTES",
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Slack",
+			"title":"Set conversation purpose",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2095,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_DKIpn-1",
+			"id":"n_GeR0r",
+			"index":3,
+			"inputs":{
+				"result":{
+					"message":"{{ n_8pCJS.outputs.channel }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +192,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
