@@ -7,46 +7,202 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_zbVhc",
+			"fromNodeId":"n_lFg1j",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_fQ2l6",
+			"toNodeId":"n_WuaZx",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_WuaZx",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_UlkPq",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_UlkPq",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_S9fKd",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_S9fKd",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_UlkPq",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_UlkPq",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_k7PBT",
 			"type":"next"
 		}
 	],
 	"id":"68e7612ae505883c8726e87e",
 	"lastModifiedBy":1,
 	"lcName":"whileloopdoesnotequal11759994141812",
-	"modifiedTime":1759994154804,
+	"modifiedTime":1759994210319,
 	"name":"whileLoopDoesNotEqual11759994141812",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":134,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_zbVhc-1",
-			"id":"_zbVhc",
-			"index":0,
+			"id":"n_lFg1j",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2022,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_zbVhc-1",
-			"id":"_fQ2l6",
-			"index":0,
+			"id":"n_WuaZx",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"string",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
+			"inputs":{
+				"i":"0"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"string",
+							"title":"i"
+						}
+					},
+					"required":[
+						"i"
+					]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":138,
+				"resourceName":"loop_while",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_zbVhc-1",
+			"id":"n_UlkPq",
+			"index":3,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"{{ n_WuaZx.outputs.i }}",
+							"filter":{
+								"operator":"NOT_EQUAL",
+								"value":"10"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"break",
+				"resourceVersion":137,
+				"resourceName":"break",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_UlkPq@_zbVhc-1@l",
+			"id":"n_S9fKd",
+			"index":4,
+			"inputs":{
+				"loop":"n_UlkPq"
+			},
+			"skip":false,
+			"subTitle":"Break",
+			"title":"Break",
+			"type":"BREAK"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_zbVhc-1",
+			"id":"n_k7PBT",
+			"index":5,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +216,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
