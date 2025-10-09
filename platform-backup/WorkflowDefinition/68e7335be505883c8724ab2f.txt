@@ -1,51 +1,188 @@
 {
 	"appsUsed":[
-		
+		"clickup"
 	],
 	"createdTime":1759982427013,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_SJrNt",
+			"fromNodeId":"n_FMhFy",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_r9B3R",
+			"toNodeId":"n_PMBca",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_PMBca",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_XIoD3",
 			"type":"next"
 		}
 	],
 	"id":"68e7335be505883c8724ab2f",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2itwwpfjdcw",
-	"modifiedTime":1759982427013,
+	"modifiedTime":1759982461312,
 	"name":"cacheQA2ITWwpfJDcw",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2092,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_SJrNt-1",
-			"id":"_SJrNt",
-			"index":0,
+			"id":"n_FMhFy",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"team_id":{
+							"type":"string",
+							"title":"team_id"
+						},
+						"space_id":{
+							"type":"string",
+							"title":"space_id"
+						},
+						"folder_id":{
+							"type":"string",
+							"title":"folder_id"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"clickup",
+				"resourceVersion":11091,
+				"connectionId":"67b0442665d0907dc7f5d402",
+				"resourceName":"clickup_get_folder_details",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_SJrNt-1",
-			"id":"_r9B3R",
-			"index":0,
+			"id":"n_PMBca",
+			"index":2,
+			"inputs":{
+				"team_id":"{{ n_FMhFy.outputs.team_id }}",
+				"folder_id":"{{ n_FMhFy.outputs.folder_id }}",
+				"space_id":"{{ n_FMhFy.outputs.space_id }}"
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"cacheKey":"{{ n_FMhFy.outputs.folder_id }}",
+					"enabled":true,
+					"timeToLive":"60",
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"ClickUp",
+			"title":"Get folder details",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2095,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_SJrNt-1",
+			"id":"n_XIoD3",
+			"index":3,
+			"inputs":{
+				"result":{
+					"result":"{{ n_PMBca.outputs.name }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +196,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
