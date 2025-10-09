@@ -18,12 +18,19 @@
 			"skip":false,
 			"toNodeId":"_QHsWm",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"_QHsWm",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_EtRjs",
+			"type":"next"
 		}
 	],
 	"id":"68e77d4dd322c64a05e1e6e0",
 	"lastModifiedBy":33,
 	"lcName":"test",
-	"modifiedTime":1760003422030,
+	"modifiedTime":1760009574209,
 	"name":"test",
 	"nodes":[
 		{
@@ -52,6 +59,11 @@
 			"type":"START"
 		},
 		{
+			"additional":{
+				"xsdSchemaConfig":{
+					"root":{}
+				}
+			},
 			"context":{
 				"appName":"custom_http_application",
 				"resourceVersion":2033,
@@ -70,10 +82,11 @@
 				"requestTimeoutInSecs":-1,
 				"httpMethod":"POST",
 				"body":{
-					"routineLoadName":"ROUTINE_LOAD_ENTITY_testkrisbash",
+					"query":"SHOW ROUTINE LOAD FOR ROUTINE_LOAD_ENTITY_testkrisbash;",
 					"reportGroup":"PLATFORM",
 					"properties":{
-						"maxErrorNum":"120"
+						"max_batch_interval":"15",
+						"max_batch_rows":"500000"
 					}
 				},
 				"sslVerify":true,
@@ -84,9 +97,9 @@
 					"type":"object",
 					"additionalProperties":false,
 					"properties":{
-						"routineLoadName":{
+						"query":{
 							"type":"string",
-							"title":"routineLoadName"
+							"title":"query"
 						},
 						"reportGroup":{
 							"type":"string",
@@ -95,22 +108,29 @@
 						"properties":{
 							"type":"object",
 							"properties":{
+								"max_error_number":{
+									"type":"string",
+									"title":"max_error_number"
+								},
+								"desired_concurrent_number":{
+									"type":"string",
+									"title":"desired_concurrent_number"
+								},
 								"max_batch_interval":{
 									"type":"string",
-									"title":"max_batch_interval"
+									"title":"Max Batch Interval"
 								},
 								"max_batch_rows":{
 									"type":"string",
-									"title":"max_batch_rows"
-								},
-								"maxErrorNum":{
-									"type":"string",
-									"title":"max_error_number"
+									"title":"Max Batch Rows"
 								}
 							},
 							"title":"properties",
 							"additionalProperties":false,
-							"required":[]
+							"required":[
+								"max_batch_interval",
+								"max_batch_rows"
+							]
 						}
 					}
 				},
@@ -125,7 +145,7 @@
 				"authType":"CUSTOM",
 				"requestContentType":"application/json"
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Custom HTTP Application",
 			"title":"Execute REST Request",
 			"type":"ACTION"
@@ -149,7 +169,7 @@
 				"requestTimeoutInSecs":-1,
 				"httpMethod":"POST",
 				"body":{
-					"sql":"SHOW ROUTINE LOAD FOR ROUTINE_LOAD_ENTITY_testkrisbash"
+					"sql":"SHOW ROUTINE LOAD FOR ROUTINE_LOAD_ENTITY_testkrisbash;"
 				},
 				"connectionType":"DIRECT",
 				"sslVerify":false,
@@ -302,9 +322,31 @@
 				"ignoreTrailingSlashes":false,
 				"certificateType":"CERT_STRING"
 			},
-			"skip":true,
+			"skip":false,
 			"subTitle":"Routine Load for Table",
 			"title":"Execute REST request",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":765,
+				"resourceName":"analytics_by_unifyapps_execute_update",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_jdzZr-1",
+			"id":"n_EtRjs",
+			"index":4,
+			"inputs":{
+				"query":"alter routine load for ROUTINE_LOAD_ENTITY_testkrisbash properties(\"max_batch_interval\" = \"10\");",
+				"group":"PLATFORM"
+			},
+			"skip":false,
+			"subTitle":"Analytics by UnifyApps",
+			"title":"Execute Analytics SQL Update Query",
 			"type":"ACTION"
 		}
 	],
@@ -325,5 +367,5 @@
 	"tags":[
 		
 	],
-	"version":4
+	"version":6
 }
