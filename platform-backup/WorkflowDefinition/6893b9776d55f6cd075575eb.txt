@@ -5,12 +5,12 @@
 	"createdTime":1756369498410,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759899553930,
+		"deployedAt":1760012218918,
 		"deployedBy":1,
-		"deployedDefinitionId":"68e5efa1c3590c5f32da6b8f",
+		"deployedDefinitionId":"68e7a7ba2821d8204eb33342",
 		"status":"DEPLOYED",
-		"version":75,
-		"workflowVersion":87
+		"version":78,
+		"workflowVersion":90
 	},
 	"edges":[
 		{
@@ -43,13 +43,6 @@
 		},
 		{
 			"fromNodeId":"n_XFWSq",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_D0bob",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_D0bob",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_Rig8e",
@@ -103,9 +96,9 @@
 		]
 	},
 	"id":"6893b9776d55f6cd075575eb",
-	"lastModifiedBy":1,
+	"lastModifiedBy":-1,
 	"lcName":"fetch trending documents ",
-	"modifiedTime":1759920849027,
+	"modifiedTime":1760024930421,
 	"name":"Fetch Trending Documents ",
 	"nodes":[
 		{
@@ -491,56 +484,6 @@
 		},
 		{
 			"context":{
-				"appName":"code_by_unifyapps",
-				"resourceVersion":526,
-				"resourceName":"code_by_unifyapps_groovy",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_0kAlG@_AXVrP-1@l",
-			"id":"n_D0bob",
-			"index":6,
-			"inputs":{
-				"output":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[],
-					"properties":{
-						"filter":{
-							"type":"object",
-							"properties":{},
-							"additionalProperties":false,
-							"title":"Filter"
-						}
-					}
-				},
-				"input":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[],
-					"properties":{
-						"assetId":{
-							"type":"string",
-							"title":"Asset Id"
-						}
-					}
-				},
-				"code":"def uniqueEntityId\n\nif(binding.hasVariable('assetId')){\n    uniqueEntityId = assetId\n}\n\ndef filters = [\n    op: 'AND',\n    values: [\n        [\n            op: 'OR',\n            values: [\n                [\n                    field: 'properties.uniqueEntityId',\n                    op: 'EQUAL',\n                    values: [uniqueEntityId] \n                ],\n                [\n                    field: 'properties.uniqueEntityId.__raw__',\n                    op: 'EQUAL',\n                    values: [uniqueEntityId]\n                ]\n            ]\n        ]\n    ]\n]\n\nreturn ['filter': filters]\n",
-				"compile_static":false,
-				"captureStdOutput":false,
-				"parameters":{
-					"assetId":"{{ n_0kAlG.outputs.item.columns._pr_assetId }}"
-				}
-			},
-			"skip":false,
-			"subTitle":"Code by UnifyApps",
-			"title":"Execute Groovy code",
-			"type":"ACTION"
-		},
-		{
-			"context":{
 				"appName":"storage_by_unifyapps",
 				"resourceVersion":180,
 				"resourceName":"storage_by_unifyapps_fetch_records",
@@ -551,13 +494,15 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_0kAlG@_AXVrP-1@l",
 			"id":"n_Rig8e",
-			"index":7,
+			"index":6,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
 						{
-							"resolvedFilter":{
-								"filter":"{{ n_D0bob.outputs.result.filter }}"
+							"property":"properties.uniqueEntityId.__raw__",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"{{ n_0kAlG.outputs.item.columns._pr_assetId }}"
 							}
 						}
 					],
@@ -592,7 +537,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_0kAlG@_AXVrP-1@l",
 			"id":"n_QTDa6",
-			"index":8,
+			"index":7,
 			"inputs":{
 				"automationId":"685914facb8d060a8c7b1481",
 				"runtimeConnections":{},
@@ -619,15 +564,13 @@
 			},
 			"debug":false,
 			"dirty":false,
-			"fallbackMode":"CONTINUE",
+			"fallbackMode":"STOP",
 			"groupId":"n_0kAlG@_AXVrP-1@l",
 			"id":"n_jMonc",
-			"index":9,
+			"index":8,
 			"inputs":{
 				"output":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"citation":{
 							"type":"object",
@@ -635,15 +578,12 @@
 							"additionalProperties":false,
 							"title":"Citation"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
 				"input":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"author",
-						"mimeType"
-					],
 					"properties":{
 						"citation":{
 							"type":"object",
@@ -659,67 +599,18 @@
 							"type":"string",
 							"title":"Mime Type"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[
+						"author",
+						"mimeType"
+					]
 				},
-				"code":"if(binding.hasVariable('citation')) {\n  if(binding.hasVariable('author')) {\n  citation.put(\"author\", author)\n  }\n  if(citation.get(\"fileType\")!= null) {\n    citation.put(\"mimeType\", citation.get(\"fileType\"))\n    if(citation.get(\"knowledgeSourceType\") == null)\n     citation.put(\"knowledgeSourceType\", \"FILE\")\n  }\n}\n\nreturn [\"citation\": citation]",
 				"compile_static":false,
-				"captureStdOutput":false,
+				"code":"if(binding.hasVariable('citation')) {\n  if(binding.hasVariable('author')) {\n  citation.put(\"author\", author)\n  }\n  if(citation.get(\"fileType\")!= null) {\n    citation.put(\"mimeType\", citation.get(\"fileType\"))\n    if(citation.get(\"knowledgeSourceType\") == null)\n     citation.put(\"knowledgeSourceType\", \"FILE\")\n  }\n}\n\nreturn [\"citation\": citation]",
 				"parameters":{
 					"citation":"{{ n_QTDa6.outputs.citationData[0] }}",
 					"author":"{{ n_Rig8e.outputs.properties.authorEmail }}"
-				}
-			},
-			"options":{
-				"bulkheadConfig":{
-					"enabled":false,
-					"global":false
-				},
-				"businessHoursConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"cacheConfig":{
-					"enabled":false,
-					"usagePolicy":"ALWAYS"
-				},
-				"circuitBreakerConfig":{
-					"enabled":false
-				},
-				"disableLogging":false,
-				"enabledForReExecution":false,
-				"hookConfig":{
-					"enabled":false,
-					"postHooks":[
-						
-					],
-					"preHooks":[
-						
-					]
-				},
-				"logConfig":{
-					"enabled":false,
-					"logPolicies":[
-						
-					]
-				},
-				"rateLimitConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"retryConfig":{
-					"backOffFactor":null,
-					"captureRetries":false,
-					"enabled":false
-				},
-				"stepError":"CONTINUE",
-				"telemetryConfig":{
-					"enableTelemetry":false,
-					"metricConfigs":[
-						
-					]
-				},
-				"timeoutConfig":{
-					"enabled":false
 				}
 			},
 			"skip":false,
@@ -736,67 +627,14 @@
 			},
 			"debug":false,
 			"dirty":false,
-			"fallbackMode":"CONTINUE",
+			"fallbackMode":"STOP",
 			"groupId":"n_0kAlG@_AXVrP-1@l",
 			"id":"_6bGU7",
-			"index":10,
+			"index":9,
 			"inputs":{
 				"itemToAdd":"{{ n_jMonc.outputs.result.citation }}",
 				"insertLocation":"END",
 				"listName":"{{ n_yj7WR.outputs.items[0] }}"
-			},
-			"options":{
-				"bulkheadConfig":{
-					"enabled":false,
-					"global":false
-				},
-				"businessHoursConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"cacheConfig":{
-					"enabled":false,
-					"usagePolicy":"ALWAYS"
-				},
-				"circuitBreakerConfig":{
-					"enabled":false
-				},
-				"disableLogging":false,
-				"enabledForReExecution":false,
-				"hookConfig":{
-					"enabled":false,
-					"postHooks":[
-						
-					],
-					"preHooks":[
-						
-					]
-				},
-				"logConfig":{
-					"enabled":false,
-					"logPolicies":[
-						
-					]
-				},
-				"rateLimitConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"retryConfig":{
-					"backOffFactor":null,
-					"captureRetries":false,
-					"enabled":false
-				},
-				"stepError":"CONTINUE",
-				"telemetryConfig":{
-					"enableTelemetry":false,
-					"metricConfigs":[
-						
-					]
-				},
-				"timeoutConfig":{
-					"enabled":false
-				}
 			},
 			"skip":false,
 			"subTitle":"Variable by UnifyApps",
@@ -815,7 +653,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_AXVrP-1",
 			"id":"n_8SIqF",
-			"index":11,
+			"index":10,
 			"inputs":{
 				"result":{
 					"documents":{
@@ -836,14 +674,14 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
 		}
 	},
 	"standard":true,
-	"version":88
+	"version":91
 }
