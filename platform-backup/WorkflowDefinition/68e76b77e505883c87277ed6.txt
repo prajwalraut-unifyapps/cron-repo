@@ -6,46 +6,154 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_Qjf3O",
+			"fromNodeId":"n_h1K6h",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_HEvGB",
+			"toNodeId":"n_aBA8R",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_aBA8R",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_sxkWA",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_sxkWA",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_MwSoy",
 			"type":"next"
 		}
 	],
 	"id":"68e76b77e505883c87277ed6",
 	"lastModifiedBy":1,
 	"lcName":"utilitybyunifyappslocaljihaosgywv",
-	"modifiedTime":1759996791843,
+	"modifiedTime":1759996813194,
 	"name":"UtilityByUnifyAppsLocaljiHAOSGYwV",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2092,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Qjf3O-1",
-			"id":"_Qjf3O",
-			"index":0,
+			"id":"n_h1K6h",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"r":{
+							"type":"string",
+							"title":"r"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"a":{
+							"type":"string",
+							"title":"a"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"files_by_unifyapps",
+				"resourceVersion":1968,
+				"resourceName":"files_by_unifyapps_upload_file",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Qjf3O-1",
-			"id":"_HEvGB",
-			"index":0,
+			"id":"n_aBA8R",
+			"index":2,
+			"inputs":{
+				"fileName":"test",
+				"url":"https://example-files.online-convert.com/document/txt/example.txt",
+				"option":"url"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Files by UnifyApps",
+			"title":"Upload file",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":2786,
+				"resourceName":"utility_by_unifyapps_zip_list_of_files",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Qjf3O-1",
+			"id":"n_sxkWA",
+			"index":3,
+			"inputs":{
+				"filesDetails":[
+					"{{ n_aBA8R.outputs.fileDetails }}",
+					"{{ n_aBA8R.outputs.fileDetails }}"
+				],
+				"skipEmpty":false,
+				"format":"zip",
+				"includeDirectoryPath":false,
+				"skipMissing":false
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Zip list of files",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2096,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Qjf3O-1",
+			"id":"n_MwSoy",
+			"index":4,
+			"inputs":{
+				"result":{
+					"r":"{{ n_sxkWA.outputs.compressedFileDetails }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +167,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
