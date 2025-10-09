@@ -5,12 +5,12 @@
 	"createdTime":1758885291510,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759948448705,
+		"deployedAt":1760024906196,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68e6aea0a991021e3f9aad21",
+		"deployedDefinitionId":"68e7d94ae4155b0b0f30af00",
 		"status":"DEPLOYED",
-		"version":23,
-		"workflowVersion":43
+		"version":25,
+		"workflowVersion":45
 	},
 	"edges":[
 		{
@@ -192,9 +192,9 @@
 		]
 	},
 	"id":"68c5cb457414d8337e4b2ed5",
-	"lastModifiedBy":1,
+	"lastModifiedBy":0,
 	"lcName":"[mcp server] request processor for agent mcp",
-	"modifiedTime":1760012213414,
+	"modifiedTime":1760034428369,
 	"name":"[MCP Server] Request Processor for Agent MCP",
 	"nodes":[
 		{
@@ -226,7 +226,9 @@
 				"setup":{
 					"type":"object",
 					"additionalProperties":false,
-					"required":[],
+					"required":[
+						"request"
+					],
 					"properties":{
 						"mcpServerId":{
 							"type":"string",
@@ -335,17 +337,22 @@
 						"agentId":{
 							"type":"string",
 							"title":"Agent Id"
+						},
+						"mcpRequestId":{
+							"type":"integer",
+							"title":"Mcp Request Id"
 						}
 					}
 				},
-				"code":"def result = [:]\nresult['mcpServerId'] = binding.hasVariable(\"mcpServerId\");\nresult['agentId'] = agentId\nresult['sessionId'] = sessionId\nif (binding.hasVariable('params')) {\n  result['params'] = params\n} else {\n  result['params'] = [:]\n}\n\nreturn ['params': result]",
 				"compile_static":false,
+				"code":"def result = [:]\nresult['mcpServerId'] = binding.hasVariable(\"mcpServerId\");\nresult['agentId'] = agentId\nresult['sessionId'] = sessionId\nresult['mcpRequestId'] = binding.hasVariable('mcpRequestId') ? mcpRequestId : null\nif (binding.hasVariable('params')) {\n  result['params'] = params\n} else {\n  result['params'] = [:]\n}\n\nreturn ['params': result]",
 				"captureStdOutput":false,
 				"parameters":{
 					"params":"{{ Oksdr.outputs.request.params }}",
 					"mcpServerId":"{{ Oksdr.outputs.mcpServerId }}",
 					"sessionId":"{{ Oksdr.outputs.sessionId }}",
-					"agentId":"{{ Oksdr.outputs.agentId }}"
+					"agentId":"{{ Oksdr.outputs.agentId }}",
+					"mcpRequestId":"{{ Oksdr.outputs.request.id }}"
 				}
 			},
 			"skip":false,
@@ -537,7 +544,7 @@
 			"id":"n_JNUta",
 			"index":7,
 			"inputs":{
-				"automationId":"{{ aOLnu.outputs.properties.agentAutomationid }}",
+				"automationId":"{{ aOLnu.outputs.properties.agentAutomationId }}",
 				"synchronous":true,
 				"triggerWorkflowWithRuntimeType":"DEFAULT",
 				"version":"-1",
@@ -585,7 +592,7 @@
 			"id":"Kmfgi",
 			"index":9,
 			"inputs":{
-				"automationId":"{{ aOLnu.outputs.properties.agentAutomationid }}",
+				"automationId":"{{ aOLnu.outputs.properties.agentAutomationId }}",
 				"synchronous":true,
 				"triggerWorkflowWithRuntimeType":"DEFAULT",
 				"version":"-1",
@@ -1123,9 +1130,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -1135,5 +1142,5 @@
 	"tags":[
 		"MCP Server"
 	],
-	"version":44
+	"version":46
 }
