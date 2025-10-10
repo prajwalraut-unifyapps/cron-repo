@@ -4,6 +4,14 @@
 	],
 	"createdTime":1760096215411,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760096408321,
+		"deployedBy":1,
+		"deployedDefinitionId":"68e8f097aa15f745769cc93d",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":1
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_TLC0m",
@@ -16,26 +24,41 @@
 			"fromNodeId":"n_Sig5V",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_nT6mA",
+			"toNodeId":"n_c3r6j",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_nT6mA",
+			"fromNodeId":"n_c3r6j",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_x8A1u",
+			"toNodeId":"_Z1zB9",
 			"type":"loop"
 		},
 		{
-			"fromNodeId":"n_x8A1u",
+			"fromNodeId":"_Z1zB9",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_nFalF",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"_nFalF",
 			"name":"loopback",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_nT6mA",
+			"toNodeId":"_Z1zB9",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_nT6mA",
+			"fromNodeId":"_Z1zB9",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_c3r6j",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_c3r6j",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_s6bcG",
@@ -45,7 +68,7 @@
 	"id":"68e8efd7aa15f745769cbd7a",
 	"lastModifiedBy":1,
 	"lcName":"for loop testing",
-	"modifiedTime":1760096404133,
+	"modifiedTime":1760097047810,
 	"name":"for loop testing",
 	"nodes":[
 		{
@@ -82,7 +105,10 @@
 					],
 					"properties":{
 						"A":{
-							"type":"integer",
+							"type":"array",
+							"items":{
+								"type":"integer"
+							},
 							"title":"A"
 						}
 					}
@@ -154,6 +180,29 @@
 		{
 			"context":{
 				"appName":"loop",
+				"resourceVersion":140,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_KGJTb-1",
+			"id":"n_c3r6j",
+			"index":3,
+			"inputs":{
+				"repeatMode":"SINGLE",
+				"listSource":"{{ n_TLC0m.outputs.A }}",
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"loop",
 				"resourceVersion":97,
 				"resourceName":"loop_for",
 				"type":"APPLICATION"
@@ -161,12 +210,12 @@
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"_KGJTb-1",
-			"id":"n_nT6mA",
-			"index":3,
+			"groupId":"n_c3r6j@_KGJTb-1@l",
+			"id":"_Z1zB9",
+			"index":4,
 			"inputs":{
 				"start":0,
-				"limit":"{{ n_TLC0m.outputs.A }}",
+				"limit":"{{ n_c3r6j.outputs.item }}",
 				"step":1,
 				"captureIterations":true
 			},
@@ -185,9 +234,9 @@
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"n_nT6mA@_KGJTb-1@l",
-			"id":"n_x8A1u",
-			"index":4,
+			"groupId":"_Z1zB9@n_c3r6j@_KGJTb-1@l@l",
+			"id":"_nFalF",
+			"index":5,
 			"inputs":{
 				"variables":[
 					{
@@ -213,7 +262,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KGJTb-1",
 			"id":"n_s6bcG",
-			"index":5,
+			"index":6,
 			"inputs":{
 				"result":{
 					"counter":"{{ n_Sig5V.outputs.counter }}"
@@ -242,5 +291,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
