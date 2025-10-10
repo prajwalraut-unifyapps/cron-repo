@@ -4,6 +4,14 @@
 	],
 	"createdTime":1760074102893,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760087127909,
+		"deployedBy":4446,
+		"deployedDefinitionId":"68e8cc55d4b9bb6927934832",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":7
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_aIgAq",
@@ -16,7 +24,7 @@
 	"id":"68e89976ead2df5803b5f70e",
 	"lastModifiedBy":4446,
 	"lcName":"test",
-	"modifiedTime":1760087123382,
+	"modifiedTime":1760087169591,
 	"name":"test",
 	"nodes":[
 		{
@@ -59,7 +67,7 @@
 			"index":2,
 			"inputs":{
 				"configurationMode":"MANUAL",
-				"code":"#!/usr/bin/env python3\nimport os, sys, time, redis, re\n\nHOST = os.getenv(\"REDIS_HOST\", \"redis-sentinel.unifyapps-infra.svc.cluster.local\")\nPORT = int(os.getenv(\"REDIS_PORT\", \"26379\"))\nAUTH = os.getenv(\"REDIS_AUTH\", \"\") or None\nTLS  = (os.getenv(\"REDIS_TLS\", \"false\").lower() == \"true\")\nPATTERN = os.getenv(\"REDIS_PATTERN\", \"*WORKFLOW_VARIABLES*\")\nCUTOFF  = int(os.getenv(\"CUTOFF_SECS\", str(12*3600)))   # default 1 month\nBATCH   = int(os.getenv(\"BATCH\", \"1000\"))                  # pipeline batch size\nCOUNT   = int(os.getenv(\"SCAN_COUNT\", \"5000\"))             # SCAN COUNT hint\nDO_DELETE = os.getenv(\"DO_DELETE\", \"1\") == \"1\"\n\noid_re = re.compile(r\"/([0-9a-fA-F]{24})/\")\n\nr = redis.Redis(host=HOST, port=PORT, password=AUTH, ssl=TLS, socket_keepalive=True)\nnow = int(time.time())\ncursor = 0\nseen = 0\ndeleted = 0\n\ndef unlink_many(keys):\n    if not keys: return 0\n    pipe = r.pipeline(transaction=False)\n    for k in keys: pipe.unlink(k)\n    res = pipe.execute()\n    return sum(1 for x in res if x)\n\nto_delete = []\nwhile True:\n    cursor, keys = r.scan(cursor=cursor, match=PATTERN, count=COUNT)\n    for k in keys:\n        seen += 1\n        if seen % 10000 == 0:\n            print(f\"Scanned {seen} keys, deleted {deleted}\", file=sys.stderr)\n            now = int(time.time())\n        key = k.decode() if isinstance(k, bytes) else k\n        m = oid_re.search(key)\n        if not m:\n            continue\n        ts_hex = m.group(1)[:8]\n        try:\n            ts = int(ts_hex, 16)\n        except ValueError:\n            continue\n        if ts <= now and (now - ts) >= CUTOFF:\n            if DO_DELETE:\n                to_delete.append(key)\n                if len(to_delete) >= BATCH:\n                    deleted += unlink_many(to_delete)\n                    to_delete.clear()\n            else:\n                print(f\"WOULD delete {key} (oid_ts={time.strftime('%Y-%m-%d %H:%M:%S%z', time.localtime(ts))})\")\n    if cursor == 0:\n        break\n\nif DO_DELETE and to_delete:\n    deleted += unlink_many(to_delete)\n\nprint(f\"Finished. Scanned {seen} keys. Deleted {deleted}.\", file=sys.stderr)\n\n\n# export REDIS_HOST='localhost'\n# export REDIS_TLS=false\n# export REDIS_PATTERN='*WORKFLOW_VARIABLES*'\n# export CUTOFF_SECS=$((2*7*24*3600))\n# export DO_DELETE=0\n# python3 fast_cleanup.py",
+				"code":"#!/usr/bin/env python3\nimport os, sys, time, redis, re\n\nHOST = os.getenv(\"REDIS_HOST\", \"redis-sentinel.unifyapps-infra.svc.cluster.local\")\nPORT = int(os.getenv(\"REDIS_PORT\", \"26379\"))\nAUTH = os.getenv(\"REDIS_AUTH\", \"\") or None\nTLS  = (os.getenv(\"REDIS_TLS\", \"false\").lower() == \"true\")\nPATTERN = os.getenv(\"REDIS_PATTERN\", \"*WORKFLOW_VARIABLES*\")\nCUTOFF  = int(os.getenv(\"CUTOFF_SECS\", str(12*3600)))   # default 1 month\nBATCH   = int(os.getenv(\"BATCH\", \"1000\"))                  # pipeline batch size\nCOUNT   = int(os.getenv(\"SCAN_COUNT\", \"5000\"))             # SCAN COUNT hint\nDO_DELETE = os.getenv(\"DO_DELETE\", \"1\") == \"1\"\n\noid_re = re.compile(r\"/([0-9a-fA-F]{24})/\")\n\nr = redis.Redis(host=HOST, port=PORT, password=AUTH, ssl=TLS, socket_keepalive=True)\nnow = int(time.time())\ncursor = 0\nseen = 0\ndeleted = 0\n\ndef unlink_many(keys):\n    if not keys: return 0\n    pipe = r.pipeline(transaction=False)\n    for k in keys: pipe.unlink(k)\n    res = pipe.execute()\n    return sum(1 for x in res if x)\n\nto_delete = []\nwhile True:\n    cursor, keys = r.scan(cursor=cursor, match=PATTERN, count=COUNT)\n    for k in keys:\n        seen += 1\n        if seen % 10000 == 0:\n            print(f\"Scanned {seen} keys, deleted {deleted}\", file=sys.stderr)\n            now = int(time.time())\n        key = k.decode() if isinstance(k, bytes) else k\n        m = oid_re.search(key)\n        if not m:\n            continue\n        ts_hex = m.group(1)[:8]\n        try:\n            ts = int(ts_hex, 16)\n        except ValueError:\n            continue\n        if ts <= now and (now - ts) >= CUTOFF:\n            if DO_DELETE:\n                to_delete.append(key)\n                if len(to_delete) >= BATCH:\n                    deleted += unlink_many(to_delete)\n                    to_delete.clear()\n            else:\n                print(f\"WOULD delete {key} (oid_ts={time.strftime('%Y-%m-%d %H:%M:%S%z', time.localtime(ts))})\")\n    if cursor == 0:\n        break\n\nif DO_DELETE and to_delete:\n    deleted += unlink_many(to_delete)\n\nprint(f\"Finished. Scanned {seen} keys. Deleted {deleted}.\", file=sys.stderr)\n\nresult = {\n    \"seen\": seen,\n    \"deleted\": deleted\n}\n\n# export REDIS_HOST='localhost'\n# export REDIS_TLS=false\n# export REDIS_PATTERN='*WORKFLOW_VARIABLES*'\n# export CUTOFF_SECS=$((2*7*24*3600))\n# export DO_DELETE=0\n# python3 fast_cleanup.py",
 				"imports":[
 					"redis"
 				],
@@ -90,5 +98,5 @@
 	"tags":[
 		
 	],
-	"version":7
+	"version":8
 }
