@@ -1,6 +1,6 @@
 {
 	"appsUsed":[
-		
+		"openai"
 	],
 	"createdTime":1760093263364,
 	"deleted":false,
@@ -9,14 +9,28 @@
 			"fromNodeId":"_ejOD4",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_msL1E",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_msL1E",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_u5g76",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_u5g76",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"_zdNf0",
 			"type":"next"
 		}
 	],
 	"id":"68e8e44fe1b2de1ff5b5dd07",
-	"lastModifiedBy":43498,
+	"lastModifiedBy":170477,
 	"lcName":"scdafv",
-	"modifiedTime":1760093263364,
+	"modifiedTime":1760094644597,
 	"name":"scdafv",
 	"nodes":[
 		{
@@ -25,7 +39,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_ejOD4-1",
 			"id":"_ejOD4",
-			"index":0,
+			"index":1,
 			"skip":false,
 			"title":"Select a trigger event",
 			"trigger":{
@@ -34,18 +48,84 @@
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"openai",
+				"resourceVersion":268,
+				"connectionId":"68d39f2dd2b48567b3840df4",
+				"resourceName":"openai_create_completion",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_ejOD4-1",
+			"id":"n_msL1E",
+			"index":2,
+			"inputs":{
+				"messages":{
+					"items":{
+						"role":"user",
+						"content":"here is the content \n\ncontent - I am seriously concerned on the delay of this request\n\nThis is a message of a user .\n\nFor this message find me the sentiment of the user\n\n\nGive the output in the follwing json format \n\n{\n\"sentiment\" : \"negative\"\n}"
+					},
+					"ua:type":"mappedArray"
+				},
+				"model":"gpt-4o-mini"
+			},
+			"skip":false,
+			"subTitle":"OpenAI",
+			"title":"Chat completion",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":1056,
+				"resourceName":"utility_by_unifyapps_to_json_object",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_ejOD4-1",
+			"id":"n_u5g76",
+			"index":3,
+			"inputs":{
+				"jsonSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"sentiment"
+					],
+					"properties":{
+						"sentiment":{
+							"type":"string",
+							"title":"Sentiment"
+						}
+					}
+				},
+				"jsonString":"{{ n_msL1E.outputs.choices[0].message.content }}"
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Deserialise string to JSON object",
+			"type":"ACTION"
+		},
+		{
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_ejOD4-1",
 			"id":"_zdNf0",
-			"index":0,
+			"index":4,
 			"skip":false,
 			"title":"Select an app and action",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":43498,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +139,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
