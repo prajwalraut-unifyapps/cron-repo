@@ -1,51 +1,193 @@
 {
 	"appsUsed":[
-		
+		"okta"
 	],
 	"createdTime":1760078042172,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_Z8FR1",
+			"fromNodeId":"n_mJUYj",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_DxOw3",
+			"toNodeId":"n_e0tLB",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_e0tLB",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_zJmCR",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_zJmCR",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_7nPqc",
 			"type":"next"
 		}
 	],
 	"id":"68e8a8daa60a6719e42c8712",
 	"lastModifiedBy":1,
 	"lcName":"bhb",
-	"modifiedTime":1760078042172,
+	"modifiedTime":1760078243388,
 	"name":"bhb",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":137,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Z8FR1-1",
-			"id":"_Z8FR1",
-			"index":0,
+			"id":"n_mJUYj",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"okta",
+				"resourceVersion":8134,
+				"connectionId":"684a876170c6204c5e99e896",
+				"resourceName":"okta_get_user_by_id",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Z8FR1-1",
-			"id":"_DxOw3",
-			"index":0,
+			"id":"n_e0tLB",
+			"index":2,
+			"inputs":{
+				"userId":"00uud0dp1eK2E1wYA697"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Okta",
+			"title":"Get user by ID",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2108,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Z8FR1-1",
+			"id":"n_zJmCR",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"obj":{
+							"type":"object",
+							"properties":{
+								"message":{
+									"type":"string",
+									"title":"message"
+								},
+								"email":{
+									"type":"string",
+									"title":"Email"
+								}
+							},
+							"additionalProperties":false,
+							"title":"Obj",
+							"required":[]
+						}
+					},
+					"required":[
+						"obj"
+					]
+				}
+			},
+			"inputs":{
+				"obj":{
+					"message":"The message sent by user is {{ n_e0tLB.outputs.profile.firstName }}",
+					"email":"{{ n_e0tLB.outputs.profile.email }}"
+				}
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"obj":{
+							"type":"object",
+							"properties":{
+								"message":{
+									"type":"string",
+									"title":"message"
+								},
+								"email":{
+									"type":"string",
+									"title":"Email"
+								}
+							},
+							"additionalProperties":false,
+							"title":"Obj",
+							"required":[]
+						}
+					},
+					"required":[
+						"obj"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":2978,
+				"resourceName":"utility_by_unifyapps_resolve_value",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Z8FR1-1",
+			"id":"n_7nPqc",
+			"index":4,
+			"inputs":{
+				"input":"{{ n_zJmCR.outputs.obj }}"
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Resolve Output Value",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +201,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
