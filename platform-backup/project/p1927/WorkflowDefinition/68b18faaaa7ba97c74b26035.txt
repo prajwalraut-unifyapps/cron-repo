@@ -29,9 +29,9 @@
 		}
 	],
 	"id":"68b18faaaa7ba97c74b26035",
-	"lastModifiedBy":103171,
+	"lastModifiedBy":39713,
 	"lcName":"[virtu-rpa-billparameteruploadfn]bp_merge_json",
-	"modifiedTime":1759003470490,
+	"modifiedTime":1760076229930,
 	"name":"[virtu-rpa-billparameteruploadfn]bp_merge_json",
 	"nodes":[
 		{
@@ -111,7 +111,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_WR3cU-1",
 			"id":"n_MtFer",
@@ -119,6 +119,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"result":{
 							"type":"object",
@@ -126,13 +128,12 @@
 							"additionalProperties":false,
 							"title":"Result"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"configurationMode":"MANUAL",
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"readExcel":{
 							"type":"object",
@@ -146,13 +147,13 @@
 							"additionalProperties":false,
 							"title":"Bill Data New"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"configurationMode":"MANUAL",
 				"code":"import json\nimport logging\n\nbill_data_old = readExcel['BPData']\nlogging.info('Python HTTP trigger function processed a request.')\n\nbill_para_new_list = []\n\nfor old in bill_data_old:\n    for new in bill_data_new:\n        if int(old['Bill Rate Key']) == new['billRateEntryId']:\n            bill_para_new_details = {\"Allocation ID\": str(new['assignmentId']), \"Project Role ID\": str(new['projectRoleId']), \"Version\": str(new['version'])}\n            old.update(bill_para_new_details)\n            bill_para_new_list.append(old)\nbp_final_json = json.dumps(bill_para_new_list)    \nresult = bp_final_json",
 				"isAsync":false,
 				"python_version":"3.12",
+				"captureStdOutput":false,
 				"parameters":{
 					"readExcel":"{{ n_J60Pq.outputs.body.readExcel }}",
 					"bill_data_new":"{{ n_J60Pq.outputs.body.BpDetails }}"
@@ -208,5 +209,5 @@
 	"tags":[
 		
 	],
-	"version":3
+	"version":4
 }
