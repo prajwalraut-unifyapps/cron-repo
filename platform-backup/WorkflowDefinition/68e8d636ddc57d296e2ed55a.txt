@@ -23,7 +23,7 @@
 	"id":"68e8d636ddc57d296e2ed55a",
 	"lastModifiedBy":1,
 	"lcName":"test",
-	"modifiedTime":1760089692140,
+	"modifiedTime":1760090005334,
 	"name":"test",
 	"nodes":[
 		{
@@ -38,7 +38,58 @@
 			"groupId":"_GBtO6-1",
 			"id":"n_ONQET",
 			"index":1,
-			"inputs":{},
+			"inputs":{
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"aiAgentId":{
+							"type":"string",
+							"title":"aiAgentId"
+						},
+						"caseId":{
+							"type":"string",
+							"title":"caseId"
+						},
+						"chartType":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"chartType"
+						},
+						"columnData":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"columnData"
+						},
+						"hasMoreData":{
+							"type":"boolean",
+							"title":"hasMoreData"
+						},
+						"rowData":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"Month":{
+										"type":"string",
+										"title":"Month"
+									},
+									"Sales":{
+										"type":"number",
+										"title":"Sales"
+									}
+								},
+								"additionalProperties":false
+							},
+							"title":"rowData"
+						}
+					}
+				}
+			},
 			"skip":false,
 			"subTitle":"Callable",
 			"title":"Trigger via automation",
@@ -48,6 +99,16 @@
 			"type":"START"
 		},
 		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.parameters.caseId",
+					"root.parameters.aiAgentId",
+					"root.parameters.chartType.source",
+					"root.parameters.chartType.ua:type",
+					"root.parameters.chartType.items",
+					"root.parameters.hasMoreData"
+				]
+			},
 			"context":{
 				"appName":"callables",
 				"resourceVersion":418,
@@ -65,7 +126,26 @@
 				"runtimeConnections":{},
 				"synchronous":false,
 				"version":"-1",
-				"parameters":{}
+				"parameters":{
+					"caseId":"{{ n_ONQET.outputs.caseId }}",
+					"aiAgentId":"{{ n_ONQET.outputs.aiAgentId }}",
+					"hasMoreData":"{{ n_ONQET.outputs.hasMoreData }}",
+					"chartType":{
+						"source":"{{ n_ONQET.outputs.chartType }}",
+						"ua:type":"mappedArray",
+						"items":"{{ n_ONQET.outputs.chartType[0] }}"
+					},
+					"rowData":{
+						"source":"{{ n_ONQET.outputs.rowData }}",
+						"ua:type":"mappedArray",
+						"items":"{{ n_ONQET.outputs.rowData[0] }}"
+					},
+					"columnData":{
+						"source":"{{ n_ONQET.outputs.columnData }}",
+						"ua:type":"mappedArray",
+						"items":"{{ n_ONQET.outputs.columnData[0] }}"
+					}
+				}
 			},
 			"skip":false,
 			"subTitle":"Callable",
@@ -111,5 +191,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
