@@ -1,16 +1,17 @@
 {
 	"appsUsed":[
-		"insider"
+		"insider",
+		"storage_by_unifyapps"
 	],
 	"createdTime":1760076324817,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760076501726,
-		"deployedBy":44104,
-		"deployedDefinitionId":"68e8a2d54b25513cf10f0b40",
+		"deployedAt":1760092258548,
+		"deployedBy":1866,
+		"deployedDefinitionId":"68e8e062e1b2de1ff5b5c926",
 		"status":"DEPLOYED",
-		"version":2,
-		"workflowVersion":2
+		"version":3,
+		"workflowVersion":4
 	},
 	"edges":[
 		{
@@ -24,6 +25,13 @@
 			"fromNodeId":"n_NYqdQ",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_Kypkk",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Kypkk",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_1qzeA",
 			"type":"next"
 		}
@@ -31,7 +39,7 @@
 	"id":"68e8a2244b25513cf10f09bf",
 	"lastModifiedBy":1866,
 	"lcName":"test webhook runtime",
-	"modifiedTime":1760092256847,
+	"modifiedTime":1760093277438,
 	"name":"test webhook runtime",
 	"nodes":[
 		{
@@ -66,19 +74,56 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_hLQan-1",
 			"id":"n_NYqdQ",
 			"index":2,
 			"inputs":{
-				"code":"return [\"execId\" : execId, \"hostName\":com.unifyapps.infra.utils.EnvUtils.getHostName()]",
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"hostName"
+					],
+					"properties":{
+						"hostName":{
+							"type":"string",
+							"title":"Host Name"
+						}
+					}
+				},
+				"code":"return [\"hostName\":com.unifyapps.infra.utils.EnvUtils.getHostName()]",
 				"compile_static":false,
 				"captureStdOutput":false
 			},
 			"skip":false,
 			"subTitle":"Code by UnifyApps",
 			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":4545,
+				"resourceName":"storage_by_unifyapps_create_record",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_hLQan-1",
+			"id":"n_Kypkk",
+			"index":3,
+			"inputs":{
+				"writeThroughSessionVariables":false,
+				"object_type":"66d187ae7c203d4d9907a74b",
+				"skipIfBlank":false,
+				"record":"{{ n_NYqdQ.outputs.result }}"
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Create record",
 			"type":"ACTION"
 		},
 		{
@@ -90,7 +135,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_hLQan-1",
 			"id":"n_1qzeA",
-			"index":3,
+			"index":4,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -114,5 +159,5 @@
 	"tags":[
 		
 	],
-	"version":4
+	"version":5
 }
