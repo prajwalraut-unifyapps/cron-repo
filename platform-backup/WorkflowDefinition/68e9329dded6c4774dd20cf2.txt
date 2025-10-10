@@ -1,6 +1,6 @@
 {
 	"appsUsed":[
-		
+		"custom_http_application"
 	],
 	"createdTime":1760113309230,
 	"deleted":false,
@@ -25,12 +25,34 @@
 			"skip":false,
 			"toNodeId":"n_9xECc",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_9xECc",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_NCjA7",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_NCjA7",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8QnCw",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_8QnCw",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_NCjA7",
+			"type":"next"
 		}
 	],
 	"id":"68e9329dded6c4774dd20cf2",
 	"lastModifiedBy":45011,
 	"lcName":"analyse changesets",
-	"modifiedTime":1760115375271,
+	"modifiedTime":1760115447230,
 	"name":"analyse changesets",
 	"nodes":[
 		{
@@ -446,6 +468,114 @@
 			"subTitle":"Code by UnifyApps",
 			"title":"Execute Groovy code",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":865,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_RFpri-1",
+			"id":"n_NCjA7",
+			"index":5,
+			"inputs":{
+				"repeatMode":"SINGLE",
+				"listSource":"{{ n_9xECc.outputs.result.items }}",
+				"captureIterations":false
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"custom_http_application",
+				"resourceVersion":2039,
+				"connectionId":"68e9366d93b7232ca4979d24",
+				"resourceName":"custom_http_application_execute",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_NCjA7@_RFpri-1@l",
+			"id":"n_8QnCw",
+			"index":6,
+			"inputs":{
+				"path":"/api/changeset/{{ n_NCjA7.outputs.item.changesetId }}",
+				"responseSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"assetDetails":{
+							"type":"object",
+							"properties":{},
+							"title":"assetDetails",
+							"additionalProperties":false,
+							"required":[]
+						},
+						"environmentIds":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"environmentIds"
+						},
+						"id":{
+							"type":"string",
+							"title":"id"
+						},
+						"name":{
+							"type":"string",
+							"title":"name"
+						},
+						"password":{
+							"type":"string",
+							"title":"password"
+						},
+						"status":{
+							"type":"string",
+							"title":"status"
+						},
+						"statusReason":{
+							"type":"string",
+							"title":"statusReason"
+						},
+						"type":{
+							"type":"string",
+							"title":"type"
+						},
+						"version":{
+							"type":"integer",
+							"title":"version"
+						}
+					}
+				},
+				"baseUrl":"https://qa.unifyapps.com",
+				"httpVersion":"HTTP_2",
+				"responseContentType":"application/json",
+				"isAsync":false,
+				"headersList":[
+					{
+						"key":"Cookie",
+						"value":"__UNIFYAPPS_GARBAGE_CONSTANT__Z29vZCBsdWNrIQ=="
+					}
+				],
+				"requestTimeoutInSecs":-1,
+				"authType":"CUSTOM",
+				"httpMethod":"GET",
+				"requestContentType":"application/json",
+				"sslVerify":true
+			},
+			"skip":false,
+			"subTitle":"Custom HTTP Application",
+			"title":"Execute REST Request",
+			"type":"ACTION"
 		}
 	],
 	"ownerUserId":45011,
@@ -465,5 +595,5 @@
 	"tags":[
 		
 	],
-	"version":3
+	"version":4
 }
