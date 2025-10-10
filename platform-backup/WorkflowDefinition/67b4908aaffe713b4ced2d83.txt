@@ -5,12 +5,12 @@
 	"createdTime":1747000736022,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760039469142,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68e8122de4155b0b0f32369d",
+		"deployedAt":1760102486922,
+		"deployedBy":1,
+		"deployedDefinitionId":"68e90856aa15f745769e1716",
 		"status":"DEPLOYED",
-		"version":98,
-		"workflowVersion":124
+		"version":102,
+		"workflowVersion":129
 	},
 	"edges":[
 		{
@@ -141,10 +141,17 @@
 			"type":"next"
 		},
 		{
+			"fromNodeId":"_3Ymme",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_UYeLm",
+			"type":"next"
+		},
+		{
 			"fromNodeId":"ZzW5K",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_AhBg6",
+			"toNodeId":"n_UYeLm",
 			"type":"next"
 		},
 		{
@@ -152,39 +159,34 @@
 			"name":"no",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_AhBg6",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"_AhBg6",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_40NgC",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_40NgC",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_P46DY",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"_3Ymme",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_CvMDZ",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_P46DY",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_CvMDZ",
+			"toNodeId":"n_UYeLm",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"DLqxP",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_UYeLm",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_UYeLm",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_5FOAF",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"_5FOAF",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_CvMDZ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_UYeLm",
 			"name":"no",
 			"priority":0,
 			"skip":false,
@@ -337,9 +339,9 @@
 		]
 	},
 	"id":"67b4908aaffe713b4ced2d83",
-	"lastModifiedBy":0,
+	"lastModifiedBy":-1,
 	"lcName":"stream content",
-	"modifiedTime":1760039852215,
+	"modifiedTime":1760117647900,
 	"name":"Stream content",
 	"nodes":[
 		{
@@ -1003,6 +1005,57 @@
 			"type":"ACTION"
 		},
 		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":442,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"CGqMR-1",
+			"id":"n_UYeLm",
+			"index":17,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ UdOSt.outputs.eventType }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"message_end"
+						}
+					},
+					{
+						"property":"{{ UdOSt.outputs.eventType }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"CLARIFICATION_FROM_USER"
+						}
+					},
+					{
+						"property":"{{ UdOSt.outputs.eventType }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"stream_completed"
+						}
+					},
+					{
+						"property":"{{ UdOSt.outputs.eventType }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"PUBLISH_INTERFACE_WAIT_FOR_USER_INPUT"
+						}
+					}
+				],
+				"operator":"OR"
+			},
+			"skip":false,
+			"subTitle":"message_end",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
 			"additional":{
 				"visibleOptionalFields":[
 					"root.updateFields.items.fieldName",
@@ -1018,9 +1071,9 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"DLqxP@5xhIJ@CGqMR-1@n@y",
-			"id":"_AhBg6",
-			"index":17,
+			"groupId":"n_UYeLm@CGqMR-1@y",
+			"id":"_5FOAF",
+			"index":18,
 			"inputs":{
 				"recordId":"{{ UdOSt.outputs.caseId }}",
 				"writeThroughSessionVariables":false,
@@ -1048,66 +1101,6 @@
 		},
 		{
 			"context":{
-				"appName":"code_by_unifyapps",
-				"resourceVersion":488,
-				"resourceName":"code_by_unifyapps_groovy",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"DLqxP@5xhIJ@CGqMR-1@n@y",
-			"id":"n_40NgC",
-			"index":18,
-			"inputs":{
-				"output":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[],
-					"properties":{
-						"payload":{
-							"type":"object",
-							"properties":{},
-							"additionalProperties":false,
-							"title":"Payload"
-						}
-					}
-				},
-				"code":"return [ 'payload': [\n  \"responseGenerationStatus\": \"completed\"\n] ]",
-				"compile_static":false,
-				"captureStdOutput":false
-			},
-			"skip":false,
-			"subTitle":"mqtt payload",
-			"title":"Execute Groovy code",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"chat_by_unifyapps",
-				"resourceVersion":482,
-				"resourceName":"chat_by_unifyapps_send_message",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"DLqxP@5xhIJ@CGqMR-1@n@y",
-			"id":"n_P46DY",
-			"index":19,
-			"inputs":{
-				"payload":{
-					"additional":"{{ n_40NgC.outputs.result.payload }}"
-				},
-				"topic":"case_{{ UdOSt.outputs.caseId }}"
-			},
-			"skip":false,
-			"subTitle":"Chat by UnifyApps",
-			"title":"Send message",
-			"type":"ACTION"
-		},
-		{
-			"context":{
 				"appName":"if_else",
 				"resourceVersion":441,
 				"resourceName":"if_else_condition",
@@ -1118,7 +1111,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CGqMR-1",
 			"id":"n_CvMDZ",
-			"index":20,
+			"index":19,
 			"inputs":{
 				"filters":[
 					{
@@ -1148,7 +1141,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_CvMDZ@CGqMR-1@y",
 			"id":"n_b3smu",
-			"index":21,
+			"index":20,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1235,7 +1228,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_CvMDZ@CGqMR-1@y",
 			"id":"n_HjpDd",
-			"index":22,
+			"index":21,
 			"inputs":{
 				"filters":[
 					{
@@ -1265,7 +1258,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_HjpDd@n_CvMDZ@CGqMR-1@y@y",
 			"id":"n_ce3Fu",
-			"index":23,
+			"index":22,
 			"inputs":{
 				"automationId":"67a48d37f8f1744841dabb63",
 				"runtimeConnections":{},
@@ -1292,7 +1285,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_HjpDd@n_CvMDZ@CGqMR-1@y@y",
 			"id":"n_DSBNX",
-			"index":24,
+			"index":23,
 			"inputs":{
 				"filters":[
 					{
@@ -1322,7 +1315,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_DSBNX@n_HjpDd@n_CvMDZ@CGqMR-1@y@y@n",
 			"id":"_zDe3X",
-			"index":25,
+			"index":24,
 			"inputs":{
 				"automationId":"67a31b86addac8605df79166",
 				"runtimeConnections":{},
@@ -1353,7 +1346,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_DSBNX@n_HjpDd@n_CvMDZ@CGqMR-1@y@y@n",
 			"id":"n_GFrRh",
-			"index":26,
+			"index":25,
 			"inputs":{
 				"variables":[
 					{
@@ -1391,7 +1384,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_DSBNX@n_HjpDd@n_CvMDZ@CGqMR-1@y@y@n",
 			"id":"QV4MH",
-			"index":27,
+			"index":26,
 			"inputs":{
 				"numberOfRecordsToUpdate":"MULTIPLE",
 				"triggerInputCondition":{
@@ -1451,7 +1444,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_HjpDd@n_CvMDZ@CGqMR-1@y@n",
 			"id":"LM5jC",
-			"index":28,
+			"index":27,
 			"inputs":{
 				"object_type":"e_ai_agent_conversation_state",
 				"includeRoleMappings":false,
@@ -1477,7 +1470,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_HjpDd@n_CvMDZ@CGqMR-1@y@n",
 			"id":"xk94J",
-			"index":29,
+			"index":28,
 			"inputs":{
 				"filters":[
 					{
@@ -1506,7 +1499,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"xk94J@n_HjpDd@n_CvMDZ@CGqMR-1@y@n@n",
 			"id":"_wteED",
-			"index":30,
+			"index":29,
 			"inputs":{
 				"automationId":"67a31b86addac8605df79166",
 				"runtimeConnections":{},
@@ -1537,7 +1530,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"xk94J@n_HjpDd@n_CvMDZ@CGqMR-1@y@n@n",
 			"id":"_WdXHr",
-			"index":31,
+			"index":30,
 			"inputs":{
 				"variables":[
 					{
@@ -1575,7 +1568,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"xk94J@n_HjpDd@n_CvMDZ@CGqMR-1@y@n@n",
 			"id":"_tdRYR",
-			"index":32,
+			"index":31,
 			"inputs":{
 				"numberOfRecordsToUpdate":"MULTIPLE",
 				"triggerInputCondition":{
@@ -1648,7 +1641,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CGqMR-1",
 			"id":"DLbDb",
-			"index":33,
+			"index":32,
 			"inputs":{
 				"automation_id":"67b7748b4372d31da7c2e130",
 				"with_signal_id":false,
@@ -1690,7 +1683,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CGqMR-1",
 			"id":"UWCkX",
-			"index":34,
+			"index":33,
 			"inputs":{
 				"result":{
 					"success":"true"
@@ -1720,5 +1713,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":125
+	"version":131
 }
