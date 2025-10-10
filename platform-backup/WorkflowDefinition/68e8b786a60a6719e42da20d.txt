@@ -1,51 +1,232 @@
 {
 	"appsUsed":[
-		
+		"okta"
 	],
 	"createdTime":1760081798374,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_mIBdJ",
+			"fromNodeId":"n_i63H3",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_2seaA",
+			"toNodeId":"n_YI1EN",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_YI1EN",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_hqKrv",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_hqKrv",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_wjvQS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_wjvQS",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_egHT2",
 			"type":"next"
 		}
 	],
 	"id":"68e8b786a60a6719e42da20d",
 	"lastModifiedBy":1,
 	"lcName":"utilitybyunifyappslocalfduxnozzfk",
-	"modifiedTime":1760081798374,
+	"modifiedTime":1760081822166,
 	"name":"UtilityByUnifyAppsLocalFduXNoZZFK",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2196,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_mIBdJ-1",
-			"id":"_mIBdJ",
-			"index":0,
+			"id":"n_i63H3",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"r":{
+							"type":"string",
+							"title":"r"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"a":{
+							"type":"string",
+							"title":"a"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"okta",
+				"resourceVersion":8134,
+				"connectionId":"684a876170c6204c5e99e896",
+				"resourceName":"okta_get_user_by_id",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_mIBdJ-1",
-			"id":"_2seaA",
-			"index":0,
+			"id":"n_YI1EN",
+			"index":2,
+			"inputs":{
+				"userId":"{{ n_i63H3.outputs.a }}"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Okta",
+			"title":"Get user by ID",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2108,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_mIBdJ-1",
+			"id":"n_hqKrv",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"a":{
+							"type":"object",
+							"properties":{
+								"message":{
+									"type":"string",
+									"title":"message"
+								},
+								"email":{
+									"type":"string",
+									"title":"email"
+								}
+							},
+							"title":"a",
+							"additionalProperties":false
+						}
+					}
+				}
+			},
+			"inputs":{
+				"a":{
+					"message":"The message sent by user is{{ n_YI1EN.outputs.profile.firstName }}",
+					"email":"{{ n_YI1EN.outputs.profile.email }}"
+				}
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"a":{
+							"type":"object",
+							"properties":{
+								"message":{
+									"type":"string",
+									"title":"message"
+								},
+								"email":{
+									"type":"string",
+									"title":"email"
+								}
+							},
+							"title":"a",
+							"additionalProperties":false
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":2978,
+				"resourceName":"utility_by_unifyapps_resolve_value",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_mIBdJ-1",
+			"id":"n_wjvQS",
+			"index":4,
+			"inputs":{
+				"input":"{{ n_hqKrv.outputs.a }}"
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Resolve Output Value",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2199,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_mIBdJ-1",
+			"id":"n_egHT2",
+			"index":5,
+			"inputs":{
+				"result":{
+					"r":"{{ n_wjvQS.outputs.output }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +240,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
