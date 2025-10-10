@@ -29,9 +29,9 @@
 		}
 	],
 	"id":"68b18dac972acf51438d4d4c",
-	"lastModifiedBy":103171,
+	"lastModifiedBy":39713,
 	"lcName":"[virtu-rpa-billparameteruploadfn] bp_merge_alloc",
-	"modifiedTime":1759003508343,
+	"modifiedTime":1760075968769,
 	"name":"[virtu-rpa-billparameteruploadfn] bp_merge_alloc",
 	"nodes":[
 		{
@@ -117,7 +117,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_9baQi-1",
 			"id":"n_26M8p",
@@ -125,6 +125,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"result":{
 							"type":"object",
@@ -132,13 +134,12 @@
 							"additionalProperties":false,
 							"title":"Result"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"configurationMode":"MANUAL",
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"bill_para_data":{
 							"type":"object",
@@ -158,16 +159,16 @@
 							"additionalProperties":false,
 							"title":"Bp Header Uom"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"configurationMode":"MANUAL",
+				"code":"import logging\nimport requests\nimport json\n\n\n\nlogging.info('Python HTTP trigger function processed a request.')\n\nalloc_list = []\n\nfor item in bill_para_data:\n    if item['assignmentId'] is not None:\n        for prj in project_alloc_data:\n            if prj['assignmentId'] == item['assignmentId']:\n                if item['uom'] is None:\n                    item['uom'] = bp_header_uom                    \n                #alloc_details = {\"assignmentName\": prj['assignmentName'], \"allocStartDate\": prj['startDate'], \"allocEndDate\": prj['endDate'], \"AllocBillRate\": prj['billRate'], \"ProjectNumber\" : prj['projectNumber'], \"EmployeeName\": prj['employee']['displayName']}\n                alloc_details = {\"assignmentName\": prj['assignmentName'], \"allocStartDate\": prj['startDate'], \"allocEndDate\": prj['endDate'], \"AllocBillRate\": prj['billRate'], \"ProjectNumber\" : prj['projectNumber'], \"EmployeeName\": prj['employeeName']}\n                item.update(alloc_details)\n                alloc_list.append(item)\nalloc_json = json.dumps(alloc_list)\nresult=alloc_json",
 				"imports":[
 					"requests"
 				],
-				"code":"import logging\nimport requests\nimport json\n\n\n\nlogging.info('Python HTTP trigger function processed a request.')\n\nalloc_list = []\n\nfor item in bill_para_data:\n    if item['assignmentId'] is not None:\n        for prj in project_alloc_data:\n            if prj['assignmentId'] == item['assignmentId']:\n                if item['uom'] is None:\n                    item['uom'] = bp_header_uom                    \n                #alloc_details = {\"assignmentName\": prj['assignmentName'], \"allocStartDate\": prj['startDate'], \"allocEndDate\": prj['endDate'], \"AllocBillRate\": prj['billRate'], \"ProjectNumber\" : prj['projectNumber'], \"EmployeeName\": prj['employee']['displayName']}\n                alloc_details = {\"assignmentName\": prj['assignmentName'], \"allocStartDate\": prj['startDate'], \"allocEndDate\": prj['endDate'], \"AllocBillRate\": prj['billRate'], \"ProjectNumber\" : prj['projectNumber'], \"EmployeeName\": prj['employeeName']}\n                item.update(alloc_details)\n                alloc_list.append(item)\nalloc_json = json.dumps(alloc_list)\nresult=alloc_json",
 				"isAsync":false,
 				"python_version":"3.12",
+				"captureStdOutput":false,
 				"parameters":{
 					"bill_para_data":"{{ n_j0sOo.outputs.body.billingParameter }}",
 					"project_alloc_data":"{{ n_j0sOo.outputs.body.projectAllocation }}",
@@ -187,7 +188,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_9baQi-1",
 			"id":"n_O0tHM",
@@ -224,5 +225,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
