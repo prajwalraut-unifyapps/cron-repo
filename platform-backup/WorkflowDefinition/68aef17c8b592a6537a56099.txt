@@ -5,23 +5,16 @@
 	"createdTime":1756473852285,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760039464812,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68e81228e4155b0b0f32366d",
+		"deployedAt":1760102133729,
+		"deployedBy":1,
+		"deployedDefinitionId":"68e906f5aa15f745769dff7b",
 		"status":"DEPLOYED",
-		"version":57,
-		"workflowVersion":61
+		"version":61,
+		"workflowVersion":66
 	},
 	"edges":[
 		{
 			"fromNodeId":"_c8Wzl",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_zAQ5Q",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_zAQ5Q",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_3BpN2",
@@ -236,9 +229,9 @@
 		]
 	},
 	"id":"68aef17c8b592a6537a56099",
-	"lastModifiedBy":0,
+	"lastModifiedBy":-1,
 	"lcName":"addtext2sqlspecifictools",
-	"modifiedTime":1760039847174,
+	"modifiedTime":1760117643472,
 	"name":"AddText2SqlSpecificTools",
 	"nodes":[
 		{
@@ -260,13 +253,6 @@
 				"setup":{
 					"dynamic":true,
 					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"caseId",
-						"agentId",
-						"task",
-						"instructionsToAppend"
-					],
 					"properties":{
 						"caseId":{
 							"type":"string",
@@ -317,6 +303,13 @@
 								"sqlAndChart1LLMCall_Variant":{
 									"type":"boolean",
 									"title":"sqlAndChart1LLMCall_Variant"
+								},
+								"TableIds2Filter":{
+									"type":"array",
+									"items":{
+										"type":"string"
+									},
+									"title":"Table Ids 2 Filter"
 								}
 							},
 							"type":"object",
@@ -326,7 +319,14 @@
 							"type":"string",
 							"title":"Current Topic"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[
+						"caseId",
+						"agentId",
+						"task",
+						"instructionsToAppend"
+					]
 				}
 			},
 			"skip":false,
@@ -336,40 +336,6 @@
 				"type":"CALLABLE"
 			},
 			"type":"START"
-		},
-		{
-			"context":{
-				"appName":"variable_by_unifyapps",
-				"resourceVersion":0,
-				"resourceName":"variable_by_unifyapps_get_session_variables",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"kLPU3-1",
-			"id":"n_zAQ5Q",
-			"index":2,
-			"inputs":{
-				"variableSchema":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[],
-					"properties":{
-						"tableIds":{
-							"type":"array",
-							"items":{
-								"type":"string"
-							},
-							"title":"Table Ids"
-						}
-					}
-				}
-			},
-			"skip":false,
-			"subTitle":"Variable by UnifyApps",
-			"title":"Get Session Variables",
-			"type":"ACTION"
 		},
 		{
 			"context":{
@@ -383,7 +349,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"kLPU3-1",
 			"id":"n_3BpN2",
-			"index":3,
+			"index":2,
 			"inputs":{
 				"automationId":"67a48d37f8f1744841dabb63",
 				"runtimeConnections":{},
@@ -410,7 +376,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"kLPU3-1",
 			"id":"_gbOeH",
-			"index":4,
+			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -681,7 +647,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"kLPU3-1",
 			"id":"n_GPwxo",
-			"index":5,
+			"index":4,
 			"inputs":{
 				"filters":[
 					{
@@ -711,7 +677,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_GPwxo@kLPU3-1@y",
 			"id":"n_UjFpo",
-			"index":6,
+			"index":5,
 			"inputs":{
 				"filters":[
 					{
@@ -757,22 +723,21 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_UjFpo@n_GPwxo@kLPU3-1@y@y",
 			"id":"_IB8QW",
-			"index":7,
+			"index":6,
 			"inputs":{
 				"output":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"userQuery":{
 							"type":"string",
 							"title":"User Query"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
 				"input":{
 					"type":"object",
-					"additionalProperties":false,
 					"properties":{
 						"messages":{
 							"type":"array",
@@ -795,11 +760,11 @@
 							},
 							"title":"messages"
 						}
-					}
+					},
+					"additionalProperties":false
 				},
-				"code":"def lastUserText = ''\nmessages.reverse().find { msg ->\n    if (msg.role == 'user') {\n        def textMsg = msg.content.findAll { it.type == 'text' && it.text?.trim() }\n        if (textMsg) {\n            lastUserText = textMsg.last().text\n            return true\n        }\n    }\n    return false\n}\nreturn [\"userQuery\": lastUserText ?: ' ']",
 				"compile_static":false,
-				"captureStdOutput":false,
+				"code":"def lastUserText = ''\nmessages.reverse().find { msg ->\n    if (msg.role == 'user') {\n        def textMsg = msg.content.findAll { it.type == 'text' && it.text?.trim() }\n        if (textMsg) {\n            lastUserText = textMsg.last().text\n            return true\n        }\n    }\n    return false\n}\nreturn [\"userQuery\": lastUserText ?: ' ']",
 				"parameters":{
 					"messages":{
 						"source":"{{ _c8Wzl.outputs.messages  }}",
@@ -831,7 +796,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_UjFpo@n_GPwxo@kLPU3-1@y@y",
 			"id":"_WGzPg",
-			"index":8,
+			"index":7,
 			"inputs":{
 				"automationId":"68712e940efd02597703f2f3",
 				"runtimeConnections":{},
@@ -842,9 +807,9 @@
 					"aiAgentId":"{{ _c8Wzl.outputs.agentId  }}",
 					"userQuery":"{{ _IB8QW.outputs.result.userQuery }}",
 					"tableIds":{
-						"source":"{{ n_zAQ5Q.outputs.tableIds }}",
+						"source":"{{ _c8Wzl.outputs.textToSQLSettings.TableIds2Filter }}",
 						"ua:type":"mappedArray",
-						"items":"{{ n_zAQ5Q.outputs.tableIds[0] }}"
+						"items":"{{ _c8Wzl.outputs.textToSQLSettings.TableIds2Filter[0] }}"
 					}
 				}
 			},
@@ -858,7 +823,7 @@
 					"waitForNextWindow":false
 				},
 				"cacheConfig":{
-					"cacheKey":"{{ _c8Wzl.outputs.caseId }}_{{ _c8Wzl.outputs.agentId }}_{{ _IB8QW.outputs.result.userQuery }}",
+					"cacheKey":"{{ xInCD.outputs.caseId }}_{{ xInCD.outputs.agentId }}_{{ _IB8QW.outputs.result.userQuery }}",
 					"enabled":true,
 					"timeToLive":"300",
 					"usagePolicy":"ALWAYS"
@@ -900,9 +865,6 @@
 					"metricConfigs":[
 						
 					]
-				},
-				"timeoutConfig":{
-					"enabled":false
 				}
 			},
 			"skip":false,
@@ -922,7 +884,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_UjFpo@n_GPwxo@kLPU3-1@y@y",
 			"id":"_nDTzv",
-			"index":9,
+			"index":8,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -984,7 +946,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_UjFpo@n_GPwxo@kLPU3-1@y@y",
 			"id":"_eeBEI",
-			"index":10,
+			"index":9,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1097,7 +1059,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_UjFpo@n_GPwxo@kLPU3-1@y@y",
 			"id":"_QkPnp",
-			"index":11,
+			"index":10,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1175,7 +1137,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_UjFpo@n_GPwxo@kLPU3-1@y@y",
 			"id":"_bleiT",
-			"index":12,
+			"index":11,
 			"inputs":{
 				"filters":[
 					{
@@ -1211,22 +1173,21 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bleiT@n_UjFpo@n_GPwxo@kLPU3-1@y@y@y",
 			"id":"_jvSeh",
-			"index":13,
+			"index":12,
 			"inputs":{
 				"input_schema":{
-					"knowledge_instructions":"{{ _WGzPg.outputs.knowledgeInstructions }}",
-					"platformName":"{{ _WGzPg.outputs.platform }}",
-					"chartInstructionsGivenByUser":"{{ n_3BpN2.outputs.properties.responseGenerationSettings.chartGenerationSettings.chartInstructions }}",
 					"few_shot_examples":{
 						"source":"{{ _WGzPg.outputs.fewShotExamples }}",
 						"ua:type":"mappedArray",
 						"items":"{{ _WGzPg.outputs.fewShotExamples[0] }}"
 					},
+					"knowledge_instructions":"{{ _WGzPg.outputs.knowledgeInstructions }}",
 					"database_metadata":{
 						"source":"{{ _QkPnp.outputs.result.metadata }}",
 						"ua:type":"mappedArray",
 						"items":"{{ _QkPnp.outputs.result.metadata[0] }}"
-					}
+					},
+					"platformName":"{{ _WGzPg.outputs.platform }}"
 				},
 				"template_id":"e_687e1e8e92a1010506733efd"
 			},
@@ -1252,12 +1213,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bleiT@n_UjFpo@n_GPwxo@kLPU3-1@y@y@y",
 			"id":"_GwOep",
-			"index":14,
+			"index":13,
 			"inputs":{
 				"output":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"executeSQLAdditional":{
 							"type":"object",
@@ -1271,12 +1230,12 @@
 							"additionalProperties":false,
 							"title":"executeSQL_ChartInputSchema"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
 				"input":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"platformName":{
 							"type":"string",
@@ -1289,11 +1248,12 @@
 							},
 							"title":"Metadata"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
-				"code":"return [\n  \n    executeSQL_ChartInputSchema: [ \n      \"type\": \"object\", \n      \"properties\": [ \n        \"sql_query\": [ \n          \"type\": \"string\", \n          \"description\": \"The generated SQL query in MySQL dialect for StarRocks, following all specified instructions.\" \n        ], \n        \"toBlocks\": [ \n          \"type\": \"object\", \n          \"properties\": [ \"yAxisLabel\": [ \"type\": \"string\", \"description\": \"Label for the Y-axis.\" ], \"columns\": [ \"type\": \"array\", \"items\": [ \"type\": \"object\", \"properties\": [ \"label\": [ \"type\": \"string\", \"description\": \"Label for the column.\" ], \"type\": [ \"type\": \"string\", \"description\": \"Data type of the column.\" ], \"value\": [ \"type\": \"string\", \"description\": \"Value for the column.\" ], \"currencyCode\": [ \"type\": \"string\", \"description\": \"Currency code if applicable.\" ] ], \"required\": [\"label\", \"type\", \"value\"] ] ], \"series\": [ \"type\": \"array\", \"items\": [ \"type\": \"object\", \"properties\": [ \"label\": [ \"type\": \"string\", \"description\": \"Series label.\" ], \"key\": [ \"type\": \"string\", \"description\": \"Series key.\" ] ], \"required\": [\"label\", \"key\"] ] ], \"blockType\": [ \"type\": \"string\", \"description\": \"Type of chart block.\" ], \"xAxisValue\": [ \"type\": \"string\", \"description\": \"Value for the X-axis.\" ], \"chartType\": [ \"type\": \"string\", \"description\": \"Type of the chart.\" ], \"xAxisLabel\": [ \"type\": \"string\", \"description\": \"Label for the X-axis.\" ], \"groupBy\": [ \"type\": \"string\", \"description\": \"Group by field.\" ], \"yAxis\": [ \"type\": \"object\", \"properties\": [ \"series\": [ \"type\": \"array\", \"items\": [ \"type\": \"object\", \"properties\": [ \"key\": [ \"type\": \"string\", \"description\": \"Key for the left Y-axis series.\" ], \"label\": [ \"type\": \"string\", \"description\": \"Label for the left Y-axis series.\" ] ], \"required\": [\"key\", \"label\"] ] ] ] ], \"title\": [ \"type\": \"string\", \"description\": \"Title of the chart.\" ] ], \n          \"required\": [\"blockType\", \"title\"]\n        ] \n      ], \n      \"required\": [\"sql_query\", \"toBlocks\"] ]\n  ,\n  \n    executeSQLAdditional: [\n      platformName: platformName,\n      metadata: metadata\n    ]\n  \n]",
 				"compile_static":false,
-				"captureStdOutput":false,
+				"code":"return [\n  \n    executeSQL_ChartInputSchema: [ \n      \"type\": \"object\", \n      \"properties\": [ \n        \"sql_query\": [ \n          \"type\": \"string\", \n          \"description\": \"The generated SQL query in MySQL dialect for StarRocks, following all specified instructions.\" \n        ], \n        \"toBlocks\": [ \n          \"type\": \"object\", \n          \"properties\": [ \"yAxisLabel\": [ \"type\": \"string\", \"description\": \"Label for the Y-axis.\" ], \"columns\": [ \"type\": \"array\", \"items\": [ \"type\": \"object\", \"properties\": [ \"label\": [ \"type\": \"string\", \"description\": \"Label for the column.\" ], \"type\": [ \"type\": \"string\", \"description\": \"Data type of the column.\" ], \"value\": [ \"type\": \"string\", \"description\": \"Value for the column.\" ], \"currencyCode\": [ \"type\": \"string\", \"description\": \"Currency code if applicable.\" ] ], \"required\": [\"label\", \"type\", \"value\"] ] ], \"series\": [ \"type\": \"array\", \"items\": [ \"type\": \"object\", \"properties\": [ \"label\": [ \"type\": \"string\", \"description\": \"Series label.\" ], \"key\": [ \"type\": \"string\", \"description\": \"Series key.\" ] ], \"required\": [\"label\", \"key\"] ] ], \"blockType\": [ \"type\": \"string\", \"description\": \"Type of chart block.\" ], \"xAxisValue\": [ \"type\": \"string\", \"description\": \"Value for the X-axis.\" ], \"chartType\": [ \"type\": \"string\", \"description\": \"Type of the chart.\" ], \"xAxisLabel\": [ \"type\": \"string\", \"description\": \"Label for the X-axis.\" ], \"groupBy\": [ \"type\": \"string\", \"description\": \"Group by field.\" ], \"yAxis\": [ \"type\": \"object\", \"properties\": [ \"series\": [ \"type\": \"array\", \"items\": [ \"type\": \"object\", \"properties\": [ \"key\": [ \"type\": \"string\", \"description\": \"Key for the left Y-axis series.\" ], \"label\": [ \"type\": \"string\", \"description\": \"Label for the left Y-axis series.\" ] ], \"required\": [\"key\", \"label\"] ] ] ] ], \"title\": [ \"type\": \"string\", \"description\": \"Title of the chart.\" ] ], \n          \"required\": [\"blockType\", \"title\"]\n        ] \n      ], \n      \"required\": [\"sql_query\", \"toBlocks\"] ]\n  ,\n  \n    executeSQLAdditional: [\n      platformName: platformName,\n      metadata: metadata\n    ]\n  \n]",
 				"parameters":{
 					"platformName":"{{ _WGzPg.outputs.platform }}",
 					"metadata":{
@@ -1329,7 +1289,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bleiT@n_UjFpo@n_GPwxo@kLPU3-1@y@y@y",
 			"id":"_4JyWp",
-			"index":15,
+			"index":14,
 			"inputs":{
 				"itemToAdd":{
 					"name":"ExecuteSQLTable",
@@ -1363,12 +1323,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bleiT@n_UjFpo@n_GPwxo@kLPU3-1@y@y@n",
 			"id":"_2KAdI",
-			"index":16,
+			"index":15,
 			"inputs":{
 				"output":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"executeSQLInputSchema":{
 							"type":"object",
@@ -1382,12 +1340,12 @@
 							"additionalProperties":false,
 							"title":"Execute SQL Additional"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
 				"input":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"platformName":{
 							"type":"string",
@@ -1400,18 +1358,19 @@
 							},
 							"title":"Metadata"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
-				"code":"return [\n  executeSQLInputSchema: [\n    type: 'object',\n    properties: [\n      sql_query: [\n        type: 'string',\n        description: 'The generated SQL query in MySQL dialect for StarRocks, following all specified instructions.' \n      ]\n    ],\n    required: ['sql_query']\n  ],\n  executeSQLAdditional: [\n    platformName: platformName,\n    metadata: metadata,\n  ]\n]",
 				"compile_static":false,
-				"captureStdOutput":false,
+				"code":"return [\n  executeSQLInputSchema: [\n    type: 'object',\n    properties: [\n      sql_query: [\n        type: 'string',\n        description: 'The generated SQL query in Oracle dialect, following all specified instructions.' \n      ]\n    ],\n    required: ['sql_query']\n  ],\n  executeSQLAdditional: [\n    platformName: platformName,\n    metadata: metadata,\n  ]\n]",
 				"parameters":{
-					"platformName":"{{ _WGzPg.outputs.platform }}",
 					"metadata":{
 						"ua:type":"mappedArray",
 						"source":"{{ _QkPnp.outputs.result.metadata_reduced }}",
 						"items":"{{ _QkPnp.outputs.result.metadata_reduced[0] }}"
-					}
+					},
+					"platformName":"{{ _WGzPg.outputs.platform }}"
 				}
 			},
 			"skip":false,
@@ -1436,7 +1395,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bleiT@n_UjFpo@n_GPwxo@kLPU3-1@y@y@n",
 			"id":"_V5ryj",
-			"index":17,
+			"index":16,
 			"inputs":{
 				"input_schema":{
 					"knowledge_instructions":"{{ _WGzPg.outputs.knowledgeInstructions }}",
@@ -1478,7 +1437,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bleiT@n_UjFpo@n_GPwxo@kLPU3-1@y@y@n",
 			"id":"_Z4UgV",
-			"index":18,
+			"index":17,
 			"inputs":{
 				"itemToAdd":{
 					"name":"ExecuteSQL",
@@ -1507,11 +1466,8 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bleiT@n_UjFpo@n_GPwxo@kLPU3-1@y@y@n",
 			"id":"_P4h61",
-			"index":19,
+			"index":18,
 			"inputs":{
-				"input_schema":{
-					"chartInstructionGivenByUser":"{{ n_3BpN2.outputs.properties.responseGenerationSettings.chartGenerationSettings.chartInstructions }}"
-				},
 				"template_id":"e_6875059d5670883c65304b26"
 			},
 			"skip":false,
@@ -1531,12 +1487,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bleiT@n_UjFpo@n_GPwxo@kLPU3-1@y@y@n",
 			"id":"_hZi9a",
-			"index":20,
+			"index":19,
 			"inputs":{
 				"output":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"generateChartWithBlockToolInputSchema":{
 							"type":"object",
@@ -1544,11 +1498,12 @@
 							"additionalProperties":false,
 							"title":"Generate Chart With Block Tool Input Schema"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
-				"code":"return [\n  generateChartWithBlockToolInputSchema: \n    [\n  \n    type: 'object',\n    properties: [\n          toBlocks: [\n            type: 'object',\n            properties: [\n              yAxisLabel: [\n                type: 'string',\n                description: 'Label for the Y-axis.'\n              ],\n              // ,\n              // data: [\n              //   type: 'object',\n              //   properties: [\n              //     text: [\n              //       type: 'string',\n              //       description: 'Main text data for the chart.'\n              //     ]\n              //   ],\n              //   required: ['text']\n              // ],\n              columns: [\n                type: 'array',\n                items: [\n                  type: 'object',\n                  properties: [\n                    label: [\n                      type: 'string',\n                      description: 'Label for the column.'\n                    ],\n                    type: [\n                      type: 'string',\n                      description: 'Data type of the column.'\n                    ],\n                    value: [\n                      type: 'string',\n                      description: 'Value for the column.'\n                    ],\n                    currencyCode: [\n                      type: 'string',\n                      description: 'Currency code if applicable.'\n                    ]\n                  ],\n                  required: ['label', 'type', 'value']\n                ]\n              ],\n              series: [\n                type: 'array',\n                items: [\n                  type: 'object',\n                  properties: [\n                    label: [\n                      type: 'string',\n                      description: 'Series label.'\n                    ],\n                    key: [\n                      type: 'string',\n                      description: 'Series key.'\n                    ]\n                  ],\n                  required: ['label', 'key']\n                ]\n              ],\n              blockType: [\n                type: 'string',\n                description: 'required field. Type of block to be published, either \"Chart\" or \"Table\".'\n              ],\n              xAxisValue: [\n                type: 'string',\n                description: 'Value for the X-axis.'\n              ],\n              chartType: [\n                type: 'string',\n                description: 'Type of the chart.'\n              ],\n              xAxisLabel: [\n                type: 'string',\n                description: 'Label for the X-axis.'\n              ],\n              groupBy: [\n                type: 'string',\n                description: 'Group by field.'\n              ],\n              yAxis: [\n                type: 'object',\n                properties: [\n                  series: [\n                    type: 'array',\n                    items: [\n                      type: 'object',\n                      properties: [\n                        key: [\n                          type: 'string',\n                          description: 'Key for the left Y-axis series.'\n                        ],\n                        label: [\n                          type: 'string',\n                          description: 'Label for the left Y-axis series.'\n                        ]\n                      ],\n                      required: ['key', 'label']\n                    ]\n                  ]\n                ]\n              ],\n              title: [\n                type: 'string',\n                description: 'Title of the chart.'\n              ]\n            ],\n            required: ['blockType']\n          ],\n          chartId: [\n            type: 'string',\n            description: 'Id of the Chart that needs to be published , these charts would be from the output of ExecuteSQL tool.'\n          ]\n        ],\n        required: ['toBlocks', 'chartId']\n      \n]\n\n  \n]",
 				"compile_static":false,
-				"captureStdOutput":false
+				"code":"return [\n  generateChartWithBlockToolInputSchema: \n    [\n  \n    type: 'object',\n    properties: [\n          toBlocks: [\n            type: 'object',\n            properties: [\n              yAxisLabel: [\n                type: 'string',\n                description: 'Label for the Y-axis.'\n              ],\n              // ,\n              // data: [\n              //   type: 'object',\n              //   properties: [\n              //     text: [\n              //       type: 'string',\n              //       description: 'Main text data for the chart.'\n              //     ]\n              //   ],\n              //   required: ['text']\n              // ],\n              columns: [\n                type: 'array',\n                items: [\n                  type: 'object',\n                  properties: [\n                    label: [\n                      type: 'string',\n                      description: 'Label for the column.'\n                    ],\n                    type: [\n                      type: 'string',\n                      description: 'Data type of the column.'\n                    ],\n                    value: [\n                      type: 'string',\n                      description: 'Value for the column.'\n                    ],\n                    currencyCode: [\n                      type: 'string',\n                      description: 'Currency code if applicable.'\n                    ]\n                  ],\n                  required: ['label', 'type', 'value']\n                ]\n              ],\n              series: [\n                type: 'array',\n                items: [\n                  type: 'object',\n                  properties: [\n                    label: [\n                      type: 'string',\n                      description: 'Series label.'\n                    ],\n                    key: [\n                      type: 'string',\n                      description: 'Series key.'\n                    ]\n                  ],\n                  required: ['label', 'key']\n                ]\n              ],\n              blockType: [\n                type: 'string',\n                description: 'required field. Type of block to be published, either \"Chart\" or \"Table\".'\n              ],\n              xAxisValue: [\n                type: 'string',\n                description: 'Value for the X-axis.'\n              ],\n              chartType: [\n                type: 'string',\n                description: 'Type of the chart.'\n              ],\n              xAxisLabel: [\n                type: 'string',\n                description: 'Label for the X-axis.'\n              ],\n              groupBy: [\n                type: 'string',\n                description: 'Group by field.'\n              ],\n              yAxis: [\n                type: 'object',\n                properties: [\n                  series: [\n                    type: 'array',\n                    items: [\n                      type: 'object',\n                      properties: [\n                        key: [\n                          type: 'string',\n                          description: 'Key for the left Y-axis series.'\n                        ],\n                        label: [\n                          type: 'string',\n                          description: 'Label for the left Y-axis series.'\n                        ]\n                      ],\n                      required: ['key', 'label']\n                    ]\n                  ]\n                ]\n              ],\n              title: [\n                type: 'string',\n                description: 'Title of the chart.'\n              ]\n            ],\n            required: ['blockType']\n          ],\n          chartId: [\n            type: 'string',\n            description: 'Id of the Chart that needs to be published , these charts would be from the output of ExecuteSQL tool.'\n          ]\n        ],\n        required: ['toBlocks', 'chartId']\n      \n]\n\n  \n]"
 			},
 			"skip":false,
 			"subTitle":"GenerateChartsToolInputSchema",
@@ -1576,7 +1531,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bleiT@n_UjFpo@n_GPwxo@kLPU3-1@y@y@n",
 			"id":"_vS5Gv",
-			"index":21,
+			"index":20,
 			"inputs":{
 				"itemToAdd":{
 					"name":"GenerateChartWithBlocks",
@@ -1604,7 +1559,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_GPwxo@kLPU3-1@n",
 			"id":"n_vDh6a",
-			"index":22,
+			"index":21,
 			"inputs":{
 				"filters":[
 					{
@@ -1634,11 +1589,8 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_vDh6a@n_GPwxo@kLPU3-1@n@y",
 			"id":"_0ru1F",
-			"index":23,
+			"index":22,
 			"inputs":{
-				"input_schema":{
-					"chartInstructionGivenByUser":"{{ n_3BpN2.outputs.properties.responseGenerationSettings.chartGenerationSettings.chartInstructions }}"
-				},
 				"template_id":"e_6875059d5670883c65304b26"
 			},
 			"skip":false,
@@ -1658,12 +1610,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_vDh6a@n_GPwxo@kLPU3-1@n@y",
 			"id":"_DPFMv",
-			"index":24,
+			"index":23,
 			"inputs":{
 				"output":{
 					"type":"object",
-					"additionalProperties":false,
-					"required":[],
 					"properties":{
 						"generateChartWithBlockToolInputSchema":{
 							"type":"object",
@@ -1671,11 +1621,12 @@
 							"additionalProperties":false,
 							"title":"Generate Chart With Block Tool Input Schema"
 						}
-					}
+					},
+					"additionalProperties":false,
+					"required":[]
 				},
-				"code":"return [\n  generateChartWithBlockToolInputSchema: \n    [\n  \n    type: 'object',\n    properties: [\n          toBlocks: [\n            type: 'object',\n            properties: [\n              yAxisLabel: [\n                type: 'string',\n                description: 'Label for the Y-axis.'\n              ],\n              // ,\n              // data: [\n              //   type: 'object',\n              //   properties: [\n              //     text: [\n              //       type: 'string',\n              //       description: 'Main text data for the chart.'\n              //     ]\n              //   ],\n              //   required: ['text']\n              // ],\n              columns: [\n                type: 'array',\n                items: [\n                  type: 'object',\n                  properties: [\n                    label: [\n                      type: 'string',\n                      description: 'Label for the column.'\n                    ],\n                    type: [\n                      type: 'string',\n                      description: 'Data type of the column.'\n                    ],\n                    value: [\n                      type: 'string',\n                      description: 'Value for the column.'\n                    ],\n                    currencyCode: [\n                      type: 'string',\n                      description: 'Currency code if applicable.'\n                    ]\n                  ],\n                  required: ['label', 'type', 'value']\n                ]\n              ],\n              series: [\n                type: 'array',\n                items: [\n                  type: 'object',\n                  properties: [\n                    label: [\n                      type: 'string',\n                      description: 'Series label.'\n                    ],\n                    key: [\n                      type: 'string',\n                      description: 'Series key.'\n                    ]\n                  ],\n                  required: ['label', 'key']\n                ]\n              ],\n              blockType: [\n                type: 'string',\n                description: 'Type of block to be published, either \"Chart\" or \"Table\" (Required field).'\n              ],\n              xAxisValue: [\n                type: 'string',\n                description: 'Value for the X-axis.'\n              ],\n              chartType: [\n                type: 'string',\n                description: 'Type of the chart.'\n              ],\n              xAxisLabel: [\n                type: 'string',\n                description: 'Label for the X-axis.'\n              ],\n              groupBy: [\n                type: 'string',\n                description: 'Group by field.'\n              ],\n              yAxis: [\n                type: 'object',\n                properties: [\n                  series: [\n                    type: 'array',\n                    items: [\n                      type: 'object',\n                      properties: [\n                        key: [\n                          type: 'string',\n                          description: 'Key for the left Y-axis series.'\n                        ],\n                        label: [\n                          type: 'string',\n                          description: 'Label for the left Y-axis series.'\n                        ]\n                      ],\n                      required: ['key', 'label']\n                    ]\n                  ]\n                ]\n              ],\n              title: [\n                type: 'string',\n                description: 'Title of the chart.'\n              ]\n            ],\n            required: ['blockType']\n          ],\n          chartId: [\n            type: 'string',\n            description: 'Id of the Chart that needs to be published , these charts would be from the output of ReferFromKnowledgeDDA tool.'\n          ]\n        ],\n        required: ['toBlocks', 'chartId']\n      \n]\n\n  \n]",
 				"compile_static":false,
-				"captureStdOutput":false
+				"code":"return [\n  generateChartWithBlockToolInputSchema: \n    [\n  \n    type: 'object',\n    properties: [\n          toBlocks: [\n            type: 'object',\n            properties: [\n              yAxisLabel: [\n                type: 'string',\n                description: 'Label for the Y-axis.'\n              ],\n              // ,\n              // data: [\n              //   type: 'object',\n              //   properties: [\n              //     text: [\n              //       type: 'string',\n              //       description: 'Main text data for the chart.'\n              //     ]\n              //   ],\n              //   required: ['text']\n              // ],\n              columns: [\n                type: 'array',\n                items: [\n                  type: 'object',\n                  properties: [\n                    label: [\n                      type: 'string',\n                      description: 'Label for the column.'\n                    ],\n                    type: [\n                      type: 'string',\n                      description: 'Data type of the column.'\n                    ],\n                    value: [\n                      type: 'string',\n                      description: 'Value for the column.'\n                    ],\n                    currencyCode: [\n                      type: 'string',\n                      description: 'Currency code if applicable.'\n                    ]\n                  ],\n                  required: ['label', 'type', 'value']\n                ]\n              ],\n              series: [\n                type: 'array',\n                items: [\n                  type: 'object',\n                  properties: [\n                    label: [\n                      type: 'string',\n                      description: 'Series label.'\n                    ],\n                    key: [\n                      type: 'string',\n                      description: 'Series key.'\n                    ]\n                  ],\n                  required: ['label', 'key']\n                ]\n              ],\n              blockType: [\n                type: 'string',\n                description: 'Type of block to be published, either \"Chart\" or \"Table\" (Required field).'\n              ],\n              xAxisValue: [\n                type: 'string',\n                description: 'Value for the X-axis.'\n              ],\n              chartType: [\n                type: 'string',\n                description: 'Type of the chart.'\n              ],\n              xAxisLabel: [\n                type: 'string',\n                description: 'Label for the X-axis.'\n              ],\n              groupBy: [\n                type: 'string',\n                description: 'Group by field.'\n              ],\n              yAxis: [\n                type: 'object',\n                properties: [\n                  series: [\n                    type: 'array',\n                    items: [\n                      type: 'object',\n                      properties: [\n                        key: [\n                          type: 'string',\n                          description: 'Key for the left Y-axis series.'\n                        ],\n                        label: [\n                          type: 'string',\n                          description: 'Label for the left Y-axis series.'\n                        ]\n                      ],\n                      required: ['key', 'label']\n                    ]\n                  ]\n                ]\n              ],\n              title: [\n                type: 'string',\n                description: 'Title of the chart.'\n              ]\n            ],\n            required: ['blockType']\n          ],\n          chartId: [\n            type: 'string',\n            description: 'Id of the Chart that needs to be published , these charts would be from the output of ReferFromKnowledgeDDA tool.'\n          ]\n        ],\n        required: ['toBlocks', 'chartId']\n      \n]\n\n  \n]"
 			},
 			"skip":false,
 			"subTitle":"GenerateChartsToolInputSchema",
@@ -1703,7 +1654,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_vDh6a@n_GPwxo@kLPU3-1@n@y",
 			"id":"_u9Vjr",
-			"index":25,
+			"index":24,
 			"inputs":{
 				"itemToAdd":{
 					"name":"GenerateChartWithBlocks",
@@ -1739,7 +1690,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"kLPU3-1",
 			"id":"_oQno5",
-			"index":26,
+			"index":25,
 			"inputs":{
 				"result":{
 					"tools":{
@@ -1779,5 +1730,5 @@
 	"tags":[
 		
 	],
-	"version":62
+	"version":68
 }
