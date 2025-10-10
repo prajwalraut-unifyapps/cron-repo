@@ -1,72 +1,75 @@
 {
 	"appsUsed":[
-		"sap_rfc"
+		
 	],
 	"createdTime":1760074102893,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"n_tuCaO",
+			"fromNodeId":"n_aIgAq",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_A9GMl",
+			"toNodeId":"n_LOey0",
 			"type":"next"
 		}
 	],
 	"id":"68e89976ead2df5803b5f70e",
-	"lastModifiedBy":687,
+	"lastModifiedBy":4446,
 	"lcName":"test",
-	"modifiedTime":1760075802238,
+	"modifiedTime":1760086446418,
 	"name":"test",
 	"nodes":[
 		{
 			"context":{
-				"appName":"schedule",
-				"resourceVersion":836,
-				"resourceName":"schedule_default"
+				"appName":"webhooks",
+				"resourceVersion":833,
+				"resourceName":"webhooks_default"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_k2kja-1",
-			"id":"n_tuCaO",
+			"id":"n_aIgAq",
 			"index":1,
 			"inputs":{
-				"cron":"INTERVAL",
-				"sequential":false,
-				"interval":15,
-				"frequency":"MINUTES"
+				"request":{
+					"contentType":"application/json"
+				}
 			},
 			"skip":false,
-			"subTitle":"Schedule",
-			"title":"New recurring event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"SCHEDULED"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
 			"context":{
-				"appName":"sap_rfc",
-				"resourceVersion":5904,
-				"connectionId":"687a64a4facc271e5be3a0a9",
-				"resourceName":"sap_rfc_call_rfm",
+				"appName":"code_by_unifyapps",
+				"resourceVersion":932,
+				"resourceName":"code_by_unifyapps_python",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_k2kja-1",
-			"id":"n_A9GMl",
+			"id":"n_LOey0",
 			"index":2,
 			"inputs":{
-				"performAsync":true,
-				"objectSourceResourceName":"sap_rfc_fetch_rfm_output_schema",
-				"objectId":"asdds"
+				"configurationMode":"MANUAL",
+				"code":"#!/usr/bin/env python3\nimport os, sys, time, redis, re\n\nHOST = os.getenv(\"REDIS_HOST\", \"redis-sentinel.unifyapps-infra.svc.cluster.local\")\nPORT = int(os.getenv(\"REDIS_PORT\", \"26379\"))\nAUTH = os.getenv(\"REDIS_AUTH\", \"\") or None\nTLS  = (os.getenv(\"REDIS_TLS\", \"false\").lower() == \"true\")\nPATTERN = os.getenv(\"REDIS_PATTERN\", \"*WORKFLOW_VARIABLES*\")\nCUTOFF  = int(os.getenv(\"CUTOFF_SECS\", str(12*3600)))   # default 1 month\nBATCH   = int(os.getenv(\"BATCH\", \"1000\"))                  # pipeline batch size\nCOUNT   = int(os.getenv(\"SCAN_COUNT\", \"5000\"))             # SCAN COUNT hint\nDO_DELETE = os.getenv(\"DO_DELETE\", \"1\") == \"1\"\n\noid_re = re.compile(r\"/([0-9a-fA-F]{24})/\")\n\nr = redis.Redis(host=HOST, port=PORT, password=AUTH, ssl=TLS, socket_keepalive=True)\nnow = int(time.time())\ncursor = 0\nseen = 0\ndeleted = 0\n\ndef unlink_many(keys):\n    if not keys: return 0\n    pipe = r.pipeline(transaction=False)\n    for k in keys: pipe.unlink(k)\n    res = pipe.execute()\n    return sum(1 for x in res if x)\n\nto_delete = []\nwhile True:\n    cursor, keys = r.scan(cursor=cursor, match=PATTERN, count=COUNT)\n    for k in keys:\n        seen += 1\n        if seen % 10000 == 0:\n            print(f\"Scanned {seen} keys, deleted {deleted}\", file=sys.stderr)\n            now = int(time.time())\n        key = k.decode() if isinstance(k, bytes) else k\n        m = oid_re.search(key)\n        if not m:\n            continue\n        ts_hex = m.group(1)[:8]\n        try:\n            ts = int(ts_hex, 16)\n        except ValueError:\n            continue\n        if ts <= now and (now - ts) >= CUTOFF:\n            if DO_DELETE:\n                to_delete.append(key)\n                if len(to_delete) >= BATCH:\n                    deleted += unlink_many(to_delete)\n                    to_delete.clear()\n            else:\n                print(f\"WOULD delete {key} (oid_ts={time.strftime('%Y-%m-%d %H:%M:%S%z', time.localtime(ts))})\")\n    if cursor == 0:\n        break\n\nif DO_DELETE and to_delete:\n    deleted += unlink_many(to_delete)\n\nprint(f\"Finished. Scanned {seen} keys. Deleted {deleted}.\", file=sys.stderr)\n\n\n# export REDIS_HOST='localhost'\n# export REDIS_TLS=false\n# export REDIS_PATTERN='*WORKFLOW_VARIABLES*'\n# export CUTOFF_SECS=$((2*7*24*3600))\n# export DO_DELETE=0\n# python3 fast_cleanup.py",
+				"imports":[
+					"redis"
+				],
+				"isAsync":false,
+				"python_version":"3.12",
+				"captureStdOutput":true
 			},
 			"skip":false,
-			"subTitle":"SAP RFC",
-			"title":"Call RFM",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Python script",
 			"type":"ACTION"
 		}
 	],
@@ -87,5 +90,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
