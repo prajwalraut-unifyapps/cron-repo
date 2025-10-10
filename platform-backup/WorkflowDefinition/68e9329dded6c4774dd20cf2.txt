@@ -49,7 +49,30 @@
 		},
 		{
 			"fromNodeId":"n_eymUK",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_H8vlJ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_H8vlJ",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_6O5Oe",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_6O5Oe",
 			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_NCjA7",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_H8vlJ",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_NCjA7",
@@ -66,7 +89,7 @@
 	"id":"68e9329dded6c4774dd20cf2",
 	"lastModifiedBy":45011,
 	"lcName":"analyse changesets",
-	"modifiedTime":1760116049898,
+	"modifiedTime":1760116356913,
 	"name":"analyse changesets",
 	"nodes":[
 		{
@@ -608,13 +631,66 @@
 				"variables":[
 					{
 						"source":"{{ n_bai1i.outputs.dr }}",
-						"value":"=IF(TEXT({{ n_8QnCw.outputs.result.status }},\"\")=\"DEPLOYED\", SUM({{ n_bai1i.outputs.dr }},1), {{ n_bai1i.outputs.dr }})"
+						"value":"=IF((=TEXT({{ n_8QnCw.outputs.result.status }},\"\")=\"DEPLOYED\"), =SUM({{ n_bai1i.outputs.dr }},1), {{ n_bai1i.outputs.dr }})"
 					}
 				]
 			},
 			"skip":false,
 			"subTitle":"Variable by UnifyApps",
 			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_NCjA7@_RFpri-1@l",
+			"id":"n_H8vlJ",
+			"index":8,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_8QnCw.outputs.result.status }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"FAILED"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1002,
+				"resourceName":"variable_by_unifyapps_add_item_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_H8vlJ@n_NCjA7@_RFpri-1@l@y",
+			"id":"n_6O5Oe",
+			"index":9,
+			"inputs":{
+				"itemToAdd":"{{ n_8QnCw.outputs.result.statusReason }}",
+				"insertLocation":"END",
+				"listName":"{{ n_E0bY4.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Add item to list",
 			"type":"ACTION"
 		},
 		{
@@ -626,7 +702,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_RFpri-1",
 			"id":"n_ulIAy",
-			"index":8,
+			"index":10,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -650,5 +726,5 @@
 	"tags":[
 		
 	],
-	"version":6
+	"version":7
 }
