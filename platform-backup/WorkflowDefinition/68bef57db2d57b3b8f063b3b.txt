@@ -5,12 +5,12 @@
 	"createdTime":1757705814214,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760039757949,
-		"deployedBy":0,
-		"deployedDefinitionId":"68e8134de4155b0b0f323bb9",
+		"deployedAt":1760099380310,
+		"deployedBy":1,
+		"deployedDefinitionId":"68e8fc33aa15f745769d64a4",
 		"status":"DEPLOYED",
-		"version":46,
-		"workflowVersion":96
+		"version":49,
+		"workflowVersion":100
 	},
 	"edges":[
 		{
@@ -118,9 +118,9 @@
 		]
 	},
 	"id":"68bef57db2d57b3b8f063b3b",
-	"lastModifiedBy":1,
+	"lastModifiedBy":-1,
 	"lcName":"knowledge downloader | onedrive | file",
-	"modifiedTime":1760039946881,
+	"modifiedTime":1760117558443,
 	"name":"Knowledge Downloader | OneDrive | File",
 	"nodes":[
 		{
@@ -608,13 +608,17 @@
 							"type":"string",
 							"title":"Modified Time"
 						},
+						"authorEmail":{
+							"type":"string",
+							"title":"Author Email"
+						},
 						"folder":{
 							"type":"string",
 							"title":"Folder"
 						}
 					}
 				},
-				"code":"def chunkMetadata = [:]\n\nchunkMetadata << (binding.hasVariable('name') && name ? [\"name\": name] : [:])\nchunkMetadata << (binding.hasVariable('mimetype') && mimetype ? [\"mimetype\": mimetype] : [:])\nchunkMetadata << (binding.hasVariable('webViewLink') && webViewLink ? [\"referenceUrl\": webViewLink] : [:])\nchunkMetadata << (binding.hasVariable('size') && size ? [\"size\": size] : [:])\nchunkMetadata << [\"appName\" : \"microsoft_onedrive\"]\nchunkMetadata << (binding.hasVariable('folder') && folder ? [\"folderName\": folder] : [:])\nchunkMetadata << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nchunkMetadata << (binding.hasVariable('creationDateTime') && creationDateTime ? [\"createdTime\": java.time.Instant.parse(creationDateTime).toEpochMilli()] : [:])\nchunkMetadata << (binding.hasVariable('modifiedTime') && modifiedTime ? [\"modifiedTime\": java.time.Instant.parse(modifiedTime).toEpochMilli()] : [:])\n\nreturn [\"chunkMetadata\": chunkMetadata]\n",
+				"code":"def chunkMetadata = [:]\n\nchunkMetadata << (binding.hasVariable('name') && name ? [\"name\": name] : [:])\nchunkMetadata << (binding.hasVariable('mimetype') && mimetype ? [\"mimetype\": mimetype] : [:])\nchunkMetadata << (binding.hasVariable('webViewLink') && webViewLink ? [\"referenceUrl\": webViewLink] : [:])\nchunkMetadata << (binding.hasVariable('size') && size ? [\"size\": size] : [:])\nchunkMetadata << [\"appName\" : \"microsoft_onedrive\"]\nchunkMetadata << (binding.hasVariable('folder') && folder ? [\"folderName\": folder] : [:])\nchunkMetadata << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nchunkMetadata << (binding.hasVariable('authorEmail') && authorEmail ? [\"authorEmail\": authorEmail] : [:])\nchunkMetadata << (binding.hasVariable('creationDateTime') && creationDateTime ? [\"createdTime\": java.time.Instant.parse(creationDateTime).toEpochMilli()] : [:])\nchunkMetadata << (binding.hasVariable('modifiedTime') && modifiedTime ? [\"modifiedTime\": java.time.Instant.parse(modifiedTime).toEpochMilli()] : [:])\n\nreturn [\"chunkMetadata\": chunkMetadata]\n",
 				"compile_static":false,
 				"isAsync":false,
 				"captureStdOutput":false,
@@ -623,9 +627,10 @@
 					"mimetype":"{{ k3HVL.outputs.file.mimeType }}",
 					"webViewLink":"{{ _sTbGo.outputs.path }}",
 					"size":"{{ k3HVL.outputs.size }}",
-					"author":"{{ k3HVL.outputs.createdBy.user.email }}",
+					"author":"{{ k3HVL.outputs.createdBy.user.displayName }}",
 					"creationDateTime":"{{ k3HVL.outputs.createdDateTime }}",
 					"modifiedTime":"{{ k3HVL.outputs.lastModifiedDateTime }}",
+					"authorEmail":"{{ k3HVL.outputs.createdBy.user.email }}",
 					"folder":"{{ k3HVL.outputs.parentReference.path }}"
 				}
 			},
@@ -846,9 +851,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -859,5 +864,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":97
+	"version":102
 }
