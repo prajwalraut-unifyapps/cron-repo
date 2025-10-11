@@ -7,46 +7,183 @@
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_TDzco",
+			"fromNodeId":"n_GejZe",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_wZ5Pm",
+			"toNodeId":"n_y1q8C",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_y1q8C",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_VybzY",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_VybzY",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_y1q8C",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_y1q8C",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_sRHVo",
 			"type":"next"
 		}
 	],
 	"id":"68eaa4cafaa1623699906d08",
 	"lastModifiedBy":1,
 	"lcName":"forloopcaptureiterations_batch11760208012783",
-	"modifiedTime":1760208074097,
+	"modifiedTime":1760208094165,
 	"name":"forLoopCaptureIterations_batch11760208012783",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":138,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_TDzco-1",
-			"id":"_TDzco",
-			"index":0,
+			"id":"n_GejZe",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"name":{
+								"type":"array",
+								"items":{
+									"type":"object",
+									"properties":{},
+									"additionalProperties":false
+								},
+								"title":"name"
+							}
+						},
+						"additionalProperties":false,
+						"required":[
+							"name"
+						]
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":141,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_TDzco-1",
-			"id":"_wZ5Pm",
-			"index":0,
+			"id":"n_y1q8C",
+			"index":2,
+			"inputs":{
+				"repeatMode":"BATCH",
+				"listSource":"{{ n_GejZe.outputs.body.name }}",
+				"captureIterations":true,
+				"batchSize":2
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2185,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_y1q8C@_TDzco-1@l",
+			"id":"n_VybzY",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"a":{
+							"type":"number",
+							"title":"a"
+						}
+					},
+					"required":[
+						"a"
+					]
+				}
+			},
+			"inputs":{
+				"a":"{{ n_y1q8C.outputs.item }}"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"a":{
+							"type":"number",
+							"title":"a"
+						}
+					},
+					"required":[
+						"a"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_TDzco-1",
+			"id":"n_sRHVo",
+			"index":4,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +197,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
