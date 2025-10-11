@@ -1,51 +1,228 @@
 {
 	"appsUsed":[
-		
+		"clickup"
 	],
 	"createdTime":1760161542331,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_KyFow",
+			"fromNodeId":"n_zqqhg",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_EjPwE",
+			"toNodeId":"n_PxdBS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_PxdBS",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_SJzGY",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_SJzGY",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_T6jdd",
 			"type":"next"
 		}
 	],
 	"id":"68e9ef0664af142a5db94a0e",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2tsiilpqarx",
-	"modifiedTime":1760161542331,
+	"modifiedTime":1760161590925,
 	"name":"cacheQA2TSIILpqArX",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2273,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_KyFow-1",
-			"id":"_KyFow",
-			"index":0,
+			"id":"n_zqqhg",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"team_id":{
+							"type":"string",
+							"title":"team_id"
+						},
+						"space_id":{
+							"type":"string",
+							"title":"space_id"
+						},
+						"folder_id":{
+							"type":"string",
+							"title":"folder_id"
+						},
+						"id_two":{
+							"type":"string",
+							"title":"id_two"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":490,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_KyFow-1",
-			"id":"_EjPwE",
-			"index":0,
+			"id":"n_PxdBS",
+			"index":2,
+			"inputs":{
+				"automationId":"68e9eedc64af142a5db9477b",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"team_id":"{{ n_zqqhg.outputs.team_id }}",
+					"space_id":"{{ n_zqqhg.outputs.space_id }}",
+					"folder_id":"{{ n_zqqhg.outputs.folder_id }}"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"clickup",
+				"resourceVersion":11484,
+				"connectionId":"67b0442665d0907dc7f5d402",
+				"resourceName":"clickup_get_folder_details",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_KyFow-1",
+			"id":"n_SJzGY",
+			"index":3,
+			"inputs":{
+				"team_id":"{{ n_zqqhg.outputs.team_id }}",
+				"folder_id":"{{ n_zqqhg.outputs.id_two }}",
+				"space_id":"{{ n_zqqhg.outputs.space_id }}"
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"cacheKey":"{{ n_zqqhg.outputs.id_two }}",
+					"enabled":true,
+					"timeToLive":"60",
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
+			"skip":false,
+			"subTitle":"ClickUp",
+			"title":"Get folder details",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2276,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_KyFow-1",
+			"id":"n_T6jdd",
+			"index":4,
+			"inputs":{
+				"result":{
+					"result":"{{ n_SJzGY.outputs.name }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +236,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
