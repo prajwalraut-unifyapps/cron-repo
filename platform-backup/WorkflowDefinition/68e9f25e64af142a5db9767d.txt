@@ -22,6 +22,22 @@
 			"type":"next"
 		},
 		{
+			"fromNodeId":"n_tmqgt",
+			"name":"success",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_dSRwV",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_tmqgt",
+			"name":"error",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_FbzBO",
+			"type":"error"
+		},
+		{
 			"fromNodeId":"n_0wmLM",
 			"name":"error",
 			"priority":0,
@@ -30,7 +46,14 @@
 			"type":"error"
 		},
 		{
-			"fromNodeId":"n_tmqgt",
+			"fromNodeId":"n_dSRwV",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_YxikF",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_FbzBO",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_YxikF",
@@ -47,7 +70,7 @@
 	"id":"68e9f25e64af142a5db9767d",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2ekryufcurz",
-	"modifiedTime":1760162455730,
+	"modifiedTime":1760162492704,
 	"name":"cacheQA2EKryUfcurZ",
 	"nodes":[
 		{
@@ -57,7 +80,7 @@
 				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_FPXK3-1",
 			"id":"n_JIdgj",
@@ -121,7 +144,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"MANUAL",
 			"groupId":"_FPXK3-1",
 			"id":"n_0wmLM",
@@ -197,16 +220,113 @@
 			},
 			"debug":false,
 			"dirty":true,
-			"fallbackMode":"STOP",
+			"fallbackMode":"MANUAL",
 			"groupId":"n_0wmLM@_FPXK3-1@success",
 			"id":"n_tmqgt",
 			"index":3,
 			"inputs":{
 				"contactId":"{{ n_JIdgj.outputs.contactId }}"
 			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"MANUAL",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
 			"skip":false,
 			"subTitle":"Freshdesk",
 			"title":"Get contact",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":10073,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_contact",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_tmqgt@n_0wmLM@_FPXK3-1@success@success",
+			"id":"n_dSRwV",
+			"index":4,
+			"inputs":{
+				"contactId":"{{ n_JIdgj.outputs.contactIdTwo }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get contact",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":10073,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_company",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_tmqgt@n_0wmLM@_FPXK3-1@success@error",
+			"id":"n_FbzBO",
+			"index":5,
+			"inputs":{
+				"companyId":"{{ n_JIdgj.outputs.companyIdTwo }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get company",
 			"type":"ACTION"
 		},
 		{
@@ -218,11 +338,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_0wmLM@_FPXK3-1@error",
 			"id":"n_yUGuu",
-			"index":4,
+			"index":6,
 			"inputs":{
 				"purpose":"{{ n_JIdgj.outputs.purpose }}",
 				"channel":"{{ n_JIdgj.outputs.channel }}"
@@ -240,11 +360,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_FPXK3-1",
 			"id":"n_YxikF",
-			"index":5,
+			"index":7,
 			"inputs":{
 				"result":{
 					"result":"{{ n_yUGuu.outputs.channel.purpose.value }}"
@@ -273,5 +393,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
