@@ -5,12 +5,12 @@
 	"createdTime":1759987412668,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760031246426,
+		"deployedAt":1760166910057,
 		"deployedBy":45011,
-		"deployedDefinitionId":"68e7f20e5ea7e71bc0badb50",
+		"deployedDefinitionId":"68ea03fd70d6433c686c9b5d",
 		"status":"DEPLOYED",
-		"version":7,
-		"workflowVersion":16
+		"version":9,
+		"workflowVersion":19
 	},
 	"edges":[
 		{
@@ -81,7 +81,7 @@
 	"id":"68e746d499f9fc69e110e5e6",
 	"lastModifiedBy":45011,
 	"lcName":"multi tenancy v2 | fetch all objects and records",
-	"modifiedTime":1760032484611,
+	"modifiedTime":1760169833799,
 	"name":"Multi Tenancy V2 | Fetch All Objects and Records",
 	"nodes":[
 		{
@@ -123,6 +123,18 @@
 									"assetVersion":{
 										"type":"string",
 										"title":"Asset Version"
+									},
+									"assetSetting":{
+										"type":"object",
+										"properties":{
+											"recordsSelection":{
+												"type":"string",
+												"title":"Records Selection"
+											}
+										},
+										"additionalProperties":false,
+										"title":"Asset Setting",
+										"required":[]
 									}
 								},
 								"additionalProperties":false,
@@ -434,6 +446,18 @@
 										"assetVersion":{
 											"type":"string",
 											"title":"Asset Version"
+										},
+										"assetSetting":{
+											"type":"object",
+											"properties":{
+												"recordsSelection":{
+													"type":"string",
+													"title":"Records Selection"
+												}
+											},
+											"additionalProperties":false,
+											"title":"Asset Setting",
+											"required":[]
 										}
 									},
 									"required":[]
@@ -474,6 +498,18 @@
 									"assetVersion":{
 										"type":"string",
 										"title":"Asset Version"
+									},
+									"assetSetting":{
+										"type":"object",
+										"properties":{
+											"recordsSelection":{
+												"type":"string",
+												"title":"Records Selection"
+											}
+										},
+										"additionalProperties":false,
+										"title":"Asset Setting",
+										"required":[]
 									}
 								},
 								"required":[]
@@ -538,6 +574,10 @@
 					{
 						"name":"id",
 						"aggregationFunction":"GROUP"
+					},
+					{
+						"name":"standard",
+						"aggregationFunction":"GROUP"
 					}
 				],
 				"filter":{
@@ -546,6 +586,11 @@
 							"property":"unifiedEntityModelId",
 							"filter":{
 								"operator":"MISSING"
+							}
+						},
+						{
+							"resolvedFilter":{
+								"filter":"{\n  \"op\": \"IN\",\n  \"field\": \"metadata.storeDetails.store\",\n  \"values\": [\"MONGO\"]\n}"
 							}
 						}
 					],
@@ -658,7 +703,7 @@
 						"assetClass":"ENTITY_TYPE",
 						"assetId":"{{ n_feENT.outputs.objects[0].columns.id }}",
 						"assetSetting":{
-							"recordsSelection":"ALL_RECORDS"
+							"recordsSelection":"=IF({{ n_feENT.outputs.objects[0].columns.standard }},\"ALL_RECORDS\",\"NO_RECORDS\")"
 						}
 					}
 				},
@@ -749,7 +794,10 @@
 						"items":{
 							"assetId":"{{ n_uIfRr.outputs.items[0].assetId }}",
 							"assetClass":"{{ n_uIfRr.outputs.items[0].assetClass }}",
-							"assetVersion":"{{ n_uIfRr.outputs.items[0].assetVersion }}"
+							"assetVersion":"{{ n_uIfRr.outputs.items[0].assetVersion }}",
+							"assetSetting":{
+								"recordsSelection":"{{ n_uIfRr.outputs.items[0].assetSetting.recordsSelection }}"
+							}
 						}
 					}
 				}
@@ -777,5 +825,5 @@
 	"tags":[
 		
 	],
-	"version":18
+	"version":20
 }
