@@ -1,51 +1,271 @@
 {
 	"appsUsed":[
-		
+		"clickup",
+		"freshdesk"
 	],
 	"createdTime":1760162389540,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_PHurS",
+			"fromNodeId":"n_XDkIy",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_wAaeh",
+			"toNodeId":"n_hzeKz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_hzeKz",
+			"name":"success",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Ku49O",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_hzeKz",
+			"name":"error",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_a6tFF",
+			"type":"error"
+		},
+		{
+			"fromNodeId":"n_Ku49O",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_0Yi5k",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_a6tFF",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_0Yi5k",
 			"type":"next"
 		}
 	],
 	"id":"68e9f25564af142a5db975f9",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2wccirmdzvq",
-	"modifiedTime":1760162389540,
+	"modifiedTime":1760162451504,
 	"name":"cacheQA2wccIrMDzVQ",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2273,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_PHurS-1",
-			"id":"_PHurS",
-			"index":0,
+			"id":"n_XDkIy",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"team_id":{
+							"type":"string",
+							"title":"team_id"
+						},
+						"space_id":{
+							"type":"string",
+							"title":"space_id"
+						},
+						"folder_id":{
+							"type":"string",
+							"title":"folder_id"
+						},
+						"id_two":{
+							"type":"string",
+							"title":"id_two"
+						},
+						"companyId":{
+							"type":"string",
+							"title":"companyId"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":490,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
+			"fallbackMode":"MANUAL",
+			"groupId":"_PHurS-1",
+			"id":"n_hzeKz",
+			"index":2,
+			"inputs":{
+				"automationId":"68e9f22d64af142a5db9742e",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"team_id":"{{ n_XDkIy.outputs.team_id }}",
+					"space_id":"{{ n_XDkIy.outputs.space_id }}",
+					"folder_id":"{{ n_XDkIy.outputs.folder_id }}"
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"cacheKey":"{{ n_XDkIy.outputs.folder_id }}",
+					"enabled":true,
+					"timeToLive":"60",
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"MANUAL",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"clickup",
+				"resourceVersion":11484,
+				"connectionId":"67b0442665d0907dc7f5d402",
+				"resourceName":"clickup_get_folder_details",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_hzeKz@_PHurS-1@success",
+			"id":"n_Ku49O",
+			"index":3,
+			"inputs":{
+				"team_id":"{{ n_XDkIy.outputs.team_id }}",
+				"folder_id":"{{ n_XDkIy.outputs.id_two }}",
+				"space_id":"{{ n_XDkIy.outputs.space_id }}"
+			},
+			"skip":false,
+			"subTitle":"ClickUp",
+			"title":"Get folder details",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":10073,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_company",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_hzeKz@_PHurS-1@error",
+			"id":"n_a6tFF",
+			"index":4,
+			"inputs":{
+				"companyId":"{{ n_XDkIy.outputs.companyId }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get company",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2276,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_PHurS-1",
-			"id":"_wAaeh",
-			"index":0,
+			"id":"n_0Yi5k",
+			"index":5,
+			"inputs":{
+				"result":{
+					"result":"{{ n_Ku49O.outputs.name }}"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +279,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
