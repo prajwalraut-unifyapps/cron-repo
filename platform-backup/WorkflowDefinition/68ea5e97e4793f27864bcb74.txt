@@ -4,16 +4,45 @@
 	],
 	"createdTime":1760201910557,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760201910642,
+		"deployedBy":43069,
+		"deployedDefinitionId":"68ea8cb654fea35de5931f5b",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":5
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_HTcrw",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_a094u",
+			"toNodeId":"n_L4t7f",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_a094u",
+			"fromNodeId":"n_L4t7f",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_VfOmU",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_VfOmU",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_3N5Qr",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_3N5Qr",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_g8X9g",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_g8X9g",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_Auqa6",
@@ -23,7 +52,7 @@
 	"id":"68ea5e97e4793f27864bcb74",
 	"lastModifiedBy":43069,
 	"lcName":"[dt] aggregated knowledges count api",
-	"modifiedTime":1760201910557,
+	"modifiedTime":1760204354427,
 	"name":"[DT] Aggregated knowledges count API",
 	"nodes":[
 		{
@@ -33,7 +62,7 @@
 				"resourceName":"callables_from_api"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_2Lv38-1",
 			"id":"n_HTcrw",
@@ -64,14 +93,32 @@
 						"body":{
 							"type":"object",
 							"properties":{
-								"entityCount":{
+								"knowledgeSetWiseCount":{
+									"type":"array",
+									"items":{
+										"type":"object",
+										"properties":{
+											"knowledgeSetId":{
+												"type":"string",
+												"title":"knowledgeSetId"
+											},
+											"entityCount":{
+												"type":"integer",
+												"title":"entityCount"
+											}
+										},
+										"additionalProperties":false
+									},
+									"title":"knowledgeSetWiseCount"
+								},
+								"totalEntityCount":{
 									"type":"integer",
-									"title":"Entity Count"
+									"title":"totalEntityCount"
 								}
 							},
-							"additionalProperties":false,
-							"required":[]
-						}
+							"additionalProperties":false
+						},
+						"namespaces":[]
 					}
 				],
 				"streamingResponse":false
@@ -87,28 +134,332 @@
 		{
 			"context":{
 				"appName":"storage_by_unifyapps",
-				"resourceVersion":842,
-				"resourceName":"storage_by_unifyapps_count_records",
+				"resourceVersion":824,
+				"resourceName":"storage_by_unifyapps_fetch_records",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_2Lv38-1",
-			"id":"n_a094u",
+			"id":"n_L4t7f",
 			"index":2,
 			"inputs":{
-				"triggerInputCondition":{
-					"filters":[
+				"object_type":"knowledge_set",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":100000,
+					"offset":0
+				},
+				"numberOfRecordsToFetch":"MULTIPLE",
+				"readThroughSessionVariables":false,
+				"includeTotalCount":false
+			},
+			"skip":false,
+			"subTitle":"Fetch knowledge sets",
+			"title":"Fetch records",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":520,
+				"resourceName":"variable_by_unifyapps_create_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_2Lv38-1",
+			"id":"n_VfOmU",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{
+					"createList":{
+						"ui:title":"",
+						"ua:type":{
+							"ui:widget":"hidden"
+						},
+						"items":{
+							"ui:title":"Initial list items",
+							"ui:description":"Set the initial values of the list (defaults to empty)"
+						},
+						"ui:order":[
+							"*",
+							"items"
+						]
+					},
+					"ua:title":{
+						"ui:widget":"hidden"
+					},
+					"ua:list_type":{
+						"ui:widget":"hidden"
+					}
+				},
+				"schema":{
+					"allOf":[
 						{
-							"property":"properties_knowledgeSetId",
-							"filter":{
-								"operator":"EQUAL",
-								"value":"{{ n_HTcrw.outputs.body.knowledgeSetId }}"
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"OBJECT"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"items":{
+												"type":"object",
+												"properties":{}
+											}
+										}
+									}
+								}
 							}
 						},
 						{
-							"property":"properties_status",
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"STRING"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of String"
+											},
+											"items":{
+												"type":"string"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"INTEGER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Integers"
+											},
+											"items":{
+												"type":"integer"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"NUMBER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Numbers"
+											},
+											"items":{
+												"type":"number"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"BOOLEAN"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Booleans"
+											},
+											"items":{
+												"type":"boolean"
+											}
+										}
+									}
+								}
+							}
+						}
+					],
+					"format":"ua:list",
+					"type":"object",
+					"properties":{
+						"ua:title":{
+							"type":"string"
+						},
+						"ua:list_type":{
+							"type":"string",
+							"title":"List Type",
+							"oneOf":[
+								{
+									"const":"OBJECT",
+									"title":"Object"
+								},
+								{
+									"const":"STRING",
+									"title":"String"
+								},
+								{
+									"const":"NUMBER",
+									"title":"Number"
+								},
+								{
+									"const":"INTEGER",
+									"title":"Integer"
+								},
+								{
+									"const":"BOOLEAN",
+									"title":"Boolean"
+								}
+							],
+							"default":"OBJECT"
+						},
+						"createList":{
+							"type":"object",
+							"properties":{
+								"ua:type":{
+									"type":"string",
+									"default":"mappedArray"
+								},
+								"source":{
+									"type":"string",
+									"format":"ua:source",
+									"title":"List Item Source"
+								},
+								"items":{
+									"additionalProperties":false,
+									"type":[
+										"object",
+										"string",
+										"number",
+										"boolean",
+										"integer"
+									],
+									"properties":{}
+								}
+							}
+						}
+					}
+				}
+			},
+			"inputs":{
+				"createList":{
+					"ua:type":"mappedArray",
+					"source":"{{ n_L4t7f.outputs.objects }}",
+					"items":"{{ n_L4t7f.outputs.objects[0].id }}"
+				},
+				"ua:title":"knowledgeSetIds",
+				"ua:list_type":"STRING"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"type":"object",
+					"properties":{
+						"items":{
+							"type":"array",
+							"title":"knowledgeSetIds",
+							"disableActions":true,
+							"items":{
+								"type":"string"
+							}
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"knowledgeSetIds List",
+			"title":"Create list",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"analytics_by_unifyapps",
+				"resourceVersion":0,
+				"resourceName":"analytics_by_unifyapps_query_reports",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_2Lv38-1",
+			"id":"n_3N5Qr",
+			"index":4,
+			"inputs":{
+				"projections":[
+					{
+						"name":"ENTITY_knowledge_raw_data_store=::=knowledgeSetId",
+						"aggregationFunction":"GROUP",
+						"alias":"knowledgeSetId",
+						"includePercentageChange":false
+					},
+					{
+						"name":"ENTITY_knowledge_raw_data_store=::=COUNT",
+						"aggregationFunction":"SUM",
+						"alias":"count",
+						"includePercentageChange":false
+					}
+				],
+				"filter":{
+					"filters":[
+						{
+							"property":"ENTITY_knowledge_raw_data_store=::=knowledgeSetId",
+							"filter":{
+								"operator":"IN",
+								"value":"{{ n_VfOmU.outputs.items }}"
+							}
+						},
+						{
+							"property":"ENTITY_knowledge_raw_data_store=::=status",
 							"filter":{
 								"operator":"EQUAL",
 								"value":"PROCESSED"
@@ -117,11 +468,93 @@
 					],
 					"operator":"AND"
 				},
-				"object_type":"knowledge_raw_data_store"
+				"includeAllRecordsFromBaseReport":true,
+				"entityType":"ENTITY_knowledge_raw_data_store",
+				"page":{
+					"offset":0,
+					"limit":100000
+				},
+				"group":"ENTITY_REPORTING"
 			},
 			"skip":false,
-			"subTitle":"Storage by UnifyApps",
-			"title":"Count records",
+			"subTitle":"Analytics by UnifyApps",
+			"title":"Analytics Query",
+			"type":"ACTION"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.parameters.knowledgeSetIdWiseCount.items.knowledgeSetId",
+					"root.parameters.knowledgeSetIdWiseCount.items.count"
+				]
+			},
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":528,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_2Lv38-1",
+			"id":"n_g8X9g",
+			"index":5,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"totalCount":{
+							"type":"integer",
+							"title":"Total Count"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"knowledgeSetIdWiseCount":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"knowledgeSetId":{
+										"type":"string",
+										"title":"Knowledge Set Id"
+									},
+									"count":{
+										"type":"integer",
+										"title":"Count"
+									}
+								},
+								"additionalProperties":false,
+								"required":[]
+							},
+							"title":"Knowledge Set Id Wise Count"
+						}
+					}
+				},
+				"code":"def totalCount = 0\n\nif (binding.hasVariable('knowledgeSetIdWiseCount') && \n    knowledgeSetIdWiseCount instanceof List && \n    !knowledgeSetIdWiseCount.isEmpty()) {\n\n    knowledgeSetIdWiseCount.each { item ->\n        if (item.containsKey('count') && item.count != null) {\n            totalCount += item.count as Integer\n        }\n    }\n}\n\nreturn [\"totalCount\": totalCount]\n",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"knowledgeSetIdWiseCount":{
+						"source":"{{ n_3N5Qr.outputs.objects }}",
+						"ua:type":"mappedArray",
+						"items":{
+							"knowledgeSetId":"{{ n_3N5Qr.outputs.objects[0].columns.knowledgeSetId }}",
+							"count":"{{ n_3N5Qr.outputs.objects[0].columns.count }}"
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
 			"type":"ACTION"
 		},
 		{
@@ -132,16 +565,24 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_2Lv38-1",
 			"id":"n_Auqa6",
-			"index":3,
+			"index":6,
 			"inputs":{
 				"streamingCompleted":true,
 				"responseName":"200_undefined",
 				"body":{
-					"entityCount":"{{ n_a094u.outputs.count }}"
+					"totalEntityCount":"{{ n_g8X9g.outputs.result.totalCount }}",
+					"knowledgeSetWiseCount":{
+						"source":"{{ n_3N5Qr.outputs.objects }}",
+						"ua:type":"mappedArray",
+						"items":{
+							"knowledgeSetId":"{{ n_3N5Qr.outputs.objects[0].columns.knowledgeSetId }}",
+							"entityCount":"{{ n_3N5Qr.outputs.objects[0].columns.count }}"
+						}
+					}
 				},
 				"status":200
 			},
@@ -168,5 +609,5 @@
 	"tags":[
 		
 	],
-	"version":5
+	"version":6
 }
