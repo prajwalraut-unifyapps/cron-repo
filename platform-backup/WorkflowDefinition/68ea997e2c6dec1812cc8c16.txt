@@ -1,51 +1,232 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
 	"createdTime":1760205182199,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_WPl9I",
+			"fromNodeId":"n_HpBbB",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_BnOAw",
+			"toNodeId":"n_zfeRG",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_zfeRG",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_TsjHc",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_TsjHc",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_9kTP6",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_9kTP6",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_hpJ7b",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_hpJ7b",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_TsjHc",
 			"type":"next"
 		}
 	],
 	"id":"68ea997e2c6dec1812cc8c16",
 	"lastModifiedBy":33658,
 	"lcName":"paginated-=test",
-	"modifiedTime":1760205182199,
+	"modifiedTime":1760205393525,
 	"name":"paginated-=test",
 	"nodes":[
 		{
+			"context":{
+				"appName":"schedule",
+				"resourceVersion":836,
+				"resourceName":"schedule_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_WPl9I-1",
-			"id":"_WPl9I",
-			"index":0,
+			"id":"n_HpBbB",
+			"index":1,
+			"inputs":{
+				"cron":"INTERVAL",
+				"sequential":false,
+				"interval":15,
+				"frequency":"MINUTES"
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Schedule",
+			"title":"New recurring event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"SCHEDULED"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1047,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_WPl9I-1",
-			"id":"_BnOAw",
-			"index":0,
+			"id":"n_zfeRG",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"offset":{
+							"type":"number",
+							"title":"Offset"
+						}
+					},
+					"required":[
+						"offset"
+					]
+				}
+			},
+			"inputs":{
+				"offset":0
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"offset":{
+							"type":"number",
+							"title":"Offset"
+						}
+					},
+					"required":[
+						"offset"
+					]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":877,
+				"resourceName":"loop_while",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_WPl9I-1",
+			"id":"n_TsjHc",
+			"index":3,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"1",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"1"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":false
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":4525,
+				"resourceName":"storage_by_unifyapps_delete_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_TsjHc@_WPl9I-1@l",
+			"id":"n_9kTP6",
+			"index":4,
+			"inputs":{
+				"writeThroughSessionVariables":false,
+				"object_type":"ecom_candidate_repository",
+				"numberOfRecordsToDelete":"MULTIPLE",
+				"page":{
+					"limit":20,
+					"offset":0
+				}
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Delete records",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"break",
+				"resourceVersion":817,
+				"resourceName":"break",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_TsjHc@_WPl9I-1@l",
+			"id":"n_hpJ7b",
+			"index":5,
+			"inputs":{
+				"loop":"n_TsjHc",
+				"conditions":{
+					"filters":[
+						{
+							"property":"{{ n_9kTP6.outputs.count }}",
+							"filter":{
+								"operator":"GTE",
+								"value":"{{ n_9kTP6.outputs.total }}"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"subTitle":"Break",
+			"title":"Break",
+			"type":"BREAK"
 		}
 	],
 	"ownerUserId":33658,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +240,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
