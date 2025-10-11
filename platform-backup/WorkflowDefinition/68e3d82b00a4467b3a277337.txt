@@ -4,9 +4,24 @@
 	],
 	"createdTime":1760199513839,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760199514104,
+		"deployedBy":33452,
+		"deployedDefinitionId":"68ea8359f52c9955cfccad89",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":103
+	},
 	"edges":[
 		{
-			"fromNodeId":"n_mncUh",
+			"fromNodeId":"n_kHI9n",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_6dp1b",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_6dp1b",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_5NV9y",
@@ -124,11 +139,33 @@
 			"fromNodeId":"n_ohdTj",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_EbMVA",
+			"toNodeId":"n_Suxpk",
 			"type":"next"
 		},
 		{
+			"fromNodeId":"n_Suxpk",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_TtAO3",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_TtAO3",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_EbMVA",
+			"type":"loop"
+		},
+		{
 			"fromNodeId":"n_EbMVA",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_TtAO3",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_TtAO3",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_GQ33D",
@@ -194,67 +231,70 @@
 	"id":"68e3d82b00a4467b3a277337",
 	"lastModifiedBy":33452,
 	"lcName":"lowes excel file processor (agent_formulaes) ",
-	"modifiedTime":1760199513839,
+	"modifiedTime":1760200656655,
 	"name":"Lowes Excel File Processor (Agent_Formulaes) ",
 	"nodes":[
 		{
 			"context":{
-				"appName":"callables",
-				"resourceVersion":159,
-				"resourceName":"callables_from_automation"
+				"appName":"webhooks",
+				"resourceVersion":833,
+				"resourceName":"webhooks_default"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
-			"id":"n_mncUh",
+			"id":"n_kHI9n",
 			"index":1,
 			"inputs":{
-				"result":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"url"
-					],
-					"properties":{
-						"url":{
-							"type":"string",
-							"title":"Url"
-						}
-					}
-				},
-				"setup":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[],
-					"properties":{
-						"caseId":{
-							"type":"string",
-							"title":"Case Id"
-						},
-						"file":{
-							"type":"string",
-							"format":"file-input",
-							"title":"File"
-						},
-						"currFW":{
-							"type":"integer",
-							"title":"Curr FW"
-						},
-						"currFY":{
-							"type":"integer",
-							"title":"Curr FY"
-						}
-					}
+				"request":{
+					"contentType":"application/json"
 				}
 			},
 			"skip":false,
-			"subTitle":"Callable",
-			"title":"Trigger via automation",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"CALLABLE"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":4549,
+				"resourceName":"storage_by_unifyapps_fetch_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_t1UEx-1",
+			"id":"n_6dp1b",
+			"index":2,
+			"inputs":{
+				"object_type":"lowes_file_url",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"sortBy":[
+					{
+						"field":"cTm",
+						"order":"DESC"
+					}
+				],
+				"translationsOption":"DEFAULT",
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":20
+				},
+				"numberOfRecordsToFetch":"SINGLE",
+				"readThroughSessionVariables":false,
+				"includeTotalCount":false
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch records",
+			"type":"ACTION"
 		},
 		{
 			"context":{
@@ -268,7 +308,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_5NV9y",
-			"index":2,
+			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -364,7 +404,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_hWXvf",
-			"index":3,
+			"index":4,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -411,13 +451,13 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_DxSHe",
-			"index":4,
+			"index":5,
 			"inputs":{
-				"fileDetails":"{{ n_mncUh.outputs.file }}",
+				"fileDetails":"{{ n_6dp1b.outputs.properties.invoiceCopyPDF }}",
 				"fileType":"XLSX"
 			},
 			"skip":false,
@@ -437,7 +477,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_qaAVc",
-			"index":5,
+			"index":6,
 			"inputs":{
 				"automationId":"66dfd76eb70dad256986b784",
 				"runtimeConnections":{},
@@ -522,7 +562,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_v7rrM",
-			"index":6,
+			"index":7,
 			"inputs":{
 				"jsonSchema":{
 					"type":"object",
@@ -673,7 +713,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_9nTAx",
-			"index":7,
+			"index":8,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -929,7 +969,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"_x8wxv",
-			"index":8,
+			"index":9,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1181,15 +1221,15 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_ohdTj",
-			"index":9,
+			"index":10,
 			"inputs":{
 				"startFromRow":1,
 				"consumptionBehaviour":"string",
-				"file":"{{ n_mncUh.outputs.file }}",
+				"file":"{{ n_6dp1b.outputs.properties.invoiceCopyPDF }}",
 				"headerRow":true,
 				"columns":[],
 				"batch":true,
@@ -1215,7 +1255,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_ohdTj@_t1UEx-1@l",
 			"id":"n_1Kbx1",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"filters":[
 					{
@@ -1245,7 +1285,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1Kbx1@n_ohdTj@_t1UEx-1@l@y",
 			"id":"n_dBJIN",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"loop":"n_ohdTj"
 			},
@@ -1266,7 +1306,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_ohdTj@_t1UEx-1@l",
 			"id":"n_WeyCI",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1361,7 +1401,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_ohdTj@_t1UEx-1@l",
 			"id":"n_KAaqe",
-			"index":13,
+			"index":14,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -1388,7 +1428,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_ohdTj@_t1UEx-1@l",
 			"id":"n_fbxzq",
-			"index":14,
+			"index":15,
 			"inputs":{
 				"listName":"{{ _x8wxv.outputs.items[0] }}"
 			},
@@ -1409,7 +1449,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_ohdTj@_t1UEx-1@l",
 			"id":"n_I3NN8",
-			"index":15,
+			"index":16,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -1427,22 +1467,79 @@
 		{
 			"context":{
 				"appName":"excel_by_unifyapps",
+				"resourceVersion":820,
+				"resourceName":"excel_by_unifyapps_create_file",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_t1UEx-1",
+			"id":"n_Suxpk",
+			"index":17,
+			"inputs":{
+				"fileName":"Results.xlsx",
+				"fileType":"xlsx"
+			},
+			"skip":false,
+			"subTitle":"Excel by UnifyApps",
+			"title":"Create an excel file",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":865,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_t1UEx-1",
+			"id":"n_TtAO3",
+			"index":18,
+			"inputs":{
+				"repeatMode":"BATCH",
+				"listSource":"{{ n_9nTAx.outputs.items }}",
+				"captureIterations":false,
+				"batchSize":5000
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.dropDownDetails.items.beginRow",
+					"root.dropDownDetails.items.endRow",
+					"root.dropDownDetails.items.beginColumn",
+					"root.dropDownDetails.items.endColumn",
+					"root.dropDownDetails.items.options.items"
+				]
+			},
+			"context":{
+				"appName":"excel_by_unifyapps",
 				"resourceVersion":140,
 				"resourceName":"excel_by_unifyapps_list_to_excel_file",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"_t1UEx-1",
+			"groupId":"n_TtAO3@_t1UEx-1@l",
 			"id":"n_EbMVA",
-			"index":16,
+			"index":19,
 			"inputs":{
 				"fileName":"new_file",
 				"sheetName":"result",
 				"headerType":"DYNAMIC",
-				"dataSource":"{{ n_9nTAx.outputs.items }}",
+				"dataSource":"{{ n_TtAO3.outputs.item }}",
+				"existingFileDetails":"{{ n_Suxpk.outputs.fileDetails }}",
 				"fileType":"xlsx",
+				"append":true,
 				"dynamicHeaders":{
 					"source":"{{ _x8wxv.outputs.items }}",
 					"ua:type":"mappedArray",
@@ -1466,7 +1563,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_GQ33D",
-			"index":17,
+			"index":20,
 			"inputs":{
 				"file":"{{ n_EbMVA.outputs.fileDetails }}",
 				"expiryTime":1
@@ -1488,7 +1585,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_OIb2b",
-			"index":18,
+			"index":21,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1594,7 +1691,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_feHLL",
-			"index":19,
+			"index":22,
 			"inputs":{
 				"base64Content":"{{ n_OIb2b.outputs.result.b64_encoded }}",
 				"fileName":"temp.xlsx",
@@ -1617,7 +1714,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"_t1UEx-1",
 			"id":"n_5udsR",
-			"index":20,
+			"index":23,
 			"inputs":{
 				"partialUpdate":false,
 				"sheetIndex":"{{ n_EbMVA.outputs.fileDetails }}",
@@ -1709,7 +1806,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_nMokn",
-			"index":21,
+			"index":24,
 			"inputs":{
 				"automationId":"6793913478118e27332f4620",
 				"runtimeConnections":{},
@@ -1739,7 +1836,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_AoUWZ",
-			"index":22,
+			"index":25,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -1782,7 +1879,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_JgWjo",
-			"index":23,
+			"index":26,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1831,7 +1928,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_KRzxK",
-			"index":24,
+			"index":27,
 			"inputs":{
 				"automationId":"68de82126b6ce77165c61665",
 				"runtimeConnections":{},
@@ -1859,7 +1956,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_8YozE",
-			"index":25,
+			"index":28,
 			"inputs":{
 				"result":{
 					"url":"{{ n_EbMVA.outputs.fileDetails }}"
@@ -1886,5 +1983,5 @@
 		}
 	},
 	"standard":false,
-	"version":103
+	"version":104
 }
