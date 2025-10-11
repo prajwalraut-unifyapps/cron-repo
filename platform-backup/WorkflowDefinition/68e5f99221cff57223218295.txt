@@ -5,12 +5,12 @@
 	"createdTime":1759902098274,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759904188998,
+		"deployedAt":1759904207744,
 		"deployedBy":155543,
-		"deployedDefinitionId":"68e601bced5850184709869d",
+		"deployedDefinitionId":"68e601cfed585018470986bd",
 		"status":"DEPLOYED",
-		"version":3,
-		"workflowVersion":3
+		"version":4,
+		"workflowVersion":4
 	},
 	"edges":[
 		{
@@ -38,7 +38,7 @@
 	"id":"68e5f99221cff57223218295",
 	"lastModifiedBy":155543,
 	"lcName":"infra | tool | get workflow dependency",
-	"modifiedTime":1759904206431,
+	"modifiedTime":1760173470095,
 	"name":"INFRA | TOOL | Get workflow dependency",
 	"nodes":[
 		{
@@ -102,6 +102,11 @@
 			"type":"CALL_WORKFLOW"
 		},
 		{
+			"additional":{
+				"xsdSchemaConfig":{
+					"root":{}
+				}
+			},
 			"context":{
 				"appName":"custom_http_endpoint",
 				"resourceVersion":1067,
@@ -120,42 +125,39 @@
 				"requestTimeoutInSecs":-1,
 				"httpMethod":"POST",
 				"body":{
-					"assetClass":"WORKFLOW_DEFINITION",
-					"assetId":"{{ n_COz9v.outputs.workflowId }}",
-					"assetVersion":"LAST_SAVED"
+					"versions":[
+						"LAST_DEPLOYED"
+					]
 				},
 				"connectionType":"DIRECT",
 				"sslVerify":false,
-				"path":"/internal/asset-dependency/dependencies/{{ __RUN__.outputs.customerId }}",
+				"path":"/internal/changeset/dependencies/{{ __RUN__.outputs.customerId }}",
 				"baseUrl":"{{ n_Yr3pa.outputs.baseInternalUrl }}",
 				"httpVersion":"HTTP_2",
 				"bodySchema":{
 					"type":"object",
 					"additionalProperties":false,
 					"required":[
-						"assetClass",
-						"assetId",
-						"assetVersion"
+						"versions"
 					],
 					"properties":{
-						"assetClass":{
-							"type":"string",
-							"title":"Asset Class"
-						},
-						"assetId":{
-							"type":"string",
-							"title":"Asset Id"
-						},
-						"assetVersion":{
-							"type":"string",
-							"title":"Asset Version"
+						"versions":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Versions"
 						}
 					}
 				},
 				"queryParamsList":[
 					{
-						"key":"isLatest",
-						"value":"true"
+						"key":"assetId",
+						"value":"{{ n_COz9v.outputs.workflowId }}"
+					},
+					{
+						"key":"assetClass",
+						"value":"WORKFLOW_DEFINITION"
 					}
 				],
 				"responseContentType":"application/json",
@@ -209,5 +211,5 @@
 	"tags":[
 		
 	],
-	"version":4
+	"version":5
 }
