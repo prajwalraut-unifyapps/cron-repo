@@ -38,6 +38,13 @@
 			"fromNodeId":"n_NZlfx",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_uX76i",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_uX76i",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_1LfIh",
 			"type":"next"
 		},
@@ -455,7 +462,7 @@
 	"id":"68e76c950e377b0bdc8c35d4",
 	"lastModifiedBy":45011,
 	"lcName":"multi tenancy v2 | fetch all api resources",
-	"modifiedTime":1760179284767,
+	"modifiedTime":1760182523867,
 	"name":"Multi Tenancy V2 | Fetch All API Resources",
 	"nodes":[
 		{
@@ -880,7 +887,7 @@
 					"filters":[
 						{
 							"resolvedFilter":{
-								"filter":"{\"op\":\"EQUAL\", \"field\":\"defaultWorkflowWebhookCollection\", \"values\":[false]}"
+								"filter":"{\"op\":\"EQUAL\", \"field\":\"defaultWorkflowWebhookCollection\", \"values\":[true]}"
 							}
 						}
 					],
@@ -895,6 +902,264 @@
 		},
 		{
 			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1035,
+				"resourceName":"variable_by_unifyapps_create_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_tT02q-1",
+			"id":"n_uX76i",
+			"index":5,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{
+					"createList":{
+						"ui:title":"",
+						"ua:type":{
+							"ui:widget":"hidden"
+						},
+						"items":{
+							"ui:title":"Initial list items",
+							"ui:description":"Set the initial values of the list (defaults to empty)"
+						},
+						"ui:order":[
+							"*",
+							"items"
+						]
+					},
+					"ua:title":{
+						"ui:widget":"hidden"
+					},
+					"ua:list_type":{
+						"ui:widget":"hidden"
+					}
+				},
+				"schema":{
+					"allOf":[
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"OBJECT"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"items":{
+												"type":"object",
+												"properties":{}
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"STRING"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of String"
+											},
+											"items":{
+												"type":"string"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"INTEGER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Integers"
+											},
+											"items":{
+												"type":"integer"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"NUMBER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Numbers"
+											},
+											"items":{
+												"type":"number"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"BOOLEAN"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Booleans"
+											},
+											"items":{
+												"type":"boolean"
+											}
+										}
+									}
+								}
+							}
+						}
+					],
+					"format":"ua:list",
+					"type":"object",
+					"properties":{
+						"ua:title":{
+							"type":"string"
+						},
+						"ua:list_type":{
+							"type":"string",
+							"title":"List Type",
+							"oneOf":[
+								{
+									"const":"OBJECT",
+									"title":"Object"
+								},
+								{
+									"const":"STRING",
+									"title":"String"
+								},
+								{
+									"const":"NUMBER",
+									"title":"Number"
+								},
+								{
+									"const":"INTEGER",
+									"title":"Integer"
+								},
+								{
+									"const":"BOOLEAN",
+									"title":"Boolean"
+								}
+							],
+							"default":"OBJECT"
+						},
+						"createList":{
+							"type":"object",
+							"properties":{
+								"ua:type":{
+									"type":"string",
+									"default":"mappedArray"
+								},
+								"source":{
+									"type":"string",
+									"format":"ua:source",
+									"title":"List Item Source"
+								},
+								"items":{
+									"additionalProperties":false,
+									"type":[
+										"object",
+										"string",
+										"number",
+										"boolean",
+										"integer"
+									],
+									"properties":{}
+								}
+							}
+						}
+					}
+				}
+			},
+			"inputs":{
+				"createList":{
+					"ua:type":"mappedArray",
+					"source":"{{ n_NZlfx.outputs.objects }}",
+					"items":"{{ n_NZlfx.outputs.objects[0].columns.id }}"
+				},
+				"ua:title":"List of Default Webhook Collection Ids",
+				"ua:list_type":"STRING"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"type":"object",
+					"properties":{
+						"items":{
+							"type":"array",
+							"title":"List of Default Webhook Collection Ids",
+							"disableActions":true,
+							"items":{
+								"type":"string"
+							}
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create list",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"branch",
 				"type":"APPLICATION"
 			},
@@ -903,7 +1168,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_1LfIh",
-			"index":5,
+			"index":6,
 			"inputs":{
 				"branches":[
 					{
@@ -958,7 +1223,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@1",
 			"id":"n_1LfIh@1",
-			"index":6,
+			"index":7,
 			"inputs":{
 				"name":"API Endpoint Collection"
 			},
@@ -974,11 +1239,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@1",
 			"id":"_bD9Vf",
-			"index":7,
+			"index":8,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1263,7 +1528,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@1",
 			"id":"n_pNNqv",
-			"index":8,
+			"index":9,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1323,7 +1588,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@1",
 			"id":"n_pVMhd",
-			"index":9,
+			"index":10,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -1352,11 +1617,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_pVMhd@n_1LfIh@_tT02q-1@1@l",
 			"id":"n_YrS93",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"projections":[
 					{
@@ -1364,6 +1629,16 @@
 						"aggregationFunction":"GROUP"
 					}
 				],
+				"filter":{
+					"filters":[
+						{
+							"resolvedFilter":{
+								"filter":"{\"op\":\"EQUAL\", \"field\":\"defaultWorkflowWebhookCollection\", \"values\":[false]}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
 				"entityType":"APIEndpointCollection",
 				"page":{
 					"offset":"{{ n_pNNqv.outputs.offset }}",
@@ -1445,11 +1720,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_pVMhd@n_1LfIh@_tT02q-1@1@l",
 			"id":"n_sMvlq",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"filter":{
 					"filters":[
@@ -1487,7 +1762,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_pVMhd@n_1LfIh@_tT02q-1@1@l",
 			"id":"n_bnMsV",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -1517,7 +1792,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_pVMhd@n_1LfIh@_tT02q-1@1@l",
 			"id":"n_iq93A",
-			"index":13,
+			"index":14,
 			"inputs":{
 				"loop":"n_pVMhd",
 				"conditions":{
@@ -1550,7 +1825,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_pVMhd@n_1LfIh@_tT02q-1@1@l",
 			"id":"n_v7zdl",
-			"index":14,
+			"index":15,
 			"inputs":{
 				"variables":[
 					{
@@ -1580,7 +1855,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@2",
 			"id":"n_1LfIh@2",
-			"index":15,
+			"index":16,
 			"inputs":{
 				"name":"API Endpoint"
 			},
@@ -1600,7 +1875,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@2",
 			"id":"_hh3aB",
-			"index":16,
+			"index":17,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1885,7 +2160,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@2",
 			"id":"_vOn7C",
-			"index":17,
+			"index":18,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1945,7 +2220,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@2",
 			"id":"_id5Er",
-			"index":18,
+			"index":19,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -1978,7 +2253,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_id5Er@n_1LfIh@_tT02q-1@2@l",
 			"id":"_6s9pf",
-			"index":19,
+			"index":20,
 			"inputs":{
 				"projections":[
 					{
@@ -2078,7 +2353,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_id5Er@n_1LfIh@_tT02q-1@2@l",
 			"id":"_hE9yo",
-			"index":20,
+			"index":21,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -2108,7 +2383,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_id5Er@n_1LfIh@_tT02q-1@2@l",
 			"id":"_BlZUa",
-			"index":21,
+			"index":22,
 			"inputs":{
 				"loop":"n_pVMhd",
 				"conditions":{
@@ -2141,7 +2416,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_id5Er@n_1LfIh@_tT02q-1@2@l",
 			"id":"_jyTmr",
-			"index":22,
+			"index":23,
 			"inputs":{
 				"variables":[
 					{
@@ -2171,7 +2446,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@3",
 			"id":"n_1LfIh@3",
-			"index":23,
+			"index":24,
 			"inputs":{
 				"name":"API Client"
 			},
@@ -2191,7 +2466,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@3",
 			"id":"_pZYGw",
-			"index":24,
+			"index":25,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -2476,7 +2751,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@3",
 			"id":"_fizGn",
-			"index":25,
+			"index":26,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -2536,7 +2811,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@3",
 			"id":"_287Jl",
-			"index":26,
+			"index":27,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -2569,7 +2844,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_287Jl@n_1LfIh@_tT02q-1@3@l",
 			"id":"_PlzR5",
-			"index":27,
+			"index":28,
 			"inputs":{
 				"projections":[
 					{
@@ -2669,7 +2944,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_287Jl@n_1LfIh@_tT02q-1@3@l",
 			"id":"_3ClSt",
-			"index":28,
+			"index":29,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -2699,7 +2974,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_287Jl@n_1LfIh@_tT02q-1@3@l",
 			"id":"_MKWrE",
-			"index":29,
+			"index":30,
 			"inputs":{
 				"loop":"n_pVMhd",
 				"conditions":{
@@ -2732,7 +3007,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_287Jl@n_1LfIh@_tT02q-1@3@l",
 			"id":"_mKTcn",
-			"index":30,
+			"index":31,
 			"inputs":{
 				"variables":[
 					{
@@ -2762,7 +3037,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@4",
 			"id":"n_1LfIh@4",
-			"index":31,
+			"index":32,
 			"inputs":{
 				"name":"Access Profile"
 			},
@@ -2782,7 +3057,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@4",
 			"id":"_lcFTq",
-			"index":32,
+			"index":33,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -3067,7 +3342,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@4",
 			"id":"_VXSWl",
-			"index":33,
+			"index":34,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -3127,7 +3402,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@4",
 			"id":"_BGCA9",
-			"index":34,
+			"index":35,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -3160,7 +3435,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_BGCA9@n_1LfIh@_tT02q-1@4@l",
 			"id":"_guZNk",
-			"index":35,
+			"index":36,
 			"inputs":{
 				"projections":[
 					{
@@ -3260,7 +3535,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_BGCA9@n_1LfIh@_tT02q-1@4@l",
 			"id":"_qyWJ1",
-			"index":36,
+			"index":37,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -3290,7 +3565,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_BGCA9@n_1LfIh@_tT02q-1@4@l",
 			"id":"_Oxq4z",
-			"index":37,
+			"index":38,
 			"inputs":{
 				"loop":"n_pVMhd",
 				"conditions":{
@@ -3323,7 +3598,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_BGCA9@n_1LfIh@_tT02q-1@4@l",
 			"id":"_rYwhE",
-			"index":38,
+			"index":39,
 			"inputs":{
 				"variables":[
 					{
@@ -3353,7 +3628,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@5",
 			"id":"n_1LfIh@5",
-			"index":39,
+			"index":40,
 			"inputs":{
 				"name":"API Policy"
 			},
@@ -3373,7 +3648,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@5",
 			"id":"_8z6y8",
-			"index":40,
+			"index":41,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -3658,7 +3933,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@5",
 			"id":"_EhoGq",
-			"index":41,
+			"index":42,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -3718,7 +3993,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@5",
 			"id":"_KdXfI",
-			"index":42,
+			"index":43,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -3751,7 +4026,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KdXfI@n_1LfIh@_tT02q-1@5@l",
 			"id":"_zHbX8",
-			"index":43,
+			"index":44,
 			"inputs":{
 				"projections":[
 					{
@@ -3851,7 +4126,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KdXfI@n_1LfIh@_tT02q-1@5@l",
 			"id":"_GE208",
-			"index":44,
+			"index":45,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -3881,7 +4156,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KdXfI@n_1LfIh@_tT02q-1@5@l",
 			"id":"_iAbCk",
-			"index":45,
+			"index":46,
 			"inputs":{
 				"loop":"n_pVMhd",
 				"conditions":{
@@ -3914,7 +4189,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KdXfI@n_1LfIh@_tT02q-1@5@l",
 			"id":"_Io806",
-			"index":46,
+			"index":47,
 			"inputs":{
 				"variables":[
 					{
@@ -3951,7 +4226,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_39JHZ",
-			"index":47,
+			"index":48,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -3989,7 +4264,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"_NSGTL",
-			"index":48,
+			"index":49,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4027,7 +4302,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"_5NCYa",
-			"index":49,
+			"index":50,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4065,7 +4340,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"_9IthP",
-			"index":50,
+			"index":51,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4103,7 +4378,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"_CKErw",
-			"index":51,
+			"index":52,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4134,7 +4409,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_1rXuq",
-			"index":52,
+			"index":53,
 			"inputs":{
 				"result":{
 					"apiAssets":{
@@ -4171,5 +4446,5 @@
 	"tags":[
 		
 	],
-	"version":17
+	"version":18
 }
