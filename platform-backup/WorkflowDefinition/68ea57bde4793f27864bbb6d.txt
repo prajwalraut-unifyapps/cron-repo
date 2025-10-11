@@ -5,12 +5,12 @@
 	"createdTime":1760188349038,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760191682087,
+		"deployedAt":1760198948513,
 		"deployedBy":46030,
-		"deployedDefinitionId":"68ea64c06539036c54747d35",
+		"deployedDefinitionId":"68ea8122cafe6123890af63b",
 		"status":"DEPLOYED",
-		"version":2,
-		"workflowVersion":5
+		"version":3,
+		"workflowVersion":6
 	},
 	"edges":[
 		{
@@ -31,6 +31,13 @@
 			"fromNodeId":"n_qVSpG",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_OSC6k",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_OSC6k",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_I2Ly7",
 			"type":"next"
 		}
@@ -38,7 +45,7 @@
 	"id":"68ea57bde4793f27864bbb6d",
 	"lastModifiedBy":46030,
 	"lcName":"workflow agent | improve with ai",
-	"modifiedTime":1760198943916,
+	"modifiedTime":1760199547775,
 	"name":"Workflow Agent | Improve with AI",
 	"nodes":[
 		{
@@ -154,13 +161,54 @@
 				"parameters":{
 					"content":"{{ n_gbr3D.outputs.result.prompt }}",
 					"type":"text",
-					"response_format":"text"
+					"response_format":"text",
+					"signalProperties":{
+						"waitingInstanceId":"{{ __RUN__.outputs.executionId }}",
+						"waitingInstanceRunTimeType":"{{ __RUN__.outputs.workflowRunTimeType }}",
+						"automationId":"{{ __RUN__.outputs.workflowId }}",
+						"nodeId":"n_OSC6k"
+					}
 				}
 			},
 			"skip":false,
 			"subTitle":"Callable",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"signals_by_unifyapps",
+				"resourceVersion":907,
+				"resourceName":"signals_by_unifyapps_wait_for_signal",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_WL17E-1",
+			"id":"n_OSC6k",
+			"index":4,
+			"inputs":{
+				"duration":"5min",
+				"unit":"MINUTES",
+				"signal_payload":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"llmResponse"
+					],
+					"properties":{
+						"llmResponse":{
+							"type":"string",
+							"title":"Llm Response"
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Signals by UnifyApps",
+			"title":"Wait for signal",
+			"type":"ACTION"
 		},
 		{
 			"context":{
@@ -174,10 +222,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WL17E-1",
 			"id":"n_I2Ly7",
-			"index":4,
+			"index":5,
 			"inputs":{
 				"result":{
-					"rephrasedUserQuery":"{{ n_qVSpG.outputs.llmResponse }}"
+					"rephrasedUserQuery":"{{ n_OSC6k.outputs.signal_payload.llmResponse }}"
 				}
 			},
 			"skip":false,
@@ -203,5 +251,5 @@
 	"tags":[
 		
 	],
-	"version":6
+	"version":7
 }
