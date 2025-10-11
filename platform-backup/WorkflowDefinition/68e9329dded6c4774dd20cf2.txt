@@ -5,16 +5,16 @@
 	"createdTime":1760113309230,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760117129285,
+		"deployedAt":1760123574358,
 		"deployedBy":45011,
-		"deployedDefinitionId":"68e9418843447e470474b44c",
+		"deployedDefinitionId":"68e95ab4a1f3b520ec4ca1ce",
 		"status":"DEPLOYED",
-		"version":1,
-		"workflowVersion":10
+		"version":2,
+		"workflowVersion":12
 	},
 	"edges":[
 		{
-			"fromNodeId":"n_MOJqy",
+			"fromNodeId":"n_GhM5D",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_bai1i",
@@ -45,8 +45,15 @@
 			"fromNodeId":"n_NCjA7",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_8QnCw",
+			"toNodeId":"n_2KEYA",
 			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_2KEYA",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8QnCw",
+			"type":"next"
 		},
 		{
 			"fromNodeId":"n_8QnCw",
@@ -149,42 +156,42 @@
 			"fromNodeId":"_dweux",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_eymUK",
+			"toNodeId":"n_H8vlJ",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"_xVm2S",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_eymUK",
+			"toNodeId":"n_H8vlJ",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"_chHA5",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_eymUK",
+			"toNodeId":"n_H8vlJ",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"_3t55Z",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_eymUK",
+			"toNodeId":"n_H8vlJ",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"_lzLHF",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_eymUK",
+			"toNodeId":"n_H8vlJ",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"_PA3DC",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_eymUK",
+			"toNodeId":"n_H8vlJ",
 			"type":"next"
 		},
 		{
@@ -192,15 +199,8 @@
 			"name":"default",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_eymUK",
-			"type":"branch"
-		},
-		{
-			"fromNodeId":"n_eymUK",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"n_H8vlJ",
-			"type":"next"
+			"type":"branch"
 		},
 		{
 			"fromNodeId":"n_H8vlJ",
@@ -243,32 +243,57 @@
 	],
 	"id":"68e9329dded6c4774dd20cf2",
 	"lastModifiedBy":45011,
-	"lcName":"[dnt] analyse changesets",
-	"modifiedTime":1760117529406,
-	"name":"[DNT] analyse changesets",
+	"lcName":"multi tenancy v2 | analyse moved changesets",
+	"modifiedTime":1760190874116,
+	"name":"Multi Tenancy V2 | Analyse moved changesets",
 	"nodes":[
 		{
 			"context":{
-				"appName":"webhooks",
-				"resourceVersion":833,
-				"resourceName":"webhooks_default"
+				"appName":"callables",
+				"resourceVersion":1029,
+				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_RFpri-1",
-			"id":"n_MOJqy",
+			"id":"n_GhM5D",
 			"index":1,
 			"inputs":{
-				"request":{
-					"contentType":"application/json"
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"items":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"changesetId":{
+										"type":"string",
+										"title":"changesetId"
+									}
+								},
+								"additionalProperties":false
+							},
+							"title":"items"
+						},
+						"baseUrl":{
+							"type":"string",
+							"title":"baseUrl"
+						},
+						"cookie":{
+							"type":"string",
+							"title":"cookie"
+						}
+					}
 				}
 			},
 			"skip":false,
-			"subTitle":"Webhook",
-			"title":"New event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"WEBHOOK"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
@@ -370,7 +395,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_RFpri-1",
 			"id":"n_E0bY4",
@@ -656,7 +681,7 @@
 				"compile_static":false,
 				"captureStdOutput":false
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Code by UnifyApps",
 			"title":"Execute Groovy code",
 			"type":"ACTION"
@@ -669,20 +694,112 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_RFpri-1",
 			"id":"n_NCjA7",
 			"index":5,
 			"inputs":{
 				"repeatMode":"SINGLE",
-				"listSource":"{{ n_9xECc.outputs.result.items }}",
+				"listSource":"{{ n_GhM5D.outputs.items }}",
 				"captureIterations":false
 			},
 			"skip":false,
 			"subTitle":"Loop",
 			"title":"For each loop",
 			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"custom_http_endpoint",
+				"resourceVersion":1073,
+				"resourceName":"custom_http_endpoint_execute",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_NCjA7@_RFpri-1@l",
+			"id":"n_2KEYA",
+			"index":6,
+			"inputs":{
+				"isAsync":false,
+				"enableProxy":false,
+				"requestTimeoutInSecs":-1,
+				"httpMethod":"GET",
+				"connectionType":"DIRECT",
+				"sslVerify":false,
+				"path":"/api/changeset/{{ n_NCjA7.outputs.item.changesetId }}",
+				"responseSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"statusReason"
+					],
+					"properties":{
+						"assetDetails":{
+							"type":"object",
+							"properties":{},
+							"title":"assetDetails",
+							"additionalProperties":false,
+							"required":[]
+						},
+						"environmentIds":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"environmentIds"
+						},
+						"id":{
+							"type":"string",
+							"title":"id"
+						},
+						"name":{
+							"type":"string",
+							"title":"name"
+						},
+						"password":{
+							"type":"string",
+							"title":"password"
+						},
+						"status":{
+							"type":"string",
+							"title":"status"
+						},
+						"type":{
+							"type":"string",
+							"title":"type"
+						},
+						"version":{
+							"type":"integer",
+							"title":"version"
+						},
+						"statusReason":{
+							"type":"string",
+							"title":"Status Reason"
+						}
+					}
+				},
+				"baseUrl":"{{ n_GhM5D.outputs.baseUrl }}",
+				"httpVersion":"HTTP_2",
+				"responseContentType":"application/json",
+				"followRedirects":"NORMAL",
+				"headersList":[
+					{
+						"key":"Cookie",
+						"value":"_at={{ n_GhM5D.outputs.cookie }}"
+					}
+				],
+				"authType":"CUSTOM",
+				"requestContentType":"application/json",
+				"ignoreTrailingSlashes":false,
+				"certificateType":"CERT_STRING"
+			},
+			"skip":false,
+			"subTitle":"Custom HTTP Endpoint",
+			"title":"Execute REST request",
+			"type":"ACTION"
 		},
 		{
 			"context":{
@@ -697,7 +814,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_NCjA7@_RFpri-1@l",
 			"id":"n_8QnCw",
-			"index":6,
+			"index":7,
 			"inputs":{
 				"path":"/api/changeset/{{ n_NCjA7.outputs.item.changesetId }}",
 				"responseSchema":{
@@ -764,7 +881,7 @@
 				"requestContentType":"application/json",
 				"sslVerify":true
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Custom HTTP Application",
 			"title":"Execute REST Request",
 			"type":"ACTION"
@@ -779,7 +896,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_NCjA7@_RFpri-1@l",
 			"id":"n_Uj6fQ",
-			"index":7,
+			"index":8,
 			"inputs":{
 				"branches":[
 					{
@@ -789,7 +906,7 @@
 							"conditions":{
 								"filters":[
 									{
-										"property":"{{ n_8QnCw.outputs.result.status }}",
+										"property":"{{ n_2KEYA.outputs.result.status }}",
 										"filter":{
 											"operator":"EQUAL",
 											"value":"DRAFT"
@@ -807,7 +924,7 @@
 							"conditions":{
 								"filters":[
 									{
-										"property":"{{ n_8QnCw.outputs.result.status }}",
+										"property":"{{ n_2KEYA.outputs.result.status }}",
 										"filter":{
 											"operator":"EQUAL",
 											"value":"SUBMITTED"
@@ -825,7 +942,7 @@
 							"conditions":{
 								"filters":[
 									{
-										"property":"{{ n_8QnCw.outputs.result.status }}",
+										"property":"{{ n_2KEYA.outputs.result.status }}",
 										"filter":{
 											"operator":"EQUAL",
 											"value":"DEPLOYED"
@@ -846,7 +963,7 @@
 										"property":"FAILED",
 										"filter":{
 											"operator":"EQUAL",
-											"value":"{{ n_8QnCw.outputs.result.status }}"
+											"value":"{{ n_2KEYA.outputs.result.status }}"
 										}
 									}
 								],
@@ -861,7 +978,7 @@
 							"conditions":{
 								"filters":[
 									{
-										"property":"{{ n_8QnCw.outputs.result.status }}",
+										"property":"{{ n_2KEYA.outputs.result.status }}",
 										"filter":{
 											"operator":"EQUAL",
 											"value":"DEPLOYMENT_FAILED"
@@ -882,7 +999,7 @@
 										"property":"EXPORTING",
 										"filter":{
 											"operator":"EQUAL",
-											"value":"{{ n_8QnCw.outputs.result.status }}"
+											"value":"{{ n_2KEYA.outputs.result.status }}"
 										}
 									}
 								],
@@ -912,13 +1029,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@1",
 			"id":"n_Uj6fQ@1",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"name":"Branch 1",
 				"conditions":{
 					"filters":[
 						{
-							"property":"{{ n_8QnCw.outputs.result.status }}",
+							"property":"{{ n_2KEYA.outputs.result.status }}",
 							"filter":{
 								"operator":"EQUAL",
 								"value":"DRAFT"
@@ -944,7 +1061,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@1",
 			"id":"_dweux",
-			"index":9,
+			"index":10,
 			"inputs":{
 				"variables":[
 					{
@@ -970,13 +1087,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@2",
 			"id":"n_Uj6fQ@2",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"name":"Branch 2",
 				"conditions":{
 					"filters":[
 						{
-							"property":"{{ n_8QnCw.outputs.result.status }}",
+							"property":"{{ n_2KEYA.outputs.result.status }}",
 							"filter":{
 								"operator":"EQUAL",
 								"value":"SUBMITTED"
@@ -1002,7 +1119,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@2",
 			"id":"_xVm2S",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"variables":[
 					{
@@ -1028,13 +1145,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@3",
 			"id":"n_Uj6fQ@3",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"name":"Branch 3",
 				"conditions":{
 					"filters":[
 						{
-							"property":"{{ n_8QnCw.outputs.result.status }}",
+							"property":"{{ n_2KEYA.outputs.result.status }}",
 							"filter":{
 								"operator":"EQUAL",
 								"value":"DEPLOYED"
@@ -1060,7 +1177,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@3",
 			"id":"_chHA5",
-			"index":13,
+			"index":14,
 			"inputs":{
 				"variables":[
 					{
@@ -1086,7 +1203,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@4",
 			"id":"n_Uj6fQ@4",
-			"index":14,
+			"index":15,
 			"inputs":{
 				"name":"Branch 4",
 				"conditions":{
@@ -1095,7 +1212,7 @@
 							"property":"FAILED",
 							"filter":{
 								"operator":"EQUAL",
-								"value":"{{ n_8QnCw.outputs.result.status }}"
+								"value":"{{ n_2KEYA.outputs.result.status }}"
 							}
 						}
 					],
@@ -1118,7 +1235,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@4",
 			"id":"_3t55Z",
-			"index":15,
+			"index":16,
 			"inputs":{
 				"variables":[
 					{
@@ -1144,13 +1261,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@5",
 			"id":"n_Uj6fQ@5",
-			"index":16,
+			"index":17,
 			"inputs":{
 				"name":"Branch 5",
 				"conditions":{
 					"filters":[
 						{
-							"property":"{{ n_8QnCw.outputs.result.status }}",
+							"property":"{{ n_2KEYA.outputs.result.status }}",
 							"filter":{
 								"operator":"EQUAL",
 								"value":"DEPLOYMENT_FAILED"
@@ -1176,7 +1293,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@5",
 			"id":"_lzLHF",
-			"index":17,
+			"index":18,
 			"inputs":{
 				"variables":[
 					{
@@ -1202,7 +1319,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@6",
 			"id":"n_Uj6fQ@6",
-			"index":18,
+			"index":19,
 			"inputs":{
 				"name":"Branch 6",
 				"conditions":{
@@ -1211,7 +1328,7 @@
 							"property":"EXPORTING",
 							"filter":{
 								"operator":"EQUAL",
-								"value":"{{ n_8QnCw.outputs.result.status }}"
+								"value":"{{ n_2KEYA.outputs.result.status }}"
 							}
 						}
 					],
@@ -1234,37 +1351,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Uj6fQ@n_NCjA7@_RFpri-1@l@6",
 			"id":"_PA3DC",
-			"index":19,
+			"index":20,
 			"inputs":{
 				"variables":[
 					{
 						"source":"{{ n_bai1i.outputs.ex }}",
 						"value":"=SUM({{ n_bai1i.outputs.ex }},1)"
-					}
-				]
-			},
-			"skip":false,
-			"subTitle":"Variable by UnifyApps",
-			"title":"Update variables",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"variable_by_unifyapps",
-				"resourceVersion":966,
-				"resourceName":"variable_by_unifyapps_update_variables",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_NCjA7@_RFpri-1@l",
-			"id":"n_eymUK",
-			"index":20,
-			"inputs":{
-				"variables":[
-					{
-						"source":"{{ n_bai1i.outputs.dr }}"
 					}
 				]
 			},
@@ -1289,7 +1381,7 @@
 			"inputs":{
 				"filters":[
 					{
-						"property":"{{ n_8QnCw.outputs.result.status }}",
+						"property":"{{ n_2KEYA.outputs.result.status }}",
 						"filter":{
 							"operator":"EQUAL",
 							"value":"FAILED"
@@ -1317,7 +1409,7 @@
 			"id":"n_6O5Oe",
 			"index":22,
 			"inputs":{
-				"itemToAdd":"{{ n_8QnCw.outputs.result.statusReason }}",
+				"itemToAdd":"{{ n_2KEYA.outputs.result.statusReason }}",
 				"insertLocation":"END",
 				"listName":"{{ n_E0bY4.outputs.items[0] }}"
 			},
@@ -1424,5 +1516,5 @@
 	"tags":[
 		
 	],
-	"version":11
+	"version":14
 }
