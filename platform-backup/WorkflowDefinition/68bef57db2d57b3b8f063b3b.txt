@@ -5,12 +5,12 @@
 	"createdTime":1757705814214,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760099380310,
-		"deployedBy":1,
-		"deployedDefinitionId":"68e8fc33aa15f745769d64a4",
+		"deployedAt":1760117558533,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68e9433664af142a5db300fc",
 		"status":"DEPLOYED",
-		"version":49,
-		"workflowVersion":100
+		"version":50,
+		"workflowVersion":102
 	},
 	"edges":[
 		{
@@ -118,9 +118,9 @@
 		]
 	},
 	"id":"68bef57db2d57b3b8f063b3b",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":1,
 	"lcName":"knowledge downloader | onedrive | file",
-	"modifiedTime":1760117558443,
+	"modifiedTime":1760201744114,
 	"name":"Knowledge Downloader | OneDrive | File",
 	"nodes":[
 		{
@@ -183,6 +183,10 @@
 							"properties":{},
 							"additionalProperties":false,
 							"title":"Downloader Config"
+						},
+						"knowledgeSetId":{
+							"type":"string",
+							"title":"Knowledge Set Id"
 						}
 					}
 				}
@@ -608,17 +612,13 @@
 							"type":"string",
 							"title":"Modified Time"
 						},
-						"authorEmail":{
-							"type":"string",
-							"title":"Author Email"
-						},
 						"folder":{
 							"type":"string",
 							"title":"Folder"
 						}
 					}
 				},
-				"code":"def chunkMetadata = [:]\n\nchunkMetadata << (binding.hasVariable('name') && name ? [\"name\": name] : [:])\nchunkMetadata << (binding.hasVariable('mimetype') && mimetype ? [\"mimetype\": mimetype] : [:])\nchunkMetadata << (binding.hasVariable('webViewLink') && webViewLink ? [\"referenceUrl\": webViewLink] : [:])\nchunkMetadata << (binding.hasVariable('size') && size ? [\"size\": size] : [:])\nchunkMetadata << [\"appName\" : \"microsoft_onedrive\"]\nchunkMetadata << (binding.hasVariable('folder') && folder ? [\"folderName\": folder] : [:])\nchunkMetadata << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nchunkMetadata << (binding.hasVariable('authorEmail') && authorEmail ? [\"authorEmail\": authorEmail] : [:])\nchunkMetadata << (binding.hasVariable('creationDateTime') && creationDateTime ? [\"createdTime\": java.time.Instant.parse(creationDateTime).toEpochMilli()] : [:])\nchunkMetadata << (binding.hasVariable('modifiedTime') && modifiedTime ? [\"modifiedTime\": java.time.Instant.parse(modifiedTime).toEpochMilli()] : [:])\n\nreturn [\"chunkMetadata\": chunkMetadata]\n",
+				"code":"def chunkMetadata = [:]\n\nchunkMetadata << (binding.hasVariable('name') && name ? [\"name\": name] : [:])\nchunkMetadata << (binding.hasVariable('mimetype') && mimetype ? [\"mimetype\": mimetype] : [:])\nchunkMetadata << (binding.hasVariable('webViewLink') && webViewLink ? [\"referenceUrl\": webViewLink] : [:])\nchunkMetadata << (binding.hasVariable('size') && size ? [\"size\": size] : [:])\nchunkMetadata << [\"appName\" : \"microsoft_onedrive\"]\nchunkMetadata << (binding.hasVariable('folder') && folder ? [\"folderName\": folder] : [:])\nchunkMetadata << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nchunkMetadata << (binding.hasVariable('creationDateTime') && creationDateTime ? [\"createdTime\": java.time.Instant.parse(creationDateTime).toEpochMilli()] : [:])\nchunkMetadata << (binding.hasVariable('modifiedTime') && modifiedTime ? [\"modifiedTime\": java.time.Instant.parse(modifiedTime).toEpochMilli()] : [:])\n\nreturn [\"chunkMetadata\": chunkMetadata]\n",
 				"compile_static":false,
 				"isAsync":false,
 				"captureStdOutput":false,
@@ -627,10 +627,9 @@
 					"mimetype":"{{ k3HVL.outputs.file.mimeType }}",
 					"webViewLink":"{{ _sTbGo.outputs.path }}",
 					"size":"{{ k3HVL.outputs.size }}",
-					"author":"{{ k3HVL.outputs.createdBy.user.displayName }}",
+					"author":"{{ k3HVL.outputs.createdBy.user.email }}",
 					"creationDateTime":"{{ k3HVL.outputs.createdDateTime }}",
 					"modifiedTime":"{{ k3HVL.outputs.lastModifiedDateTime }}",
-					"authorEmail":"{{ k3HVL.outputs.createdBy.user.email }}",
 					"folder":"{{ k3HVL.outputs.parentReference.path }}"
 				}
 			},
@@ -718,10 +717,6 @@
 							"type":"string",
 							"title":"author"
 						},
-						"authorEmail":{
-							"type":"string",
-							"title":"authorEmail"
-						},
 						"creationDateTime":{
 							"type":"string",
 							"title":"creationDateTime"
@@ -758,12 +753,11 @@
 						}
 					}
 				},
-				"code":"def sourceResponse = [:]\n\nif(binding.hasVariable('fileDetails')){\n  sourceResponse[\"fileDetails\"] = fileDetails\n}\n\nsourceResponse << (binding.hasVariable('name') && name ? [\"name\": name] : [:])\nsourceResponse << (binding.hasVariable('mimetype') && mimetype ? [\"mimetype\": mimetype] : [:])\nsourceResponse << (binding.hasVariable('webViewLink') && webViewLink ? [\"referenceUrl\": webViewLink] : [:])\nsourceResponse << (binding.hasVariable('size') && size ? [\"size\": size] : [:])\nsourceResponse << [\"appName\" : \"microsoft_onedrive\"]\nsourceResponse << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nsourceResponse << (binding.hasVariable('folder') && folder ? [\"folder\": folder] : [:])\nsourceResponse << (binding.hasVariable('authorEmail') && authorEmail ? [\"authorEmail\": authorEmail] : [:])\nsourceResponse << (binding.hasVariable('creationDateTime') && creationDateTime ? [\"createdTime\": java.time.Instant.parse(creationDateTime).toEpochMilli()] : [:])\nsourceResponse << (binding.hasVariable('modifiedTime') && modifiedTime ? [\"modifiedTime\": java.time.Instant.parse(modifiedTime).toEpochMilli()] : [:])\n\nreturn [\"sourceResponse\": sourceResponse]\n",
+				"code":"def sourceResponse = [:]\n\nif(binding.hasVariable('fileDetails')){\n  sourceResponse[\"fileDetails\"] = fileDetails\n}\n\nsourceResponse << (binding.hasVariable('name') && name ? [\"name\": name] : [:])\nsourceResponse << (binding.hasVariable('mimetype') && mimetype ? [\"mimetype\": mimetype] : [:])\nsourceResponse << (binding.hasVariable('webViewLink') && webViewLink ? [\"referenceUrl\": webViewLink] : [:])\nsourceResponse << (binding.hasVariable('size') && size ? [\"size\": size] : [:])\nsourceResponse << [\"appName\" : \"microsoft_onedrive\"]\nsourceResponse << (binding.hasVariable('author') && author ? [\"author\": author] : [:])\nsourceResponse << (binding.hasVariable('folder') && folder ? [\"folder\": folder] : [:])\nsourceResponse << (binding.hasVariable('creationDateTime') && creationDateTime ? [\"createdTime\": java.time.Instant.parse(creationDateTime).toEpochMilli()] : [:])\nsourceResponse << (binding.hasVariable('modifiedTime') && modifiedTime ? [\"modifiedTime\": java.time.Instant.parse(modifiedTime).toEpochMilli()] : [:])\n\nreturn [\"sourceResponse\": sourceResponse]\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
-					"author":"{{ k3HVL.outputs.createdBy.user.displayName }}",
-					"authorEmail":"{{ k3HVL.outputs.createdBy.user.email }}",
+					"author":"{{ k3HVL.outputs.createdBy.user.email }}",
 					"creationDateTime":"{{ k3HVL.outputs.createdDateTime }}",
 					"mimetype":"{{ k3HVL.outputs.file.mimeType }}",
 					"modifiedTime":"{{ k3HVL.outputs.lastModifiedDateTime }}",
@@ -807,6 +801,7 @@
 					"metadata":"{{ _5iPjK.outputs.result.chunkMetadata }}",
 					"authorEmail":"{{ _SNVyB.outputs.result.sourceResponse.authorEmail }}",
 					"isTypeFile":true,
+					"knowledgeSetId":"{{ n_0pUZ3.outputs.knowledgeSetId }}",
 					"sharedWithIds":{
 						"ua:type":"mappedArray",
 						"source":"{{ _DH3yZ.outputs.sharedWithIds }}",
@@ -860,9 +855,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
+	"standard":false,
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":102
+	"version":103
 }
