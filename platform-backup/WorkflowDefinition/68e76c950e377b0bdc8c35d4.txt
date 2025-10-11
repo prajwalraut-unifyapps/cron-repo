@@ -5,12 +5,12 @@
 	"createdTime":1759997077498,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760032678698,
+		"deployedAt":1760185112551,
 		"deployedBy":45011,
-		"deployedDefinitionId":"68e7f7a650c30c5009b3ade4",
+		"deployedDefinitionId":"68ea4b187028c72b8a916014",
 		"status":"DEPLOYED",
-		"version":4,
-		"workflowVersion":16
+		"version":5,
+		"workflowVersion":21
 	},
 	"edges":[
 		{
@@ -211,8 +211,15 @@
 			"fromNodeId":"_287Jl",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_PlzR5",
+			"toNodeId":"n_gHo2n",
 			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_gHo2n",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_PlzR5",
+			"type":"next"
 		},
 		{
 			"fromNodeId":"_PlzR5",
@@ -455,7 +462,7 @@
 	"id":"68e76c950e377b0bdc8c35d4",
 	"lastModifiedBy":45011,
 	"lcName":"multi tenancy v2 | fetch all api resources",
-	"modifiedTime":1760185109878,
+	"modifiedTime":1760187104956,
 	"name":"Multi Tenancy V2 | Fetch All API Resources",
 	"nodes":[
 		{
@@ -864,7 +871,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_NZlfx",
@@ -1212,7 +1219,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@1",
 			"id":"n_1LfIh@1",
@@ -1220,7 +1227,7 @@
 			"inputs":{
 				"name":"API Endpoint Collection"
 			},
-			"skip":false,
+			"skip":true,
 			"title":"",
 			"type":"BRANCH_CONDITION"
 		},
@@ -1232,7 +1239,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@1",
 			"id":"_bD9Vf",
@@ -1610,7 +1617,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_pVMhd@n_1LfIh@_tT02q-1@1@l",
 			"id":"n_YrS93",
@@ -1813,7 +1820,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@2",
 			"id":"n_1LfIh@2",
@@ -1821,7 +1828,7 @@
 			"inputs":{
 				"name":"API Endpoint"
 			},
-			"skip":false,
+			"skip":true,
 			"title":"",
 			"type":"BRANCH_CONDITION"
 		},
@@ -2211,7 +2218,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_id5Er@n_1LfIh@_tT02q-1@2@l",
 			"id":"_6s9pf",
@@ -2805,6 +2812,85 @@
 			"type":"LOOP"
 		},
 		{
+			"additional":{
+				"xsdSchemaConfig":{
+					"root":{}
+				}
+			},
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":989,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_287Jl@n_1LfIh@_tT02q-1@3@l",
+			"id":"n_gHo2n",
+			"index":27,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"filter":{
+							"type":"object",
+							"properties":{
+								"op":{
+									"type":"string",
+									"title":"op"
+								},
+								"field":{
+									"type":"string",
+									"title":"field"
+								},
+								"values":{
+									"type":"array",
+									"items":{
+										"type":"string"
+									},
+									"title":"values"
+								}
+							},
+							"title":"filter",
+							"additionalProperties":false
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"defaultCollectionList"
+					],
+					"properties":{
+						"defaultCollectionList":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Default Collection List"
+						}
+					}
+				},
+				"code":"return [\n  \"filter\" : [\n    \"op\" : \"NOT_IN\",\n    \"field\": \"collectionId\",\n    \"values\" : binding.hasVariable('defaultCollectionList') ? defaultCollectionList : []\n  ]\n]",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"defaultCollectionList":{
+						"source":"{{ n_uX76i.outputs.items }}",
+						"ua:type":"mappedArray",
+						"items":"{{ n_uX76i.outputs.items[0] }}"
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
 			"context":{
 				"appName":"standard_entities",
 				"resourceVersion":1193,
@@ -2816,7 +2902,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_287Jl@n_1LfIh@_tT02q-1@3@l",
 			"id":"_PlzR5",
-			"index":27,
+			"index":28,
 			"inputs":{
 				"projections":[
 					{
@@ -2828,7 +2914,7 @@
 					"filters":[
 						{
 							"resolvedFilter":{
-								"filter":"{\"op\":\"NOT_IN\", \"field\":\"collectionIds\", \"values\":{{ n_uX76i.outputs.items }}}"
+								"filter":"{{ n_gHo2n.outputs.result.filter }}"
 							}
 						}
 					],
@@ -2926,7 +3012,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_287Jl@n_1LfIh@_tT02q-1@3@l",
 			"id":"_3ClSt",
-			"index":28,
+			"index":29,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -2956,7 +3042,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_287Jl@n_1LfIh@_tT02q-1@3@l",
 			"id":"_MKWrE",
-			"index":29,
+			"index":30,
 			"inputs":{
 				"loop":"n_pVMhd",
 				"conditions":{
@@ -2989,7 +3075,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_287Jl@n_1LfIh@_tT02q-1@3@l",
 			"id":"_mKTcn",
-			"index":30,
+			"index":31,
 			"inputs":{
 				"variables":[
 					{
@@ -3015,15 +3101,15 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@4",
 			"id":"n_1LfIh@4",
-			"index":31,
+			"index":32,
 			"inputs":{
 				"name":"Access Profile"
 			},
-			"skip":false,
+			"skip":true,
 			"title":"",
 			"type":"BRANCH_CONDITION"
 		},
@@ -3039,7 +3125,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@4",
 			"id":"_lcFTq",
-			"index":32,
+			"index":33,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -3324,7 +3410,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@4",
 			"id":"_VXSWl",
-			"index":33,
+			"index":34,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -3384,7 +3470,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@4",
 			"id":"_BGCA9",
-			"index":34,
+			"index":35,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -3413,11 +3499,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_BGCA9@n_1LfIh@_tT02q-1@4@l",
 			"id":"_guZNk",
-			"index":35,
+			"index":36,
 			"inputs":{
 				"projections":[
 					{
@@ -3527,7 +3613,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_BGCA9@n_1LfIh@_tT02q-1@4@l",
 			"id":"_qyWJ1",
-			"index":36,
+			"index":37,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -3557,7 +3643,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_BGCA9@n_1LfIh@_tT02q-1@4@l",
 			"id":"_Oxq4z",
-			"index":37,
+			"index":38,
 			"inputs":{
 				"loop":"n_pVMhd",
 				"conditions":{
@@ -3590,7 +3676,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_BGCA9@n_1LfIh@_tT02q-1@4@l",
 			"id":"_rYwhE",
-			"index":38,
+			"index":39,
 			"inputs":{
 				"variables":[
 					{
@@ -3616,15 +3702,15 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@5",
 			"id":"n_1LfIh@5",
-			"index":39,
+			"index":40,
 			"inputs":{
 				"name":"API Policy"
 			},
-			"skip":false,
+			"skip":true,
 			"title":"",
 			"type":"BRANCH_CONDITION"
 		},
@@ -3640,7 +3726,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@5",
 			"id":"_8z6y8",
-			"index":40,
+			"index":41,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -3925,7 +4011,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@5",
 			"id":"_EhoGq",
-			"index":41,
+			"index":42,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -3985,7 +4071,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_1LfIh@_tT02q-1@5",
 			"id":"_KdXfI",
-			"index":42,
+			"index":43,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -4014,11 +4100,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_KdXfI@n_1LfIh@_tT02q-1@5@l",
 			"id":"_zHbX8",
-			"index":43,
+			"index":44,
 			"inputs":{
 				"projections":[
 					{
@@ -4118,7 +4204,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KdXfI@n_1LfIh@_tT02q-1@5@l",
 			"id":"_GE208",
-			"index":44,
+			"index":45,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4148,7 +4234,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KdXfI@n_1LfIh@_tT02q-1@5@l",
 			"id":"_iAbCk",
-			"index":45,
+			"index":46,
 			"inputs":{
 				"loop":"n_pVMhd",
 				"conditions":{
@@ -4181,7 +4267,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_KdXfI@n_1LfIh@_tT02q-1@5@l",
 			"id":"_Io806",
-			"index":46,
+			"index":47,
 			"inputs":{
 				"variables":[
 					{
@@ -4218,7 +4304,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_39JHZ",
-			"index":47,
+			"index":48,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4256,7 +4342,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"_NSGTL",
-			"index":48,
+			"index":49,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4294,7 +4380,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"_5NCYa",
-			"index":49,
+			"index":50,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4332,7 +4418,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"_9IthP",
-			"index":50,
+			"index":51,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4370,7 +4456,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"_CKErw",
-			"index":51,
+			"index":52,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4401,7 +4487,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_tT02q-1",
 			"id":"n_1rXuq",
-			"index":52,
+			"index":53,
 			"inputs":{
 				"result":{
 					"apiAssets":{
@@ -4438,5 +4524,5 @@
 	"tags":[
 		
 	],
-	"version":21
+	"version":22
 }
