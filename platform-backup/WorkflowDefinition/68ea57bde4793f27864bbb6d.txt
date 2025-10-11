@@ -5,16 +5,23 @@
 	"createdTime":1760188349038,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760190290249,
+		"deployedAt":1760191682087,
 		"deployedBy":46030,
-		"deployedDefinitionId":"68ea5f526dfc56103a00793f",
+		"deployedDefinitionId":"68ea64c06539036c54747d35",
 		"status":"DEPLOYED",
-		"version":1,
-		"workflowVersion":4
+		"version":2,
+		"workflowVersion":5
 	},
 	"edges":[
 		{
-			"fromNodeId":"n_dEkFG",
+			"fromNodeId":"n_KXYHE",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_gbr3D",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_gbr3D",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_qVSpG",
@@ -31,33 +38,100 @@
 	"id":"68ea57bde4793f27864bbb6d",
 	"lastModifiedBy":46030,
 	"lcName":"workflow agent | improve with ai",
-	"modifiedTime":1760191675973,
+	"modifiedTime":1760198943916,
 	"name":"Workflow Agent | Improve with AI",
 	"nodes":[
 		{
 			"context":{
-				"appName":"webhooks",
-				"resourceVersion":833,
-				"resourceName":"webhooks_default"
+				"appName":"callables",
+				"resourceVersion":1029,
+				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_WL17E-1",
-			"id":"n_dEkFG",
+			"id":"n_KXYHE",
 			"index":1,
 			"inputs":{
-				"request":{
-					"contentType":"application/json"
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"rephrasedUserQuery":{
+							"type":"string",
+							"title":"Rephrased User Query"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"userQuery":{
+							"type":"string",
+							"title":"User Query"
+						}
+					}
 				}
 			},
 			"skip":false,
-			"subTitle":"Webhook",
-			"title":"New event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"WEBHOOK"
+				"type":"CALLABLE"
 			},
 			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":989,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_WL17E-1",
+			"id":"n_gbr3D",
+			"index":2,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"prompt":{
+							"type":"string",
+							"title":"Prompt"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"userQuery":{
+							"type":"string",
+							"title":"User Query"
+						}
+					}
+				},
+				"code":"return [\n  \"prompt\": \"\"\"You are a query rephraser assistant. \nYour task is to rephrase user queries to make them clearer, more structured, and grammatically correct — \nwithout changing their meaning or intent.\n\nGuidelines:\n1. Preserve the user’s original intent and domain context.\n2. Eliminate ambiguity, slang, filler words, or unnecessary verbosity.\n3. Normalize references (e.g., \"it\", \"that thing\") if context allows.\n4. Output a concise, professional, and natural rephrasing in plain English.\n5. Do not answer the query — just rephrase it.\n6. If the query is a command, keep it as a command but make it cleaner and more actionable.\n7. If the user input is incomplete or vague, infer the most likely intended meaning from the text.\n\nReturn only the rephrased version. Do not include explanations or notes.\n\nUser Query : ${userQuery}\n\"\"\".toString()\n]",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"userQuery":"{{ n_KXYHE.outputs.userQuery }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
 		},
 		{
 			"context":{
@@ -71,14 +145,14 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WL17E-1",
 			"id":"n_qVSpG",
-			"index":2,
+			"index":3,
 			"inputs":{
 				"automationId":"684fceac5ae1b66e4745e406",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"content":"You are a query rephraser assistant. \nYour task is to rephrase user queries to make them clearer, more structured, and grammatically correct — \nwithout changing their meaning or intent.\nGuidelines:\n1. Preserve the user’s original intent and domain context.\n2. Eliminate ambiguity, slang, filler words, or unnecessary verbosity.\n3. Normalize references (e.g., \"it\", \"that thing\") if context allows.\n4. Output a concise, professional, and natural rephrasing in plain English.\n5. Do not answer the query — just rephrase it.\n6. If the query is a command, keep it as a command but make it cleaner and more actionable.\n7. If the user input is incomplete or vague, infer the most likely intended meaning from the text.\nReturn only the rephrased version. Do not include explanations or notes.\n\nuserQuery: \n\"help me fix this error in workflow execution log\"\n",
+					"content":"{{ n_gbr3D.outputs.result.prompt }}",
 					"type":"text",
 					"response_format":"text"
 				}
@@ -100,13 +174,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WL17E-1",
 			"id":"n_I2Ly7",
-			"index":3,
+			"index":4,
 			"inputs":{
 				"result":{
-					"rephrasedQuery":"{{ n_qVSpG.outputs.llmResponse }}"
+					"rephrasedUserQuery":"{{ n_qVSpG.outputs.llmResponse }}"
 				}
 			},
-			"skip":true,
+			"skip":false,
 			"subTitle":"Callable",
 			"title":"Respond to automation",
 			"type":"STOP"
@@ -129,5 +203,5 @@
 	"tags":[
 		
 	],
-	"version":5
+	"version":6
 }
