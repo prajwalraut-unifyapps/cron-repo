@@ -1,51 +1,214 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
 	"createdTime":1760258881292,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_MfpQd",
+			"fromNodeId":"n_Bm5o3",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_I0ut8",
+			"toNodeId":"n_0pol6",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_0pol6",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_byqEA",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_byqEA",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_QyLuG",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_byqEA",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_WMRL3",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_QyLuG",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_WMRL3",
 			"type":"next"
 		}
 	],
 	"id":"68eb6b41ec609d6e7454af5f",
 	"lastModifiedBy":33877,
 	"lcName":"test",
-	"modifiedTime":1760258881292,
+	"modifiedTime":1760259295623,
 	"name":"test",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1121,
+				"resourceName":"callables_from_api"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_MfpQd-1",
-			"id":"_MfpQd",
-			"index":0,
+			"id":"n_Bm5o3",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				},
+				"endpointType":"REST",
+				"response":[
+					{
+						"name":"Success",
+						"status":200,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						}
+					},
+					{
+						"status":401,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						}
+					}
+				],
+				"streamingResponse":false
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via API",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":4552,
+				"resourceName":"storage_by_unifyapps_fetch_records",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_MfpQd-1",
-			"id":"_I0ut8",
-			"index":0,
+			"id":"n_0pol6",
+			"index":2,
+			"inputs":{
+				"searchField":{
+					"fields":[
+						"properties_Useremail"
+					]
+				},
+				"object_type":"entry",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":20
+				},
+				"numberOfRecordsToFetch":"MULTIPLE",
+				"readThroughSessionVariables":false,
+				"includeTotalCount":false
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch records",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_MfpQd-1",
+			"id":"n_byqEA",
+			"index":3,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_0pol6.outputs.objects[0].properties.Useremail }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1090,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_byqEA@_MfpQd-1@n",
+			"id":"n_QyLuG",
+			"index":4,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"401_undefined",
+				"status":401
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1090,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_MfpQd-1",
+			"id":"n_WMRL3",
+			"index":5,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_Success",
+				"status":200
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":33877,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +222,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
