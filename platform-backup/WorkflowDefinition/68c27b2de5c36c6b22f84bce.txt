@@ -5,12 +5,12 @@
 	"createdTime":1757705829683,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760024953880,
+		"deployedAt":1760117579068,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68e7d979e4155b0b0f30b1dc",
+		"deployedDefinitionId":"68e9434b64af142a5db3017c",
 		"status":"DEPLOYED",
-		"version":39,
-		"workflowVersion":61
+		"version":48,
+		"workflowVersion":74
 	},
 	"edges":[
 		{
@@ -83,9 +83,9 @@
 		]
 	},
 	"id":"68c27b2de5c36c6b22f84bce",
-	"lastModifiedBy":0,
+	"lastModifiedBy":1,
 	"lcName":"knowledge downloader | sharepoint | single file wrapper",
-	"modifiedTime":1760034473370,
+	"modifiedTime":1760303516582,
 	"name":"Knowledge Downloader | Sharepoint | Single file wrapper",
 	"nodes":[
 		{
@@ -267,9 +267,7 @@
 				"output":{
 					"type":"object",
 					"additionalProperties":false,
-					"required":[
-						"siteType"
-					],
+					"required":[],
 					"properties":{
 						"fileName":{
 							"type":"string",
@@ -282,10 +280,6 @@
 						"parentFolder":{
 							"type":"string",
 							"title":"Parent Folder"
-						},
-						"siteType":{
-							"type":"string",
-							"title":"Site Type"
 						}
 					}
 				},
@@ -302,9 +296,8 @@
 						}
 					}
 				},
-				"code":"import java.net.URLEncoder\n\nif(!binding.hasVariable('inputs')){\n  return [:]\n}\n\ndef toReturn = [:]\n\ndef encodeStringToUrl(String input) {\n    def encoded = \"\"\n    for (char ch : input.toCharArray()) {\n        if (ch.isLetterOrDigit() || ch in ['-', '_', '.', '~']) {\n            encoded += ch\n        } else {\n            encoded += String.format(\"%%%02X\", (int) ch)\n        }\n    }\n    return encoded\n}\n\nif (inputs?.parentFolder != null && inputs?.filePath != null) {\n    \n    def newId = new StringBuilder()\n\n    for (text in inputs.parentFolder.context) {\n            newId.append('/')\n            newId.append(text.name)\n        }\n\n    newId.append('/')\n    newId.append(inputs.filePath)\n\n    if(inputs?.siteName != null)\n    {\n        toReturn.put(\"siteName\", inputs.siteName)\n    }\n    \n    toReturn.put(\"parentFolder\", inputs.parentFolder)\n    toReturn.put(\"filePath\", inputs.filePath)\n    toReturn.put(\"serverRelativeUri\", newId.toString())\n\n    return ['toReturn':toReturn]\n}\n\nif (inputs?.serverRelativeUri != null) {\n\n    def filePath = inputs.serverRelativeUri.substring(inputs.serverRelativeUri.lastIndexOf(\"/\") + 1)\n    \n    def lastSlashIndex = inputs.serverRelativeUri.lastIndexOf(\"/\")\n    def folderPath = lastSlashIndex > 0 ? \n        inputs.serverRelativeUri.substring(1, lastSlashIndex) : \"\"\n\n    if (inputs?.siteName != null) {\n        toReturn.put(\"siteName\", inputs.siteName)\n    }\n    if (inputs?.siteType != null) {\n        toReturn.put(\"siteType\", inputs.siteType)\n    }\n    toReturn.put(\"serverRelativeUri\", inputs.serverRelativeUri)\n    toReturn.put(\"filePath\", filePath)\n\n    def encodedPath = encodeStringToUrl(folderPath)\n\n    newFolderPath = [context: [], id: encodedPath]\n    toReturn.put(\"parentFolder\", newFolderPath)\n\n    return ['toReturn': toReturn]\n}\n\n\nreturn ['toReturn':inputs]",
+				"code":"return inputs",
 				"compile_static":false,
-				"captureStdOutput":false,
 				"parameters":{
 					"inputs":"{{ n_3KodF.outputs.inputs }}"
 				}
@@ -331,8 +324,7 @@
 			"inputs":{
 				"site_name":"{{ 1WPP3.outputs.result.siteName }}",
 				"parent_folder":"{{ 1WPP3.outputs.result.parentFolder }}",
-				"file_name":"{{ 1WPP3.outputs.result.fileName }}",
-				"siteType":"{{ 1WPP3.outputs.result.siteType }}"
+				"file_name":"{{ 1WPP3.outputs.result.fileName }}"
 			},
 			"skip":false,
 			"subTitle":"Microsoft SharePoint",
@@ -506,8 +498,7 @@
 					"folderPath":"{{ n_BV12k.outputs.result.folderPath }}",
 					"uniqueId":"{{ n_Gi2jb.outputs.d.UniqueId }}",
 					"connectionId":"{{ n_3KodF.outputs.knowledge.applicationInfo.context.connectionId }}",
-					"grabberType":"{{ n_3KodF.outputs.downloaderConfig.grabberType }}",
-					"siteType":"{{ 1WPP3.outputs.result.siteType }}"
+					"grabberType":"{{ n_3KodF.outputs.downloaderConfig.grabberType }}"
 				}
 			},
 			"skip":false,
@@ -550,9 +541,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":true,
-		"enableRunLogging":true,
-		"enableVariableLogging":true,
+		"enableNodeLevelLogging":false,
+		"enableRunLogging":false,
+		"enableVariableLogging":false,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -563,5 +554,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":62
+	"version":75
 }
