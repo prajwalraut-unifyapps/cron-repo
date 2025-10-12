@@ -23,7 +23,7 @@
 	"id":"68ebc04f0c3d19149a9dbb42",
 	"lastModifiedBy":44108,
 	"lcName":"descryption1",
-	"modifiedTime":1760280655094,
+	"modifiedTime":1760280731972,
 	"name":"descryption1",
 	"nodes":[
 		{
@@ -33,7 +33,7 @@
 				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_YZ322-1",
 			"id":"n_BR2T1",
@@ -44,9 +44,9 @@
 					"additionalProperties":false,
 					"required":[],
 					"properties":{
-						"cipher":{
+						"descryptedText":{
 							"type":"string",
-							"title":"Cipher"
+							"title":"Descrypted Text"
 						}
 					}
 				},
@@ -55,13 +55,13 @@
 					"additionalProperties":false,
 					"required":[],
 					"properties":{
-						"text":{
-							"type":"string",
-							"title":"Text"
-						},
 						"passPhrase":{
 							"type":"string",
 							"title":"Pass Phrase"
+						},
+						"cipherText":{
+							"type":"string",
+							"title":"Text"
 						}
 					}
 				}
@@ -82,7 +82,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_YZ322-1",
 			"id":"n_vmZm3",
@@ -93,9 +93,9 @@
 					"additionalProperties":false,
 					"required":[],
 					"properties":{
-						"cipher":{
+						"descryptedText":{
 							"type":"string",
-							"title":"Cipher"
+							"title":"descryptedText"
 						}
 					}
 				},
@@ -114,12 +114,12 @@
 						}
 					}
 				},
-				"code":"import javax.crypto.*\nimport javax.crypto.spec.*\nimport java.security.*\nimport java.security.spec.*\nimport java.util.Base64\n\ndef generate128BitsOfRandomEntropy() {\n    byte[] randomBytes = new byte[16] \n    new SecureRandom().nextBytes(randomBytes)\n    return randomBytes\n}\n\ndef encrypt(String plainText, String passPhrase) {\n    int Keysize = 128\n    int DerivationIterations = 1000\n\n    byte[] saltBytes = generate128BitsOfRandomEntropy()\n    byte[] ivBytes = generate128BitsOfRandomEntropy()\n    byte[] plainTextBytes = plainText.getBytes(\"UTF-8\")\n\n    SecretKeyFactory factory = SecretKeyFactory.getInstance(\"PBKDF2WithHmacSHA1\")\n    KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), saltBytes, DerivationIterations, Keysize)\n    SecretKey tmp = factory.generateSecret(spec)\n    SecretKeySpec secret = new SecretKeySpec(tmp.getEncoded(), \"AES\")\n\n    Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\")\n    cipher.init(Cipher.ENCRYPT_MODE, secret, new IvParameterSpec(ivBytes))\n    byte[] cipherBytes = cipher.doFinal(plainTextBytes)\n\n    // Combine salt + IV + cipher text\n    byte[] combined = new byte[saltBytes.length + ivBytes.length + cipherBytes.length]\n    System.arraycopy(saltBytes, 0, combined, 0, saltBytes.length)\n    System.arraycopy(ivBytes, 0, combined, saltBytes.length, ivBytes.length)\n    System.arraycopy(cipherBytes, 0, combined, saltBytes.length + ivBytes.length, cipherBytes.length)\n\n    return Base64.encoder.encodeToString(combined)\n}\n\n// --- Decrypt ---\ndef decrypt(String cipherText, String passPhrase) {\n    int Keysize = 128\n    int DerivationIterations = 1000\n\n    byte[] cipherBytesWithSaltAndIv = Base64.decoder.decode(cipherText)\n    int blockSize = Keysize / 8\n\n    byte[] saltBytes = Arrays.copyOfRange(cipherBytesWithSaltAndIv, 0, blockSize)\n    byte[] ivBytes = Arrays.copyOfRange(cipherBytesWithSaltAndIv, blockSize, blockSize * 2)\n    byte[] cipherBytes = Arrays.copyOfRange(cipherBytesWithSaltAndIv, blockSize * 2, cipherBytesWithSaltAndIv.length)\n\n    SecretKeyFactory factory = SecretKeyFactory.getInstance(\"PBKDF2WithHmacSHA1\")\n    KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), saltBytes, DerivationIterations, Keysize)\n    SecretKey tmp = factory.generateSecret(spec)\n    SecretKeySpec secret = new SecretKeySpec(tmp.getEncoded(), \"AES\")\n\n    Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\")\n    cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(ivBytes))\n    byte[] plainBytes = cipher.doFinal(cipherBytes)\n\n    return new String(plainBytes, \"UTF-8\")\n}\n\n\nreturn [\"cipher\" : encrypt(text,passPhrase)]",
+				"code":"import javax.crypto.*\nimport javax.crypto.spec.*\nimport java.security.*\nimport java.security.spec.*\nimport java.util.Base64\n\ndef generate128BitsOfRandomEntropy() {\n    byte[] randomBytes = new byte[16] \n    new SecureRandom().nextBytes(randomBytes)\n    return randomBytes\n}\n\ndef encrypt(String plainText, String passPhrase) {\n    int Keysize = 128\n    int DerivationIterations = 1000\n\n    byte[] saltBytes = generate128BitsOfRandomEntropy()\n    byte[] ivBytes = generate128BitsOfRandomEntropy()\n    byte[] plainTextBytes = plainText.getBytes(\"UTF-8\")\n\n    SecretKeyFactory factory = SecretKeyFactory.getInstance(\"PBKDF2WithHmacSHA1\")\n    KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), saltBytes, DerivationIterations, Keysize)\n    SecretKey tmp = factory.generateSecret(spec)\n    SecretKeySpec secret = new SecretKeySpec(tmp.getEncoded(), \"AES\")\n\n    Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\")\n    cipher.init(Cipher.ENCRYPT_MODE, secret, new IvParameterSpec(ivBytes))\n    byte[] cipherBytes = cipher.doFinal(plainTextBytes)\n\n    // Combine salt + IV + cipher text\n    byte[] combined = new byte[saltBytes.length + ivBytes.length + cipherBytes.length]\n    System.arraycopy(saltBytes, 0, combined, 0, saltBytes.length)\n    System.arraycopy(ivBytes, 0, combined, saltBytes.length, ivBytes.length)\n    System.arraycopy(cipherBytes, 0, combined, saltBytes.length + ivBytes.length, cipherBytes.length)\n\n    return Base64.encoder.encodeToString(combined)\n}\n\n// --- Decrypt ---\ndef decrypt(String cipherText, String passPhrase) {\n    int Keysize = 128\n    int DerivationIterations = 1000\n\n    byte[] cipherBytesWithSaltAndIv = Base64.decoder.decode(cipherText)\n    int blockSize = Keysize / 8\n\n    byte[] saltBytes = Arrays.copyOfRange(cipherBytesWithSaltAndIv, 0, blockSize)\n    byte[] ivBytes = Arrays.copyOfRange(cipherBytesWithSaltAndIv, blockSize, blockSize * 2)\n    byte[] cipherBytes = Arrays.copyOfRange(cipherBytesWithSaltAndIv, blockSize * 2, cipherBytesWithSaltAndIv.length)\n\n    SecretKeyFactory factory = SecretKeyFactory.getInstance(\"PBKDF2WithHmacSHA1\")\n    KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), saltBytes, DerivationIterations, Keysize)\n    SecretKey tmp = factory.generateSecret(spec)\n    SecretKeySpec secret = new SecretKeySpec(tmp.getEncoded(), \"AES\")\n\n    Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\")\n    cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(ivBytes))\n    byte[] plainBytes = cipher.doFinal(cipherBytes)\n\n    return new String(plainBytes, \"UTF-8\")\n}\n\n\nreturn [\"descryptedText\" : decrypt(text,passPhrase)]",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
 					"text":"{{ n_BR2T1.outputs.text }}",
-					"passPhrase":"{{ n_BR2T1.outputs.passPhrase }}"
+					"passPhrase":"{{ n_BR2T1.outputs.cipherText }}"
 				}
 			},
 			"skip":false,
@@ -135,14 +135,14 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_YZ322-1",
 			"id":"n_AwBnP",
 			"index":3,
 			"inputs":{
 				"result":{
-					"cipher":"{{ n_vmZm3.outputs.result.cipher }}"
+					"descryptedText":"{{ n_vmZm3.outputs.result.descryptedText }}"
 				}
 			},
 			"skip":false,
@@ -168,5 +168,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
