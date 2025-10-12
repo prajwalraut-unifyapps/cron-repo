@@ -1,51 +1,109 @@
 {
 	"appsUsed":[
-		
+		"openai",
+		"slack"
 	],
 	"createdTime":1760264405158,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_PsyZL",
+			"fromNodeId":"n_qr0Dk",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_GlIJc",
+			"toNodeId":"n_gkNmH",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_gkNmH",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_STjur",
 			"type":"next"
 		}
 	],
 	"id":"68eb80d5d4bf2e015e9598cf",
 	"lastModifiedBy":177858,
 	"lcName":"market analyser",
-	"modifiedTime":1760264405158,
+	"modifiedTime":1760264851402,
 	"name":"Market analyser",
 	"nodes":[
 		{
+			"context":{
+				"appName":"slack",
+				"resourceVersion":6311,
+				"connectionId":"68eb81c460b6e7200830a8d0",
+				"resourceName":"slack_on_new_message"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_PsyZL-1",
-			"id":"_PsyZL",
-			"index":0,
+			"id":"n_qr0Dk",
+			"index":1,
+			"inputs":{},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Slack",
+			"title":"On new message",
 			"trigger":{
 				"type":"EVENT"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"openai",
+				"resourceVersion":5489,
+				"connectionId":"68d39f2dd2b48567b3840df4",
+				"resourceName":"openai_send_message",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_PsyZL-1",
-			"id":"_GlIJc",
-			"index":0,
+			"id":"n_gkNmH",
+			"index":2,
+			"inputs":{
+				"response_format":"text",
+				"model":"gpt-3.5-turbo",
+				"message":"Create any mock data and answer following this structure \n\n3. Customer Margin Preservation & Price Adjustment Agent (Finance + Sales + Legal)\nTrigger: User prompt in Slack — “Analyze steel price increase impact and find customers where we can adjust pricing.”\nFetches latest steel price index (Web Search/API).\nCompares with the last benchmarked rate from SharePoint.\nCalculates new cost per SKU and margin erosion in existing customers on Salesforce.\nIdentifies customers where margins fall below the set threshold.\nRetrieves corresponding contracts from SharePoint.\nLLM extracts price-adjustment or escalation clauses.\nCategorizes accounts as Auto-Adjustable / Negotiable / Fixed.\nSummarizes in a tabular format for these details. \n\n👉 Turns steel price volatility into an automated margin protection workflow.\n\nUser input:{{ n_qr0Dk.outputs.event.text }}"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"OpenAI",
+			"title":"Send message to OpenAI models",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"slack",
+				"resourceVersion":6309,
+				"connectionId":"68eb81c460b6e7200830a8d0",
+				"resourceName":"slack_post_message_in_channel",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_PsyZL-1",
+			"id":"n_STjur",
+			"index":3,
+			"inputs":{
+				"link_names":true,
+				"messageType":"text",
+				"channel":"C09HFBDDWA2",
+				"text":"{{ n_gkNmH.outputs.choices[0].message.content }}",
+				"mrkdwn":true
+			},
+			"skip":false,
+			"subTitle":"Slack",
+			"title":"Post message",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":177858,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +117,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
