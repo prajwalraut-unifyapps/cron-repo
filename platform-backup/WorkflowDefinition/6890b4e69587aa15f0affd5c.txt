@@ -146,7 +146,7 @@
 	"id":"6890b4e69587aa15f0affd5c",
 	"lastModifiedBy":44096,
 	"lcName":"check opensearch",
-	"modifiedTime":1760276991727,
+	"modifiedTime":1760277172197,
 	"name":"check opensearch",
 	"nodes":[
 		{
@@ -546,7 +546,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_T3sPu-1",
 			"id":"n_NZskw",
@@ -554,17 +554,19 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"indexName":{
 							"type":"string",
 							"title":"Index Name"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"lookupResponse":{
 							"type":"object",
@@ -572,12 +574,11 @@
 							"additionalProperties":false,
 							"title":"Lookup Response"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"return [\"indexName\":\"knowledge_vector_store_open_ai_3072_v2\"]\n//return [\"indexName\": lookupResponse?.objects.knowledge_vector_store_open_ai_3072?.metadata?.storeDetails?.indexName]",
 				"compile_static":false,
-				"code":"return [\"indexName\":\"knowledge_vector_store_open_ai_3072_10100_v3\"]\n//return [\"indexName\": lookupResponse?.objects.knowledge_vector_store_open_ai_3072?.metadata?.storeDetails?.indexName]",
+				"captureStdOutput":false,
 				"parameters":{
 					"lookupResponse":"{{ n_eNiyx.outputs.response }}"
 				}
@@ -1607,7 +1608,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"CONTINUE",
 			"groupId":"n_zQdIf@_T3sPu-1@n",
 			"id":"_lLBG7",
@@ -1627,10 +1628,12 @@
 						}
 					}
 				},
+				"connectionType":"DIRECT",
 				"sslVerify":false,
 				"path":"/{{ n_NZskw.outputs.result.indexName }}/_doc",
 				"responseSchema":{
 					"type":"object",
+					"additionalProperties":false,
 					"properties":{
 						"took":{
 							"type":"integer",
@@ -1737,12 +1740,14 @@
 							"title":"aggregations",
 							"additionalProperties":false
 						}
-					},
-					"additionalProperties":false
+					}
 				},
 				"baseUrl":"{{ n_ua6Z9.outputs.opensearchHost }}",
+				"httpVersion":"HTTP_2",
 				"bodySchema":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"properties":{
 							"type":"object",
@@ -1762,14 +1767,14 @@
 							"type":"string",
 							"title":"Properties Knowledge Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"responseContentType":"application/json",
+				"followRedirects":"NORMAL",
 				"authType":"CUSTOM",
 				"requestContentType":"application/json",
-				"ignoreTrailingSlashes":false
+				"ignoreTrailingSlashes":false,
+				"certificateType":"CERT_STRING"
 			},
 			"options":{
 				"bulkheadConfig":{
@@ -2173,5 +2178,5 @@
 	"tags":[
 		
 	],
-	"version":22
+	"version":23
 }
