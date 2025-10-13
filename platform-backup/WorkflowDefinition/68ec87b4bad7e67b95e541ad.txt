@@ -45,6 +45,35 @@
 			"fromNodeId":"n_cJIpP",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"_WKNjr",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_WKNjr",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_J3QPY",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"_J3QPY",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_GrSqP",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_GrSqP",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_WKNjr",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_WKNjr",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_Cm09f",
 			"type":"next"
 		}
@@ -52,7 +81,7 @@
 	"id":"68ec87b4bad7e67b95e541ad",
 	"lastModifiedBy":182775,
 	"lcName":"pub-testconc",
-	"modifiedTime":1760332746058,
+	"modifiedTime":1760333005053,
 	"name":"pub-testConc",
 	"nodes":[
 		{
@@ -248,6 +277,88 @@
 		},
 		{
 			"context":{
+				"appName":"loop",
+				"resourceVersion":36,
+				"resourceName":"loop_for",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_hxMkq-1",
+			"id":"_WKNjr",
+			"index":6,
+			"inputs":{
+				"start":0,
+				"limit":8,
+				"step":1,
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":972,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_WKNjr@_hxMkq-1@l",
+			"id":"_J3QPY",
+			"index":7,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_FW3kJ.outputs.event_conc }}",
+						"value":{
+							"name":"{{ n_FW3kJ.outputs.event_conc.name }}",
+							"index":"{{ _WKNjr.outputs.index }}",
+							"id":"\"123A\""
+						}
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":1647,
+				"resourceName":"streams_by_unifyapps_publish_event",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_WKNjr@_hxMkq-1@l",
+			"id":"_GrSqP",
+			"index":8,
+			"inputs":{
+				"streamId":"e_68ec88aa96598a556955efd0",
+				"skipInputValidation":true,
+				"event":{
+					"group":"abcd",
+					"event":"{{ n_FW3kJ.outputs.event_conc }}",
+					"description":"test",
+					"dlqReason":"test"
+				}
+			},
+			"skip":false,
+			"subTitle":"Streams by UnifyApps",
+			"title":"Publish event to stream",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"stop"
 			},
 			"debug":false,
@@ -255,7 +366,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_hxMkq-1",
 			"id":"n_Cm09f",
-			"index":6,
+			"index":9,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -279,5 +390,5 @@
 	"tags":[
 		
 	],
-	"version":7
+	"version":8
 }
