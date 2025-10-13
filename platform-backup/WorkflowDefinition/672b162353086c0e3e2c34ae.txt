@@ -155,9 +155,9 @@
 		]
 	},
 	"id":"672b162353086c0e3e2c34ae",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"excel file indexer",
-	"modifiedTime":1760024972004,
+	"modifiedTime":1760376402312,
 	"name":"Excel File Indexer",
 	"nodes":[
 		{
@@ -397,7 +397,7 @@
 				"file":"{{ _kAukP.outputs.fileDetails }}",
 				"encoding":"base64"
 			},
-			"skip":true,
+			"skip":false,
 			"subTitle":"Utility by UnifyApps",
 			"title":"Download file as string",
 			"type":"ACTION"
@@ -440,6 +440,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"csv_string":{
 							"type":"string",
@@ -452,12 +454,12 @@
 							},
 							"title":"Headers List"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"url":{
 							"type":"string",
@@ -467,12 +469,13 @@
 							"type":"string",
 							"title":"base64string"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"configurationMode":"DEFAULT",
 				"code":"import pandas as pd\nimport requests\nimport io\nimport tempfile\nimport csv\n\ntry:\n  sav_url = url\nexcept:\n  sav_url = \"\"\n\n\nresponse = requests.get(sav_url)\nwith tempfile.NamedTemporaryFile(suffix=\".sav\", delete=False) as tmp_file:\n  tmp_file.write(response.content)\n  tmp_file_path = tmp_file.name  \n\ndf = pd.read_spss(tmp_file_path)\ncsv_string = df.to_csv(index=False)\nheader_line = csv_string.splitlines()[0]\nheader_list = next(csv.reader([header_line]))\n\nresult={\n \"csv_string\": csv_string,\n \"header_list\": header_list\n}\n\n\n# def base64_sav_to_csv_string(base64_string: str) -> str:\n#   import base64\n#   import io\n#   import pyreadstat\n#   import pandas as pd\n#   binary_data = base64.b64decode(base64_string)\n#   buffer_ = io.BytesIO(binary_data)\n#   df, _ = pyreadstat.read_sav(buffer_)\n#   csv_buffer = io.StringIO()\n#   df.to_csv(csv_buffer, index=False)\n#   csv_string = csv_buffer.getvalue() \n#   return csv_string\n\n# csv_string = base64_sav_to_csv_string(base64string)\n# csv_string = df.to_csv(index=False)\n# header_line = csv_string.splitlines()[0]\n# header_list = next(csv.reader([header_line]))\n\n# result={\n#  \"csv_string\": csv_string,\n#  \"header_list\": []\n# }",
 				"isAsync":false,
+				"python_version":"3.12",
+				"captureStdOutput":false,
 				"parameters":{
 					"base64string":"{{ 4AO6V.outputs.fileContent }}",
 					"url":"{{ 3xtdC.outputs.url }}"
@@ -661,10 +664,11 @@
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"knowledgeId":"{{ _kAukP.outputs.knowledgeId }}",
-					"uniqueEntityId":"{{ _kAukP.outputs.uniqueEntityId }}",
 					"file":"{{ W4hpH.outputs.fileDetails }}",
-					"mimeType":"{{ W4hpH.outputs.mimeType }}"
+					"knowledgeId":"{{ _kAukP.outputs.knowledgeId }}",
+					"mimeType":"{{ W4hpH.outputs.mimeType }}",
+					"uniqueEntityId":"{{ _kAukP.outputs.uniqueEntityId }}",
+					"chunkMetadata":"{{ _kAukP.outputs.chunkMetadata }}"
 				}
 			},
 			"skip":false,
@@ -815,5 +819,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":121
+	"version":131
 }
