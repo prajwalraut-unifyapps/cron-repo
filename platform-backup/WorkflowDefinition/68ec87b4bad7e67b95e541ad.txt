@@ -6,46 +6,197 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_hxMkq",
+			"fromNodeId":"n_TRPcA",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_WlXzl",
+			"toNodeId":"n_FW3kJ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_FW3kJ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_cJIpP",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_cJIpP",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_qLER5",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_qLER5",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_cJIpP",
 			"type":"next"
 		}
 	],
 	"id":"68ec87b4bad7e67b95e541ad",
 	"lastModifiedBy":182775,
 	"lcName":"pub-testconc",
-	"modifiedTime":1760331700984,
+	"modifiedTime":1760332124670,
 	"name":"pub-testConc",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":833,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_hxMkq-1",
-			"id":"_hxMkq",
-			"index":0,
+			"id":"n_TRPcA",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1053,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_hxMkq-1",
-			"id":"_WlXzl",
-			"index":0,
+			"id":"n_FW3kJ",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"event_conc":{
+							"type":"object",
+							"properties":{
+								"id":{
+									"type":"integer",
+									"title":"id"
+								},
+								"name":{
+									"type":"string",
+									"title":"name"
+								}
+							},
+							"additionalProperties":false
+						}
+					},
+					"required":[]
+				}
+			},
+			"inputs":{
+				"event_conc":{
+					"id":123,
+					"name":"Aryan"
+				}
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"event_conc":{
+							"type":"object",
+							"properties":{
+								"id":{
+									"type":"integer",
+									"title":"id"
+								},
+								"name":{
+									"type":"string",
+									"title":"name"
+								}
+							},
+							"additionalProperties":false
+						}
+					},
+					"required":[]
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":36,
+				"resourceName":"loop_for",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_hxMkq-1",
+			"id":"n_cJIpP",
+			"index":3,
+			"inputs":{
+				"start":0,
+				"limit":8,
+				"step":1,
+				"captureIterations":false
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":1647,
+				"resourceName":"streams_by_unifyapps_publish_event",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_cJIpP@_hxMkq-1@l",
+			"id":"n_qLER5",
+			"index":4,
+			"inputs":{
+				"streamId":"e_68dfd29adc6c2b4d40587037",
+				"skipInputValidation":true,
+				"event":{
+					"group":"abcd",
+					"dlqReason":"test",
+					"description":"test",
+					"event":"{{ n_FW3kJ.outputs.event_conc }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Streams by UnifyApps",
+			"title":"Publish event to stream",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":182775,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +210,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
