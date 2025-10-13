@@ -5,12 +5,12 @@
 	"createdTime":1760332198530,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760335041983,
+		"deployedAt":1760335364136,
 		"deployedBy":173449,
-		"deployedDefinitionId":"68ec94c1bad7e67b95e55b2e",
+		"deployedDefinitionId":"68ec9604b515c31be84b275e",
 		"status":"DEPLOYED",
-		"version":34,
-		"workflowVersion":34
+		"version":35,
+		"workflowVersion":35
 	},
 	"description":"",
 	"edges":[
@@ -32,6 +32,13 @@
 			"fromNodeId":"n_qeA9F",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_cAxUs",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_cAxUs",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_UcgpP",
 			"type":"next"
 		},
@@ -46,7 +53,7 @@
 	"id":"68ec89a6b515c31be84b09a6",
 	"lastModifiedBy":173449,
 	"lcName":"testing ag",
-	"modifiedTime":1760335363948,
+	"modifiedTime":1760337287744,
 	"name":"testing ag",
 	"nodes":[
 		{
@@ -108,8 +115,8 @@
 									"tone":{
 										"type":"string",
 										"enum":[
-											"authoritative",
 											"commanding",
+											"authoritative",
 											"regal",
 											"imperious"
 										],
@@ -132,28 +139,30 @@
 												"items":{
 													"type":"string"
 												},
-												"description":"Common Latin phrases or Roman expressions used in the speech."
+												"description":"Latin phrases or Roman references used in the speech."
 											}
 										}
 									},
 									"delivery":{
 										"type":"object",
 										"properties":{
+											"emphasis":{
+												"type":"string",
+												"enum":[
+													"strong",
+													"moderate",
+													"subtle"
+												],
+												"description":"The level of emphasis in the speech delivery."
+											},
 											"pacing":{
 												"type":"string",
 												"enum":[
 													"slow",
 													"measured",
-													"deliberate"
+													"rapid"
 												],
-												"description":"The pace at which the speech is delivered."
-											},
-											"emphasis":{
-												"type":"array",
-												"items":{
-													"type":"string"
-												},
-												"description":"Key words or phrases to be emphasized in the speech."
+												"description":"The speed at which the speech is delivered."
 											}
 										}
 									}
@@ -185,7 +194,7 @@
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
 					"name":"Agent",
-					"instructions":"solve user queries speaking like a roman emperor",
+					"instructions":"solve user queries speaking in a baby like tone",
 					"model":"e_686654b81257d219bd7958d5",
 					"knowledges":[],
 					"responseSchema":{
@@ -193,49 +202,40 @@
 						"properties":{
 							"response":{
 								"type":"string",
-								"description":"The response to the user's query in the style of a Roman emperor"
+								"description":"The baby-like response to the user's query"
 							},
-							"imperialGreeting":{
+							"tone":{
 								"type":"string",
-								"description":"A formal greeting in the style of a Roman emperor"
+								"enum":[
+									"baby-like"
+								],
+								"description":"The tone of the response"
 							},
-							"imperialFarewell":{
+							"query":{
 								"type":"string",
-								"description":"A formal farewell in the style of a Roman emperor"
+								"description":"The original user query"
 							},
-							"imperialTitle":{
-								"type":"string",
-								"description":"The title used by the Roman emperor AI"
-							},
-							"latinPhrases":{
-								"type":"array",
-								"items":{
-									"type":"string"
-								},
-								"description":"A list of Latin phrases that may be used in the response"
-							},
-							"historicalContext":{
+							"metadata":{
 								"type":"object",
 								"properties":{
-									"era":{
-										"type":"string",
-										"description":"The historical era being referenced"
+									"simplifiedLanguage":{
+										"type":"boolean",
+										"description":"Indicates if simplified language was used"
 									},
-									"relevantEvents":{
+									"emoticons":{
 										"type":"array",
 										"items":{
 											"type":"string"
 										},
-										"description":"Historical events that may be relevant to the response"
+										"description":"List of emoticons used in the response"
 									}
 								}
 							}
 						},
 						"required":[
 							"response",
-							"imperialGreeting",
-							"imperialFarewell",
-							"imperialTitle"
+							"tone",
+							"query"
 						]
 					},
 					"tools":{
@@ -247,7 +247,39 @@
 			},
 			"skip":false,
 			"subTitle":"Agent",
-			"title":"AI agent responds as Roman emperor to user queries",
+			"title":"AI agent responds to queries in baby-like tone.",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"workflow_agent_search_knowledge",
+				"resourceVersion":149,
+				"resourceName":"workflow_agent_search_knowledge_default",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_UWIyO-1",
+			"id":"n_cAxUs",
+			"index":0,
+			"inputs":{
+				"callableInterfaceId":"__ua__knowledge_search_interface",
+				"parameters":{
+					"AISearchInstructions":"Search knowledge and answer query",
+					"knowledges":[
+						{
+							"type":"knowledge",
+							"id":"knowledge_o5pYL"
+						}
+					],
+					"name":"knowledge",
+					"model":"e_686654b81257d219bd7958d5"
+				}
+			},
+			"skip":false,
+			"subTitle":"Search the Knowledge",
+			"title":"Searches internal knowledge databases for company\ninformation.",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -273,7 +305,7 @@
 			},
 			"skip":false,
 			"subTitle":"Respond",
-			"title":"Generates AI response to user query using model\nand specified instructions.",
+			"title":"Generates AI response to user query with specific\ninstructions and model.",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -303,5 +335,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":35
+	"version":36
 }
