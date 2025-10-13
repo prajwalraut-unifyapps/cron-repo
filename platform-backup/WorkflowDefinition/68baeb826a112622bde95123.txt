@@ -5,12 +5,12 @@
 	"createdTime":1757705804521,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760117546055,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68e9432a64af142a5db300a7",
+		"deployedAt":1760303519125,
+		"deployedBy":1,
+		"deployedDefinitionId":"68ec199e7cbff43ccfcb57c6",
 		"status":"DEPLOYED",
-		"version":48,
-		"workflowVersion":78
+		"version":49,
+		"workflowVersion":79
 	},
 	"edges":[
 		{
@@ -171,9 +171,9 @@
 		]
 	},
 	"id":"68baeb826a112622bde95123",
-	"lastModifiedBy":1,
+	"lastModifiedBy":0,
 	"lcName":"sharepoint | get folder recursively",
-	"modifiedTime":1760303518759,
+	"modifiedTime":1760376208003,
 	"name":"Sharepoint | Get Folder Recursively",
 	"nodes":[
 		{
@@ -403,6 +403,10 @@
 						"connectionId":{
 							"type":"string",
 							"title":"Connection Id"
+						},
+						"siteType":{
+							"type":"string",
+							"title":"Site Type"
 						}
 					}
 				}
@@ -1115,7 +1119,8 @@
 			"inputs":{
 				"site_name":"{{ n_VOTra.outputs.siteName }}",
 				"select":"folder",
-				"parent_folder":"{{ n_VOTra.outputs.folderPath }}"
+				"parent_folder":"{{ n_VOTra.outputs.folderPath }}",
+				"siteType":"{{ n_VOTra.outputs.siteType }}"
 			},
 			"skip":false,
 			"subTitle":"Microsoft SharePoint",
@@ -1270,12 +1275,14 @@
 				"site_name":"{{ n_VOTra.outputs.siteName }}",
 				"top":"100",
 				"skip":"{{ n_3GTYU.outputs.skip }}",
-				"folder_path":"{{ n_VOTra.outputs.folderPath }}"
+				"folder_path":"{{ n_VOTra.outputs.folderPath }}",
+				"siteType":"{{ n_VOTra.outputs.siteType }}"
 			},
 			"options":{
 				"bulkheadConfig":{
 					"enabled":false,
-					"global":false
+					"maxLeaseTimeUnit":"SECONDS",
+					"maxWaitDurationUnit":"SECONDS"
 				},
 				"businessHoursConfig":{
 					"enabled":false,
@@ -1437,6 +1444,7 @@
 				},
 				"code":"def toReturn = [:]\n\nif(binding.hasVariable('serverRelativeUri')){\n\n  def extractedPath = serverRelativeUri.replaceFirst(\"^(/sites/[^/]+)\", \"\")\n\n  return [\"folderPath\":extractedPath]\n}\n\nreturn [:]",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"serverRelativeUri":"{{ _tEbeO.outputs.item.ServerRelativeUrl }}"
 				}
@@ -1469,7 +1477,9 @@
 				"parameters":{
 					"recursive":"{{ n_VOTra.outputs.recursive }}",
 					"siteName":"{{ n_VOTra.outputs.siteName }}",
-					"folderPath":"{{ Xx33R.outputs.result.folderPath }}"
+					"folderPath":"{{ Xx33R.outputs.result.folderPath }}",
+					"connectionId":"{{ n_VOTra.outputs.connectionId }}",
+					"siteType":"{{ n_VOTra.outputs.siteType }}"
 				}
 			},
 			"skip":false,
@@ -1795,9 +1805,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -1808,5 +1818,5 @@
 	"tags":[
 		"knowledge_v2"
 	],
-	"version":79
+	"version":80
 }
