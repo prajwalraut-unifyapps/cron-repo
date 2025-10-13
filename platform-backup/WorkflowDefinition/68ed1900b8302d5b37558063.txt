@@ -5,12 +5,12 @@
 	"createdTime":1760368896854,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760373210827,
-		"deployedBy":125843,
-		"deployedDefinitionId":"68ed29dab8302d5b3755e4bf",
+		"deployedAt":1760374136594,
+		"deployedBy":85476,
+		"deployedDefinitionId":"68ed2d78b8302d5b3755ffb9",
 		"status":"DEPLOYED",
-		"version":2,
-		"workflowVersion":6
+		"version":3,
+		"workflowVersion":8
 	},
 	"edges":[
 		{
@@ -31,42 +31,26 @@
 			"fromNodeId":"n_A1Kd0",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_lqKxD",
+			"toNodeId":"n_pvgVS",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_lqKxD",
+			"fromNodeId":"n_pvgVS",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_LAGUH",
+			"toNodeId":"n_1IQgs",
 			"type":"loop"
 		},
 		{
-			"fromNodeId":"n_LAGUH",
-			"name":"no",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_JtCN6",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_LAGUH",
-			"name":"yes",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_lqKxD",
-			"type":"if"
-		},
-		{
-			"fromNodeId":"n_JtCN6",
+			"fromNodeId":"n_1IQgs",
 			"name":"loopback",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_lqKxD",
+			"toNodeId":"n_pvgVS",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_lqKxD",
+			"fromNodeId":"n_pvgVS",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_XUmGk",
@@ -74,9 +58,9 @@
 		}
 	],
 	"id":"68ed1900b8302d5b37558063",
-	"lastModifiedBy":85476,
+	"lastModifiedBy":125843,
 	"lcName":"sharepoint file test",
-	"modifiedTime":1760374134804,
+	"modifiedTime":1760376915823,
 	"name":"Sharepoint File Test",
 	"nodes":[
 		{
@@ -130,7 +114,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_fy61u-1",
 			"id":"n_AKbRj",
@@ -406,71 +390,46 @@
 		},
 		{
 			"context":{
-				"appName":"csv_by_unifyapps",
-				"resourceVersion":903,
-				"resourceName":"csv_by_unifyapps_for_each_row_or_rows",
+				"appName":"excel_by_unifyapps",
+				"resourceVersion":922,
+				"resourceName":"excel_by_unifyapps_for_each_row_or_rows",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_fy61u-1",
-			"id":"n_lqKxD",
+			"id":"n_pvgVS",
 			"index":4,
 			"inputs":{
 				"startFromRow":1,
+				"consumptionBehaviour":"string",
 				"file":"{{ n_AKbRj.outputs.file }}",
 				"headerRow":true,
 				"columns":[
 					"Title",
 					"steel_type",
 					"Region",
-					"Benchmark Date",
 					"Benchmark_Index_Value",
 					"Currency",
 					"Applied To SKUs",
 					"SKU Number",
-					"Price Change Percent"
+					"Price Change Percent",
+					"Base Cost",
+					"Selling Price",
+					"Steel Content Factor",
+					"Current Cost"
 				],
-				"delimiter":",",
 				"batch":false,
-				"encoding":"UTF-8",
-				"batchSize":100
+				"evaluateFormulae":true,
+				"batchSize":100,
+				"fileType":"xlsx",
+				"skipEmptyRows":false
 			},
 			"skip":false,
-			"subTitle":"CSV by UnifyApps",
-			"title":"Consume data from CSV file",
+			"subTitle":"Excel by UnifyApps",
+			"title":"Consume data from Excel file",
 			"type":"LOOP"
-		},
-		{
-			"context":{
-				"appName":"if_else",
-				"resourceVersion":791,
-				"resourceName":"if_else_condition",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_lqKxD@_fy61u-1@l",
-			"id":"n_LAGUH",
-			"index":5,
-			"inputs":{
-				"filters":[
-					{
-						"property":"{{ n_bJuTW.outputs.key }}",
-						"filter":{
-							"operator":"EQUAL",
-							"value":"{{ n_lqKxD.outputs.item.steel_type }}"
-						}
-					}
-				],
-				"operator":"AND"
-			},
-			"skip":false,
-			"subTitle":"Condition",
-			"title":"Condition",
-			"type":"IF_ELSE"
 		},
 		{
 			"context":{
@@ -480,13 +439,13 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"n_LAGUH@n_lqKxD@_fy61u-1@l@n",
-			"id":"n_JtCN6",
-			"index":6,
+			"groupId":"n_pvgVS@_fy61u-1@l",
+			"id":"n_1IQgs",
+			"index":5,
 			"inputs":{
-				"loop":"n_lqKxD"
+				"loop":"n_pvgVS"
 			},
 			"skip":false,
 			"subTitle":"Continue",
@@ -505,7 +464,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_fy61u-1",
 			"id":"n_XUmGk",
-			"index":7,
+			"index":6,
 			"inputs":{
 				"result":{
 					"Benchmark_Index_Value":"{{ n_lqKxD.outputs.item.Benchmark_Index_Value }}",
@@ -538,5 +497,5 @@
 	"tags":[
 		
 	],
-	"version":8
+	"version":9
 }
