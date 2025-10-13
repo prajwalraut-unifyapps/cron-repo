@@ -41,12 +41,72 @@
 			"skip":false,
 			"toNodeId":"n_oVxuh",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_oVxuh",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_cMPbz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_cMPbz",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_yiePM",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_yiePM",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_j6NIa",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_cMPbz",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_j6NIa",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_j6NIa",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_grF3i",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_grF3i",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_nT8i3",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"_nT8i3",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_rThQZ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_grF3i",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_rThQZ",
+			"type":"next"
 		}
 	],
 	"id":"68eca1193ef30311dc734a35",
 	"lastModifiedBy":35286,
 	"lcName":"dt | askt | entra token login",
-	"modifiedTime":1760338899993,
+	"modifiedTime":1760339513827,
 	"name":"DT | AskT | Entra Token Login",
 	"nodes":[
 		{
@@ -277,6 +337,7 @@
 						"value":"Bearer {{ n_SyUHw.outputs.access_token }}"
 					}
 				],
+				"errorResponseSchemas":[],
 				"authType":"CUSTOM",
 				"requestContentType":"application/json",
 				"ignoreTrailingSlashes":false,
@@ -286,6 +347,157 @@
 			"subTitle":"Point de terminaison HTTP personnalisé",
 			"title":"Execute REST request",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_CqyLP-1",
+			"id":"n_cMPbz",
+			"index":6,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_oVxuh.outputs.result.email }}",
+						"filter":{
+							"operator":"MISSING"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1071,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_cMPbz@_CqyLP-1@y",
+			"id":"n_yiePM",
+			"index":7,
+			"inputs":{
+				"result":{
+					"authenticated":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"standard_entities",
+				"resourceVersion":1314,
+				"resourceName":"standard_entities_fetch_user",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_CqyLP-1",
+			"id":"n_j6NIa",
+			"index":8,
+			"inputs":{
+				"fetchBy":"username",
+				"applicationId":"",
+				"user":"{{ n_oVxuh.outputs.result.email }}"
+			},
+			"skip":false,
+			"subTitle":"Standard entities by UnifyApps",
+			"title":"Fetch User",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_CqyLP-1",
+			"id":"n_grF3i",
+			"index":9,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_j6NIa.outputs.username }}",
+						"filter":{
+							"operator":"MISSING"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1071,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_grF3i@_CqyLP-1@y",
+			"id":"_nT8i3",
+			"index":10,
+			"inputs":{
+				"result":{
+					"authenticated":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1071,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_CqyLP-1",
+			"id":"n_rThQZ",
+			"index":11,
+			"inputs":{
+				"result":{
+					"authenticated":true,
+					"userId":"{{ n_j6NIa.outputs.id }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":35286,
@@ -305,5 +517,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
