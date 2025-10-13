@@ -6,46 +6,202 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_CqyLP",
+			"fromNodeId":"n_SyUHw",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_Yfn1o",
+			"toNodeId":"n_hwlgS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_hwlgS",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_B6DdR",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_B6DdR",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_7EPcS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_hwlgS",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_7EPcS",
 			"type":"next"
 		}
 	],
 	"id":"68eca1193ef30311dc734a35",
 	"lastModifiedBy":35286,
 	"lcName":"dt | askt | entra token login",
-	"modifiedTime":1760338201654,
+	"modifiedTime":1760338539656,
 	"name":"DT | AskT | Entra Token Login",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1035,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
-			"id":"_CqyLP",
-			"index":0,
+			"id":"n_SyUHw",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"authenticated"
+					],
+					"properties":{
+						"authenticated":{
+							"type":"boolean",
+							"title":"Authenticated"
+						},
+						"userId":{
+							"type":"string",
+							"title":"User Id"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"access_token":{
+							"type":"string",
+							"title":"Access Token"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
-			"id":"_Yfn1o",
-			"index":0,
+			"id":"n_hwlgS",
+			"index":2,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_SyUHw.outputs.access_token }}",
+						"filter":{
+							"operator":"MISSING"
+						}
+					}
+				],
+				"operator":"AND"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1071,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_hwlgS@_CqyLP-1@y",
+			"id":"n_B6DdR",
+			"index":3,
+			"inputs":{
+				"result":{
+					"authenticated":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1053,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_CqyLP-1",
+			"id":"n_7EPcS",
+			"index":4,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"userInfoRequestUrl":{
+							"type":"string",
+							"title":"User Info Request Url"
+						}
+					},
+					"required":[
+						"userInfoRequestUrl"
+					]
+				}
+			},
+			"inputs":{},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"userInfoRequestUrl":{
+							"type":"string",
+							"title":"User Info Request Url"
+						}
+					},
+					"required":[
+						"userInfoRequestUrl"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":35286,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +215,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
