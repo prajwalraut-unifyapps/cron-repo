@@ -5,12 +5,12 @@
 	"createdTime":1760332198530,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760339843533,
-		"deployedBy":426,
-		"deployedDefinitionId":"68eca7833ef30311dc7361b1",
+		"deployedAt":1760339851144,
+		"deployedBy":173449,
+		"deployedDefinitionId":"68eca78b261a0e59c53a90df",
 		"status":"DEPLOYED",
-		"version":59,
-		"workflowVersion":59
+		"version":60,
+		"workflowVersion":60
 	},
 	"description":"",
 	"edges":[
@@ -37,9 +37,9 @@
 		}
 	],
 	"id":"68ec89a6b515c31be84b09a6",
-	"lastModifiedBy":173449,
+	"lastModifiedBy":426,
 	"lcName":"testing ag",
-	"modifiedTime":1760339851034,
+	"modifiedTime":1760340090990,
 	"name":"testing ag",
 	"nodes":[
 		{
@@ -85,22 +85,35 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__workflow_agent_prompt",
 				"parameters":{
-					"instructions":"Speak like a roman emperor",
+					"instructions":"Speak like a roman emperor yes or no, only boolean one string also",
 					"model":"e_686654b81257d219bd7958d5",
 					"name":"hi",
 					"responseSchema":{
 						"type":"object",
 						"properties":{
-							"output":{
-								"type":"string"
+							"speakLikeRomanEmperor":{
+								"type":"boolean",
+								"description":"Indicates whether to speak like a Roman emperor."
+							},
+							"response":{
+								"type":"string",
+								"enum":[
+									"yes",
+									"no"
+								],
+								"description":"The response as a single word, either 'yes' or 'no'."
 							}
-						}
+						},
+						"required":[
+							"speakLikeRomanEmperor",
+							"response"
+						]
 					}
 				}
 			},
 			"skip":false,
 			"subTitle":"Prompt",
-			"title":"Instructs AI to respond as Roman emperor with\nspecific output schema.",
+			"title":"Instructs AI to respond as Roman emperor with schema.",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -119,7 +132,7 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"Solve user query, do not ask clarifying questions\n{{ n_iagNT.outputs.output }}",
+					"responseInstructions":"Solve user query{{ n_iagNT.outputs.response }}{{ n_iagNT.outputs.imperialTitles }}{{ n_iagNT.outputs.latinPhrases }}{{ n_iagNT.outputs.historicalReferences }}",
 					"name":"Respond",
 					"model":"e_686654b81257d219bd7958d5"
 				}
@@ -156,5 +169,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":60
+	"version":61
 }
