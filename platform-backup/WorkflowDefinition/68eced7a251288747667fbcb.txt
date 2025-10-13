@@ -6,46 +6,187 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_hdqpz",
+			"fromNodeId":"n_xUzbA",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_Qrwkb",
+			"toNodeId":"n_7NZEZ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_7NZEZ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_IS0gS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_IS0gS",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_SkcVG",
 			"type":"next"
 		}
 	],
 	"id":"68eced7a251288747667fbcb",
 	"lastModifiedBy":178082,
 	"lcName":"answerconsscore",
-	"modifiedTime":1760357754682,
+	"modifiedTime":1760360075808,
 	"name":"AnswerConsScore",
 	"nodes":[
 		{
+			"context":{
+				"appName":"ai_evaluator_by_unifyapps",
+				"resourceVersion":539,
+				"resourceName":"ai_evaluator_by_unifyapps_trigger_metric_evaluation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_hdqpz-1",
-			"id":"_hdqpz",
-			"index":0,
+			"id":"n_xUzbA",
+			"index":1,
+			"inputs":{
+				"setup":{
+					"type":"object",
+					"properties":{
+						"input":{
+							"type":"string"
+						},
+						"expected_output":{
+							"type":"string"
+						},
+						"context":{
+							"type":"string"
+						},
+						"expected_tools":{
+							"type":"array",
+							"items":{
+								"type":"object"
+							}
+						},
+						"actual_output":{
+							"type":"string"
+						},
+						"retrieved_context":{
+							"type":"string"
+						},
+						"tools_called":{
+							"type":"array",
+							"items":{
+								"type":"object"
+							}
+						},
+						"additional":{
+							"title":"Additional Input Properties",
+							"type":"object",
+							"additionalProperties":true
+						},
+						"additional_output_properties":{
+							"type":"object",
+							"additionalProperties":true
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"AI Evaluator by UnifyApps",
+			"title":"Triggers LLM metrics evaluation",
 			"trigger":{
 				"type":"EVENT"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1091,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_hdqpz-1",
-			"id":"_Qrwkb",
-			"index":0,
+			"id":"n_7NZEZ",
+			"index":2,
+			"inputs":{
+				"automationId":"66dfd76eb70dad256986b784",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"modelId":"e_68d169384031ad246056a836",
+					"type":"text",
+					"response_format":"json",
+					"maxTokens":"4096",
+					"temperature":"0.1"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":1062,
+				"resourceName":"utility_by_unifyapps_to_json_object",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_hdqpz-1",
+			"id":"n_IS0gS",
+			"index":3,
+			"inputs":{
+				"jsonSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"score":{
+							"type":"number",
+							"title":"Score"
+						},
+						"reason":{
+							"type":"string",
+							"title":"Reason"
+						}
+					}
+				},
+				"jsonString":"{{ n_7NZEZ.outputs.llmResponse }}"
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Deserialise string to JSON object",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"ai_evaluator_by_unifyapps",
+				"resourceVersion":543,
+				"resourceName":"ai_evaluator_by_unifyapps_return_response_to_metric_evaluation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_hdqpz-1",
+			"id":"n_SkcVG",
+			"index":4,
+			"inputs":{},
+			"skip":false,
+			"subTitle":"AI Evaluator by UnifyApps",
+			"title":"Respond to metric evaluation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":178082,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +200,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
