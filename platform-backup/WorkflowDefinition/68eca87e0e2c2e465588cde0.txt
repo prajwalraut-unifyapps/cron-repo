@@ -9,6 +9,20 @@
 			"fromNodeId":"n_9w09c",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_FnaGt",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_FnaGt",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_yrxuK",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_yrxuK",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_gtSWF",
 			"type":"next"
 		}
@@ -16,7 +30,7 @@
 	"id":"68eca87e0e2c2e465588cde0",
 	"lastModifiedBy":1246,
 	"lcName":"custommetric",
-	"modifiedTime":1760340135241,
+	"modifiedTime":1760340249871,
 	"name":"customMetric",
 	"nodes":[
 		{
@@ -84,6 +98,75 @@
 		},
 		{
 			"context":{
+				"appName":"callables",
+				"resourceVersion":1091,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_QxXKn-1",
+			"id":"n_FnaGt",
+			"index":2,
+			"inputs":{
+				"automationId":"66dfd76eb70dad256986b784",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"type":"json",
+					"response_format":"text",
+					"maxTokens":"4096",
+					"temperature":"0.1"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":1062,
+				"resourceName":"utility_by_unifyapps_to_json_object",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_QxXKn-1",
+			"id":"n_yrxuK",
+			"index":3,
+			"inputs":{
+				"jsonSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"score",
+						"reason"
+					],
+					"properties":{
+						"score":{
+							"type":"string",
+							"title":"Score"
+						},
+						"reason":{
+							"type":"string",
+							"title":"Reason"
+						}
+					}
+				},
+				"jsonString":"{{ n_FnaGt.outputs.llmResponse }}"
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Deserialise string to JSON object",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"ai_evaluator_by_unifyapps",
 				"resourceVersion":543,
 				"resourceName":"ai_evaluator_by_unifyapps_return_response_to_metric_evaluation",
@@ -94,11 +177,11 @@
 			"fallbackMode":"STOP",
 			"groupId":"_QxXKn-1",
 			"id":"n_gtSWF",
-			"index":2,
+			"index":4,
 			"inputs":{
 				"result":{
-					"score":10,
-					"reason":"abc"
+					"score":"{{ n_yrxuK.outputs.result.score }}",
+					"reason":"{{ n_yrxuK.outputs.result.reason }}"
 				}
 			},
 			"skip":false,
@@ -124,5 +207,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
