@@ -32,28 +32,6 @@
 			"fromNodeId":"n_pxHWw",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_0bpwL",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_0bpwL",
-			"name":"1",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_0bpwL@1",
-			"type":"branch"
-		},
-		{
-			"fromNodeId":"n_0bpwL@1",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_wlHCl",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_wlHCl",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"DUMMY_RETURN_NODE_ID",
 			"type":"next"
 		}
@@ -61,7 +39,7 @@
 	"id":"68eba5870c3d19149a9dae2f",
 	"lastModifiedBy":504,
 	"lcName":"hs test workflow agent",
-	"modifiedTime":1760351248399,
+	"modifiedTime":1760372624241,
 	"name":"hs test workflow agent",
 	"nodes":[
 		{
@@ -78,10 +56,27 @@
 			"groupId":"_E3hv7-1",
 			"id":"n_6xvl4",
 			"index":0,
-			"inputs":{},
+			"inputs":{
+				"setup":{
+					"type":"object",
+					"properties":{
+						"_d5pd8":{
+							"type":"string",
+							"title":"Company Name"
+						}
+					},
+					"additionalProperties":false,
+					"required":[]
+				},
+				"setupLayout":{
+					"ui:order":[
+						"_d5pd8"
+					]
+				}
+			},
 			"skip":false,
 			"subTitle":"Form",
-			"title":"Fill in a simple form to start the agent",
+			"title":"Initiates workflow with a form to input company name.",
 			"trigger":{
 				"type":"CALLABLE"
 			},
@@ -101,11 +96,24 @@
 			"id":"n_go6sj",
 			"index":0,
 			"inputs":{
-				"callableInterfaceId":"__ua__workflow_agent_prompt"
+				"callableInterfaceId":"__ua__workflow_agent_prompt",
+				"parameters":{
+					"instructions":"Fetch all the details about the company {{ n_6xvl4.outputs._d5pd8 }} including revenue, investments, funds raised etc.",
+					"model":"e_68b9f1ec63a0db49a0245853",
+					"name":"Prompt Node",
+					"responseSchema":{
+						"type":"object",
+						"properties":{
+							"output":{
+								"type":"string"
+							}
+						}
+					}
+				}
 			},
 			"skip":false,
 			"subTitle":"Prompt",
-			"title":"Executes a prompt in the workflow, likely for\nuser input or agent interaction.",
+			"title":"Executes prompt to fetch company details including\nrevenue and investments.",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -122,73 +130,16 @@
 			"id":"n_pxHWw",
 			"index":0,
 			"inputs":{
-				"callableInterfaceId":"__ua__generate_response_interface"
+				"callableInterfaceId":"__ua__generate_response_interface",
+				"parameters":{
+					"responseInstructions":"Respond to user in a well formatted markdown.",
+					"model":"e_ai_agent_openai_gpt_4.1_mini"
+				}
 			},
 			"skip":false,
 			"subTitle":"Reply to User",
-			"title":"Generates AI response with specific format and tone",
+			"title":"Generates AI response using GPT-4 model with\nspecific formatting and instructions.",
 			"type":"CALL_INTERFACE_WORKFLOW"
-		},
-		{
-			"context":{
-				"appName":"branch",
-				"resourceName":"branch",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"_E3hv7-1",
-			"id":"n_0bpwL",
-			"index":0,
-			"inputs":{
-				"branches":[
-					{
-						"id":"1",
-						"inputs":{}
-					},
-					{
-						"id":"default"
-					}
-				]
-			},
-			"skip":false,
-			"subTitle":"Branch",
-			"title":"Branch",
-			"type":"BRANCH"
-		},
-		{
-			"context":{
-				"appName":"branch_condition",
-				"resourceName":"branch_condition",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_0bpwL@_E3hv7-1@1",
-			"id":"n_0bpwL@1",
-			"index":0,
-			"skip":false,
-			"subTitle":"Branch Condition",
-			"title":"Branch Condition",
-			"type":"BRANCH_CONDITION"
-		},
-		{
-			"context":{
-				"appName":"workflow_agent_ask_ai_agent",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"n_0bpwL@_E3hv7-1@1",
-			"id":"n_wlHCl",
-			"index":0,
-			"skip":false,
-			"subTitle":"Agent",
-			"title":"Select an action",
-			"type":"ACTION"
 		},
 		{
 			"context":{
@@ -217,5 +168,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":12
+	"version":13
 }
