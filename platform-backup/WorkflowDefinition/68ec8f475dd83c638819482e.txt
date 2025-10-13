@@ -1,51 +1,214 @@
 {
 	"appsUsed":[
-		
+		"freshdesk"
 	],
 	"createdTime":1760333639639,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_HsnYd",
+			"fromNodeId":"n_K425o",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_mtpjk",
+			"toNodeId":"n_fOxTY",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_fOxTY",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_XkMVB",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_XkMVB",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Tm19l",
 			"type":"next"
 		}
 	],
 	"id":"68ec8f475dd83c638819482e",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2rfvqtkctjb",
-	"modifiedTime":1760333639639,
+	"modifiedTime":1760333681637,
 	"name":"cacheQA2rfVQTKcTjB",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2415,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_HsnYd-1",
-			"id":"_HsnYd",
-			"index":0,
+			"id":"n_K425o",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"companyId":{
+							"type":"string",
+							"title":"companyId"
+						},
+						"contactId":{
+							"type":"string",
+							"title":"contactId"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":632,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
+			"fallbackMode":"CONTINUE",
+			"groupId":"_HsnYd-1",
+			"id":"n_fOxTY",
+			"index":2,
+			"inputs":{
+				"automationId":"68ec8f1c5dd83c63881946ac",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"companyId":"{{ n_K425o.outputs.companyId }}"
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"global":false
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"CONTINUE",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":10287,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_contact",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_HsnYd-1",
-			"id":"_mtpjk",
-			"index":0,
+			"id":"n_XkMVB",
+			"index":3,
+			"inputs":{
+				"contactId":"{{ n_K425o.outputs.contactId }}"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Freshdesk",
+			"title":"Get contact",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2418,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_HsnYd-1",
+			"id":"n_Tm19l",
+			"index":4,
+			"inputs":{
+				"result":{
+					"result":"{{ n_XkMVB.outputs.email }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +222,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
