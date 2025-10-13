@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1747000745384,
+	"createdTime":1744279540752,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760117547111,
+		"deployedAt":1760296188466,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68e9432b64af142a5db300af",
+		"deployedDefinitionId":"68ebfcfcd60dd816d7798f62",
 		"status":"DEPLOYED",
-		"version":119,
-		"workflowVersion":133
+		"version":88,
+		"workflowVersion":124
 	},
 	"edges":[
 		{
@@ -98,6 +98,13 @@
 			"fromNodeId":"jhXdk",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_9MaHD",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_9MaHD",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"pwksZ",
 			"type":"next"
 		},
@@ -156,9 +163,9 @@
 		]
 	},
 	"id":"67e29909b7d2dd451ebaaf36",
-	"lastModifiedBy":1,
+	"lastModifiedBy":0,
 	"lcName":"eval | metrics | g-eval",
-	"modifiedTime":1760303561240,
+	"modifiedTime":1760337961336,
 	"name":"Eval | Metrics | G-EVAL",
 	"nodes":[
 		{
@@ -835,6 +842,75 @@
 		},
 		{
 			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":483,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"DrOWd-1",
+			"id":"n_9MaHD",
+			"index":11,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"response_formate":{
+							"type":"string",
+							"title":"Response Formate"
+						},
+						"temperature":{
+							"type":"number",
+							"title":"Temperature"
+						},
+						"maxTokens":{
+							"type":"integer",
+							"title":"Max Tokens"
+						}
+					},
+					"required":[]
+				}
+			},
+			"inputs":{
+				"response_formate":"text",
+				"temperature":0.1,
+				"maxTokens":4096
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"response_formate":{
+							"type":"string",
+							"title":"Response Formate"
+						},
+						"temperature":{
+							"type":"number",
+							"title":"Temperature"
+						},
+						"maxTokens":{
+							"type":"integer",
+							"title":"Max Tokens"
+						}
+					},
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":167,
 				"resourceName":"callables_call_automation",
@@ -845,16 +921,19 @@
 			"fallbackMode":"MANUAL",
 			"groupId":"DrOWd-1",
 			"id":"pwksZ",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"automationId":"66dfd76eb70dad256986b784",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"type":"text",
 					"modelId":"{{ 5bATh.outputs.model }}",
-					"content":"{{ jhXdk.outputs.output }}"
+					"content":"{{ jhXdk.outputs.output }}",
+					"type":"text",
+					"response_format":"{{ n_9MaHD.outputs.response_formate }}",
+					"maxTokens":"{{ n_9MaHD.outputs.maxTokens }}",
+					"temperature":"{{ n_9MaHD.outputs.temperature }}"
 				}
 			},
 			"options":{
@@ -922,7 +1001,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"pwksZ@DrOWd-1@error",
 			"id":"n_W8xyL",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"jsonSchema":{
 					"type":"object",
@@ -964,7 +1043,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"pwksZ@DrOWd-1@error",
 			"id":"n_8DRly",
-			"index":13,
+			"index":14,
 			"inputs":{
 				"object_type":"experiment_errors",
 				"record":{
@@ -995,7 +1074,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"DrOWd-1",
 			"id":"aKbpW",
-			"index":14,
+			"index":15,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1046,7 +1125,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"DrOWd-1",
 			"id":"hm0c6",
-			"index":15,
+			"index":16,
 			"inputs":{
 				"jsonSchema":{
 					"type":"object",
@@ -1085,7 +1164,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"DrOWd-1",
 			"id":"TUgkl",
-			"index":16,
+			"index":17,
 			"inputs":{
 				"result":{
 					"score":"{{ hm0c6.outputs.result.score }}",
@@ -1100,14 +1179,14 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1,
+	"ownerUserId":-1,
 	"schemaReferences":[
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -1117,5 +1196,5 @@
 	"tags":[
 		
 	],
-	"version":134
+	"version":126
 }
