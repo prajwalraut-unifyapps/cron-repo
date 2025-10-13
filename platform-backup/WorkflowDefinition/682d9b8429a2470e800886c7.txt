@@ -5,17 +5,30 @@
 	"createdTime":1747819396300,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1753358477149,
-		"deployedBy":67744,
-		"deployedDefinitionId":"688220871d310b405af7b37c",
-		"deploymentTag":"thisIsTesting",
+		"deployedAt":1760358366932,
+		"deployedBy":45011,
+		"deployedDefinitionId":"68ecefdc25128874766808bf",
 		"status":"DEPLOYED",
-		"version":7,
-		"workflowVersion":50
+		"version":8,
+		"workflowVersion":55
 	},
 	"edges":[
 		{
 			"fromNodeId":"n_rdqMt",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_IOD6c",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_IOD6c",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_ldeqF",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_ldeqF",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_SD2L4",
@@ -74,7 +87,7 @@
 	"id":"682d9b8429a2470e800886c7",
 	"lastModifiedBy":45011,
 	"lcName":"test-apis-1",
-	"modifiedTime":1760358358716,
+	"modifiedTime":1760361734055,
 	"name":"test-apis-1",
 	"nodes":[
 		{
@@ -84,7 +97,7 @@
 				"resourceName":"webhooks_default"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"VwBvu-1",
 			"id":"n_rdqMt",
@@ -121,6 +134,86 @@
 			"type":"START"
 		},
 		{
+			"additional":{
+				"xsdSchemaConfig":{
+					"root":{}
+				}
+			},
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":995,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"VwBvu-1",
+			"id":"n_IOD6c",
+			"index":2,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"options":{
+							"type":"object",
+							"properties":{
+								"entity_type":{
+									"type":"string",
+									"title":"entityType"
+								}
+							},
+							"title":"options",
+							"additionalProperties":false,
+							"required":[]
+						}
+					}
+				},
+				"code":"return [\n  \"options\" : [\n    \"entity_type\" : \"e_interface\"\n  ]\n]",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"entityType":"{{ n_N2EZ4.outputs.item.columns.id }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"standard_entities",
+				"resourceVersion":1145,
+				"resourceName":"standard_entities_lookup_entities",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"VwBvu-1",
+			"id":"n_ldeqF",
+			"index":3,
+			"inputs":{
+				"options":"{{ n_IOD6c.outputs.result.options }}",
+				"lookupType":"ENTITY",
+				"page":{
+					"limit":20,
+					"offset":0
+				},
+				"type":"ByQuery",
+				"fields":[
+					"id",
+					"entityType"
+				]
+			},
+			"skip":false,
+			"subTitle":"Standard entities by UnifyApps",
+			"title":"Lookup Request",
+			"type":"ACTION"
+		},
+		{
 			"context":{
 				"appName":"variable_by_unifyapps",
 				"resourceVersion":1041,
@@ -132,7 +225,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"VwBvu-1",
 			"id":"n_SD2L4",
-			"index":2,
+			"index":4,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -392,7 +485,7 @@
 					}
 				}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Variable by UnifyApps",
 			"title":"Create list",
 			"type":"ACTION"
@@ -409,14 +502,14 @@
 			"fallbackMode":"STOP",
 			"groupId":"VwBvu-1",
 			"id":"n_DLkqh",
-			"index":3,
+			"index":5,
 			"inputs":{
 				"automationId":"68ecc497350d793c6ae933bb",
 				"runtimeConnections":{},
 				"version":"-1",
 				"parameters":{}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Callable",
 			"title":"Call automation",
 			"type":"LOOP"
@@ -440,7 +533,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_DLkqh@VwBvu-1@l",
 			"id":"n_l5Gci",
-			"index":4,
+			"index":6,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -454,7 +547,7 @@
 				},
 				"listName":"{{ n_SD2L4.outputs.items[0] }}"
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Variable by UnifyApps",
 			"title":"Add items to list",
 			"type":"ACTION"
@@ -464,11 +557,11 @@
 				"appName":"stop"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"VwBvu-1",
 			"id":"n_t5n6O",
-			"index":5,
+			"index":7,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -486,5 +579,5 @@
 		"enableVariableLogging":true
 	},
 	"standard":false,
-	"version":55
+	"version":56
 }
