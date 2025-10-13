@@ -5,16 +5,39 @@
 	"createdTime":1754459050490,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760024940107,
+		"deployedAt":1760117566088,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68e7d96ce4155b0b0f30b0b3",
+		"deployedDefinitionId":"68e9433e64af142a5db30123",
 		"status":"DEPLOYED",
-		"version":92,
-		"workflowVersion":116
+		"version":101,
+		"workflowVersion":129
 	},
 	"edges":[
 		{
 			"fromNodeId":"n_NCQCN",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_RA9lD",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_RA9lD",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_FGfLx",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_FGfLx",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"53LAF",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_RA9lD",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"53LAF",
@@ -85,7 +108,7 @@
 	"id":"6854195c4a0205327f0f4712",
 	"lastModifiedBy":0,
 	"lcName":"getagentmodelcached",
-	"modifiedTime":1760034460221,
+	"modifiedTime":1760376282903,
 	"name":"GetAgentModelCached",
 	"nodes":[
 		{
@@ -400,6 +423,10 @@
 							"title":"properties",
 							"additionalProperties":false,
 							"required":[]
+						},
+						"success":{
+							"type":"boolean",
+							"title":"Success"
 						}
 					}
 				},
@@ -427,6 +454,58 @@
 		},
 		{
 			"context":{
+				"appName":"if_else",
+				"resourceVersion":447,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_ewkKJ-1",
+			"id":"n_RA9lD",
+			"index":2,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_NCQCN.outputs.modelId }}",
+						"filter":{
+							"operator":"MISSING"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"model not found",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":583,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_RA9lD@_ewkKJ-1@y",
+			"id":"n_FGfLx",
+			"index":3,
+			"inputs":{
+				"result":{
+					"success":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		},
+		{
+			"context":{
 				"appName":"variable_by_unifyapps",
 				"resourceVersion":220,
 				"resourceName":"variable_by_unifyapps_get_session_variables",
@@ -437,7 +516,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_ewkKJ-1",
 			"id":"53LAF",
-			"index":2,
+			"index":4,
 			"inputs":{
 				"variableSchema":{
 					"type":"object",
@@ -472,7 +551,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_ewkKJ-1",
 			"id":"mtswW",
-			"index":3,
+			"index":5,
 			"inputs":{
 				"object_type":"ai_agent_llm_model",
 				"includeRoleMappings":false,
@@ -483,7 +562,8 @@
 			"options":{
 				"bulkheadConfig":{
 					"enabled":false,
-					"global":false
+					"maxLeaseTimeUnit":"SECONDS",
+					"maxWaitDurationUnit":"SECONDS"
 				},
 				"businessHoursConfig":{
 					"enabled":false,
@@ -537,7 +617,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_ewkKJ-1",
 			"id":"n_BIfvi",
-			"index":4,
+			"index":6,
 			"inputs":{
 				"filters":[
 					{
@@ -566,7 +646,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_BIfvi@_ewkKJ-1@y",
 			"id":"n_X4FSu",
-			"index":5,
+			"index":7,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -613,7 +693,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_BIfvi@_ewkKJ-1@y",
 			"id":"n_zqYqF",
-			"index":6,
+			"index":8,
 			"inputs":{
 				"object_type":"ai_agent_llm_model",
 				"includeRoleMappings":false,
@@ -688,7 +768,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_BIfvi@_ewkKJ-1@y",
 			"id":"_ykoSh",
-			"index":7,
+			"index":9,
 			"inputs":{
 				"result":{
 					"id":"{{ n_zqYqF.outputs.id }}",
@@ -777,7 +857,8 @@
 							"ua:type":"mappedArray",
 							"items":"{{ n_zqYqF.outputs.properties.outputModality[0] }}"
 						}
-					}
+					},
+					"success":true
 				}
 			},
 			"skip":false,
@@ -797,7 +878,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_ewkKJ-1",
 			"id":"n_SyNu4",
-			"index":8,
+			"index":10,
 			"inputs":{
 				"result":{
 					"id":"{{ mtswW.outputs.id }}",
@@ -886,7 +967,8 @@
 							"ua:type":"mappedArray",
 							"items":"{{ mtswW.outputs.properties.outputModality[0] }}"
 						}
-					}
+					},
+					"success":true
 				}
 			},
 			"skip":false,
@@ -900,9 +982,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":true,
+		"enableNodeLevelLogging":false,
 		"enableRunLogging":true,
-		"enableVariableLogging":true,
+		"enableVariableLogging":false,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -913,5 +995,5 @@
 	"tags":[
 		
 	],
-	"version":117
+	"version":130
 }
