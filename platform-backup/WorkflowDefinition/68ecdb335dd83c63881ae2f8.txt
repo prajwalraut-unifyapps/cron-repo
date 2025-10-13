@@ -6,46 +6,415 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_meZvr",
+			"fromNodeId":"n_mDX2j",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_X3RgV",
+			"toNodeId":"n_tMnS8",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_tMnS8",
+			"name":"1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_tMnS8@1",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_tMnS8@1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_guMJO",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_guMJO",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_SPrXS",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_SPrXS",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_mRoF5",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_mRoF5",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_SPrXS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_SPrXS",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_guMJO",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_tMnS8",
+			"name":"2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_tMnS8@2",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_tMnS8@2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Ld1Y6",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Ld1Y6",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_4SotW",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_4SotW",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Ld1Y6",
 			"type":"next"
 		}
 	],
 	"id":"68ecdb335dd83c63881ae2f8",
 	"lastModifiedBy":1,
 	"lcName":"loopslocalnestedloopsinbranchhbcykogshk",
-	"modifiedTime":1760353075828,
+	"modifiedTime":1760353121929,
 	"name":"loopsLocalNestedLoopsInBranchHBcykogsHk",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2416,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_meZvr-1",
-			"id":"_meZvr",
-			"index":0,
+			"id":"n_mDX2j",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"output":{
+							"type":"integer",
+							"title":"output"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"inputField1":{
+							"type":"integer",
+							"title":"inputField1"
+						},
+						"inputField2":{
+							"type":"integer",
+							"title":"inputField2"
+						},
+						"Array":{
+							"type":"array",
+							"items":{
+								"type":"integer"
+							},
+							"title":"Array"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"branch",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_meZvr-1",
-			"id":"_X3RgV",
-			"index":0,
+			"id":"n_tMnS8",
+			"index":2,
+			"inputs":{
+				"branches":[
+					{
+						"id":"1",
+						"inputs":{
+							"name":"Branch 1",
+							"conditions":{
+								"filters":[
+									{
+										"property":"{{ n_mDX2j.outputs.Array }}",
+										"filter":{
+											"operator":"CONTAINS",
+											"value":"branch1"
+										}
+									}
+								],
+								"operator":"AND"
+							}
+						}
+					},
+					{
+						"id":"2",
+						"inputs":{
+							"name":"Branch 2",
+							"conditions":{
+								"filters":[
+									{
+										"property":"{{ n_mDX2j.outputs.Array }}",
+										"filter":{
+											"operator":"CONTAINS",
+											"value":"branch2"
+										}
+									}
+								],
+								"operator":"AND"
+							}
+						}
+					},
+					{
+						"id":"default"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Branch",
+			"title":"",
+			"type":"BRANCH"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceVersion":0,
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_tMnS8@_meZvr-1@1",
+			"id":"n_tMnS8@1",
+			"index":3,
+			"inputs":{
+				"name":"Branch 1",
+				"conditions":{
+					"filters":[
+						{
+							"property":"{{ n_mDX2j.outputs.Array }}",
+							"filter":{
+								"operator":"CONTAINS",
+								"value":"branch1"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"title":"",
+			"type":"BRANCH_CONDITION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":143,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_tMnS8@_meZvr-1@1",
+			"id":"n_guMJO",
+			"index":4,
+			"inputs":{
+				"repeatMode":"SINGLE",
+				"listSource":"{{ n_mDX2j.outputs.Array }}",
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":100,
+				"resourceName":"loop_for",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_guMJO@n_tMnS8@_meZvr-1@1@l",
+			"id":"n_SPrXS",
+			"index":5,
+			"inputs":{
+				"start":0,
+				"limit":"{{ n_mDX2j.outputs.inputField1 }}",
+				"step":1,
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2310,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_SPrXS@n_guMJO@n_tMnS8@_meZvr-1@1@l@l",
+			"id":"n_mRoF5",
+			"index":6,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"branch1":{
+							"type":"integer",
+							"title":"branch1"
+						}
+					}
+				}
+			},
+			"inputs":{
+				"branch1":"=SUM({{ n_guMJO.outputs.item }},{{ n_SPrXS.outputs.index }})"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"branch1":{
+							"type":"integer",
+							"title":"branch1"
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceVersion":0,
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_tMnS8@_meZvr-1@2",
+			"id":"n_tMnS8@2",
+			"index":7,
+			"inputs":{
+				"name":"Branch 2",
+				"conditions":{
+					"filters":[
+						{
+							"property":"{{ n_mDX2j.outputs.Array }}",
+							"filter":{
+								"operator":"CONTAINS",
+								"value":"branch2"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"title":"",
+			"type":"BRANCH_CONDITION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":144,
+				"resourceName":"loop_while",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_tMnS8@_meZvr-1@2",
+			"id":"n_Ld1Y6",
+			"index":8,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"{{ n_mDX2j.outputs.inputField1 }}",
+							"filter":{
+								"operator":"LT",
+								"value":"5"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_Ld1Y6@n_tMnS8@_meZvr-1@2@l",
+			"id":"n_4SotW",
+			"index":9,
 			"skip":false,
 			"title":"Select an app and action",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +428,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
