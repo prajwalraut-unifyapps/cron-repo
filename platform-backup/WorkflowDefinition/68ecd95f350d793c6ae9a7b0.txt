@@ -47,7 +47,7 @@
 	"id":"68ecd95f350d793c6ae9a7b0",
 	"lastModifiedBy":133661,
 	"lcName":"greif | rca agent",
-	"modifiedTime":1760360457200,
+	"modifiedTime":1760361967882,
 	"name":"Greif | RCA Agent",
 	"nodes":[
 		{
@@ -112,6 +112,7 @@
 			"id":"n_HO6yF",
 			"index":2,
 			"inputs":{
+				"object_type":"greif_issue_category",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
 				"sortBy":[],
@@ -169,7 +170,7 @@
 			"index":4,
 			"inputs":{
 				"model":"gpt-3.5-turbo",
-				"message":"You are an expert in analyzing customer order issues and performing Root Cause Analysis (RCA). \nYou will be given the details of an order and a customer issue. \nYour task is to analyze the issue based on the order information and return a structured JSON object in the exact format below. \n**Input Fields:**\n- order_id\n- customer_name\n- order_date\n- delivery_date\n- delivery_status\n- total_amount\n- product_name\n- quantity\n- unit_price\n- payment_status\n- issue (description from customer)\n**JSON Output Format (exactly like this):**\n{\n  \"issue\": \"<summarize customer issue>\",\n  \"customer_name\": \"<customer_name>\",\n  \"category\": \"<RCA category such as Logistics / Warehouse / Vendor / System / Customer>\",\n  \"order_id\": \"<order_id>\",\n  \"product_name\": \"<product_name>\",\n  \"rca_analysis\": \"<concise root cause analysis explanation>\"\n}\n**Instructions:**\n1. Identify the **root cause category** based on order details and the issue.  \n2. Provide a **brief RCA explanation** in `rca_analysis`.  \n3. Always output **valid JSON** exactly as specified, no extra text.  \n**Example Input:**\norder_id: ORD12345  \ncustomer_name: John Doe  \norder_date: 2025-10-01  \ndelivery_date: 2025-10-05  \ndelivery_status: Delayed  \ntotal_amount: 149.99  \nproduct_name: Memorial Flower Bouquet  \nquantity: 1  \nunit_price: 149.99  \npayment_status: Paid  \nissue: \"My order has not arrived yet, even though it was supposed to be delivered 2 days ago.\"\n**Example Output:**\n{\n  \"issue\": \"Order not delivered on time\",\n  \"customer_name\": \"John Doe\",\n  \"category\": \"Logistics\",\n  \"order_id\": \"ORD12345\",\n  \"product_name\": \"Memorial Flower Bouquet\",\n  \"rca_analysis\": \"The delay is likely caused by courier partner shipping delays. Expected delivery was 2 days ago.\"\n}\n"
+				"message":"You are an expert in analyzing customer order issues and performing Root Cause Analysis (RCA). \nYou will be given the details of an order and a customer issue. \nYour task is to analyze the issue based on the order information and return a structured JSON object in the exact format below. \n**Input Fields{{ n_9DMVl.outputs.records }}:**\n- order_id\n- customer_name\n- order_date\n- delivery_date\n- delivery_status\n- total_amount\n- product_name\n- quantity\n- unit_price\n- payment_status\nand\n- issue (description from customer {{ n_HO6yF.outputs.properties.issue }})\n**JSON Output Format (exactly like this):**\n{\n\"issue\": \"<summarize customer issue>\",\n\"customer_name\": \"<customer_name>\",\n\"category\": \"<RCA category such as Logistics / Warehouse / Vendor / System / Customer>\",\n\"order_id\": \"<order_id>\",\n\"product_name\": \"<product_name>\",\n\"rca_analysis\": \"<concise root cause analysis explanation>\"\n}\n**Instructions:**\n1. Identify the **root cause category** based on order details and the issue. \n2. Provide a **brief RCA explanation** in `rca_analysis`. \n3. Always output **valid JSON** exactly as specified, no extra text. \n**Example Input:**\norder_id: ORD12345 \ncustomer_name: John Doe \norder_date: 2025-10-01 \ndelivery_date: 2025-10-05 \ndelivery_status: Delayed \ntotal_amount: 149.99 \nproduct_name: Memorial Flower Bouquet \nquantity: 1 \nunit_price: 149.99 \npayment_status: Paid \nissue: \"My order has not arrived yet, even though it was supposed to be delivered 2 days ago.\"\n**Example Output:**\n{\n\"issue\": \"Order not delivered on time\",\n\"customer_name\": \"John Doe\",\n\"category\": \"Logistics\",\n\"order_id\": \"ORD12345\",\n\"product_name\": \"Memorial Flower Bouquet\",\n\"rca_analysis\": \"The delay is likely caused by courier partner shipping delays. Expected delivery was 2 days ago.\"\n}\n"
 			},
 			"skip":false,
 			"subTitle":"OpenAI",
@@ -217,5 +218,5 @@
 	"tags":[
 		
 	],
-	"version":10
+	"version":11
 }
