@@ -5,12 +5,12 @@
 	"createdTime":1760332198530,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760338817401,
+		"deployedAt":1760338949357,
 		"deployedBy":173449,
-		"deployedDefinitionId":"68eca3813ef30311dc7353bf",
+		"deployedDefinitionId":"68eca4053ef30311dc7356ec",
 		"status":"DEPLOYED",
-		"version":49,
-		"workflowVersion":49
+		"version":50,
+		"workflowVersion":50
 	},
 	"description":"",
 	"edges":[
@@ -23,13 +23,6 @@
 		},
 		{
 			"fromNodeId":"n_iagNT",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_qeA9F",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_qeA9F",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_UcgpP",
@@ -46,7 +39,7 @@
 	"id":"68ec89a6b515c31be84b09a6",
 	"lastModifiedBy":173449,
 	"lcName":"testing ag",
-	"modifiedTime":1760338949278,
+	"modifiedTime":1760339066897,
 	"name":"testing ag",
 	"nodes":[
 		{
@@ -98,147 +91,52 @@
 					"responseSchema":{
 						"type":"object",
 						"properties":{
-							"speech":{
-								"type":"object",
-								"properties":{
-									"content":{
-										"type":"string",
-										"description":"The response content in the style of a Roman emperor."
-									},
-									"tone":{
-										"type":"string",
-										"enum":[
-											"authoritative",
-											"commanding",
-											"regal",
-											"imperious"
-										],
-										"description":"The tone of the speech, typical of a Roman emperor."
-									},
-									"language":{
-										"type":"object",
-										"properties":{
-											"style":{
-												"type":"string",
-												"enum":[
-													"formal",
-													"archaic",
-													"grandiose"
-												],
-												"description":"The linguistic style used in the speech."
-											},
-											"phrases":{
-												"type":"array",
-												"items":{
-													"type":"string"
-												},
-												"description":"Common Latin phrases or Roman sayings used in the speech."
-											}
-										}
-									},
-									"delivery":{
-										"type":"object",
-										"properties":{
-											"pacing":{
-												"type":"string",
-												"enum":[
-													"slow",
-													"measured",
-													"deliberate"
-												],
-												"description":"The pace at which the speech is delivered."
-											},
-											"emphasis":{
-												"type":"array",
-												"items":{
-													"type":"string"
-												},
-												"description":"Key words or phrases to be emphasized in the speech."
-											}
-										}
-									}
-								}
+							"response":{
+								"type":"string",
+								"description":"A response in the style of a Roman emperor"
+							},
+							"imperialTitles":{
+								"type":"array",
+								"items":{
+									"type":"string"
+								},
+								"description":"A list of imperial titles used in the response"
+							},
+							"latinPhrases":{
+								"type":"array",
+								"items":{
+									"type":"string"
+								},
+								"description":"Latin phrases or words used in the response"
+							},
+							"tone":{
+								"type":"string",
+								"enum":[
+									"commanding",
+									"authoritative",
+									"regal",
+									"imperious"
+								],
+								"description":"The overall tone of the response"
+							},
+							"historicalReferences":{
+								"type":"array",
+								"items":{
+									"type":"string"
+								},
+								"description":"Any references to Roman history or mythology used in the response"
 							}
-						}
+						},
+						"required":[
+							"response",
+							"tone"
+						]
 					}
 				}
 			},
 			"skip":false,
 			"subTitle":"Prompt",
 			"title":"Instructs AI to respond as Roman emperor with\nspecific output schema.",
-			"type":"CALL_INTERFACE_WORKFLOW"
-		},
-		{
-			"context":{
-				"appName":"workflow_agent_ask_ai_agent",
-				"resourceVersion":27,
-				"resourceName":"workflow_agent_ask_ai_agent_default",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"_UWIyO-1",
-			"id":"n_qeA9F",
-			"index":0,
-			"inputs":{
-				"callableInterfaceId":"__ua__ask_ai_agent_interface",
-				"parameters":{
-					"name":"Agent",
-					"instructions":"solve user queries speaking in a baby like tone",
-					"model":"e_686654b81257d219bd7958d5",
-					"knowledges":[],
-					"responseSchema":{
-						"type":"object",
-						"properties":{
-							"response":{
-								"type":"string",
-								"description":"The baby-like response to the user's query"
-							},
-							"tone":{
-								"type":"string",
-								"enum":[
-									"baby-like"
-								],
-								"description":"The tone of the response"
-							},
-							"query":{
-								"type":"string",
-								"description":"The original user query"
-							},
-							"metadata":{
-								"type":"object",
-								"properties":{
-									"simplifiedLanguage":{
-										"type":"boolean",
-										"description":"Indicates if simplified language was used in the response"
-									},
-									"emoticons":{
-										"type":"array",
-										"items":{
-											"type":"string"
-										},
-										"description":"List of emoticons used in the response"
-									}
-								}
-							}
-						},
-						"required":[
-							"response",
-							"tone",
-							"query"
-						]
-					},
-					"tools":{
-						"defaultTools":[
-							"webSearch"
-						]
-					}
-				}
-			},
-			"skip":false,
-			"subTitle":"Agent",
-			"title":"AI agent responds to queries in baby-like tone.",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -257,7 +155,7 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"Solve user query{{ n_iagNT.outputs.speech }}",
+					"responseInstructions":"Solve user query{{ n_iagNT.outputs.response }}{{ n_iagNT.outputs.imperialTitles }}{{ n_iagNT.outputs.latinPhrases }}{{ n_iagNT.outputs.historicalReferences }}",
 					"name":"Respond",
 					"model":"e_686654b81257d219bd7958d5"
 				}
@@ -294,5 +192,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":50
+	"version":51
 }
