@@ -1,6 +1,6 @@
 {
 	"appsUsed":[
-		
+		"mongo"
 	],
 	"createdTime":1759916114118,
 	"deleted":false,
@@ -47,12 +47,26 @@
 			"skip":false,
 			"toNodeId":"n_tklky",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_tklky",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_OF1Df",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_OF1Df",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_vlAg9",
+			"type":"next"
 		}
 	],
 	"id":"68e63052129e046ad9677f55",
 	"lastModifiedBy":155341,
 	"lcName":"test",
-	"modifiedTime":1760357217627,
+	"modifiedTime":1760370645026,
 	"name":"test",
 	"nodes":[
 		{
@@ -156,7 +170,7 @@
 					"required":[]
 				}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Variable by UnifyApps",
 			"title":"Create variables",
 			"type":"ACTION"
@@ -169,7 +183,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Ji0fF-1",
 			"id":"n_RW4kc",
@@ -182,7 +196,7 @@
 					}
 				]
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Variable by UnifyApps",
 			"title":"Update variables",
 			"type":"ACTION"
@@ -195,7 +209,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Ji0fF-1",
 			"id":"n_CnCs3",
@@ -208,7 +222,7 @@
 					}
 				]
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Variable by UnifyApps",
 			"title":"Update variables",
 			"type":"ACTION"
@@ -221,7 +235,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Ji0fF-1",
 			"id":"n_tklky",
@@ -273,9 +287,185 @@
 				"compile_static":false,
 				"captureStdOutput":false
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Code by UnifyApps",
 			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.updateDocuments.items.filter",
+					"root.updateDocuments.items.updateFields.items.fieldName",
+					"root.updateDocuments.items.updateFields.items.actionType",
+					"root.updateDocuments.items.upsert",
+					"root.updateDocuments.items.multi",
+					"root.deleteDocuments.items.filter",
+					"root.deleteDocuments.items.multi"
+				]
+			},
+			"context":{
+				"appName":"mongo",
+				"resourceVersion":300,
+				"connectionId":"681202198782846948e46c23",
+				"resourceName":"mongodb_bulk_write_documents",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Ji0fF-1",
+			"id":"n_OF1Df",
+			"index":7,
+			"inputs":{
+				"document_schema":{
+					"type":"object",
+					"properties":{
+						"document":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"MasterProduct":{
+										"type":"string"
+									},
+									"AdditionalBarcodes":{
+										"type":"string"
+									},
+									"ImageUrl":{
+										"type":"string"
+									},
+									"ProductGroupName":{
+										"type":"string"
+									},
+									"Name":{
+										"type":"string"
+									},
+									"ProductGroupCode":{
+										"type":"string"
+									},
+									"Active":{
+										"type":"boolean"
+									},
+									"UnitPrice":{
+										"type":"integer"
+									},
+									"EAN":{
+										"type":"string"
+									},
+									"Note":{
+										"type":"string"
+									},
+									"Packaging":{
+										"type":"object",
+										"properties":{
+											"Codes":{
+												"type":"array",
+												"items":{
+													"type":"object",
+													"properties":{
+														"Value":{
+															"type":"string"
+														}
+													}
+												}
+											},
+											"IsSet":{
+												"type":"boolean"
+											}
+										}
+									},
+									"_id":{
+										"type":"string"
+									},
+									"Tag":{
+										"type":"string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"updateDocuments":[
+					{
+						"updateFields":[
+							{
+								"fieldName":"MasterProduct",
+								"actionType":"SET",
+								"setValue":"update"
+							}
+						],
+						"upsert":true,
+						"filter":{
+							"filters":[
+								{
+									"property":"EAN",
+									"filter":{
+										"operator":"EQUAL",
+										"details":{
+											"fieldType":"TEXT"
+										},
+										"value":"10609465149322"
+									}
+								}
+							],
+							"operator":"AND"
+						}
+					},
+					{}
+				],
+				"collection":"product"
+			},
+			"skip":false,
+			"subTitle":"MongoDB",
+			"title":"Bulk Write documents",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"mongo",
+				"resourceVersion":5486,
+				"connectionId":"681202198782846948e46c23",
+				"resourceName":"mongodb_find_documents",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Ji0fF-1",
+			"id":"n_vlAg9",
+			"index":8,
+			"inputs":{
+				"document_schema":{
+					"type":"object",
+					"properties":{
+						"links":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"rel":{
+										"type":"string"
+									},
+									"href":{
+										"type":"string"
+									}
+								}
+							}
+						},
+						"_id":{
+							"type":"string"
+						}
+					}
+				},
+				"objectSourceResourceName":"mongodb_fetch_collection_information",
+				"limit":10,
+				"skip":0,
+				"objectId":"testNetsuite1inventory_item"
+			},
+			"skip":false,
+			"subTitle":"MongoDB",
+			"title":"Find documents",
 			"type":"ACTION"
 		}
 	],
@@ -296,5 +486,5 @@
 	"tags":[
 		
 	],
-	"version":13
+	"version":14
 }
