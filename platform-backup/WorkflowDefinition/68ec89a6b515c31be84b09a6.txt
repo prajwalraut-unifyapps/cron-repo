@@ -5,12 +5,12 @@
 	"createdTime":1760332198530,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760342351149,
+		"deployedAt":1760342484302,
 		"deployedBy":1728,
-		"deployedDefinitionId":"68ecb14f8c93a57cdb103f48",
+		"deployedDefinitionId":"68ecb1d48c93a57cdb10424b",
 		"status":"DEPLOYED",
-		"version":68,
-		"workflowVersion":68
+		"version":69,
+		"workflowVersion":69
 	},
 	"description":"",
 	"edges":[
@@ -18,11 +18,18 @@
 			"fromNodeId":"n_tzAAa",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_VOQ3Y",
+			"toNodeId":"n_iagNT",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_VOQ3Y",
+			"fromNodeId":"n_iagNT",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_tcvQ2",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_tcvQ2",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_UcgpP",
@@ -37,9 +44,9 @@
 		}
 	],
 	"id":"68ec89a6b515c31be84b09a6",
-	"lastModifiedBy":1728,
+	"lastModifiedBy":173449,
 	"lcName":"testing ag",
-	"modifiedTime":1760342484203,
+	"modifiedTime":1760348593104,
 	"name":"testing ag",
 	"nodes":[
 		{
@@ -80,14 +87,14 @@
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_UWIyO-1",
-			"id":"n_VOQ3Y",
+			"id":"n_iagNT",
 			"index":0,
 			"inputs":{
 				"callableInterfaceId":"__ua__workflow_agent_prompt",
 				"parameters":{
-					"instructions":"Speak like a Roman Emperor",
+					"instructions":"Speak like a roman emperor",
 					"model":"e_686654b81257d219bd7958d5",
-					"name":"Name",
+					"name":"hi",
 					"responseSchema":{
 						"type":"object",
 						"properties":{
@@ -100,7 +107,81 @@
 			},
 			"skip":false,
 			"subTitle":"Prompt",
-			"title":"Sets AI to speak like Roman Emperor with imperial tone",
+			"title":"Instructs AI to respond as Roman emperor with\nspecific output schema.",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"workflow_agent_ask_ai_agent",
+				"resourceVersion":27,
+				"resourceName":"workflow_agent_ask_ai_agent_default",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_UWIyO-1",
+			"id":"n_tcvQ2",
+			"index":0,
+			"inputs":{
+				"callableInterfaceId":"__ua__ask_ai_agent_interface",
+				"parameters":{
+					"name":"agent",
+					"instructions":"Use tools and knowledge to answer query",
+					"model":"e_686654b81257d219bd7958d5",
+					"knowledges":[
+						{
+							"type":"GLOBAL"
+						}
+					],
+					"responseSchema":{
+						"type":"object",
+						"properties":{
+							"answer":{
+								"type":"string",
+								"description":"The answer to the user's query generated using tools."
+							},
+							"toolsUsed":{
+								"type":"array",
+								"items":{
+									"type":"string"
+								},
+								"description":"List of tools used to generate the answer."
+							},
+							"confidence":{
+								"type":"number",
+								"minimum":0,
+								"maximum":1,
+								"description":"Confidence score of the generated answer."
+							},
+							"metadata":{
+								"type":"object",
+								"properties":{
+									"processingTime":{
+										"type":"number",
+										"description":"Time taken to process the query and generate the answer in milliseconds."
+									},
+									"timestamp":{
+										"type":"string",
+										"format":"date-time",
+										"description":"Timestamp of when the answer was generated."
+									}
+								}
+							}
+						},
+						"required":[
+							"answer",
+							"toolsUsed"
+						]
+					},
+					"tools":{
+						"defaultTools":[]
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Agent",
+			"title":"Creates AI agent to answer queries using tools",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -119,14 +200,14 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"Solve user query using this reponse as reference: response to use : {{ n_VOQ3Y.outputs.output }}",
+					"responseInstructions":"Solve user query, do not ask clarifying questions\n{{ n_tcvQ2.outputs.answer }}{{ n_tcvQ2.outputs.toolsUsed }}",
 					"name":"Respond",
 					"model":"e_686654b81257d219bd7958d5"
 				}
 			},
 			"skip":false,
 			"subTitle":"Respond",
-			"title":"Generates AI response using a specified model and\ninstructions based on a reference response.",
+			"title":"Generates AI response to user query using specified\nmodel and instructions.",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -156,5 +237,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":69
+	"version":70
 }
