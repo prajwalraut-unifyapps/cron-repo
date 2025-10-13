@@ -7,12 +7,12 @@
 	"createdTime":1760362726729,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760376366853,
+		"deployedAt":1760376393914,
 		"deployedBy":85476,
-		"deployedDefinitionId":"68ed362eb8302d5b37562fdb",
+		"deployedDefinitionId":"68ed3649b8302d5b37563088",
 		"status":"DEPLOYED",
-		"version":6,
-		"workflowVersion":60
+		"version":7,
+		"workflowVersion":61
 	},
 	"edges":[
 		{
@@ -111,7 +111,7 @@
 	"id":"68ecbd095dec97614aa65277",
 	"lastModifiedBy":85476,
 	"lcName":"greif | issue classify",
-	"modifiedTime":1760376392428,
+	"modifiedTime":1760376635695,
 	"name":"Greif | Issue Classify",
 	"nodes":[
 		{
@@ -531,7 +531,7 @@
 						}
 					}
 				},
-				"code":"function decodeBase64Text(base64String) {\n    // 1. Node.js check\n    if (typeof Buffer !== 'undefined') {\n        try {\n            return Buffer.from(base64String, 'base64').toString('utf8');\n        } catch (e) { /* Ignore Buffer error and check for browser method */ }\n    }\n\n    // 2. Browser check (atob is a global browser function)\n    if (typeof atob !== 'undefined') {\n        try {\n            // Browser-safe, UTF-8 compatible decoding logic\n            const decodedBString = atob(base64String);\n            return decodeURIComponent(\n                [...decodedBString].map(char => \n                    '%' + ('00' + char.charCodeAt(0).toString(16)).slice(-2)\n                ).join('')\n            );\n        } catch (e) {\n            console.error(\"Decoding failed:\", e.message);\n            return \"\";\n        }\n    }\n\n    // 3. Environment Fallback\n    console.error(\"Base64 decoding failed: Neither Buffer nor atob is available.\");\n    return \"\";\n}\n\ndecodeBase64Text(base64String)\n",
+				"code":"function cleanBase64String(base64String) {\n    // Regular expression to match only valid Base64 characters:\n    // A-Z, a-z, 0-9, +, /, and = (padding)\n    // The 'g' flag ensures all matches are replaced.\n    const validBase64Chars = /[^A-Za-z0-9+/=]/g;\n\n    // Use the replace method to substitute all invalid characters with an empty string.\n    const cleanedString = base64String.replace(validBase64Chars, '');\n\n    return cleanedString;\n}\n\ncleanBase64String(base64String)",
 				"isAsync":false
 			},
 			"skip":true,
@@ -750,5 +750,5 @@
 	"tags":[
 		
 	],
-	"version":61
+	"version":62
 }
