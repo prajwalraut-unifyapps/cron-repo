@@ -68,6 +68,44 @@
 			"fromNodeId":"n_WaDfK",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_V0AHB",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_V0AHB",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_kXl86",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_kXl86",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_9I8pp",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_9I8pp",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_V0AHB",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_kXl86",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_V0AHB",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_V0AHB",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_xU6FU",
 			"type":"next"
 		}
@@ -75,7 +113,7 @@
 	"id":"68ecd29a350d793c6ae98573",
 	"lastModifiedBy":178082,
 	"lcName":"answer consistency",
-	"modifiedTime":1760352528093,
+	"modifiedTime":1760357683810,
 	"name":"Answer Consistency",
 	"nodes":[
 		{
@@ -222,7 +260,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_WVYcL-1",
 			"id":"n_S9aSq",
@@ -252,7 +290,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_WVYcL-1",
 			"id":"n_b9BdR",
@@ -305,7 +343,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_R0bZB@n_b9BdR@_WVYcL-1@l@y",
 			"id":"n_3A6i5",
@@ -331,7 +369,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_WVYcL-1",
 			"id":"n_WaDfK",
@@ -343,6 +381,8 @@
 				"triggerWorkflowWithRuntimeType":"DEFAULT",
 				"fallbackWorkflowId":"68050ca67df58855654804a0",
 				"parameters":{
+					"userQuery":"{{ n_0yZJA.outputs.input }}",
+					"aiAgentId":"e_68c7f799a052936894ea7187",
 					"triggerWorkflowWithRuntimeType":"IN_MEMORY"
 				}
 			},
@@ -353,21 +393,102 @@
 		},
 		{
 			"context":{
+				"appName":"loop",
+				"resourceVersion":865,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_WVYcL-1",
+			"id":"n_V0AHB",
+			"index":8,
+			"inputs":{
+				"listSource":"{{ n_WaDfK.outputs.agentResponses }}",
+				"captureIterations":false
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_V0AHB@_WVYcL-1@l",
+			"id":"n_kXl86",
+			"index":9,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_V0AHB.outputs.isLast }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"true"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":972,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_kXl86@n_V0AHB@_WVYcL-1@l@y",
+			"id":"n_9I8pp",
+			"index":10,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_SKn5v.outputs.Text1 }}",
+						"value":"{{ n_V0AHB.outputs.item.text }}"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"ai_evaluator_by_unifyapps",
 				"resourceVersion":12,
 				"resourceName":"ai_evaluator_by_unifyapps_return_response_to_task_execution",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_WVYcL-1",
 			"id":"n_xU6FU",
-			"index":8,
+			"index":11,
 			"inputs":{
 				"result":{
-					"Actual_Output":"{{ n_IdwSf.outputs.agentResponse }}",
-					"actual_output":"{{ n_6fQkH.outputs.text }}"
+					"actual_output":"{{ n_SKn5v.outputs.text }}",
+					"additional":{
+						"ActualOutput1":"{{ n_SKn5v.outputs.Text1 }}"
+					},
+					"Actual_Output":"{{ n_IdwSf.outputs.agentResponse }}"
 				}
 			},
 			"skip":false,
@@ -393,5 +514,5 @@
 	"tags":[
 		
 	],
-	"version":3
+	"version":4
 }
