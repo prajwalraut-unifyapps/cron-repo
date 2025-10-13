@@ -5,12 +5,12 @@
 	"createdTime":1754332475841,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760117618402,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68e9437264af142a5db302e5",
+		"deployedAt":1760303567222,
+		"deployedBy":1,
+		"deployedDefinitionId":"68ec19cf7cbff43ccfcb5953",
 		"status":"DEPLOYED",
-		"version":101,
-		"workflowVersion":122
+		"version":102,
+		"workflowVersion":123
 	},
 	"edges":[
 		{
@@ -362,10 +362,10 @@
 		]
 	},
 	"id":"68199f8ba3904643303bfc35",
-	"lastModifiedBy":1,
-	"lcName":"experiment | run test cases",
-	"modifiedTime":1760303567117,
-	"name":"Experiment | Run Test Cases",
+	"lastModifiedBy":0,
+	"lcName":"eval | experiment | run llm testcase",
+	"modifiedTime":1760376492335,
+	"name":"Eval | Experiment | Run LLM Testcase",
 	"nodes":[
 		{
 			"context":{
@@ -510,6 +510,16 @@
 												"properties":{},
 												"additionalProperties":false,
 												"title":"Custom Properties"
+											},
+											"additional_output_properties":{
+												"type":"object",
+												"properties":{},
+												"additionalProperties":false,
+												"title":"Additional Output Properties"
+											},
+											"dataset_import_order":{
+												"type":"integer",
+												"title":"Dataset Import Order"
 											}
 										},
 										"required":[]
@@ -703,17 +713,17 @@
 			"inputs":{
 				"filters":[
 					{
+						"property":"{{ n_5KiY8.outputs.properties.AvgTestCaseRunTime }}",
 						"filter":{
 							"operator":"EXISTS"
-						},
-						"property":"{{ n_5KiY8.outputs.properties.AvgTestCaseRunTime }}"
+						}
 					},
 					{
+						"property":"{{ n_5KiY8.outputs.properties.AvgTestCaseRunTime }}",
 						"filter":{
-							"value":"0",
-							"operator":"NOT_EQUAL"
-						},
-						"property":"{{ n_5KiY8.outputs.properties.AvgTestCaseRunTime }}"
+							"operator":"NOT_EQUAL",
+							"value":"0"
+						}
 					}
 				],
 				"operator":"AND"
@@ -810,6 +820,12 @@
 						"actual_output":{
 							"type":"string",
 							"title":"Actual Output"
+						},
+						"additionalOutputProperties":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Additional Output Properties"
 						}
 					},
 					"required":[]
@@ -860,6 +876,12 @@
 						"actual_output":{
 							"type":"string",
 							"title":"Actual Output"
+						},
+						"additionalOutputProperties":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Additional Output Properties"
 						}
 					},
 					"required":[]
@@ -1029,6 +1051,10 @@
 					{
 						"source":"{{ _Oa42h.outputs.actual_output }}",
 						"value":"{{ trK3s.outputs.item.properties.actual_output }}"
+					},
+					{
+						"source":"{{ _Oa42h.outputs.additionalOutputProperties }}",
+						"value":"{{ trK3s.outputs.item.properties.additional_output_properties }}"
 					}
 				]
 			},
@@ -1576,6 +1602,10 @@
 					{
 						"source":"{{ _Oa42h.outputs.retrieved_context }}",
 						"value":"{{ _vHqnH.outputs.retrieved_context }}"
+					},
+					{
+						"source":"{{ _Oa42h.outputs.additionalOutputProperties }}",
+						"value":"{{ _vHqnH.outputs.additional }}"
 					}
 				]
 			},
@@ -1649,7 +1679,18 @@
 					"root.record.testCaseObject.expected_tools.items",
 					"root.record.testCaseObject.datasetId",
 					"root.record.testCaseObject.conversationId",
-					"root.record.testCaseObject.dataset_ids.items"
+					"root.record.testCaseObject.dataset_ids.items",
+					"root.record.metricScores.items.metricId",
+					"root.record.metricScores.items.score",
+					"root.record.metricScores.items.result",
+					"root.record.metricScores.items.comment",
+					"root.record.metricScores.items.reason",
+					"root.record.metricScores.items.scoredBy",
+					"root.record.metricScores.items.cost",
+					"root.record.metricScores.items.latency",
+					"root.record.metricScores.items.totalTokens",
+					"root.record.testCaseObject.additionalInputProperties",
+					"root.record.testCaseObject.dataset_import_order"
 				]
 			},
 			"context":{
@@ -1683,6 +1724,8 @@
 						"expected_output":"{{ trK3s.outputs.item.properties.expected_output }}",
 						"context":"{{ trK3s.outputs.item.properties.context }}",
 						"datasetId":"{{ trK3s.outputs.item.properties.datasetId }}",
+						"additionalInputProperties":"{{ trK3s.outputs.item.properties.customProperties }}",
+						"dataset_import_order":"{{ trK3s.outputs.item.properties.dataset_import_order }}",
 						"expected_tools":{
 							"source":"{{ trK3s.outputs.item.properties.expected_tools }}",
 							"ua:type":"mappedArray",
@@ -1696,6 +1739,7 @@
 					},
 					"agentCost":"{{ _Oa42h.outputs.cost }}",
 					"agentLatency":"{{ _Oa42h.outputs.latency }}",
+					"additionalOutputProperties":"{{ _Oa42h.outputs.additionalOutputProperties }}",
 					"tool_called":{
 						"source":"{{ _Oa42h.outputs.tools_used }}",
 						"ua:type":"mappedArray",
@@ -1744,9 +1788,7 @@
 				"input":{
 					"additionalProperties":false,
 					"type":"object",
-					"required":[
-						"properties"
-					],
+					"required":[],
 					"properties":{
 						"input":{
 							"type":"string",
@@ -1786,12 +1828,6 @@
 							"type":"string",
 							"title":"Actual Output"
 						},
-						"properties":{
-							"additionalProperties":false,
-							"type":"object",
-							"title":"Properties",
-							"properties":{}
-						},
 						"latency":{
 							"type":"number",
 							"title":"Latency"
@@ -1799,18 +1835,34 @@
 						"cost":{
 							"type":"number",
 							"title":"Cost"
+						},
+						"additional":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Additional Input Properties"
+						},
+						"additional_output_properties":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Additional Output Properties"
 						}
 					}
 				},
-				"code":"def str = new StringBuilder()\nstr.append('{ \"testCases\": [')\n\ndef safe = { val ->\n    if (val == null) return \"\"\n    \n    String content = val.toString()\n    \n    // Handle already-escaped content properly\n    content = content.replace('\\\\\\\\', '\\u0001TEMP_BACKSLASH\\u0001')\n                    .replace('\\\\\"', '\\u0002TEMP_QUOTE\\u0002')      \n                    .replace('\\\\n', '\\n')                          \n                    .replace('\\\\r', '\\r')                          \n                    .replace('\\\\t', '\\t')                          \n    \n    // Proper JSON escaping\n    content = content.replace('\\\\', '\\\\\\\\')                        \n                    .replace('\"', '\\\\\"')                           \n                    .replace('\\n', '\\\\n')                          \n                    .replace('\\r', '\\\\r')                          \n                    .replace('\\t', '\\\\t')                          \n                    .replace('\\b', '\\\\b')                          \n                    .replace('\\f', '\\\\f')                          \n    \n    // Restore temporarily stored characters\n    content = content.replace('\\u0001TEMP_BACKSLASH\\u0001', '\\\\\\\\')  \n                    .replace('\\u0002TEMP_QUOTE\\u0002', '\\\\\"')\n    \n    return content\n}\n\n// Safe list processing with proper JSON escaping\ndef safeList = { list ->\n    if (list == null) return \"\"\n    \n    return list.collect { item ->\n        \"\\\"${safe(item.toString())}\\\"\"\n    }.join(\", \")\n}\n\ndef testCaseJson = \"\"\"{\n        \"INPUT\": \"${binding.hasVariable('input') ? safe(input) : \"\"}\",\n        \"ACTUAL_OUTPUT\": \"${binding.hasVariable('actual_output') ? safe(actual_output) : \"\"}\",\n        \"EXPECTED_OUTPUT\": \"${binding.hasVariable('expected_output') ? safe(expected_output) : \"\"}\",\n        \"CONTEXT\": \"${binding.hasVariable('context') ? safe(context) : \"\"}\",\n        \"TOOLS_USED\": [${binding.hasVariable('tools_used') ? safeList(tools_used) : \"\"}],\n        \"EXPECTED_TOOLS\": [${binding.hasVariable('expected_tools') ? safeList(expected_tools) : \"\"}],\n        \"RETRIEVAL_CONTEXT\": \"${binding.hasVariable('retrieved_context') ? safe(retrieved_context) : \"\"}\", //DO NOT CHANGE THE KEY (needs to be RETRIEVAL_CONTEXT for correct metric evaluation)\n        \"LATENCY\": \"${binding.hasVariable('latency') ? safe(latency) : \"\"}\",\n        \"COST\": \"${binding.hasVariable('cost') ? safe(cost) : \"\"}\",\n    }\"\"\"\n\nstr.append(testCaseJson)\nstr.append(']}')\n\nreturn [\"testCase\": str.toString()]",
+				"code":"def str = new StringBuilder()\nstr.append('{ \"testCases\": [')\n\ndef safe = { val ->\n    if (val == null) return \"\"\n    \n    String content = val.toString()\n    \n    // Handle already-escaped content properly\n    content = content.replace('\\\\\\\\', '\\u0001TEMP_BACKSLASH\\u0001')\n                    .replace('\\\\\"', '\\u0002TEMP_QUOTE\\u0002')      \n                    .replace('\\\\n', '\\n')                          \n                    .replace('\\\\r', '\\r')                          \n                    .replace('\\\\t', '\\t')                          \n    \n    // Proper JSON escaping\n    content = content.replace('\\\\', '\\\\\\\\')                        \n                    .replace('\"', '\\\\\"')                           \n                    .replace('\\n', '\\\\n')                          \n                    .replace('\\r', '\\\\r')                          \n                    .replace('\\t', '\\\\t')                          \n                    .replace('\\b', '\\\\b')                          \n                    .replace('\\f', '\\\\f')                          \n    \n    // Restore temporarily stored characters\n    content = content.replace('\\u0001TEMP_BACKSLASH\\u0001', '\\\\\\\\')  \n                    .replace('\\u0002TEMP_QUOTE\\u0002', '\\\\\"')\n    \n    return content\n}\n\n// Safe list processing with proper JSON escaping\ndef safeList = { list ->\n    if (list == null) return \"\"\n    \n    return list.collect { item ->\n        \"\\\"${safe(item.toString())}\\\"\"\n    }.join(\", \")\n}\n\ndef testCaseJson = \"\"\"{\n        \"INPUT\": \"${binding.hasVariable('input') ? safe(input) : \"\"}\",\n        \"ACTUAL_OUTPUT\": \"${binding.hasVariable('actual_output') ? safe(actual_output) : \"\"}\",\n        \"EXPECTED_OUTPUT\": \"${binding.hasVariable('expected_output') ? safe(expected_output) : \"\"}\",\n        \"CONTEXT\": \"${binding.hasVariable('context') ? safe(context) : \"\"}\",\n        \"TOOLS_USED\": [${binding.hasVariable('tools_used') ? safeList(tools_used) : \"\"}],\n        \"EXPECTED_TOOLS\": [${binding.hasVariable('expected_tools') ? safeList(expected_tools) : \"\"}],\n        \"RETRIEVAL_CONTEXT\": \"${binding.hasVariable('retrieved_context') ? safe(retrieved_context) : \"\"}\", //DO NOT CHANGE THE KEY (needs to be RETRIEVAL_CONTEXT for correct metric evaluation)\n        \"LATENCY\": \"${binding.hasVariable('latency') ? safe(latency) : \"\"}\",\n        \"COST\": \"${binding.hasVariable('cost') ? safe(cost) : \"\"}\",\n        \"ADDITIONAL\": \"${binding.hasVariable('additional') ? safe(additional) : \"\"}\",\n        \"ADDITIONAL_OUTPUT_PROPERTIES\": \"${binding.hasVariable('additional_output_properties') ? safe(additional_output_properties) : \"\"}\"\n    }\"\"\"\n\nstr.append(testCaseJson)\nstr.append(']}')\n\nreturn [\"testCase\": str.toString()]",
 				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"input":"{{ trK3s.outputs.item.properties.input }}",
 					"retrieved_context":"{{ _Oa42h.outputs.retrieved_context }}",
 					"expected_output":"{{ trK3s.outputs.item.properties.expected_output }}",
 					"context":"{{ trK3s.outputs.item.properties.context }}",
 					"actual_output":"{{ _Oa42h.outputs.actual_output }}",
-					"properties":"{{ trK3s.outputs.item.properties }}",
+					"latency":"{{ _Oa42h.outputs.latency }}",
+					"cost":"{{ _Oa42h.outputs.cost }}",
+					"additional":"{{ trK3s.outputs.item.properties.customProperties }}",
+					"additional_output_properties":"{{ _Oa42h.outputs.additionalOutputProperties }}",
 					"expected_tools":{
 						"source":"{{ trK3s.outputs.item.properties.expected_tools }}",
 						"items":"{{ trK3s.outputs.item.properties.expected_tools[0] }}",
@@ -2315,9 +2367,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -2327,5 +2379,5 @@
 	"tags":[
 		
 	],
-	"version":123
+	"version":124
 }
