@@ -1,51 +1,170 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
 	"createdTime":1760365208263,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_xN92R",
+			"fromNodeId":"n_mPYSF",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_9LVi0",
+			"toNodeId":"n_c97FZ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_c97FZ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_IiCh2",
 			"type":"next"
 		}
 	],
 	"id":"68ed0a98e8dd8b0561107eb1",
 	"lastModifiedBy":125843,
 	"lcName":"grief extract last benchmark rate",
-	"modifiedTime":1760365208263,
+	"modifiedTime":1760365366422,
 	"name":"grief extract last benchmark rate",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1035,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_xN92R-1",
-			"id":"_xN92R",
-			"index":0,
+			"id":"n_mPYSF",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"benchmark_Date":{
+							"type":"string",
+							"title":"benchmark_Date"
+						},
+						"Benchmark_Index_Value":{
+							"type":"string",
+							"title":"Benchmark_Index_Value"
+						},
+						"steel_type":{
+							"type":"string",
+							"title":"steel_type"
+						},
+						"currency":{
+							"type":"string",
+							"title":"currency"
+						},
+						"title":{
+							"type":"string",
+							"title":"title"
+						},
+						"region":{
+							"type":"string",
+							"title":"region"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"key":{
+							"type":"string",
+							"title":"Key"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":4555,
+				"resourceName":"storage_by_unifyapps_fetch_records",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_xN92R-1",
-			"id":"_9LVi0",
-			"index":0,
+			"id":"n_c97FZ",
+			"index":2,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"properties_steel_type",
+							"filter":{
+								"operator":"CONTAINS",
+								"value":"{{ n_mPYSF.outputs.key }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"object_type":"greif_benchmark_data",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":20
+				},
+				"numberOfRecordsToFetch":"SINGLE",
+				"readThroughSessionVariables":false,
+				"includeTotalCount":false
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch records",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1071,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_xN92R-1",
+			"id":"n_IiCh2",
+			"index":3,
+			"inputs":{
+				"result":{
+					"benchmark_Date":"{{ n_c97FZ.outputs.properties.benchmark_Date }}",
+					"Benchmark_Index_Value":"{{ n_c97FZ.outputs.properties.Benchmark_Index_Value }}",
+					"steel_type":"{{ n_c97FZ.outputs.properties.steel_type }}",
+					"currency":"{{ n_c97FZ.outputs.properties.currency }}",
+					"title":"{{ n_c97FZ.outputs.properties.title }}",
+					"region":"{{ n_c97FZ.outputs.properties.region }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":125843,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +178,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
