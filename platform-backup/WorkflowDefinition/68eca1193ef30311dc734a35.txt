@@ -34,12 +34,19 @@
 			"skip":false,
 			"toNodeId":"n_7EPcS",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_7EPcS",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_oVxuh",
+			"type":"next"
 		}
 	],
 	"id":"68eca1193ef30311dc734a35",
 	"lastModifiedBy":35286,
 	"lcName":"dt | askt | entra token login",
-	"modifiedTime":1760338539656,
+	"modifiedTime":1760338899993,
 	"name":"DT | AskT | Entra Token Login",
 	"nodes":[
 		{
@@ -168,14 +175,22 @@
 						"userInfoRequestUrl":{
 							"type":"string",
 							"title":"User Info Request Url"
+						},
+						"userDetailsRequestVerb":{
+							"type":"string",
+							"title":"User Details Request Verb"
 						}
 					},
 					"required":[
-						"userInfoRequestUrl"
+						"userInfoRequestUrl",
+						"userDetailsRequestVerb"
 					]
 				}
 			},
-			"inputs":{},
+			"inputs":{
+				"userDetailsRequestVerb":"GET",
+				"userInfoRequestUrl":"https://graph.microsoft.com/oidc/userinfo"
+			},
 			"outputSchema":{
 				"dynamic":false,
 				"schema":{
@@ -185,16 +200,91 @@
 						"userInfoRequestUrl":{
 							"type":"string",
 							"title":"User Info Request Url"
+						},
+						"userDetailsRequestVerb":{
+							"type":"string",
+							"title":"User Details Request Verb"
 						}
 					},
 					"required":[
-						"userInfoRequestUrl"
+						"userInfoRequestUrl",
+						"userDetailsRequestVerb"
 					]
 				}
 			},
 			"skip":false,
 			"subTitle":"Variable by UnifyApps",
 			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"custom_http_endpoint",
+				"resourceVersion":1079,
+				"resourceName":"custom_http_endpoint_execute",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_CqyLP-1",
+			"id":"n_oVxuh",
+			"index":5,
+			"inputs":{
+				"isAsync":false,
+				"enableProxy":false,
+				"requestTimeoutInSecs":-1,
+				"httpMethod":"{{ n_7EPcS.outputs.userDetailsRequestVerb }}",
+				"connectionType":"DIRECT",
+				"sslVerify":false,
+				"responseSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"sub":{
+							"type":"string",
+							"title":"sub"
+						},
+						"name":{
+							"type":"string",
+							"title":"name"
+						},
+						"family_name":{
+							"type":"string",
+							"title":"family_name"
+						},
+						"given_name":{
+							"type":"string",
+							"title":"given_name"
+						},
+						"picture":{
+							"type":"string",
+							"title":"picture"
+						},
+						"email":{
+							"type":"string",
+							"title":"email"
+						}
+					}
+				},
+				"baseUrl":"{{ n_7EPcS.outputs.userInfoRequestUrl }}",
+				"httpVersion":"HTTP_2",
+				"responseContentType":"application/json",
+				"followRedirects":"NORMAL",
+				"headersList":[
+					{
+						"key":"Authorization",
+						"value":"Bearer {{ n_SyUHw.outputs.access_token }}"
+					}
+				],
+				"authType":"CUSTOM",
+				"requestContentType":"application/json",
+				"ignoreTrailingSlashes":false,
+				"certificateType":"CERT_STRING"
+			},
+			"skip":false,
+			"subTitle":"Point de terminaison HTTP personnalisé",
+			"title":"Execute REST request",
 			"type":"ACTION"
 		}
 	],
@@ -215,5 +305,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
