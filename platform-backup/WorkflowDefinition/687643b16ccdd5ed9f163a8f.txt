@@ -5,12 +5,12 @@
 	"createdTime":1752764153104,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759948491917,
+		"deployedAt":1760117565535,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68e6aecba991021e3f9ac2b2",
+		"deployedDefinitionId":"68e9433d64af142a5db30121",
 		"status":"DEPLOYED",
-		"version":68,
-		"workflowVersion":127
+		"version":79,
+		"workflowVersion":142
 	},
 	"description":"Takes in a single url and indexes it and also extracts the urls from the html.",
 	"edges":[
@@ -153,6 +153,13 @@
 			"fromNodeId":"_6sNJC",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_QCNyV",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_QCNyV",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"_EKNXc",
 			"type":"next"
 		},
@@ -219,9 +226,9 @@
 		]
 	},
 	"id":"687643b16ccdd5ed9f163a8f",
-	"lastModifiedBy":1,
+	"lastModifiedBy":0,
 	"lcName":"website or file indexing | page indexer",
-	"modifiedTime":1760012258169,
+	"modifiedTime":1760376279916,
 	"name":"Website or File Indexing | Page Indexer",
 	"nodes":[
 		{
@@ -616,6 +623,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"baseUrl":{
 							"type":"string",
@@ -625,23 +634,22 @@
 							"type":"string",
 							"title":"path"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"url":{
 							"type":"string",
 							"title":"url"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"// Parse the URL\ndef parsed = new URL(url)\n\n// Construct base URL (protocol + \"://\" + host)\nString base_url = \"${parsed.protocol}://${parsed.host}\"\n\n// Extract path, including query parameters, from URL\nString path = parsed.file\n\nreturn [\n  \"baseUrl\": base_url,\n  \"path\": path\n]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"url":"{{ n_rDYUN.outputs.url }}"
 				}
@@ -856,26 +864,27 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
 					"properties":{
 						"baseUrl":{
 							"type":"string",
 							"title":"baseUrl"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
 					"properties":{
 						"url":{
 							"type":"string",
 							"title":"url"
 						}
-					},
-					"additionalProperties":false
+					}
 				},
-				"compile_static":false,
 				"code":"def extractBaseUrl(String fullUrl) {\n    if (!(fullUrl =~ /^https?:\\/\\//)) {\n        fullUrl = 'https://' + fullUrl\n    }\n    def uri = new URI(fullUrl)\n    return \"$uri.scheme://$uri.host\"\n}\n\ndef url = binding.hasVariable(\"url\")?binding.getVariable(\"url\"):\"\"\n\nreturn [baseUrl : extractBaseUrl(url).toString()]",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"url":"{{ n_rDYUN.outputs.url }}"
 				}
@@ -929,7 +938,7 @@
 					}
 				},
 				"configurationMode":"DEFAULT",
-				"code":"def extract_links(html_content, base_url):\n    from urllib.parse import urljoin\n    from bs4 import BeautifulSoup\n    import json\n    import re\n\n    if not isinstance(html_content, str):\n        html_content = json.dumps(html_content) if isinstance(html_content, dict) else str(html_content)\n    \n    soup = BeautifulSoup(html_content, 'html.parser')\n    all_links = set()\n    \n    soup = BeautifulSoup(html_content, 'html.parser')\n    all_links = set()\n    \n    def should_ignore(url):\n        return \"/icons/\" in url or \"/app-categories/\" in url or \"mailto:\" in url\n    \n    for a in soup.find_all('a', href=True):\n        href = a['href']\n        if not should_ignore(href):\n            full_url = href if href.startswith(('http://', 'https://')) else urljoin(base_url, href)\n            if not should_ignore(full_url):\n                all_links.add(full_url)\n    \n    for link in soup.find_all('link', href=True):\n        href = link['href']\n        if not href.startswith(('/_next/', '.css', '.js')) and not should_ignore(href):  # Skip assets\n            full_url = href if href.startswith(('http://', 'https://')) else urljoin(base_url, href)\n            if not should_ignore(full_url):\n                all_links.add(full_url)\n    \n    for script in soup.find_all('script'):\n        if script.string:\n            try:\n                slug_pattern = r'\"slug\"\\s*:\\s*\"([^\"]+)\"'\n                slugs = re.findall(slug_pattern, script.string)\n                for slug in slugs:\n                    if slug and not should_ignore(slug):\n                        if not slug.startswith(('http://', 'https://', '#', '/')):\n                            full_url = urljoin(base_url, '/' + slug)\n                        elif slug.startswith('/'):\n                            full_url = urljoin(base_url, slug)\n                        else:\n                            continue\n                        \n                        if not should_ignore(full_url):\n                            all_links.add(full_url)\n                \n                redirect_pattern = r'\"redirectLink\"\\s*:\\s*\"([^\"]+)\"'\n                redirect_links = re.findall(redirect_pattern, script.string)\n                for link in redirect_links:\n                    if link and link != 'null' and not should_ignore(link):\n                        full_url = link if link.startswith(('http://', 'https://')) else urljoin(base_url, link)\n                        if not should_ignore(full_url):\n                            all_links.add(full_url)\n                \n                href_pattern = r'\"href\"\\s*:\\s*\"([^\"]+)\"'\n                hrefs = re.findall(href_pattern, script.string)\n                for href in hrefs:\n                    if href and not href.startswith(('/_next/', '.css', '.js', 'data:', 'javascript:')) and not should_ignore(href):\n                        full_url = href if href.startswith(('http://', 'https://')) else urljoin(base_url, href)\n                        if not should_ignore(full_url):\n                            all_links.add(full_url)\n                \n            except Exception:\n                pass\n    \n    for meta in soup.find_all('meta', content=True):\n        if meta.get('property') in ['og:url', 'twitter:url'] or meta.get('name') in ['url']:\n            content = meta['content']\n            if content.startswith(('http://', 'https://')) and not should_ignore(content):\n                all_links.add(content)\n    \n    social_pattern = r'(https?://(?:www\\.)?(?:linkedin\\.com|twitter\\.com|facebook\\.com|github\\.com)/[^\\s\"\\'<>]+)'\n    for match in re.findall(social_pattern, str(soup)):\n        if not should_ignore(match):\n            all_links.add(match)\n    \n    return list(all_links)\n\ndef filter_links_to_same_domain(links, base_url):\n    import tldextract\n    \n    def remove_fragment(url):\n        from urllib.parse import urlparse, urlunparse\n        parsed = urlparse(url)\n        return urlunparse(parsed._replace(fragment=''))\n\n    base_domain = tldextract.extract(base_url).top_domain_under_public_suffix\n    filtered_links = []\n    seen = set()\n    \n    for link in links:\n        link_domain = tldextract.extract(link).top_domain_under_public_suffix\n        if link_domain == base_domain:\n            clean_link = remove_fragment(link)\n            if clean_link not in seen and clean_link != base_url:\n                seen.add(clean_link)\n                filtered_links.append(clean_link)\n    \n    return sorted(filtered_links)\n\nresult = {\"links\": filter_links_to_same_domain(extract_links(htmlcontent, base_url), base_url)}",
+				"code":"def extract_links(html_content, base_url):\n    from urllib.parse import urljoin\n    from bs4 import BeautifulSoup\n    import json\n    import re\n\n    if not isinstance(html_content, str):\n        html_content = json.dumps(html_content) if isinstance(html_content, dict) else str(html_content)\n    \n    soup = BeautifulSoup(html_content, 'html.parser')\n    all_links = set()\n    \n    def should_ignore(url):\n        return \"/icons/\" in url or \"/app-categories/\" in url or \"mailto:\" in url\n    \n    for a in soup.find_all('a', href=True):\n        href = a['href']\n        if not should_ignore(href):\n            full_url = href if href.startswith(('http://', 'https://')) else urljoin(base_url, href)\n            if not should_ignore(full_url):\n                all_links.add(full_url)\n    \n    for link in soup.find_all('link', href=True):\n        href = link['href']\n        if not href.startswith(('/_next/', '.css', '.js')) and not should_ignore(href):\n            full_url = href if href.startswith(('http://', 'https://')) else urljoin(base_url, href)\n            if not should_ignore(full_url):\n                all_links.add(full_url)\n    \n    for script in soup.find_all('script'):\n        if script.string:\n            try:\n                slug_pattern = r'\"slug\"\\s*:\\s*\"([^\"]+)\"'\n                slugs = re.findall(slug_pattern, script.string)\n                for slug in slugs:\n                    if slug and not should_ignore(slug):\n                        if not slug.startswith(('http://', 'https://', '#', '/')):\n                            full_url = urljoin(base_url, '/' + slug)\n                        elif slug.startswith('/'):\n                            full_url = urljoin(base_url, slug)\n                        else:\n                            continue\n                        \n                        if not should_ignore(full_url):\n                            all_links.add(full_url)\n                \n                redirect_pattern = r'\"redirectLink\"\\s*:\\s*\"([^\"]+)\"'\n                redirect_links = re.findall(redirect_pattern, script.string)\n                for link in redirect_links:\n                    if link and link != 'null' and not should_ignore(link):\n                        full_url = link if link.startswith(('http://', 'https://')) else urljoin(base_url, link)\n                        if not should_ignore(full_url):\n                            all_links.add(full_url)\n                \n                href_pattern = r'\"href\"\\s*:\\s*\"([^\"]+)\"'\n                hrefs = re.findall(href_pattern, script.string)\n                for href in hrefs:\n                    if href and not href.startswith(('/_next/', '.css', '.js', 'data:', 'javascript:')) and not should_ignore(href):\n                        full_url = href if href.startswith(('http://', 'https://')) else urljoin(base_url, href)\n                        if not should_ignore(full_url):\n                            all_links.add(full_url)\n                \n            except Exception:\n                pass\n    \n    for meta in soup.find_all('meta', content=True):\n        if meta.get('property') in ['og:url', 'twitter:url'] or meta.get('name') in ['url']:\n            content = meta['content']\n            if content.startswith(('http://', 'https://')) and not should_ignore(content):\n                all_links.add(content)\n    \n    social_pattern = r'(https?://(?:www\\.)?(?:linkedin\\.com|twitter\\.com|facebook\\.com|github\\.com)/[^\\s\"\\'<>]+)'\n    for match in re.findall(social_pattern, str(soup)):\n        if not should_ignore(match):\n            all_links.add(match)\n    \n    return list(all_links)\n\ndef filter_links_to_same_domain(links, base_url):\n    from urllib.parse import urlparse, urlunparse\n    \n    def remove_fragment(url):\n        parsed = urlparse(url)\n        return urlunparse(parsed._replace(fragment=''))\n    \n    def get_domain(url):\n        parsed = urlparse(url)\n        # Get the netloc (domain with potential port)\n        domain = parsed.netloc.lower()\n        # Remove www. prefix if present\n        if domain.startswith('www.'):\n            domain = domain[4:]\n        # Remove port if present\n        if ':' in domain:\n            domain = domain.split(':')[0]\n        return domain\n    \n    base_domain = get_domain(base_url)\n    if not base_domain:\n        return []\n    \n    filtered_links = []\n    seen = set()\n    \n    for link in links:\n        try:\n            link_domain = get_domain(link)\n            if link_domain == base_domain:\n                clean_link = remove_fragment(link)\n                if clean_link not in seen and clean_link != base_url:\n                    seen.add(clean_link)\n                    filtered_links.append(clean_link)\n        except Exception:\n            continue\n    \n    return sorted(filtered_links)\n\n# Execute the functions and store only the final result\nextracted = extract_links(htmlcontent, base_url)\nfiltered = filter_links_to_same_domain(extracted, base_url)\nresult = {\"links\": filtered}\n\n# # Clean up variables that might cause serialization issues\n# del extracted\n# del filtered",
 				"isAsync":false,
 				"python_version":"3.12",
 				"captureStdOutput":false,
@@ -938,9 +947,65 @@
 					"base_url":"{{ _w5Ghc.outputs.result.baseUrl }}"
 				}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"extractLinks",
 			"title":"Execute Python script",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":0,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_JOyjL@_Yv0XF-1@y",
+			"id":"n_QCNyV",
+			"index":16,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"links":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Links"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"htmlcontent":{
+							"type":"string",
+							"title":"Htmlcontent"
+						},
+						"base_url":{
+							"type":"string",
+							"title":"Base Url"
+						}
+					}
+				},
+				"code":"import org.jsoup.Jsoup\nimport org.jsoup.nodes.Document\nimport org.jsoup.nodes.Element\n\ndef extractLinks(htmlContent, baseUrl) {\n    if (!(htmlContent instanceof String)) {\n        htmlContent = htmlContent instanceof Map ? groovy.json.JsonOutput.toJson(htmlContent) : htmlContent.toString()\n    }\n    \n    Document doc = Jsoup.parse(htmlContent, baseUrl)\n    def allLinks = [] as Set\n    \n    def shouldIgnore = { url ->\n        url.contains(\"/icons/\") || url.contains(\"/app-categories/\") || url.startsWith(\"mailto:\")\n    }\n    \n    def joinUrl = { base, relative ->\n        if (relative.startsWith(\"http://\") || relative.startsWith(\"https://\")) {\n            return relative\n        }\n        def baseUri = new URI(base)\n        def resolvedUri = baseUri.resolve(relative)\n        return resolvedUri.toString()\n    }\n    \n    // Extract links from <a> tags\n    doc.select(\"a[href]\").each { Element a ->\n        def href = a.attr(\"href\")\n        if (!shouldIgnore(href)) {\n            def fullUrl = href.startsWith(\"http://\") || href.startsWith(\"https://\") ? \n                         href : joinUrl(baseUrl, href)\n            if (!shouldIgnore(fullUrl)) {\n                allLinks.add(fullUrl)\n            }\n        }\n    }\n    \n    // Extract links from <link> tags\n    doc.select(\"link[href]\").each { Element link ->\n        def href = link.attr(\"href\")\n        if (!href.startsWith(\"/_next/\") && !href.endsWith(\".css\") && \n            !href.endsWith(\".js\") && !shouldIgnore(href)) {\n            def fullUrl = href.startsWith(\"http://\") || href.startsWith(\"https://\") ? \n                         href : joinUrl(baseUrl, href)\n            if (!shouldIgnore(fullUrl)) {\n                allLinks.add(fullUrl)\n            }\n        }\n    }\n    \n    // Extract links from <script> tags\n    doc.select(\"script\").each { Element script ->\n        def scriptContent = script.html()\n        if (scriptContent) {\n            try {\n                // Extract slugs\n                def slugPattern = ~/\"slug\"\\s*:\\s*\"([^\"]+)\"/\n                def slugMatcher = scriptContent =~ slugPattern\n                slugMatcher.each { match ->\n                    def slug = match[1]\n                    if (slug && !shouldIgnore(slug)) {\n                        def fullUrl\n                        if (!slug.startsWith(\"http://\") && !slug.startsWith(\"https://\") && \n                            !slug.startsWith(\"#\") && !slug.startsWith(\"/\")) {\n                            fullUrl = joinUrl(baseUrl, \"/\" + slug)\n                        } else if (slug.startsWith(\"/\")) {\n                            fullUrl = joinUrl(baseUrl, slug)\n                        } else {\n                            return\n                        }\n                        if (!shouldIgnore(fullUrl)) {\n                            allLinks.add(fullUrl)\n                        }\n                    }\n                }\n                \n                // Extract redirect links\n                def redirectPattern = ~/\"redirectLink\"\\s*:\\s*\"([^\"]+)\"/\n                def redirectMatcher = scriptContent =~ redirectPattern\n                redirectMatcher.each { match ->\n                    def link = match[1]\n                    if (link && link != \"null\" && !shouldIgnore(link)) {\n                        def fullUrl = link.startsWith(\"http://\") || link.startsWith(\"https://\") ? \n                                     link : joinUrl(baseUrl, link)\n                        if (!shouldIgnore(fullUrl)) {\n                            allLinks.add(fullUrl)\n                        }\n                    }\n                }\n                \n                // Extract hrefs\n                def hrefPattern = ~/\"href\"\\s*:\\s*\"([^\"]+)\"/\n                def hrefMatcher = scriptContent =~ hrefPattern\n                hrefMatcher.each { match ->\n                    def href = match[1]\n                    if (href && !href.startsWith(\"/_next/\") && !href.endsWith(\".css\") && \n                        !href.endsWith(\".js\") && !href.startsWith(\"data:\") && \n                        !href.startsWith(\"javascript:\") && !shouldIgnore(href)) {\n                        def fullUrl = href.startsWith(\"http://\") || href.startsWith(\"https://\") ? \n                                     href : joinUrl(baseUrl, href)\n                        if (!shouldIgnore(fullUrl)) {\n                            allLinks.add(fullUrl)\n                        }\n                    }\n                }\n            } catch (Exception e) {\n                // Ignore parsing errors\n            }\n        }\n    }\n    \n    // Extract URLs from meta tags\n    doc.select(\"meta[content]\").each { Element meta ->\n        def property = meta.attr(\"property\")\n        def name = meta.attr(\"name\")\n        if (property in ['og:url', 'twitter:url'] || name == 'url') {\n            def content = meta.attr(\"content\")\n            if ((content.startsWith(\"http://\") || content.startsWith(\"https://\")) && \n                !shouldIgnore(content)) {\n                allLinks.add(content)\n            }\n        }\n    }\n    \n    // Extract social media links using regex on the HTML string\n    def socialPattern = ~/(https?:\\/\\/(?:www\\.)?(?:linkedin\\.com|twitter\\.com|facebook\\.com|github\\.com)\\/[^\\s\"'<>]+)/\n    def socialMatcher = htmlContent =~ socialPattern\n    socialMatcher.each { match ->\n        if (!shouldIgnore(match[0])) {\n            allLinks.add(match[0])\n        }\n    }\n    \n    return allLinks as List\n}\n\ndef filterLinksToSameDomain(links, baseUrl) {\n    def removeFragment = { url ->\n        def uri = new URI(url)\n        new URI(uri.scheme, uri.authority, uri.path, uri.query, null).toString()\n    }\n    \n    def getDomain = { url ->\n        def uri = new URI(url)\n        def domain = uri.host?.toLowerCase() ?: \"\"\n        if (domain.startsWith(\"www.\")) {\n            domain = domain.substring(4)\n        }\n        return domain\n    }\n    \n    def baseDomain = getDomain(baseUrl)\n    if (!baseDomain) {\n        return []\n    }\n    \n    def filteredLinks = []\n    def seen = [] as Set\n    \n    links.each { link ->\n        try {\n            def linkDomain = getDomain(link)\n            if (linkDomain == baseDomain) {\n                def cleanLink = removeFragment(link)\n                if (!seen.contains(cleanLink) && cleanLink != baseUrl) {\n                    seen.add(cleanLink)\n                    filteredLinks.add(cleanLink)\n                }\n            }\n        } catch (Exception e) {\n            // Ignore invalid URLs\n        }\n    }\n    \n    return filteredLinks.sort()\n}\n\n// Execute the functions and store the final result\ndef extracted = extractLinks(htmlcontent, base_url)\ndef filtered = filterLinksToSameDomain(extracted, base_url)\ndef result = [links: filtered]",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"htmlcontent":"{{ n_cERsp.outputs.html }}",
+					"base_url":"{{ _w5Ghc.outputs.result.baseUrl }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"extract Links",
+			"title":"Execute Groovy code",
 			"type":"ACTION"
 		},
 		{
@@ -955,7 +1020,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_JOyjL@_Yv0XF-1@y",
 			"id":"_EKNXc",
-			"index":16,
+			"index":17,
 			"inputs":{
 				"embeddingType":"HUGGING_FACE",
 				"inputText":"{{ n_cERsp.outputs.html }}",
@@ -982,7 +1047,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_JOyjL@_Yv0XF-1@y",
 			"id":"_AVSvb",
-			"index":17,
+			"index":18,
 			"inputs":{
 				"repeatMode":"BATCH",
 				"listSource":"{{ _EKNXc.outputs.chunks }}",
@@ -1006,7 +1071,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_AVSvb@n_JOyjL@_Yv0XF-1@y@l",
 			"id":"n_zSexL",
-			"index":18,
+			"index":19,
 			"inputs":{
 				"automationId":"685d22faae119e75316ded7d",
 				"runtimeConnections":{},
@@ -1044,14 +1109,14 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_JOyjL@_Yv0XF-1@y",
 			"id":"n_8qpQT",
-			"index":19,
+			"index":20,
 			"inputs":{
 				"result":{
 					"success":"OK",
 					"extracted_links":{
-						"source":"{{ _6sNJC.outputs.result.links }}",
 						"ua:type":"mappedArray",
-						"items":"{{ _6sNJC.outputs.result.links[0] }}"
+						"source":"{{ n_QCNyV.outputs.result.links }}",
+						"items":"{{ n_QCNyV.outputs.result.links[0] }}"
 					}
 				}
 			},
@@ -1072,7 +1137,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_JOyjL@_Yv0XF-1@n",
 			"id":"_nYoX8",
-			"index":20,
+			"index":21,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1137,7 +1202,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_JOyjL@_Yv0XF-1@n",
 			"id":"n_37bpD",
-			"index":21,
+			"index":22,
 			"inputs":{
 				"automationId":"68764a904a79e9934a6439f3",
 				"runtimeConnections":{},
@@ -1175,7 +1240,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_JOyjL@_Yv0XF-1@n",
 			"id":"_KXhOT",
-			"index":22,
+			"index":23,
 			"inputs":{
 				"result":{
 					"success":"{{ n_37bpD.outputs.status }}",
@@ -1200,9 +1265,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"headerValueTierMap":{},
@@ -1213,5 +1278,5 @@
 	"tags":[
 		
 	],
-	"version":128
+	"version":143
 }
