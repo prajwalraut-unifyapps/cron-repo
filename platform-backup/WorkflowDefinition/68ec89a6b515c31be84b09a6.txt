@@ -5,12 +5,12 @@
 	"createdTime":1760332198530,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760332741101,
+		"deployedAt":1760333112037,
 		"deployedBy":173449,
-		"deployedDefinitionId":"68ec8bc5bad7e67b95e54989",
+		"deployedDefinitionId":"68ec8d37bad7e67b95e54bc3",
 		"status":"DEPLOYED",
-		"version":5,
-		"workflowVersion":5
+		"version":9,
+		"workflowVersion":9
 	},
 	"description":"",
 	"edges":[
@@ -39,7 +39,7 @@
 	"id":"68ec89a6b515c31be84b09a6",
 	"lastModifiedBy":173449,
 	"lcName":"testing ag",
-	"modifiedTime":1760332745548,
+	"modifiedTime":1760333158269,
 	"name":"testing ag",
 	"nodes":[
 		{
@@ -85,63 +85,65 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__workflow_agent_prompt",
 				"parameters":{
-					"instructions":"always mention Donald trump in answers",
+					"instructions":"Speak like a Roman Emperor",
 					"model":"e_686654b81257d219bd7958d5",
 					"name":"Name",
 					"responseSchema":{
 						"type":"object",
 						"properties":{
-							"answer":{
+							"response":{
 								"type":"string",
-								"description":"The response to the user's query, always mentioning Donald Trump."
+								"description":"A response in the style of a Roman Emperor"
 							},
-							"trumpReference":{
+							"tone":{
+								"type":"string",
+								"enum":[
+									"authoritative",
+									"commanding",
+									"regal",
+									"imperial"
+								],
+								"description":"The tone of the Roman Emperor's speech"
+							},
+							"language":{
 								"type":"object",
 								"properties":{
-									"mentioned":{
-										"type":"boolean",
-										"description":"Indicates whether Donald Trump was mentioned in the answer."
-									},
-									"context":{
+									"style":{
 										"type":"string",
-										"description":"The specific context in which Donald Trump was mentioned."
+										"enum":[
+											"formal",
+											"archaic",
+											"grandiose"
+										],
+										"description":"The linguistic style of the response"
+									},
+									"latinPhrases":{
+										"type":"array",
+										"items":{
+											"type":"string"
+										},
+										"description":"Latin phrases or words used in the response"
 									}
-								},
-								"required":[
-									"mentioned",
-									"context"
-								]
+								}
 							},
-							"metadata":{
-								"type":"object",
-								"properties":{
-									"timestamp":{
-										"type":"string",
-										"format":"date-time",
-										"description":"The time at which the response was generated."
-									},
-									"instructionFollowed":{
-										"type":"boolean",
-										"description":"Confirms that the instruction to mention Donald Trump was followed."
-									}
+							"imperialReferences":{
+								"type":"array",
+								"items":{
+									"type":"string"
 								},
-								"required":[
-									"timestamp",
-									"instructionFollowed"
-								]
+								"description":"References to Roman imperial customs, titles, or historical events"
 							}
 						},
 						"required":[
-							"answer",
-							"trumpReference",
-							"metadata"
+							"response",
+							"tone"
 						]
 					}
 				}
 			},
 			"skip":false,
 			"subTitle":"Prompt",
-			"title":"Sets AI to mention Trump in all responses.",
+			"title":"Sets AI to speak like a Roman Emperor, defining\ntone, style, and imperial references.",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -160,14 +162,14 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"Be Polite",
+					"responseInstructions":"Be Polite{{ n_VOQ3Y.outputs.response }}{{ n_VOQ3Y.outputs.tone }}{{ n_VOQ3Y.outputs.language }}{{ n_VOQ3Y.outputs.imperialReferences }}",
 					"name":"Respond",
 					"model":"e_686654b81257d219bd7958d5"
 				}
 			},
 			"skip":false,
 			"subTitle":"Respond",
-			"title":"Generates polite AI response using specified model\nand instructions.",
+			"title":"Generates AI response with specified model and\ninstructions, emphasizing politeness.",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -197,5 +199,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":6
+	"version":10
 }
