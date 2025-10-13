@@ -5,12 +5,12 @@
 	"createdTime":1747000713436,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759948416513,
+		"deployedAt":1760117512753,
 		"deployedBy":-1,
-		"deployedDefinitionId":"68e6ae80a991021e3f9aa385",
+		"deployedDefinitionId":"68e9430864af142a5db2ffb8",
 		"status":"DEPLOYED",
-		"version":78,
-		"workflowVersion":100
+		"version":86,
+		"workflowVersion":112
 	},
 	"edges":[
 		{
@@ -83,8 +83,38 @@
 			"fromNodeId":"tauXu",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"cWnYk",
+			"toNodeId":"n_7bKIw",
 			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_7bKIw",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_nOwAt",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_nOwAt",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_YCc7W",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_YCc7W",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"cWnYk",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_7bKIw",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"cWnYk",
+			"type":"next"
 		},
 		{
 			"fromNodeId":"cWnYk",
@@ -159,9 +189,9 @@
 		]
 	},
 	"id":"66e598f208d0f101e7cd4734",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"get message attachments",
-	"modifiedTime":1760024885840,
+	"modifiedTime":1760376087321,
 	"name":"Get Message Attachments",
 	"nodes":[
 		{
@@ -898,6 +928,104 @@
 		{
 			"context":{
 				"appName":"if_else",
+				"resourceVersion":446,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"tauXu@CemZV@xLrrq-1@y@l",
+			"id":"n_7bKIw",
+			"index":10,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ tauXu.outputs.item.properties.documentExtractedText }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					},
+					{
+						"property":"=LEN({{ tauXu.outputs.item.properties.documentExtractedText }})",
+						"filter":{
+							"operator":"GT",
+							"value":"0"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.itemToAdd.fileDetails.size",
+					"root.itemToAdd.fileDetails.source",
+					"root.itemToAdd.fileDetails.sourceType"
+				]
+			},
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":515,
+				"resourceName":"variable_by_unifyapps_add_item_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_7bKIw@tauXu@CemZV@xLrrq-1@y@l@y",
+			"id":"n_nOwAt",
+			"index":11,
+			"inputs":{
+				"itemToAdd":{
+					"name":"{{ tauXu.outputs.item.properties.name }}",
+					"id":"{{ tauXu.outputs.item.id }}",
+					"fileType":"{{ tauXu.outputs.item.properties.fileType }}",
+					"data":"{{ tauXu.outputs.item.properties.documentExtractedText }}",
+					"mimeType":"{{ tauXu.outputs.item.properties.mimeType }}",
+					"fileDetails":{
+						"size":"{{ tauXu.outputs.item.properties.fileDetails.size }}",
+						"source":"{{ tauXu.outputs.item.properties.fileDetails.source }}",
+						"sourceType":"{{ tauXu.outputs.item.properties.fileDetails.sourceType }}"
+					}
+				},
+				"insertLocation":"END",
+				"listName":"{{ nc8ru.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Add item to list",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"continue",
+				"resourceVersion":0,
+				"resourceName":"continue",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_7bKIw@tauXu@CemZV@xLrrq-1@y@l@y",
+			"id":"n_YCc7W",
+			"index":12,
+			"inputs":{
+				"loop":"tauXu"
+			},
+			"skip":false,
+			"subTitle":"Continue",
+			"title":"Continue",
+			"type":"CONTINUE"
+		},
+		{
+			"context":{
+				"appName":"if_else",
 				"resourceVersion":50,
 				"resourceName":"if_else_condition",
 				"type":"APPLICATION"
@@ -907,7 +1035,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"tauXu@CemZV@xLrrq-1@y@l",
 			"id":"cWnYk",
-			"index":10,
+			"index":13,
 			"inputs":{
 				"filters":[
 					{
@@ -937,7 +1065,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"cWnYk@tauXu@CemZV@xLrrq-1@y@l@y",
 			"id":"BQEcT",
-			"index":11,
+			"index":14,
 			"inputs":{
 				"file":"{{ tauXu.outputs.item.properties.url }}",
 				"encoding":"base64"
@@ -966,7 +1094,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"cWnYk@tauXu@CemZV@xLrrq-1@y@l@y",
 			"id":"fHutN",
-			"index":12,
+			"index":15,
 			"inputs":{
 				"itemToAdd":{
 					"name":"{{ tauXu.outputs.item.properties.name }}",
@@ -1008,7 +1136,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"cWnYk@tauXu@CemZV@xLrrq-1@y@l@n",
 			"id":"I8h8M",
-			"index":13,
+			"index":16,
 			"inputs":{
 				"itemToAdd":{
 					"name":"{{ tauXu.outputs.item.properties.name }}",
@@ -1043,7 +1171,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"CemZV@xLrrq-1@n",
 			"id":"_SLIOg",
-			"index":14,
+			"index":17,
 			"inputs":{
 				"variables":[
 					{
@@ -1069,7 +1197,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"xLrrq-1",
 			"id":"XTYvx",
-			"index":15,
+			"index":18,
 			"inputs":{
 				"result":{
 					"attachmentsFound":"{{ _BpHk6.outputs.attachmentsFound }}",
@@ -1128,5 +1256,5 @@
 	"tags":[
 		"AI Agent"
 	],
-	"version":101
+	"version":113
 }
