@@ -5,12 +5,12 @@
 	"createdTime":1756411325319,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760331959251,
-		"deployedBy":1728,
-		"deployedDefinitionId":"68ec88b7bad7e67b95e5447b",
+		"deployedAt":1760374659173,
+		"deployedBy":46030,
+		"deployedDefinitionId":"68ed2f83b8302d5b37560c3b",
 		"status":"DEPLOYED",
-		"version":30,
-		"workflowVersion":75
+		"version":31,
+		"workflowVersion":76
 	},
 	"edges":[
 		{
@@ -45,6 +45,13 @@
 			"fromNodeId":"_l0HR8",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"q5Ajz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"q5Ajz",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_PfAI4",
 			"type":"next"
 		},
@@ -77,7 +84,7 @@
 	"id":"684954f1c821822ac12269da",
 	"lastModifiedBy":46030,
 	"lcName":"workflow agent | search knowledge",
-	"modifiedTime":1760374655236,
+	"modifiedTime":1760375719104,
 	"name":"Workflow Agent | Search Knowledge",
 	"nodes":[
 		{
@@ -87,13 +94,14 @@
 				"resourceName":"callables_from_interface"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Mac8v-1",
 			"id":"n_RZaIU",
 			"index":1,
 			"inputs":{
 				"result":{
+					"required":[],
 					"ua:modal":{
 						"field_type":"STRING",
 						"is_optional":true
@@ -102,27 +110,42 @@
 						"success":{
 							"type":"boolean",
 							"title":"Success"
+						},
+						"response":{
+							"type":"string",
+							"title":"Response"
 						}
-					},
-					"required":[]
+					}
 				},
 				"callableInterfaceId":"__ua__knowledge_search_interface",
 				"setup":{
+					"required":[],
 					"ua:modal":{
 						"field_type":"STRING",
 						"is_optional":true
 					},
 					"properties":{
 						"AISearchInstructions":{
-							"type":"string",
-							"title":"AI Search Instructions"
+							"type":"string"
 						},
-						"numberOfResultsToRetrieve":{
-							"type":"integer",
-							"title":"Number Of Results To Retrieve"
+						"knowledges":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{},
+								"additionalProperties":false
+							},
+							"title":"Knowledges"
+						},
+						"name":{
+							"type":"string",
+							"title":"Name"
+						},
+						"model":{
+							"type":"string",
+							"title":"Model"
 						}
-					},
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -181,7 +204,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Mac8v-1",
 			"id":"_uaRIG",
@@ -189,6 +212,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"rawLLMResponse":{
 							"type":"string",
@@ -206,23 +231,22 @@
 							"title":"Tool Inputs",
 							"required":[]
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"query":{
 							"type":"string",
 							"title":"Query"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"def query = binding.hasVariable('query') ? query : \"\"\n\nreturn [\n  \"rawLLMResponse\": \"Thought:Fetch Relevant Content From Knolwedge\", \n  \"toolInputs\": [\n   \"query\": query\n  ]\n]\n",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"query":"{{ n_RZaIU.outputs.AISearchInstructions }}"
 				}
@@ -240,7 +264,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Mac8v-1",
 			"id":"_70CpW",
@@ -268,7 +292,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Mac8v-1",
 			"id":"_l0HR8",
@@ -293,6 +317,242 @@
 		},
 		{
 			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":50,
+				"resourceName":"variable_by_unifyapps_set_session_variable",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Mac8v-1",
+			"id":"q5Ajz",
+			"index":6,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"ai_agent_ua_knowledgeIds":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{},
+								"additionalProperties":false
+							},
+							"title":"Ai Agent Ua Knowledge Ids"
+						},
+						"ai_agent_ua_toolIds":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{},
+								"additionalProperties":false
+							},
+							"title":"Ai Agent Ua Tool Ids"
+						},
+						"ai_agent_ua_instructions":{
+							"type":"string",
+							"title":"Ai Agent Ua Instructions"
+						},
+						"ai_agent_ua_steps":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"instructions":{
+										"type":"string",
+										"title":"Instructions"
+									},
+									"nodes":{
+										"type":"array",
+										"items":{
+											"type":"object",
+											"properties":{},
+											"additionalProperties":false
+										},
+										"title":"Nodes"
+									}
+								},
+								"additionalProperties":false,
+								"required":[]
+							},
+							"title":"Ai Agent Ua Steps"
+						},
+						"ai_agent_ua_goal":{
+							"type":"string",
+							"title":"Ai Agent Ua Goal"
+						},
+						"ai_agent_ua_test_mode":{
+							"type":"boolean",
+							"title":"Ai Agent Ua Test Mode"
+						},
+						"ai_agent_ua_role":{
+							"type":"string",
+							"title":"Ai Agent Ua Role"
+						},
+						"ai_agent_ua_knowledgeSetIds":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{},
+								"additionalProperties":false
+							},
+							"title":"Ai Agent Ua Knowledge Set Ids"
+						},
+						"ai_agent_default_tools":{
+							"type":"object",
+							"properties":{
+								"webSearch":{
+									"type":"boolean",
+									"title":"Web Search"
+								},
+								"deepResearch":{
+									"type":"boolean",
+									"title":"Deep Research"
+								}
+							},
+							"additionalProperties":false,
+							"title":"Ai Agent Default Tools",
+							"required":[]
+						},
+						"ua_taskExecutionModel":{
+							"type":"string",
+							"title":"Ua Task Execution Model"
+						}
+					},
+					"required":[]
+				}
+			},
+			"inputs":{
+				"ai_agent_ua_toolIds":{
+					"source":"{{ n_I2G8B.outputs.result.toolIds }}",
+					"ua:type":"mappedArray",
+					"items":"{{ n_I2G8B.outputs.result.toolIds[0] }}"
+				},
+				"ua_taskExecutionModel":"{{ n_2omrf.outputs.model }}",
+				"ai_agent_ua_knowledgeSetIds":{
+					"source":"{{ n_I2G8B.outputs.result.knowledgeSetIds }}",
+					"ua:type":"mappedArray",
+					"items":"{{ n_I2G8B.outputs.result.knowledgeSetIds[0] }}"
+				},
+				"ai_agent_default_tools":{
+					"webSearch":"{{ n_I2G8B.outputs.result.webSearch }}",
+					"deepResearch":"{{ n_I2G8B.outputs.result.deepSearch }}"
+				},
+				"ai_agent_ua_test_mode":true,
+				"ai_agent_ua_knowledgeIds":{
+					"ua:type":"mappedArray",
+					"source":"{{ n_RZaIU.outputs.knowledges }}"
+				}
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"ai_agent_ua_knowledgeIds":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{},
+								"additionalProperties":false
+							},
+							"title":"Ai Agent Ua Knowledge Ids"
+						},
+						"ai_agent_ua_toolIds":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{},
+								"additionalProperties":false
+							},
+							"title":"Ai Agent Ua Tool Ids"
+						},
+						"ai_agent_ua_instructions":{
+							"type":"string",
+							"title":"Ai Agent Ua Instructions"
+						},
+						"ai_agent_ua_steps":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"instructions":{
+										"type":"string",
+										"title":"Instructions"
+									},
+									"nodes":{
+										"type":"array",
+										"items":{
+											"type":"object",
+											"properties":{},
+											"additionalProperties":false
+										},
+										"title":"Nodes"
+									}
+								},
+								"additionalProperties":false,
+								"required":[]
+							},
+							"title":"Ai Agent Ua Steps"
+						},
+						"ai_agent_ua_goal":{
+							"type":"string",
+							"title":"Ai Agent Ua Goal"
+						},
+						"ai_agent_ua_test_mode":{
+							"type":"boolean",
+							"title":"Ai Agent Ua Test Mode"
+						},
+						"ai_agent_ua_role":{
+							"type":"string",
+							"title":"Ai Agent Ua Role"
+						},
+						"ai_agent_ua_knowledgeSetIds":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{},
+								"additionalProperties":false
+							},
+							"title":"Ai Agent Ua Knowledge Set Ids"
+						},
+						"ai_agent_default_tools":{
+							"type":"object",
+							"properties":{
+								"webSearch":{
+									"type":"boolean",
+									"title":"Web Search"
+								},
+								"deepResearch":{
+									"type":"boolean",
+									"title":"Deep Research"
+								}
+							},
+							"additionalProperties":false,
+							"title":"Ai Agent Default Tools",
+							"required":[]
+						},
+						"ua_taskExecutionModel":{
+							"type":"string",
+							"title":"Ua Task Execution Model"
+						}
+					},
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"Test mode",
+			"title":"Set Session Variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":449,
 				"resourceName":"callables_call_interface",
@@ -303,7 +563,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_Mac8v-1",
 			"id":"n_PfAI4",
-			"index":6,
+			"index":7,
 			"inputs":{
 				"callableInterfaceId":"679484ef9c8ab5620dca9609",
 				"runtimeConnections":{},
@@ -337,7 +597,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_Mac8v-1",
 			"id":"_JFJWt",
-			"index":7,
+			"index":8,
 			"inputs":{
 				"automationId":"67a31b86addac8605df79166",
 				"runtimeConnections":{},
@@ -376,7 +636,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_Mac8v-1",
 			"id":"n_c5mla",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"result":{
 					"success":true
@@ -405,5 +665,5 @@
 	"tags":[
 		
 	],
-	"version":76
+	"version":77
 }
