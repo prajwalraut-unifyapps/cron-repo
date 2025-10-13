@@ -104,7 +104,7 @@
 	"id":"68ecbd095dec97614aa65277",
 	"lastModifiedBy":85476,
 	"lcName":"greif | issue classify",
-	"modifiedTime":1760376011307,
+	"modifiedTime":1760376340732,
 	"name":"Greif | Issue Classify",
 	"nodes":[
 		{
@@ -524,7 +524,7 @@
 						}
 					}
 				},
-				"code":"function decodeBase64Text(base64String) {\n    // 1. Decode the Base64 string into a byte string.\n    //    'atob' (Ascii to Binary) is used in the browser. \n    //    In Node.js, you'd typically use 'Buffer.from(base64String, 'base64').toString('utf8')'\n    const decodedBString = atob(base64String);\n\n    // 2. Convert the byte string to a URI-safe string by escaping certain characters.\n    //    This is crucial for handling multi-byte characters (like '£', '€', or the '’' in your example) \n    //    that are often part of valid UTF-8 sequences.\n    const uriSafeString = decodeURIComponent(\n        // Map over each character's code point, convert to a hex escape sequence (%XX), \n        // and join them back into a single string.\n        [...decodedBString].map(char => \n            '%' + ('00' + char.charCodeAt(0).toString(16)).slice(-2)\n        ).join('')\n    );\n\n    // Note: The conversion logic above is often simplified in modern browsers by \n    // using the TextDecoder API (new TextDecoder().decode(Uint8Array.from(atob(base64String), c => c.charCodeAt(0)))), \n    // but the `atob` -> `decodeURIComponent` method is a classic, highly compatible approach.\n\n    return uriSafeString;\n}",
+				"code":"function decodeBase64Text(base64String) {\n    // 1. Node.js check\n    if (typeof Buffer !== 'undefined') {\n        try {\n            return Buffer.from(base64String, 'base64').toString('utf8');\n        } catch (e) { /* Ignore Buffer error and check for browser method */ }\n    }\n\n    // 2. Browser check (atob is a global browser function)\n    if (typeof atob !== 'undefined') {\n        try {\n            // Browser-safe, UTF-8 compatible decoding logic\n            const decodedBString = atob(base64String);\n            return decodeURIComponent(\n                [...decodedBString].map(char => \n                    '%' + ('00' + char.charCodeAt(0).toString(16)).slice(-2)\n                ).join('')\n            );\n        } catch (e) {\n            console.error(\"Decoding failed:\", e.message);\n            return \"\";\n        }\n    }\n\n    // 3. Environment Fallback\n    console.error(\"Base64 decoding failed: Neither Buffer nor atob is available.\");\n    return \"\";\n}\n\ndecodeBase64Text(base64String)\n",
 				"isAsync":false
 			},
 			"skip":false,
@@ -540,14 +540,14 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_mBCpd@_g4vZt-1@l",
 			"id":"n_jXAuL",
 			"index":7,
 			"inputs":{
 				"charset":"UTF-8",
-				"encodedText":"{{ n_9VPkH.outputs.result }}"
+				"encodedText":"{{ n_qfE7b.outputs.payload.parts[0].body.data }}"
 			},
 			"skip":true,
 			"subTitle":"Utility by UnifyApps",
@@ -720,5 +720,5 @@
 	"tags":[
 		
 	],
-	"version":57
+	"version":58
 }
