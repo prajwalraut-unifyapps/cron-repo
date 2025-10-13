@@ -6,46 +6,584 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_M1jsU",
+			"fromNodeId":"n_Mr0nc",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_wOiUE",
+			"toNodeId":"n_5vsdK",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_5vsdK",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_hvlPN",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_hvlPN",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_BtfsL",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_BtfsL",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_6a3vs",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_6a3vs",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_4tusl",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_6a3vs",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_ePaft",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_4tusl",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_BtfsL",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_ePaft",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_BtfsL",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_BtfsL",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Mo8TY",
 			"type":"next"
 		}
 	],
 	"id":"68ece2c2c4f4287cb5234c26",
 	"lastModifiedBy":1,
 	"lcName":"loopslocalergmcflpwr",
-	"modifiedTime":1760355010111,
+	"modifiedTime":1760355046816,
 	"name":"loopsLocalErgmCflPWR",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2416,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_M1jsU-1",
-			"id":"_M1jsU",
-			"index":0,
+			"id":"n_Mr0nc",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"output":{
+							"type":"object",
+							"title":"output"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"input":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"num":{
+										"type":"number",
+										"title":"num"
+									}
+								},
+								"additionalProperties":false
+							},
+							"title":"input"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2307,
+				"resourceName":"variable_by_unifyapps_create_list",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_M1jsU-1",
-			"id":"_wOiUE",
-			"index":0,
+			"id":"n_5vsdK",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{
+					"createList":{
+						"ui:title":"",
+						"ua:type":{
+							"ui:widget":"hidden"
+						},
+						"items":{
+							"ui:title":"Initial list items",
+							"ui:description":"Set the initial values of the list (defaults to empty)"
+						},
+						"ui:order":[
+							"*",
+							"items"
+						]
+					},
+					"ua:title":{
+						"ui:widget":"hidden"
+					},
+					"ua:list_type":{
+						"ui:widget":"hidden"
+					}
+				},
+				"schema":{
+					"allOf":[
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"OBJECT"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"items":{
+												"type":"object",
+												"properties":{}
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"STRING"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of String"
+											},
+											"items":{
+												"type":"string"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"INTEGER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Integers"
+											},
+											"items":{
+												"type":"integer"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"NUMBER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Numbers"
+											},
+											"items":{
+												"type":"number"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"BOOLEAN"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Booleans"
+											},
+											"items":{
+												"type":"boolean"
+											}
+										}
+									}
+								}
+							}
+						}
+					],
+					"format":"ua:list",
+					"type":"object",
+					"properties":{
+						"ua:title":{
+							"type":"string"
+						},
+						"ua:list_type":{
+							"type":"string",
+							"title":"List Type",
+							"oneOf":[
+								{
+									"const":"OBJECT",
+									"title":"Object"
+								},
+								{
+									"const":"STRING",
+									"title":"String"
+								},
+								{
+									"const":"NUMBER",
+									"title":"Number"
+								},
+								{
+									"const":"INTEGER",
+									"title":"Integer"
+								},
+								{
+									"const":"BOOLEAN",
+									"title":"Boolean"
+								}
+							],
+							"default":"OBJECT"
+						},
+						"createList":{
+							"type":"object",
+							"properties":{
+								"ua:type":{
+									"type":"string",
+									"default":"mappedArray"
+								},
+								"source":{
+									"type":"string",
+									"format":"ua:source",
+									"title":"List Item Source"
+								},
+								"items":{
+									"type":"object",
+									"properties":{
+										"num":{
+											"type":"number",
+											"title":"num"
+										}
+									},
+									"additionalProperties":false
+								}
+							}
+						}
+					}
+				}
+			},
+			"inputs":{
+				"createList":{
+					"ua:type":"mappedArray"
+				},
+				"ua:title":"List",
+				"ua:list_type":"OBJECT"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"type":"object",
+					"properties":{
+						"items":{
+							"type":"array",
+							"title":"List",
+							"disableActions":true,
+							"items":{
+								"type":"object",
+								"properties":{
+									"num":{
+										"type":"number",
+										"title":"num"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create list",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2310,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_M1jsU-1",
+			"id":"n_hvlPN",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"num1":{
+							"type":"number",
+							"title":"num1"
+						},
+						"num2":{
+							"type":"number",
+							"title":"num2"
+						}
+					}
+				}
+			},
+			"inputs":{
+				"num1":2.4,
+				"num2":8.6
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"num1":{
+							"type":"number",
+							"title":"num1"
+						},
+						"num2":{
+							"type":"number",
+							"title":"num2"
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":143,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_M1jsU-1",
+			"id":"n_BtfsL",
+			"index":4,
+			"inputs":{
+				"repeatMode":"SINGLE",
+				"listSource":"{{ n_Mr0nc.outputs.input }}",
+				"captureIterations":false
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":140,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_BtfsL@_M1jsU-1@l",
+			"id":"n_6a3vs",
+			"index":5,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_BtfsL.outputs.item.num }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"{{ n_hvlPN.outputs.num1 }}"
+						}
+					},
+					{
+						"property":"{{ n_BtfsL.outputs.item.num }}",
+						"filter":{
+							"operator":"NOT_EQUAL",
+							"value":"{{ n_hvlPN.outputs.num2 }}"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2308,
+				"resourceName":"variable_by_unifyapps_add_item_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_6a3vs@n_BtfsL@_M1jsU-1@l@y",
+			"id":"n_4tusl",
+			"index":6,
+			"inputs":{
+				"itemToAdd":{
+					"num":"{{ n_BtfsL.outputs.item.num }}"
+				},
+				"insertLocation":"END",
+				"listName":"{{ n_5vsdK.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Add item to list",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"continue",
+				"resourceVersion":140,
+				"resourceName":"continue",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_6a3vs@n_BtfsL@_M1jsU-1@l@n",
+			"id":"n_ePaft",
+			"index":7,
+			"inputs":{
+				"loop":"n_BtfsL"
+			},
+			"skip":false,
+			"subTitle":"Continue",
+			"title":"Continue",
+			"type":"CONTINUE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2419,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_M1jsU-1",
+			"id":"n_Mo8TY",
+			"index":8,
+			"inputs":{
+				"result":{
+					"output":"{{ n_5vsdK.outputs.items }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +597,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
