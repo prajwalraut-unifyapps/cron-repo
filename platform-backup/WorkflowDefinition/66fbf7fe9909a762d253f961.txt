@@ -5,12 +5,12 @@
 	"createdTime":1747000734433,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759920954133,
-		"deployedBy":1,
-		"deployedDefinitionId":"68e6433a3b62b9403f74c447",
+		"deployedAt":1760117593237,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68e9435964af142a5db301df",
 		"status":"DEPLOYED",
-		"version":85,
-		"workflowVersion":163
+		"version":97,
+		"workflowVersion":179
 	},
 	"edges":[
 		{
@@ -497,9 +497,9 @@
 		]
 	},
 	"id":"66fbf7fe9909a762d253f961",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"excel row data as chunk generator",
-	"modifiedTime":1759948537085,
+	"modifiedTime":1760376389610,
 	"name":"Excel Row Data as Chunk Generator",
 	"nodes":[
 		{
@@ -1620,6 +1620,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"columnNames":{
 							"type":"array",
@@ -1628,13 +1630,12 @@
 							},
 							"title":"Column Names"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"configurationMode":"DEFAULT",
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"url":{
 							"type":"string",
@@ -1644,13 +1645,13 @@
 							"type":"string",
 							"title":"Sheet Name"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"code":"# import pandas as pd\n\n# result = {\"columnNames\": []}\n# i = 0\n# max_rows_to_check = 100\n# found = False\n\n# while i < max_rows_to_check:\n#     df = pd.read_excel(\n#         url,\n#         sheet_name=sheetName,\n#         header=None,\n#         skiprows=i,\n#         nrows=1\n#     )\n\n#     if not df.notna().any().any():\n#         i += 1\n#         continue \n\n#     header = df.iloc[0].astype(str).replace('nan', 'Unnamed Column').tolist()\n\n#     seen = {}\n#     final_headers = []\n#     for col in header:\n#         if col in seen:\n#             seen[col] += 1\n#             final_headers.append(f\"{col}_{seen[col]}\")\n#         else:\n#             seen[col] = 0\n#             final_headers.append(col)\n\n#     result = {\"columnNames\": final_headers}\n#     found = True\n#     break\n\n# if not found: \n#     result = {\"columnNames\": []}\n\n\nimport pandas as pd\nimport requests\nfrom io import BytesIO\n\n# Download the Excel file once\nresponse = requests.get(url, verify=False)\nresponse.raise_for_status()  # Raise an error if request failed\n\n# Store the content in memory\nexcel_content = BytesIO(response.content)\n\nresult = {\"columnNames\": []}\ni = 0\nmax_rows_to_check = 100\nfound = False\n\nwhile i < max_rows_to_check:\n    # Reset the BytesIO position for each read\n    excel_content.seek(0)\n    \n    df = pd.read_excel(\n        excel_content,\n        sheet_name=sheetName,\n        header=None,\n        skiprows=i,\n        nrows=1\n    )\n\n    if not df.notna().any().any():\n        i += 1\n        continue \n\n    header = df.iloc[0].astype(str).replace('nan', 'Unnamed Column').tolist()\n\n    seen = {}\n    final_headers = []\n    for col in header:\n        if col in seen:\n            seen[col] += 1\n            final_headers.append(f\"{col}_{seen[col]}\")\n        else:\n            seen[col] = 0\n            final_headers.append(col)\n\n    result = {\"columnNames\": final_headers}\n    found = True\n    break\n\nif not found: \n    result = {\"columnNames\": []}",
+				"configurationMode":"DEFAULT",
+				"code":"# import pandas as pd\n\n# result = {\"columnNames\": []}\n# i = 0\n# max_rows_to_check = 100\n# found = False\n\n# while i < max_rows_to_check:\n#     df = pd.read_excel(\n#         url,\n#         sheet_name=sheetName,\n#         header=None,\n#         skiprows=i,\n#         nrows=1\n#     )\n\n#     if not df.notna().any().any():\n#         i += 1\n#         continue \n\n#     header = df.iloc[0].astype(str).replace('nan', 'Unnamed Column').tolist()\n\n#     seen = {}\n#     final_headers = []\n#     for col in header:\n#         if col in seen:\n#             seen[col] += 1\n#             final_headers.append(f\"{col}_{seen[col]}\")\n#         else:\n#             seen[col] = 0\n#             final_headers.append(col)\n\n#     result = {\"columnNames\": final_headers}\n#     found = True\n#     break\n\n# if not found: \n#     result = {\"columnNames\": []}\n\nimport pandas as pd\nimport requests\nfrom io import BytesIO\n\n# Download the Excel file once\nresponse = requests.get(url, verify=False, timeout=60)\nresponse.raise_for_status()  # Raise error if request failed\n\n# Store the content in memory\nexcel_content = BytesIO(response.content)\n\n# Read the entire sheet once (no headers)\ndf = pd.read_excel(excel_content, sheet_name=sheetName, header=None, nrows=100)\n\n# Initialize result\nresult = {\"columnNames\": []}\nmax_rows_to_check = 100\n\n# Look through first 100 rows for a usable header\nfor i in range(min(max_rows_to_check, len(df))):\n    row = df.iloc[i]\n\n    # Skip empty rows\n    if not row.notna().any():\n        continue\n\n    # Convert to strings and replace missing values\n    header = row.astype(str).replace('nan', 'Unnamed Column').tolist()\n\n    # Handle duplicate column names\n    seen = {}\n    final_headers = []\n    for col in header:\n        if col in seen:\n            seen[col] += 1\n            final_headers.append(f\"{col}_{seen[col]}\")\n        else:\n            seen[col] = 0\n            final_headers.append(col)\n\n    # Save result and stop searching\n    result = {\"columnNames\": final_headers}\n    break",
 				"isAsync":false,
 				"python_version":"3.12",
+				"captureStdOutput":false,
 				"parameters":{
 					"url":"{{ 7abtV.outputs.url }}",
 					"sheetName":"{{ sAi0U.outputs.item }}"
@@ -1991,9 +1992,10 @@
 					}
 				},
 				"configurationMode":"DEFAULT",
-				"code":"# import pandas as pd\n\n# result = {\"columnNames\": []}\n# i = 0\n# max_rows_to_check = 100\n# found = False\n\n# while i < max_rows_to_check:\n#     df = pd.read_excel(\n#         url,\n#         sheet_name=sheetName,\n#         header=None,\n#         skiprows=i,\n#         nrows=1\n#     )\n\n#     if not df.notna().any().any():\n#         i += 1\n#         continue \n\n#     header = df.iloc[0].astype(str).replace('nan', 'Unnamed Column').tolist()\n\n#     seen = {}\n#     final_headers = []\n#     for col in header:\n#         if col in seen:\n#             seen[col] += 1\n#             final_headers.append(f\"{col}_{seen[col]}\")\n#         else:\n#             seen[col] = 0\n#             final_headers.append(col)\n\n#     result = {\"columnNames\": final_headers}\n#     found = True\n#     break\n\n# if not found: \n#     result = {\"columnNames\": []}\n\nimport pandas as pd\nimport requests\nfrom io import BytesIO\n\n# Download the Excel file once\nresponse = requests.get(url, verify=False)\nresponse.raise_for_status()  # Raise an error if request failed\n\n# Store the content in memory\nexcel_content = BytesIO(response.content)\n\nresult = {\"columnNames\": []}\ni = 0\nmax_rows_to_check = 100\nfound = False\n\nwhile i < max_rows_to_check:\n    # Reset the BytesIO position for each read\n    excel_content.seek(0)\n    \n    df = pd.read_excel(\n        excel_content,\n        sheet_name=sheetName,\n        header=None,\n        skiprows=i,\n        nrows=1\n    )\n\n    if not df.notna().any().any():\n        i += 1\n        continue \n\n    header = df.iloc[0].astype(str).replace('nan', 'Unnamed Column').tolist()\n\n    seen = {}\n    final_headers = []\n    for col in header:\n        if col in seen:\n            seen[col] += 1\n            final_headers.append(f\"{col}_{seen[col]}\")\n        else:\n            seen[col] = 0\n            final_headers.append(col)\n\n    result = {\"columnNames\": final_headers}\n    found = True\n    break\n\nif not found: \n    result = {\"columnNames\": []}\n\n",
+				"code":"# import pandas as pd\n\n# result = {\"columnNames\": []}\n# i = 0\n# max_rows_to_check = 100\n# found = False\n\n# while i < max_rows_to_check:\n#     df = pd.read_excel(\n#         url,\n#         sheet_name=sheetName,\n#         header=None,\n#         skiprows=i,\n#         nrows=1\n#     )\n\n#     if not df.notna().any().any():\n#         i += 1\n#         continue \n\n#     header = df.iloc[0].astype(str).replace('nan', 'Unnamed Column').tolist()\n\n#     seen = {}\n#     final_headers = []\n#     for col in header:\n#         if col in seen:\n#             seen[col] += 1\n#             final_headers.append(f\"{col}_{seen[col]}\")\n#         else:\n#             seen[col] = 0\n#             final_headers.append(col)\n\n#     result = {\"columnNames\": final_headers}\n#     found = True\n#     break\n\n# if not found: \n#     result = {\"columnNames\": []}\n\nimport pandas as pd\nimport requests\nfrom io import BytesIO\n\n# Download the Excel file once\nresponse = requests.get(url, verify=False, timeout=60)\nresponse.raise_for_status()  # Raise error if request failed\n\n# Store the content in memory\nexcel_content = BytesIO(response.content)\n\n# Read the entire sheet once (no headers)\ndf = pd.read_excel(excel_content, sheet_name=sheetName, header=None, nrows=100)\n\n# Initialize result\nresult = {\"columnNames\": []}\nmax_rows_to_check = 100\n\n# Look through first 100 rows for a usable header\nfor i in range(min(max_rows_to_check, len(df))):\n    row = df.iloc[i]\n\n    # Skip empty rows\n    if not row.notna().any():\n        continue\n\n    # Convert to strings and replace missing values\n    header = row.astype(str).replace('nan', 'Unnamed Column').tolist()\n\n    # Handle duplicate column names\n    seen = {}\n    final_headers = []\n    for col in header:\n        if col in seen:\n            seen[col] += 1\n            final_headers.append(f\"{col}_{seen[col]}\")\n        else:\n            seen[col] = 0\n            final_headers.append(col)\n\n    # Save result and stop searching\n    result = {\"columnNames\": final_headers}\n    break\n\n",
 				"isAsync":false,
 				"python_version":"3.12",
+				"captureStdOutput":false,
 				"parameters":{
 					"url":"{{ ProR9.outputs.url }}",
 					"sheetName":"{{ IoW77.outputs.item }}"
@@ -2305,6 +2307,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"columnNames":{
 							"type":"array",
@@ -2313,12 +2317,12 @@
 							},
 							"title":"Column Names"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"url":{
 							"type":"string",
@@ -2328,12 +2332,13 @@
 							"type":"string",
 							"title":"Sheet Name"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"code":"# import pandas as pd\n\n# result = {\"columnNames\": []}\n# i = 0\n# max_rows_to_check = 100\n# found = False\n\n# while i < max_rows_to_check:\n#     df = pd.read_excel(\n#         url,\n#         sheet_name=sheetName,\n#         header=None,\n#         skiprows=i,\n#         nrows=1,\n#         engine=\"openpyxl\"\n#     )\n\n#     if not df.notna().any().any():\n#         i += 1\n#         continue \n\n#     header = df.iloc[0].astype(str).replace('nan', 'Unnamed Column').tolist()\n\n#     seen = {}\n#     final_headers = []\n#     for col in header:\n#         if col in seen:\n#             seen[col] += 1\n#             final_headers.append(f\"{col}_{seen[col]}\")\n#         else:\n#             seen[col] = 0\n#             final_headers.append(col)\n\n#     result = {\"columnNames\": final_headers}\n#     found = True\n#     break\n\n# if not found: \n#     result = {\"columnNames\": []}\n\nimport pandas as pd\nimport requests\nfrom io import BytesIO\n\n# Download the Excel file once\nresponse = requests.get(url, verify=False)\nresponse.raise_for_status()  # Raise an error if request failed\n\n# Store the content in memory\nexcel_content = BytesIO(response.content)\n\nresult = {\"columnNames\": []}\ni = 0\nmax_rows_to_check = 100\nfound = False\n\nwhile i < max_rows_to_check:\n    # Reset the BytesIO position for each read\n    excel_content.seek(0)\n    \n    df = pd.read_excel(\n        excel_content,\n        sheet_name=sheetName,\n        header=None,\n        skiprows=i,\n        nrows=1,\n        engine=\"openpyxl\"\n    )\n\n    if not df.notna().any().any():\n        i += 1\n        continue \n\n    header = df.iloc[0].astype(str).replace('nan', 'Unnamed Column').tolist()\n\n    seen = {}\n    final_headers = []\n    for col in header:\n        if col in seen:\n            seen[col] += 1\n            final_headers.append(f\"{col}_{seen[col]}\")\n        else:\n            seen[col] = 0\n            final_headers.append(col)\n\n    result = {\"columnNames\": final_headers}\n    found = True\n    break\n\nif not found: \n    result = {\"columnNames\": []}\n",
+				"configurationMode":"DEFAULT",
+				"code":"# import pandas as pd\n\n# result = {\"columnNames\": []}\n# i = 0\n# max_rows_to_check = 100\n# found = False\n\n# while i < max_rows_to_check:\n#     df = pd.read_excel(\n#         url,\n#         sheet_name=sheetName,\n#         header=None,\n#         skiprows=i,\n#         nrows=1,\n#         engine=\"openpyxl\"\n#     )\n\n#     if not df.notna().any().any():\n#         i += 1\n#         continue \n\n#     header = df.iloc[0].astype(str).replace('nan', 'Unnamed Column').tolist()\n\n#     seen = {}\n#     final_headers = []\n#     for col in header:\n#         if col in seen:\n#             seen[col] += 1\n#             final_headers.append(f\"{col}_{seen[col]}\")\n#         else:\n#             seen[col] = 0\n#             final_headers.append(col)\n\n#     result = {\"columnNames\": final_headers}\n#     found = True\n#     break\n\n# if not found: \n#     result = {\"columnNames\": []}\n\nimport pandas as pd\nimport requests\nfrom io import BytesIO\n\n# Download the Excel file once\nresponse = requests.get(url, verify=False, timeout=60)\nresponse.raise_for_status()  # Raise error if request failed\n\n# Store the content in memory\nexcel_content = BytesIO(response.content)\n\n# Read the entire sheet once (no headers)\ndf = pd.read_excel(excel_content, sheet_name=sheetName, header=None, nrows=100)\n\n# Initialize result\nresult = {\"columnNames\": []}\nmax_rows_to_check = 100\n\n# Look through first 100 rows for a usable header\nfor i in range(min(max_rows_to_check, len(df))):\n    row = df.iloc[i]\n\n    # Skip empty rows\n    if not row.notna().any():\n        continue\n\n    # Convert to strings and replace missing values\n    header = row.astype(str).replace('nan', 'Unnamed Column').tolist()\n\n    # Handle duplicate column names\n    seen = {}\n    final_headers = []\n    for col in header:\n        if col in seen:\n            seen[col] += 1\n            final_headers.append(f\"{col}_{seen[col]}\")\n        else:\n            seen[col] = 0\n            final_headers.append(col)\n\n    # Save result and stop searching\n    result = {\"columnNames\": final_headers}\n    break\n\n",
 				"isAsync":false,
+				"python_version":"3.12",
+				"captureStdOutput":false,
 				"parameters":{
 					"url":"{{ f4YJQ.outputs.url }}",
 					"sheetName":"{{ L4XLa.outputs.item }}"
@@ -2640,5 +2645,5 @@
 		}
 	},
 	"standard":true,
-	"version":164
+	"version":180
 }
