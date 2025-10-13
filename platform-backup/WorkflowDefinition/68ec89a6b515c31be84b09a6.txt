@@ -5,12 +5,12 @@
 	"createdTime":1760332198530,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760350417456,
+		"deployedAt":1760350432981,
 		"deployedBy":173449,
-		"deployedDefinitionId":"68ecd0d1350d793c6ae97955",
+		"deployedDefinitionId":"68ecd0e0350d793c6ae97999",
 		"status":"DEPLOYED",
-		"version":72,
-		"workflowVersion":72
+		"version":73,
+		"workflowVersion":73
 	},
 	"description":"",
 	"edges":[
@@ -18,18 +18,18 @@
 			"fromNodeId":"n_tzAAa",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_iagNT",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_iagNT",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"n_tcvQ2",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"n_tcvQ2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_pbCuS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_pbCuS",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_UcgpP",
@@ -46,7 +46,7 @@
 	"id":"68ec89a6b515c31be84b09a6",
 	"lastModifiedBy":173449,
 	"lcName":"testing ag",
-	"modifiedTime":1760350432847,
+	"modifiedTime":1760350693348,
 	"name":"testing ag",
 	"nodes":[
 		{
@@ -78,40 +78,6 @@
 		},
 		{
 			"context":{
-				"appName":"workflow_agent_prompt",
-				"resourceVersion":17,
-				"resourceName":"workflow_agent_prompt_default",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"_UWIyO-1",
-			"id":"n_iagNT",
-			"index":0,
-			"inputs":{
-				"callableInterfaceId":"__ua__workflow_agent_prompt",
-				"parameters":{
-					"instructions":"Speak like a roman emperor",
-					"model":"e_686654b81257d219bd7958d5",
-					"name":"hi",
-					"responseSchema":{
-						"type":"object",
-						"properties":{
-							"output":{
-								"type":"string"
-							}
-						}
-					}
-				}
-			},
-			"skip":false,
-			"subTitle":"Prompt",
-			"title":"Instructs AI to respond as Roman emperor with\nspecific output schema.",
-			"type":"CALL_INTERFACE_WORKFLOW"
-		},
-		{
-			"context":{
 				"appName":"workflow_agent_ask_ai_agent",
 				"resourceVersion":27,
 				"resourceName":"workflow_agent_ask_ai_agent_default",
@@ -139,39 +105,42 @@
 						"properties":{
 							"answer":{
 								"type":"string",
-								"description":"The answer to the user's query generated using tools."
+								"description":"The answer to the user's query based on tools and knowledge"
 							},
 							"toolsUsed":{
 								"type":"array",
 								"items":{
 									"type":"string"
 								},
-								"description":"List of tools used to generate the answer."
+								"description":"List of tools used to generate the answer"
 							},
 							"confidence":{
 								"type":"number",
 								"minimum":0,
 								"maximum":1,
-								"description":"Confidence score of the generated answer."
+								"description":"Confidence level of the answer provided"
 							},
-							"metadata":{
-								"type":"object",
-								"properties":{
-									"processingTime":{
-										"type":"number",
-										"description":"Time taken to process the query and generate the answer in milliseconds."
-									},
-									"timestamp":{
-										"type":"string",
-										"format":"date-time",
-										"description":"Timestamp of when the answer was generated."
+							"sources":{
+								"type":"array",
+								"items":{
+									"type":"object",
+									"properties":{
+										"name":{
+											"type":"string",
+											"description":"Name of the knowledge source"
+										},
+										"url":{
+											"type":"string",
+											"format":"uri",
+											"description":"URL of the knowledge source, if applicable"
+										}
 									}
-								}
+								},
+								"description":"Sources of information used to generate the answer"
 							}
 						},
 						"required":[
-							"answer",
-							"toolsUsed"
+							"answer"
 						]
 					},
 					"tools":{
@@ -181,7 +150,40 @@
 			},
 			"skip":false,
 			"subTitle":"Agent",
-			"title":"Creates AI agent to answer queries using tools",
+			"title":"Creates AI agent to answer queries using tools\nand knowledge sources.",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"workflow_agent_prompt",
+				"resourceVersion":17,
+				"resourceName":"workflow_agent_prompt_default",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_UWIyO-1",
+			"id":"n_pbCuS",
+			"index":0,
+			"inputs":{
+				"callableInterfaceId":"__ua__workflow_agent_prompt",
+				"parameters":{
+					"instructions":"speak like a roman emperor",
+					"model":"e_ai_agent_openai_gpt_4.1_mini",
+					"responseSchema":{
+						"type":"object",
+						"properties":{
+							"output":{
+								"type":"string"
+							}
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Prompt",
+			"title":"Prompts AI to speak like a Roman emperor",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -200,14 +202,14 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"Solve user query, do not ask clarifying questions\n{{ n_tcvQ2.outputs.answer }}{{ n_tcvQ2.outputs.toolsUsed }}",
+					"responseInstructions":"{{ n_pbCuS.outputs.output }}Solve user query, do not ask clarifying questions\n{{ n_tcvQ2.outputs.answer }}{{ n_tcvQ2.outputs.toolsUsed }}",
 					"name":"Respond",
 					"model":"e_686654b81257d219bd7958d5"
 				}
 			},
 			"skip":false,
 			"subTitle":"Respond",
-			"title":"Generates AI response to user query using specified\nmodel and instructions.",
+			"title":"Generates AI response to user query using model\nand instructions from previous nodes.",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -237,5 +239,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":73
+	"version":74
 }
