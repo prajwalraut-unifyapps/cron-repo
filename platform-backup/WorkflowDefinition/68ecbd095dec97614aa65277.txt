@@ -104,7 +104,7 @@
 	"id":"68ecbd095dec97614aa65277",
 	"lastModifiedBy":85476,
 	"lcName":"greif | issue classify",
-	"modifiedTime":1760376004167,
+	"modifiedTime":1760376011307,
 	"name":"Greif | Issue Classify",
 	"nodes":[
 		{
@@ -513,6 +513,17 @@
 			"id":"n_tekXj",
 			"index":6,
 			"inputs":{
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"base64String":{
+							"type":"string",
+							"title":"Base 64 String"
+						}
+					}
+				},
 				"code":"function decodeBase64Text(base64String) {\n    // 1. Decode the Base64 string into a byte string.\n    //    'atob' (Ascii to Binary) is used in the browser. \n    //    In Node.js, you'd typically use 'Buffer.from(base64String, 'base64').toString('utf8')'\n    const decodedBString = atob(base64String);\n\n    // 2. Convert the byte string to a URI-safe string by escaping certain characters.\n    //    This is crucial for handling multi-byte characters (like '£', '€', or the '’' in your example) \n    //    that are often part of valid UTF-8 sequences.\n    const uriSafeString = decodeURIComponent(\n        // Map over each character's code point, convert to a hex escape sequence (%XX), \n        // and join them back into a single string.\n        [...decodedBString].map(char => \n            '%' + ('00' + char.charCodeAt(0).toString(16)).slice(-2)\n        ).join('')\n    );\n\n    // Note: The conversion logic above is often simplified in modern browsers by \n    // using the TextDecoder API (new TextDecoder().decode(Uint8Array.from(atob(base64String), c => c.charCodeAt(0)))), \n    // but the `atob` -> `decodeURIComponent` method is a classic, highly compatible approach.\n\n    return uriSafeString;\n}",
 				"isAsync":false
 			},
@@ -709,5 +720,5 @@
 	"tags":[
 		
 	],
-	"version":56
+	"version":57
 }
