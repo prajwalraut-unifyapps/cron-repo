@@ -9,11 +9,11 @@
 			"fromNodeId":"n_zGC3s",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_TLkJr",
+			"toNodeId":"n_g3D7g",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_TLkJr",
+			"fromNodeId":"n_g3D7g",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_RM3Hp",
@@ -23,28 +23,6 @@
 			"fromNodeId":"n_RM3Hp",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_fZu5f",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_fZu5f",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_OioJ7",
-			"type":"loop"
-		},
-		{
-			"fromNodeId":"n_OioJ7",
-			"name":"loopback",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_fZu5f",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_fZu5f",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"n_Efhcq",
 			"type":"next"
 		}
@@ -52,7 +30,7 @@
 	"id":"68ee677d3ec90e20bab5cf8f",
 	"lastModifiedBy":21056,
 	"lcName":"test",
-	"modifiedTime":1760458187069,
+	"modifiedTime":1760458323402,
 	"name":"test",
 	"nodes":[
 		{
@@ -62,7 +40,7 @@
 				"resourceName":"webhooks_default"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_eACkJ-1",
 			"id":"n_zGC3s",
@@ -83,24 +61,43 @@
 		{
 			"context":{
 				"appName":"utility_by_unifyapps",
-				"resourceVersion":999,
-				"resourceName":"utility_by_unifyapps_download_multiple_files_from_urls",
+				"resourceVersion":1066,
+				"resourceName":"utility_by_unifyapps_to_json_object",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_eACkJ-1",
-			"id":"n_TLkJr",
+			"id":"n_g3D7g",
 			"index":2,
 			"inputs":{
-				"urls":[
-					"https://file-examples.com/wp-content/storage/2017/02/file_example_XLS_10.xls"
-				]
+				"jsonSchema":{
+					"type":"array",
+					"items":{
+						"type":"object",
+						"properties":{
+							"id":{
+								"type":"integer",
+								"title":"id"
+							},
+							"name":{
+								"type":"string",
+								"title":"name"
+							},
+							"role":{
+								"type":"string",
+								"title":"role"
+							}
+						},
+						"additionalProperties":false
+					}
+				},
+				"jsonString":"[{\"id\":1,\"name\":\"Alice\",\"role\":\"Engineer\"},{\"id\":2,\"name\":\"Bob\",\"role\":\"Designer\"},{\"id\":3,\"name\":\"Charlie\",\"role\":\"ProductManager\"},{\"id\":4,\"name\":\"Diana\",\"role\":\"DataAnalyst\"},{\"id\":5,\"name\":\"Ethan\",\"role\":\"QATester\"}]"
 			},
 			"skip":false,
 			"subTitle":"Utility by UnifyApps",
-			"title":"Download multiple files from list of URL's",
+			"title":"Deserialise string to JSON object",
 			"type":"ACTION"
 		},
 		{
@@ -340,7 +337,13 @@
 			},
 			"inputs":{
 				"createList":{
-					"ua:type":"mappedArray"
+					"ua:type":"mappedArray",
+					"source":"{{ n_g3D7g.outputs.result }}",
+					"items":{
+						"id":"{{ n_g3D7g.outputs.result[0].id }}",
+						"name":"{{ n_g3D7g.outputs.result[0].name }}",
+						"role":"{{ n_g3D7g.outputs.result[0].role }}"
+					}
 				},
 				"ua:title":"List",
 				"ua:list_type":"OBJECT"
@@ -381,67 +384,6 @@
 			"type":"ACTION"
 		},
 		{
-			"context":{
-				"appName":"excel_by_unifyapps",
-				"resourceVersion":933,
-				"resourceName":"excel_by_unifyapps_for_each_row_or_rows",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":true,
-			"fallbackMode":"STOP",
-			"groupId":"_eACkJ-1",
-			"id":"n_fZu5f",
-			"index":4,
-			"inputs":{
-				"startFromRow":1,
-				"consumptionBehaviour":"string",
-				"file":"{{ n_TLkJr.outputs.filesDetails }}",
-				"headerRow":true,
-				"columns":[
-					"Id",
-					"Age",
-					"Date"
-				],
-				"batch":false,
-				"evaluateFormulae":true,
-				"batchSize":100,
-				"fileType":"xlsx",
-				"skipEmptyRows":false
-			},
-			"skip":false,
-			"subTitle":"Excel by UnifyApps",
-			"title":"Consume data from Excel file",
-			"type":"LOOP"
-		},
-		{
-			"context":{
-				"appName":"variable_by_unifyapps",
-				"resourceVersion":1011,
-				"resourceName":"variable_by_unifyapps_add_item_to_list",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":true,
-			"fallbackMode":"STOP",
-			"groupId":"n_fZu5f@_eACkJ-1@l",
-			"id":"n_OioJ7",
-			"index":5,
-			"inputs":{
-				"itemToAdd":{
-					"id":"{{ n_fZu5f.outputs.item.Id }}",
-					"name":"{{ n_fZu5f.outputs.item.Age }}",
-					"role":"{{ n_fZu5f.outputs.item.Date }}"
-				},
-				"insertLocation":"END",
-				"listName":"{{ n_RM3Hp.outputs.items[0] }}"
-			},
-			"skip":false,
-			"subTitle":"Variable by UnifyApps",
-			"title":"Add item to list",
-			"type":"ACTION"
-		},
-		{
 			"additional":{
 				"visibleOptionalFields":[
 					"root.dropDownDetails.items.beginRow",
@@ -464,7 +406,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_eACkJ-1",
 			"id":"n_Efhcq",
-			"index":6,
+			"index":4,
 			"inputs":{
 				"fileName":"new",
 				"sheetName":"new",
@@ -484,7 +426,7 @@
 				],
 				"skipHeaderRow":true,
 				"headerType":"STATIC",
-				"dataSource":"{{ n_TLkJr.outputs.filesDetails }}",
+				"dataSource":"{{ n_RM3Hp.outputs.items }}",
 				"fileType":"xlsx",
 				"append":false,
 				"headerFormatMapping":[]
@@ -512,5 +454,5 @@
 	"tags":[
 		
 	],
-	"version":3
+	"version":4
 }
