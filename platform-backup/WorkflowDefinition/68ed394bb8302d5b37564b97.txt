@@ -5,12 +5,12 @@
 	"createdTime":1760377163951,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760379865283,
-		"deployedBy":173449,
-		"deployedDefinitionId":"68ed43d9d2b62915aa6764f0",
+		"deployedAt":1760381250552,
+		"deployedBy":189565,
+		"deployedDefinitionId":"68ed4942d2b62915aa67b8f4",
 		"status":"DEPLOYED",
-		"version":7,
-		"workflowVersion":27
+		"version":13,
+		"workflowVersion":33
 	},
 	"description":"",
 	"edges":[
@@ -46,7 +46,7 @@
 	"id":"68ed394bb8302d5b37564b97",
 	"lastModifiedBy":173449,
 	"lcName":"employee support copilot",
-	"modifiedTime":1760380423257,
+	"modifiedTime":1760430336415,
 	"name":"Employee Support Copilot",
 	"nodes":[
 		{
@@ -214,8 +214,8 @@
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
 					"name":"Search Database",
-					"instructions":"If the intent is Identified \nSearch Confluence Knowledge Base for relevant guides.\nrespond with knowledge result\n{{ n_L3seg.outputs.Intent }}{{ n_L3seg.outputs.userIntent }}{{ n_L3seg.outputs.user }}{{ n_L3seg.outputs.issue }}",
-					"model":"e_686654b81257d219bd7958d5",
+					"instructions":"You are an Employee Support Copilot that helps employees resolve HR and IT issues automatically\nThese are the following steps you will be taking :\n1. Identify user intent from messages.\n2. Classify Issues as Hardware or Software based on the User Query and store in an string variable \"Intent\"\n3. If the intent is Identified, Search Confluence Knowledge Base for relevant guides and respond with knowledge result\n",
+					"model":"e_686654b81257d219bd7958dc",
 					"knowledges":[
 						{
 							"type":"knowledge",
@@ -225,10 +225,46 @@
 					"responseSchema":{
 						"type":"object",
 						"properties":{
-							"output":{
-								"type":"string"
+							"intent":{
+								"type":"string",
+								"description":"Identified user intent from the message"
+							},
+							"issueType":{
+								"type":"string",
+								"enum":[
+									"Hardware",
+									"Software"
+								],
+								"description":"Classification of the issue based on user query"
+							},
+							"knowledgeResult":{
+								"type":"object",
+								"properties":{
+									"found":{
+										"type":"boolean",
+										"description":"Indicates if relevant knowledge was found in Confluence"
+									},
+									"content":{
+										"type":"string",
+										"description":"Relevant guide or information from Confluence Knowledge Base"
+									},
+									"url":{
+										"type":"string",
+										"format":"uri",
+										"description":"Link to the full article in Confluence"
+									}
+								}
+							},
+							"response":{
+								"type":"string",
+								"description":"Generated response to the user query"
 							}
-						}
+						},
+						"required":[
+							"intent",
+							"issueType",
+							"response"
+						]
 					},
 					"tools":{
 						"toolList":[
@@ -258,9 +294,9 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"{{ n_L3seg.outputs.intent }}{{ n_L3seg.outputs.escalation }}{{ n_L3seg.outputs.solution }}{{ n_L3seg.outputs.user }}{{ n_L3seg.outputs.issueClassification }}\nBe Polite, Greet the user and classify the issue as Hardware or Software{{ n_k4J5d.outputs.output }}",
+					"responseInstructions":"Be Polite, Greet the user \nIdentify if a solution has been found\n{{ n_k4J5d.outputs.intent }}{{ n_k4J5d.outputs.issueType }}{{ n_k4J5d.outputs.knowledgeResult }}{{ n_k4J5d.outputs.response }}",
 					"name":"Crafts AI response format and tone based on inputs",
-					"model":"e_686654b81257d219bd7958d5"
+					"model":"e_686654b81257d219bd7958dc"
 				}
 			},
 			"skip":false,
@@ -295,5 +331,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":28
+	"version":34
 }
