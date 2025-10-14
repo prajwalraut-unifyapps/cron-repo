@@ -5,16 +5,45 @@
 	"createdTime":1760422868356,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760423049278,
+		"deployedAt":1760423171021,
 		"deployedBy":39713,
-		"deployedDefinitionId":"68edec87f318e9204fe5058e",
+		"deployedDefinitionId":"68eded00f318e9204fe50b56",
 		"status":"DEPLOYED",
-		"version":1,
-		"workflowVersion":4
+		"version":2,
+		"workflowVersion":5
 	},
 	"edges":[
 		{
 			"fromNodeId":"n_P8Bu9",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_xAkzG",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_xAkzG",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_paaOi",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_paaOi",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_p9uwf",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"_p9uwf",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_paaOi",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_paaOi",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_QDCAq",
@@ -68,7 +97,7 @@
 	"id":"68edebd4f318e9204fe502fd",
 	"lastModifiedBy":39713,
 	"lcName":"testiteration",
-	"modifiedTime":1760423167335,
+	"modifiedTime":1760423189311,
 	"name":"testIteration",
 	"nodes":[
 		{
@@ -98,6 +127,116 @@
 		},
 		{
 			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1054,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_lUJ2S-1",
+			"id":"_xAkzG",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"a":{
+							"type":"integer",
+							"title":"A"
+						}
+					},
+					"required":[]
+				}
+			},
+			"inputs":{
+				"a":2
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"a":{
+							"type":"integer",
+							"title":"A"
+						}
+					},
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":877,
+				"resourceName":"loop_while",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_lUJ2S-1",
+			"id":"_paaOi",
+			"index":3,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"{{ _xAkzG.outputs.a }}",
+							"filter":{
+								"operator":"GT",
+								"value":"1"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":973,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_paaOi@_lUJ2S-1@l",
+			"id":"_p9uwf",
+			"index":4,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ _xAkzG.outputs.a }}",
+						"value":"=SUM({{ _xAkzG.outputs.a }},-1)"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"loop",
 				"resourceVersion":36,
 				"resourceName":"loop_for",
@@ -108,7 +247,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_lUJ2S-1",
 			"id":"n_QDCAq",
-			"index":2,
+			"index":5,
 			"inputs":{
 				"start":0,
 				"limit":5,
@@ -132,7 +271,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_QDCAq@_lUJ2S-1@l",
 			"id":"n_77HzE",
-			"index":3,
+			"index":6,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -183,7 +322,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_QDCAq@_lUJ2S-1@l",
 			"id":"n_9Jfyn",
-			"index":4,
+			"index":7,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -216,7 +355,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_9Jfyn@n_QDCAq@_lUJ2S-1@l@l",
 			"id":"n_DP5LC",
-			"index":5,
+			"index":8,
 			"inputs":{
 				"variables":[
 					{
@@ -239,7 +378,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_lUJ2S-1",
 			"id":"n_8Tfi4",
-			"index":6,
+			"index":9,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -263,5 +402,5 @@
 	"tags":[
 		
 	],
-	"version":5
+	"version":6
 }
