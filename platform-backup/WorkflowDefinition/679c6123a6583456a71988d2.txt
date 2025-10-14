@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1738691628295,
+	"createdTime":1747000741744,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760285165158,
-		"deployedBy":47193,
-		"deployedDefinitionId":"68ebd1ed0c3d19149a9dcba4",
+		"deployedAt":1760378617699,
+		"deployedBy":1,
+		"deployedDefinitionId":"68ed3ef9f5eb8345dac8042d",
 		"status":"DEPLOYED",
-		"version":88,
-		"workflowVersion":129
+		"version":125,
+		"workflowVersion":160
 	},
 	"edges":[
 		{
@@ -132,11 +132,18 @@
 			"name":"yes",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_rLRst",
+			"toNodeId":"n_6bGtB",
 			"type":"if"
 		},
 		{
-			"fromNodeId":"n_rLRst",
+			"fromNodeId":"n_6bGtB",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_IBeox",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_IBeox",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_Oqu8q",
@@ -465,6 +472,7 @@
 		"configs":[
 			{
 				"permissions":[
+					"VIEW_RUNS",
 					"V"
 				],
 				"principalType":"GLOBAL"
@@ -472,9 +480,9 @@
 		]
 	},
 	"id":"679c6123a6583456a71988d2",
-	"lastModifiedBy":47193,
+	"lastModifiedBy":1,
 	"lcName":"fetch applicable knowledges",
-	"modifiedTime":1760285295266,
+	"modifiedTime":1760441567109,
 	"name":"Fetch Applicable Knowledges",
 	"nodes":[
 		{
@@ -1959,33 +1967,120 @@
 			"type":"IF_ELSE"
 		},
 		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.parameters.kSetIds.items",
+					"root.parameters.kSetTags.items"
+				]
+			},
 			"context":{
-				"appName":"storage_by_unifyapps",
-				"resourceVersion":711,
-				"resourceName":"storage_by_unifyapps_get_records_by_ids",
+				"appName":"code_by_unifyapps",
+				"resourceVersion":512,
+				"resourceName":"code_by_unifyapps_groovy",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_JEXpc@gcxHF-1@y",
-			"id":"n_rLRst",
+			"id":"n_6bGtB",
 			"index":17,
 			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"filter":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Filter"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"kSetIds":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"K Set Ids"
+						},
+						"kSetTags":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"K Set Tags"
+						}
+					}
+				},
+				"code":"def combinedFilter = [\n    op: 'AND',\n    values: []\n]\n\ndef knowledgeSetIdsFilter = null\n\nif (binding.hasVariable('kSetIds') && kSetIds) {\n    knowledgeSetIdsFilter = [\n        field: 'id',\n        op: 'IN',\n        values: kSetIds\n    ]\n    combinedFilter['values'].add(knowledgeSetIdsFilter)\n}\n\ndef knowledgeSetTagsFilter = null\nif (binding.hasVariable('kSetTags') && kSetTags) {\n    knowledgeSetTagsFilter = [\n        field: 'tags',\n        op: 'IN',\n        values: kSetTags\n    ]\n    combinedFilter['values'].add(knowledgeSetTagsFilter)\n}\n\nif (binding.hasVariable(\"additionalfilter\")) {   \n    combinedFilter['values'].add(additionalfilter)\n}\n\nreturn ['filter': combinedFilter['values'].size() > 0 ? combinedFilter : null]\n",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"kSetIds":{
+						"source":"{{ WQdRt.outputs.externalKnowledgeSets }}",
+						"ua:type":"mappedArray",
+						"items":"{{ WQdRt.outputs.externalKnowledgeSets[0] }}"
+					},
+					"kSetTags":{
+						"source":"{{ DxRWf.outputs.filterByLLM.knowledgeSetTags }}",
+						"ua:type":"mappedArray",
+						"items":"{{ DxRWf.outputs.filterByLLM.knowledgeSetTags[0] }}"
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":1005,
+				"resourceName":"storage_by_unifyapps_fetch_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_JEXpc@gcxHF-1@y",
+			"id":"_IBeox",
+			"index":18,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"resolvedFilter":{
+								"filter":"{{ n_6bGtB.outputs.result.filter }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
 				"object_type":"knowledge_set",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
-				"ids":{
-					"source":"{{ WQdRt.outputs.externalKnowledgeSets }}",
-					"ua:type":"mappedArray",
-					"items":"{{ WQdRt.outputs.externalKnowledgeSets[0] }}"
-				},
 				"translationsOption":"DEFAULT",
-				"readThroughSessionVariables":false
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":500,
+					"offset":0
+				},
+				"numberOfRecordsToFetch":"MULTIPLE",
+				"readThroughSessionVariables":false,
+				"includeTotalCount":false
 			},
 			"skip":false,
-			"subTitle":"Get KnowledgeSets",
-			"title":"Get records by IDs",
+			"subTitle":"all knowledge sets",
+			"title":"Fetch records",
 			"type":"ACTION"
 		},
 		{
@@ -2000,13 +2095,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_JEXpc@gcxHF-1@y",
 			"id":"n_Oqu8q",
-			"index":18,
+			"index":19,
 			"inputs":{
 				"result":{
 					"knowledgeSets":{
-						"source":"{{ n_rLRst.outputs.objects }}",
 						"ua:type":"mappedArray",
-						"items":"{{ n_rLRst.outputs.objects[0] }}"
+						"source":"{{ _IBeox.outputs.objects }}",
+						"items":"{{ _IBeox.outputs.objects[0] }}"
 					}
 				}
 			},
@@ -2027,7 +2122,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gcxHF-1",
 			"id":"n_WIGlm",
-			"index":19,
+			"index":20,
 			"inputs":{
 				"automationId":"67a48d37f8f1744841dabb63",
 				"runtimeConnections":{},
@@ -2054,7 +2149,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gcxHF-1",
 			"id":"60aq2",
-			"index":20,
+			"index":21,
 			"inputs":{
 				"filters":[
 					{
@@ -2091,7 +2186,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"60aq2@gcxHF-1@y",
 			"id":"n_xQCQZ",
-			"index":21,
+			"index":22,
 			"inputs":{
 				"filters":[
 					{
@@ -2120,7 +2215,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_xQCQZ@60aq2@gcxHF-1@y@y",
 			"id":"_wedEL",
-			"index":22,
+			"index":23,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -2164,7 +2259,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_xQCQZ@60aq2@gcxHF-1@y@n",
 			"id":"i2f2C",
-			"index":23,
+			"index":24,
 			"inputs":{
 				"object_type":"knowledge_set",
 				"includeRoleMappings":false,
@@ -2202,7 +2297,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"60aq2@gcxHF-1@y",
 			"id":"n_TGcUq",
-			"index":24,
+			"index":25,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -2283,7 +2378,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"60aq2@gcxHF-1@y",
 			"id":"uFQfv",
-			"index":25,
+			"index":26,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -2338,7 +2433,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"60aq2@gcxHF-1@y",
 			"id":"n_Nhtpk",
-			"index":26,
+			"index":27,
 			"inputs":{
 				"filters":[
 					{
@@ -2367,7 +2462,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Nhtpk@60aq2@gcxHF-1@y@y",
 			"id":"_sIliv",
-			"index":27,
+			"index":28,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -2425,7 +2520,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_Nhtpk@60aq2@gcxHF-1@y@n",
 			"id":"G1D3s",
-			"index":28,
+			"index":29,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -2482,7 +2577,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"60aq2@gcxHF-1@y",
 			"id":"_vPEQ6",
-			"index":29,
+			"index":30,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -2525,7 +2620,7 @@
 						}
 					}
 				},
-				"code":"return [\n  \"knowledgeSets\" : binding.hasVariable(\"knowledgeSets\") ? knowledgeSets : (binding.hasVariable(\"knowledgeSetsWithTags\") ? knowledgeSetsWithTags : [])\n]",
+				"code":"return [\n  \"knowledges\" : binding.hasVariable(\"knowledges\") ? knowledges : (binding.hasVariable(\"knowledgesWithTags\") ? knowledgesWithTags : [])\n]",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -2558,7 +2653,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"60aq2@gcxHF-1@y",
 			"id":"HSdvt",
-			"index":30,
+			"index":31,
 			"inputs":{
 				"result":{
 					"knowledges":{
@@ -2590,7 +2685,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gcxHF-1",
 			"id":"n_LLvTv",
-			"index":31,
+			"index":32,
 			"inputs":{
 				"filters":[
 					{
@@ -2619,7 +2714,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_LLvTv@gcxHF-1@y",
 			"id":"n_hQf4Q",
-			"index":32,
+			"index":33,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -2673,7 +2768,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_LLvTv@gcxHF-1@y",
 			"id":"n_VWqbc",
-			"index":33,
+			"index":34,
 			"inputs":{
 				"filters":[
 					{
@@ -2708,7 +2803,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_VWqbc@n_LLvTv@gcxHF-1@y@y",
 			"id":"n_jSAA2",
-			"index":34,
+			"index":35,
 			"inputs":{
 				"automationId":"68aee0487b509332af37fbc1",
 				"runtimeConnections":{},
@@ -2748,7 +2843,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_VWqbc@n_LLvTv@gcxHF-1@y@y",
 			"id":"n_TbRgg",
-			"index":35,
+			"index":36,
 			"inputs":{
 				"filters":[
 					{
@@ -2778,7 +2873,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_TbRgg@n_VWqbc@n_LLvTv@gcxHF-1@y@y@y",
 			"id":"n_MyGhY",
-			"index":36,
+			"index":37,
 			"inputs":{
 				"result":{
 					"knowledges":{
@@ -2819,7 +2914,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_TbRgg@n_VWqbc@n_LLvTv@gcxHF-1@y@y@n",
 			"id":"n_oigvl",
-			"index":37,
+			"index":38,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -2860,7 +2955,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_TbRgg@n_VWqbc@n_LLvTv@gcxHF-1@y@y@n",
 			"id":"n_bpqqV",
-			"index":38,
+			"index":39,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -2896,7 +2991,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gcxHF-1",
 			"id":"n_WRI37",
-			"index":39,
+			"index":40,
 			"inputs":{
 				"filters":[
 					{
@@ -2925,7 +3020,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_WRI37@gcxHF-1@y",
 			"id":"_fh1Zq",
-			"index":40,
+			"index":41,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -2962,7 +3057,8 @@
 			"options":{
 				"bulkheadConfig":{
 					"enabled":false,
-					"global":false
+					"maxLeaseTimeUnit":"SECONDS",
+					"maxWaitDurationUnit":"SECONDS"
 				},
 				"businessHoursConfig":{
 					"enabled":false,
@@ -3036,7 +3132,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_WRI37@gcxHF-1@y",
 			"id":"_HckCK",
-			"index":41,
+			"index":42,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -3071,7 +3167,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_WRI37@gcxHF-1@n",
 			"id":"_tGOpq",
-			"index":42,
+			"index":43,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -3099,10 +3195,6 @@
 				"includeTotalCount":false
 			},
 			"options":{
-				"bulkheadConfig":{
-					"enabled":false,
-					"global":false
-				},
 				"businessHoursConfig":{
 					"enabled":false,
 					"waitForNextWindow":false
@@ -3150,9 +3242,6 @@
 					"metricConfigs":[
 						
 					]
-				},
-				"timeoutConfig":{
-					"enabled":false
 				}
 			},
 			"skip":false,
@@ -3178,7 +3267,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_WRI37@gcxHF-1@n",
 			"id":"_mGLVB",
-			"index":43,
+			"index":44,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -3213,7 +3302,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gcxHF-1",
 			"id":"V9PfM",
-			"index":44,
+			"index":45,
 			"inputs":{
 				"fetchBy":"id",
 				"applicationId":"",
@@ -3242,7 +3331,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gcxHF-1",
 			"id":"QX8JP",
-			"index":45,
+			"index":46,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -3300,7 +3389,7 @@
 						}
 					}
 				},
-				"code":"// TODO: add usergroups support\ndef userSharedGrants() {\n    [\n        field : 'fg',\n        op    : 'IN',\n        values: ['u/' + userId + '/V']\n    ]\n}\n\ndef accessibleGrantsFilter() {\n    def grants = []\n\n    if(binding.hasVariable(\"fetchKnowledgeSetKnowledges\") && fetchKnowledgeSetKnowledges==true){\n        if (binding.hasVariable('knowledgeSetIds') && knowledgeSetIds) {\n        grants += knowledgeSetIds.collect { 'knowledge_set/' + it }\n    }\n    }\n\n    if (binding.hasVariable('aiAgentId') && aiAgentId) {\n        grants << 'ai_agent/' + aiAgentId\n    }\n    if (binding.hasVariable('caseId') && caseId) {\n        grants << 'service_hub_case/' + caseId\n    }\n\n    [\n        field : 'properties.accessibleTo',\n        op    : 'IN',\n        values: grants\n    ]\n}\n\ndef filter = (binding.hasVariable('applicationId') && applicationId) ? [\n    op    : 'AND',\n    values: [\n        accessibleGrantsFilter(),\n        userSharedGrants()\n    ]\n] : accessibleGrantsFilter()\n\nreturn [grantsFilter: filter]",
+				"code":"// TODO: add usergroups support\n/*\ndef userSharedGrants() {\n    [\n        field : 'fg',\n        op    : 'IN',\n        values: ['u/' + userId + '/V']\n    ]\n}\n*/\n\ndef accessibleGrantsFilter() {\n    def grants = []\n\n    if(binding.hasVariable(\"fetchKnowledgeSetKnowledges\") && fetchKnowledgeSetKnowledges==true){\n        if (binding.hasVariable('knowledgeSetIds') && knowledgeSetIds) {\n        grants += knowledgeSetIds.collect { 'knowledge_set/' + it }\n    }\n    }\n\n    if (binding.hasVariable('aiAgentId') && aiAgentId) {\n        grants << 'ai_agent/' + aiAgentId\n    }\n    if (binding.hasVariable('caseId') && caseId) {\n        grants << 'service_hub_case/' + caseId\n    }\n\n    [\n        field : 'properties.accessibleTo',\n        op    : 'IN',\n        values: grants\n    ]\n}\n\ndef filter = (binding.hasVariable('applicationId') && applicationId) ? [\n    op    : 'AND',\n    values: [\n        accessibleGrantsFilter()\n    ]\n] : accessibleGrantsFilter()\n\nreturn [grantsFilter: filter]",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -3333,7 +3422,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gcxHF-1",
 			"id":"n_8v9RB",
-			"index":46,
+			"index":47,
 			"inputs":{
 				"filters":[
 					{
@@ -3362,7 +3451,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_8v9RB@gcxHF-1@y",
 			"id":"_JafqJ",
-			"index":47,
+			"index":48,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -3476,7 +3565,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_8v9RB@gcxHF-1@y",
 			"id":"_KqdNX",
-			"index":48,
+			"index":49,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -3511,7 +3600,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_8v9RB@gcxHF-1@n",
 			"id":"gd7El",
-			"index":49,
+			"index":50,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -3618,7 +3707,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_8v9RB@gcxHF-1@n",
 			"id":"n_CGvPP",
-			"index":50,
+			"index":51,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -3659,7 +3748,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gcxHF-1",
 			"id":"n_AzNHC",
-			"index":51,
+			"index":52,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -3747,7 +3836,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"gcxHF-1",
 			"id":"2B19E",
-			"index":52,
+			"index":53,
 			"inputs":{
 				"result":{
 					"knowledges":{
@@ -3776,7 +3865,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":635,
+	"ownerUserId":1,
 	"schemaReferences":[
 		
 	],
@@ -3790,10 +3879,10 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
+	"standard":false,
 	"tags":[
 		"AI Agent",
 		"Knowledge"
 	],
-	"version":131
+	"version":161
 }
