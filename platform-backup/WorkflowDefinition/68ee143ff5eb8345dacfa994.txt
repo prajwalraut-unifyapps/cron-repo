@@ -4,31 +4,39 @@
 	],
 	"createdTime":1760433215880,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760433308238,
+		"deployedBy":1,
+		"deployedDefinitionId":"68ee149bf5eb8345dacfae17",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":1
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_Hxkr5",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_3vTW4",
+			"toNodeId":"n_kHTcn",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_3vTW4",
+			"fromNodeId":"n_kHTcn",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_C7Q4E",
+			"toNodeId":"n_NxgYj",
 			"type":"loop"
 		},
 		{
-			"fromNodeId":"n_C7Q4E",
+			"fromNodeId":"n_NxgYj",
 			"name":"loopback",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_3vTW4",
+			"toNodeId":"n_kHTcn",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_3vTW4",
+			"fromNodeId":"n_kHTcn",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_ZGPnq",
@@ -38,7 +46,7 @@
 	"id":"68ee143ff5eb8345dacfa994",
 	"lastModifiedBy":1,
 	"lcName":"webhookiterations",
-	"modifiedTime":1760433305564,
+	"modifiedTime":1760433934436,
 	"name":"webhookiterations",
 	"nodes":[
 		{
@@ -60,10 +68,7 @@
 						"type":"object",
 						"properties":{
 							"var":{
-								"type":"array",
-								"items":{
-									"type":"integer"
-								},
+								"type":"integer",
 								"title":"Var"
 							}
 						},
@@ -85,24 +90,25 @@
 		{
 			"context":{
 				"appName":"loop",
-				"resourceVersion":144,
-				"resourceName":"loop_for_each",
+				"resourceVersion":101,
+				"resourceName":"loop_for",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_5dbwt-1",
-			"id":"n_3vTW4",
+			"id":"n_kHTcn",
 			"index":2,
 			"inputs":{
-				"repeatMode":"SINGLE",
-				"listSource":"{{ n_Hxkr5.outputs.body.var }}",
+				"start":0,
+				"limit":"{{ n_Hxkr5.outputs.body.var }}",
+				"step":1,
 				"captureIterations":true
 			},
 			"skip":false,
 			"subTitle":"Loop",
-			"title":"For each loop",
+			"title":"For loop",
 			"type":"LOOP"
 		},
 		{
@@ -115,8 +121,8 @@
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"n_3vTW4@_5dbwt-1@l",
-			"id":"n_C7Q4E",
+			"groupId":"n_kHTcn@_5dbwt-1@l",
+			"id":"n_NxgYj",
 			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
@@ -126,18 +132,18 @@
 					"additionalProperties":false,
 					"type":"object",
 					"properties":{
-						"var":{
+						"a":{
 							"type":"integer",
-							"title":"Var"
+							"title":"A"
 						}
 					},
 					"required":[
-						"var"
+						"a"
 					]
 				}
 			},
 			"inputs":{
-				"var":"{{ n_3vTW4.outputs.item }}"
+				"a":"=SUM({{ n_Hxkr5.outputs.body.var }},{{ n_kHTcn.outputs.index }})"
 			},
 			"outputSchema":{
 				"dynamic":false,
@@ -145,13 +151,13 @@
 					"additionalProperties":false,
 					"type":"object",
 					"properties":{
-						"var":{
+						"a":{
 							"type":"integer",
-							"title":"Var"
+							"title":"A"
 						}
 					},
 					"required":[
-						"var"
+						"a"
 					]
 				}
 			},
@@ -165,7 +171,7 @@
 				"appName":"stop"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_5dbwt-1",
 			"id":"n_ZGPnq",
@@ -193,5 +199,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
