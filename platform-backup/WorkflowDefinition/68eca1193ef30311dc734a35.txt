@@ -5,12 +5,12 @@
 	"createdTime":1760338201654,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760339517027,
+		"deployedAt":1760339776363,
 		"deployedBy":35286,
-		"deployedDefinitionId":"68eca63c261a0e59c53a8ef6",
+		"deployedDefinitionId":"68eca7400e2c2e465588cca1",
 		"status":"DEPLOYED",
-		"version":1,
-		"workflowVersion":3
+		"version":2,
+		"workflowVersion":4
 	},
 	"edges":[
 		{
@@ -45,6 +45,43 @@
 		},
 		{
 			"fromNodeId":"n_7EPcS",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_RYC8T",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_RYC8T",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_yXePL",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_yXePL",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_oA20F",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_oA20F",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_5KIGJ",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"_5KIGJ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_oVxuh",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_oA20F",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_oVxuh",
@@ -127,9 +164,9 @@
 		}
 	],
 	"id":"68eca1193ef30311dc734a35",
-	"lastModifiedBy":35286,
+	"lastModifiedBy":33,
 	"lcName":"dt | askt | entra token login",
-	"modifiedTime":1760339774374,
+	"modifiedTime":1760422017237,
 	"name":"DT | AskT | Entra Token Login",
 	"nodes":[
 		{
@@ -242,7 +279,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_7EPcS",
@@ -262,17 +299,29 @@
 						"userDetailsRequestVerb":{
 							"type":"string",
 							"title":"User Details Request Verb"
+						},
+						"appId":{
+							"type":"string",
+							"title":"Application ID"
+						},
+						"tenantId":{
+							"type":"string",
+							"title":"Tenant ID"
 						}
 					},
 					"required":[
 						"userInfoRequestUrl",
-						"userDetailsRequestVerb"
+						"userDetailsRequestVerb",
+						"appId",
+						"tenantId"
 					]
 				}
 			},
 			"inputs":{
 				"userDetailsRequestVerb":"GET",
-				"userInfoRequestUrl":"https://graph.microsoft.com/oidc/userinfo"
+				"appId":"89e0bc1e-5fe0-4e4e-8a81-fd8154a70bdf",
+				"userInfoRequestUrl":"https://graph.microsoft.com/oidc/userinfo",
+				"tenantId":"86e5eadd-81e9-4032-8caa-c419ab9d61ae"
 			},
 			"outputSchema":{
 				"dynamic":false,
@@ -287,11 +336,21 @@
 						"userDetailsRequestVerb":{
 							"type":"string",
 							"title":"User Details Request Verb"
+						},
+						"appId":{
+							"type":"string",
+							"title":"Application ID"
+						},
+						"tenantId":{
+							"type":"string",
+							"title":"Tenant ID"
 						}
 					},
 					"required":[
 						"userInfoRequestUrl",
-						"userDetailsRequestVerb"
+						"userDetailsRequestVerb",
+						"appId",
+						"tenantId"
 					]
 				}
 			},
@@ -302,17 +361,153 @@
 		},
 		{
 			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":471,
+				"resourceName":"utility_by_unifyapps_decode_jwt_token",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_CqyLP-1",
+			"id":"n_RYC8T",
+			"index":5,
+			"inputs":{
+				"token":"{{ n_SyUHw.outputs.access_token }}"
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Decode JWT Token",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":995,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_CqyLP-1",
+			"id":"n_yXePL",
+			"index":6,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"isCorrectAppAndTenant"
+					],
+					"properties":{
+						"isCorrectAppAndTenant":{
+							"type":"boolean",
+							"title":"Is Correct App And Tenant"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"tenantId":{
+							"type":"string",
+							"title":"Tenant Id"
+						},
+						"appId":{
+							"type":"string",
+							"title":"Application Id"
+						},
+						"decodedTokenPayload":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Decoded Token Payload"
+						}
+					}
+				},
+				"code":"if (!binding.hasVariable('decodedTokenPayload') || !binding.hasVariable('appId') || !binding.hasVariable('tenantId')) {\n  return ['isCorrectAppAndTenant' : false]\n}\n\ndef decodedApp = decodedTokenPayload.appid\ndef decodedTenant = decodedTokenPayload.tid\n\nreturn ['isCorrectAppAndTenant' : (decodedApp == appId && decodedTenant == tenantId)]",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"tenantId":"{{ n_7EPcS.outputs.tenantId }}",
+					"appId":"{{ n_7EPcS.outputs.appId }}",
+					"decodedTokenPayload":"{{ n_RYC8T.outputs.payload }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_CqyLP-1",
+			"id":"_oA20F",
+			"index":7,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_yXePL.outputs.result.isCorrectAppAndTenant }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"false"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1071,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_oA20F@_CqyLP-1@y",
+			"id":"_5KIGJ",
+			"index":8,
+			"inputs":{
+				"result":{
+					"authenticated":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		},
+		{
+			"context":{
 				"appName":"custom_http_endpoint",
 				"resourceVersion":1079,
 				"resourceName":"custom_http_endpoint_execute",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"MANUAL",
 			"groupId":"_CqyLP-1",
 			"id":"n_oVxuh",
-			"index":5,
+			"index":9,
 			"inputs":{
 				"isAsync":false,
 				"enableProxy":false,
@@ -369,7 +564,8 @@
 			"options":{
 				"bulkheadConfig":{
 					"enabled":false,
-					"global":false
+					"maxLeaseTimeUnit":"SECONDS",
+					"maxWaitDurationUnit":"SECONDS"
 				},
 				"businessHoursConfig":{
 					"enabled":false,
@@ -432,11 +628,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_oVxuh@_CqyLP-1@error",
 			"id":"n_01KmV",
-			"index":6,
+			"index":10,
 			"inputs":{
 				"result":{
 					"authenticated":false
@@ -455,11 +651,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_cMPbz",
-			"index":7,
+			"index":11,
 			"inputs":{
 				"filters":[
 					{
@@ -488,7 +684,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_cMPbz@_CqyLP-1@y",
 			"id":"n_yiePM",
-			"index":8,
+			"index":12,
 			"inputs":{
 				"result":{
 					"authenticated":false
@@ -511,7 +707,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_j6NIa",
-			"index":9,
+			"index":13,
 			"inputs":{
 				"fetchBy":"username",
 				"applicationId":"",
@@ -534,7 +730,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_grF3i",
-			"index":10,
+			"index":14,
 			"inputs":{
 				"filters":[
 					{
@@ -563,7 +759,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_grF3i@_CqyLP-1@y",
 			"id":"_nT8i3",
-			"index":11,
+			"index":15,
 			"inputs":{
 				"result":{
 					"authenticated":false
@@ -586,7 +782,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_rThQZ",
-			"index":12,
+			"index":16,
 			"inputs":{
 				"result":{
 					"authenticated":true,
@@ -616,5 +812,5 @@
 	"tags":[
 		
 	],
-	"version":4
+	"version":6
 }
