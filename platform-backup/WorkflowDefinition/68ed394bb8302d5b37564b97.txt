@@ -18,18 +18,18 @@
 			"fromNodeId":"n_s8vHN",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_L3seg",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_L3seg",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"n_k4J5d",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"n_k4J5d",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_vlkVj",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_vlkVj",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_4IC5y",
@@ -74,9 +74,9 @@
 		}
 	],
 	"id":"68ed394bb8302d5b37564b97",
-	"lastModifiedBy":46673,
+	"lastModifiedBy":173449,
 	"lcName":"employee support copilot",
-	"modifiedTime":1760430928634,
+	"modifiedTime":1760435833371,
 	"name":"Employee Support Copilot",
 	"nodes":[
 		{
@@ -96,8 +96,7 @@
 			"inputs":{
 				"convStarters":[
 					"My laptop camera isn’t working",
-					"My laptop camera isn’t working",
-					"My laptop camera isn’t working"
+					"My laptop trackpad isn’t working"
 				]
 			},
 			"skip":false,
@@ -107,127 +106,6 @@
 				"type":"CALLABLE"
 			},
 			"type":"START"
-		},
-		{
-			"context":{
-				"appName":"workflow_agent_prompt",
-				"resourceVersion":20,
-				"resourceName":"workflow_agent_prompt_default",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"_9ELtT-1",
-			"id":"n_L3seg",
-			"index":0,
-			"inputs":{
-				"callableInterfaceId":"__ua__workflow_agent_prompt",
-				"parameters":{
-					"instructions":"You are an Employee Support Copilot that helps employees resolve HR and IT issues automatically\nThese are the following steps you will be taking :\nIdentify user intent from messages.\nClassify Issues as Hardware or Software based on the User Query and store in an string variable \"Intent\"",
-					"model":"e_686654b81257d219bd7958d5",
-					"name":"Instructions",
-					"responseSchema":{
-						"type":"object",
-						"properties":{
-							"Intent":{
-								"type":"string",
-								"enum":[
-									"Hardware",
-									"Software"
-								],
-								"description":"Classification of the issue based on user query"
-							},
-							"userIntent":{
-								"type":"string",
-								"description":"Identified user intent from the message"
-							},
-							"user":{
-								"type":"object",
-								"properties":{
-									"id":{
-										"type":"string",
-										"description":"Unique identifier for the user"
-									},
-									"profile":{
-										"type":"object",
-										"properties":{
-											"name":{
-												"type":"string"
-											},
-											"email":{
-												"type":"string",
-												"format":"email"
-											},
-											"department":{
-												"type":"string"
-											},
-											"position":{
-												"type":"string"
-											}
-										}
-									}
-								}
-							},
-							"issue":{
-								"type":"object",
-								"properties":{
-									"description":{
-										"type":"string"
-									},
-									"category":{
-										"type":"string",
-										"enum":[
-											"HR",
-											"IT"
-										]
-									},
-									"priority":{
-										"type":"string",
-										"enum":[
-											"Low",
-											"Medium",
-											"High"
-										]
-									},
-									"status":{
-										"type":"string",
-										"enum":[
-											"Open",
-											"In Progress",
-											"Resolved"
-										]
-									}
-								}
-							},
-							"resolution":{
-								"type":"object",
-								"properties":{
-									"steps":{
-										"type":"array",
-										"items":{
-											"type":"string"
-										}
-									},
-									"additionalInfo":{
-										"type":"string"
-									}
-								}
-							}
-						},
-						"required":[
-							"Intent",
-							"userIntent",
-							"user",
-							"issue"
-						]
-					}
-				}
-			},
-			"skip":false,
-			"subTitle":"Prompt",
-			"title":"Instructions",
-			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
 			"context":{
@@ -251,7 +129,7 @@
 					"knowledges":[
 						{
 							"type":"knowledge",
-							"id":"e_68ed4214e59f99321f3f8922"
+							"id":"knowledge_tMeyt"
 						}
 					],
 					"responseSchema":{
@@ -308,6 +186,51 @@
 			"skip":false,
 			"subTitle":"Agent",
 			"title":"Search Database",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"workflow_agent_prompt",
+				"resourceVersion":20,
+				"resourceName":"workflow_agent_prompt_default",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_9ELtT-1",
+			"id":"n_vlkVj",
+			"index":0,
+			"inputs":{
+				"callableInterfaceId":"__ua__workflow_agent_prompt",
+				"parameters":{
+					"instructions":"Set the value of \"Knowledge found\" to \"Yes\" if the agent has located a solution in the knowledge base; otherwise, set it to \"No\".",
+					"model":"e_686654b81257d219bd7958dc",
+					"name":"Solution Found",
+					"responseSchema":{
+						"ua:modal":{
+							"field_type":"STRING"
+						},
+						"type":"object",
+						"properties":{
+							"Knowledge found":{
+								"type":"string",
+								"enum":[
+									"Yes",
+									"No"
+								],
+								"description":"Indicates whether the agent has located a solution in the knowledge base."
+							}
+						},
+						"required":[
+							"Knowledge found"
+						]
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Prompt",
+			"title":"Solution Found",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -387,7 +310,7 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"Be Polite, Greet the user \nIdentify if a solution has been found\n{{ n_k4J5d.outputs.intent }}{{ n_k4J5d.outputs.issueType }}{{ n_k4J5d.outputs.knowledgeResult }}{{ n_k4J5d.outputs.response }}",
+					"responseInstructions":"Be Polite, Greet the user \nIdentify if a solution has been found\nPrint the value of this variable at the end\n{{ n_vlkVj.outputs.Knowledge found }}",
 					"name":"Crafts AI response format and tone based on inputs",
 					"model":"e_686654b81257d219bd7958dc"
 				}
@@ -424,5 +347,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":37
+	"version":38
 }
