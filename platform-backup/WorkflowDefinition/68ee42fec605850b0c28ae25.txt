@@ -9,69 +9,85 @@
 			"fromNodeId":"n_D96JW",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_Gmm9r",
+			"toNodeId":"_Xrf3P",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_Gmm9r",
+			"fromNodeId":"_Xrf3P",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_AyA4e",
+			"toNodeId":"n_Q7kxp",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"_AyA4e",
+			"fromNodeId":"n_Q7kxp",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_J9seo",
+			"toNodeId":"n_FsZg1",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_J9seo",
+			"fromNodeId":"n_FsZg1",
+			"name":"yes",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_lg1AM",
+			"toNodeId":"_WwBWq",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"_WwBWq",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_OkOe4",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_lg1AM",
+			"fromNodeId":"_OkOe4",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_A732u",
+			"toNodeId":"n_T0I17",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"_A732u",
+			"fromNodeId":"n_T0I17",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_3KdFV",
+			"toNodeId":"n_zbl7z",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_FsZg1",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_zbl7z",
 			"type":"next"
 		}
 	],
 	"id":"68ee42fec605850b0c28ae25",
 	"lastModifiedBy":43498,
 	"lcName":"[dnt] entity template child tenant publisher | on change",
-	"modifiedTime":1760445182618,
+	"modifiedTime":1760445254462,
 	"name":"[DNT] Entity Template Child Tenant Publisher | On Change",
 	"nodes":[
 		{
 			"context":{
 				"appName":"storage_by_unifyapps",
-				"resourceVersion":4546,
-				"resourceName":"storage_by_unifyapps_on_create_record"
+				"resourceVersion":4527,
+				"resourceName":"storage_by_unifyapps_on_any_change"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_1kXHh-1",
 			"id":"n_D96JW",
 			"index":1,
 			"inputs":{
-				"object_type":"e_template"
+				"object_type":"Template"
 			},
 			"skip":false,
 			"subTitle":"Storage by UnifyApps",
-			"title":"New record",
+			"title":"Changed record",
 			"trigger":{
 				"type":"EVENT"
 			},
@@ -85,10 +101,10 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_1kXHh-1",
-			"id":"n_Gmm9r",
+			"id":"_Xrf3P",
 			"index":2,
 			"inputs":{
 				"object_type":"child_tenant",
@@ -116,10 +132,10 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_1kXHh-1",
-			"id":"_AyA4e",
+			"id":"n_Q7kxp",
 			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
@@ -357,15 +373,15 @@
 				"createList":{
 					"ua:type":"mappedArray",
 					"items":{
-						"assetId":"{{ n_D96JW.outputs.id }}",
-						"assetClass":"{{ n_D96JW.outputs.entityType }}"
+						"assetId":"{{ n_D96JW.outputs.object.id }}",
+						"assetVersion":"{{ n_D96JW.outputs.object.version }}",
+						"assetClass":"{{ n_D96JW.outputs.object.entityType }}"
 					}
 				},
 				"ua:title":"List",
 				"ua:list_type":"OBJECT"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -406,25 +422,56 @@
 		},
 		{
 			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_1kXHh-1",
+			"id":"n_FsZg1",
+			"index":4,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_CVFkm.outputs.change_type }}",
+						"filter":{
+							"operator":"NOT_EQUAL",
+							"value":"DELETED"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":1092,
 				"resourceName":"callables_call_automation",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"_1kXHh-1",
-			"id":"n_J9seo",
-			"index":4,
+			"groupId":"n_FsZg1@_1kXHh-1@y",
+			"id":"_WwBWq",
+			"index":5,
 			"inputs":{
 				"automationId":"68e9f3658a89042ce909eec5",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"assetClass":"{{ n_D96JW.outputs.entityType }}",
-					"assetId":"{{ n_D96JW.outputs.id }}"
+					"assetClass":"{{ n_D96JW.outputs.object.entityType }}",
+					"assetVersion":"{{ n_D96JW.outputs.object.version }}",
+					"assetId":"{{ n_D96JW.outputs.object.id }}"
 				}
 			},
 			"skip":false,
@@ -445,23 +492,23 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"_1kXHh-1",
-			"id":"n_lg1AM",
-			"index":5,
+			"groupId":"n_FsZg1@_1kXHh-1@y",
+			"id":"_OkOe4",
+			"index":6,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
 					"ua:type":"mappedArray",
-					"source":"{{ n_J9seo.outputs.applicationDependentAssets }}",
+					"source":"{{ _WwBWq.outputs.applicationDependentAssets }}",
 					"items":{
-						"assetId":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetId }}",
-						"assetVersion":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetVersion }}",
-						"assetClass":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetClass }}"
+						"assetId":"{{ _WwBWq.outputs.applicationDependentAssets[0].assetId }}",
+						"assetVersion":"{{ _WwBWq.outputs.applicationDependentAssets[0].assetVersion }}",
+						"assetClass":"{{ _WwBWq.outputs.applicationDependentAssets[0].assetClass }}"
 					}
 				},
-				"listName":"{{ _AyA4e.outputs.items[0] }}"
+				"listName":"{{ n_Q7kxp.outputs.items[0] }}"
 			},
 			"skip":false,
 			"subTitle":"Add in Dependency List",
@@ -481,27 +528,27 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"_1kXHh-1",
-			"id":"_A732u",
-			"index":6,
+			"groupId":"n_FsZg1@_1kXHh-1@y",
+			"id":"n_T0I17",
+			"index":7,
 			"inputs":{
 				"assetDetails":{
-					"source":"{{ _AyA4e.outputs.items }}",
+					"source":"{{ n_Q7kxp.outputs.items }}",
 					"ua:type":"mappedArray",
 					"items":{
-						"assetClass":"{{ _AyA4e.outputs.items[0].assetClass }}",
-						"assetId":"{{ _AyA4e.outputs.items[0].assetId }}",
-						"assetVersion":"{{ _AyA4e.outputs.items[0].assetVersion }}"
+						"assetClass":"{{ n_Q7kxp.outputs.items[0].assetClass }}",
+						"assetId":"{{ n_Q7kxp.outputs.items[0].assetId }}",
+						"assetVersion":"{{ n_Q7kxp.outputs.items[0].assetVersion }}"
 					}
 				},
 				"envIds":{
 					"ua:type":"mappedArray",
-					"source":"{{ n_Gmm9r.outputs.objects }}",
-					"items":"{{ n_Gmm9r.outputs.objects[0].properties.connectedEnvId }}"
+					"source":"{{ _Xrf3P.outputs.objects }}",
+					"items":"{{ _Xrf3P.outputs.objects[0].properties.connectedEnvId }}"
 				},
-				"name":"Template Deployment - ({{ n_D96JW.outputs.id }})"
+				"name":"Template Deployment - ({{ n_D96JW.outputs.object.id }}:{{ n_D96JW.outputs.change_type }})"
 			},
 			"skip":false,
 			"subTitle":"Standard entities by UnifyApps",
@@ -513,11 +560,11 @@
 				"appName":"stop"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_1kXHh-1",
-			"id":"_3KdFV",
-			"index":7,
+			"id":"n_zbl7z",
+			"index":8,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -541,5 +588,5 @@
 	"tags":[
 		"Multi Tenant CS"
 	],
-	"version":0
+	"version":1
 }
