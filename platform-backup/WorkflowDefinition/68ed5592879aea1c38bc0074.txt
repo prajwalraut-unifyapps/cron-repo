@@ -5,12 +5,12 @@
 	"createdTime":1760384402843,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760445812956,
-		"deployedBy":1728,
-		"deployedDefinitionId":"68ee4574c605850b0c28c4a4",
+		"deployedAt":1760446436344,
+		"deployedBy":175259,
+		"deployedDefinitionId":"68ee47e4c605850b0c28de3e",
 		"status":"DEPLOYED",
-		"version":24,
-		"workflowVersion":23
+		"version":25,
+		"workflowVersion":24
 	},
 	"description":"",
 	"edges":[
@@ -37,9 +37,9 @@
 		}
 	],
 	"id":"68ed5592879aea1c38bc0074",
-	"lastModifiedBy":175259,
+	"lastModifiedBy":1728,
 	"lcName":"testaditya",
-	"modifiedTime":1760446436179,
+	"modifiedTime":1760450309317,
 	"name":"testaditya",
 	"nodes":[
 		{
@@ -86,12 +86,15 @@
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
 					"name":"Creates an Employee Support Copilot agent to handle\nuser queries and search knowledge base.",
-					"instructions":"As an Employee Support Copilot, perform the following tasks:\n\n1. Analyse user messages to determine their intent.\n2. Categorize issues as either \"Hardware\" or \"Software\" based on the user query, and store the result in a string variable named \"Intent\".\n3. Always search the knowledge base and try to find a matching solution to the user problem\n4. Set the value of SolutionFound to \"Yes\" if knowledge is found, otherwise set it to \"No\"\n\nInfer the user's intent from their query without asking for clarification, and search the knowledge base accordingly.\nDo not give a generic answer\n\nif not present then throw the ticket on monday using the tool present",
+					"instructions":"As an Employee Support Copilot, perform the following tasks:\n\n1. Analyse user messages to determine their intent.\n2. Categorize issues as either \"Hardware\" or \"Software\" based on the user query, and store the result in a string variable named \"Intent\".\n3. Always search the knowledge base and try to find a matching solution to the user problem\n4. Set the value of SolutionFound to \"Yes\" if knowledge is found, otherwise set it to \"No\"\n\nInfer the user's intent from their query without asking for clarification, and search the knowledge base accordingly.\nDo not give a generic answer",
 					"model":"e_686654b81257d219bd7958d5",
 					"knowledges":[
 						{
 							"type":"knowledge",
 							"id":"knowledge_jW8P6"
+						},
+						{
+							"type":"GLOBAL"
 						}
 					],
 					"responseSchema":{
@@ -103,42 +106,33 @@
 									"Hardware",
 									"Software"
 								],
-								"description":"Categorization of the user's issue"
+								"description":"Classification of the issue based on user query"
 							},
-							"SolutionFound":{
-								"type":"string",
-								"enum":[
-									"Yes",
-									"No"
-								],
-								"description":"Indicates whether a solution was found in the knowledge base"
-							},
-							"Solution":{
-								"type":"string",
-								"description":"The solution found in the knowledge base, if any"
-							},
-							"TicketCreated":{
-								"type":"boolean",
-								"description":"Indicates whether a ticket was created on Monday"
-							},
-							"TicketDetails":{
+							"knowledgeResult":{
 								"type":"object",
 								"properties":{
-									"id":{
+									"guide":{
 										"type":"string",
-										"description":"Unique identifier for the ticket"
+										"description":"Relevant guide from the knowledge base"
 									},
-									"status":{
-										"type":"string",
-										"description":"Current status of the ticket"
+									"steps":{
+										"type":"array",
+										"items":{
+											"type":"string"
+										},
+										"description":"Steps or instructions from the relevant guide"
 									}
-								},
-								"description":"Details of the ticket created on Monday, if applicable"
+								}
+							},
+							"response":{
+								"type":"string",
+								"description":"The final response to be sent to the user"
 							}
 						},
 						"required":[
 							"Intent",
-							"SolutionFound"
+							"knowledgeResult",
+							"response"
 						]
 					},
 					"tools":{
@@ -206,5 +200,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":24
+	"version":25
 }
