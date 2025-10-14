@@ -1,6 +1,8 @@
 {
 	"appsUsed":[
-		"sap_rfc"
+		"oracledb",
+		"sap_rfc",
+		"slack"
 	],
 	"createdTime":1760336953697,
 	"deleted":false,
@@ -9,21 +11,50 @@
 			"fromNodeId":"n_hcuWZ",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_JjzK4",
+			"toNodeId":"n_KzK2E",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_JjzK4",
+			"fromNodeId":"n_KzK2E",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_KzK2E",
+			"toNodeId":"n_9l0pg",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_9l0pg",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_VGCDV",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_VGCDV",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_b1sxm",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_b1sxm",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_2hQYg",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_2hQYg",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_b1sxm",
 			"type":"next"
 		}
 	],
 	"id":"68ec9c39bad7e67b95e565f0",
 	"lastModifiedBy":687,
 	"lcName":"jbhcd",
-	"modifiedTime":1760347656323,
+	"modifiedTime":1760448329302,
 	"name":"jbhcd",
 	"nodes":[
 		{
@@ -54,30 +85,6 @@
 		{
 			"context":{
 				"appName":"sap_rfc",
-				"resourceVersion":5934,
-				"connectionId":"687a64a4facc271e5be3a0a9",
-				"resourceName":"sap_rfc_call_rfm",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"_2M0ro-1",
-			"id":"n_JjzK4",
-			"index":2,
-			"inputs":{
-				"performAsync":false,
-				"objectSourceResourceName":"sap_rfc_fetch_rfm_output_schema",
-				"objectId":"RFC_SYSTEM_INFO"
-			},
-			"skip":false,
-			"subTitle":"SAP RFC",
-			"title":"Call RFM",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"sap_rfc",
 				"resourceVersion":4,
 				"connectionId":"687a64a4facc271e5be3a0a9",
 				"resourceName":"sap_rfc_export_call_rfm",
@@ -88,13 +95,120 @@
 			"fallbackMode":"STOP",
 			"groupId":"_2M0ro-1",
 			"id":"n_KzK2E",
-			"index":3,
+			"index":2,
 			"inputs":{
 				"objectId":"RFC_SYSTEM_INFO"
 			},
 			"skip":false,
 			"subTitle":"SAP RFC",
 			"title":"Export Call RFM",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"oracledb",
+				"resourceVersion":5569,
+				"connectionId":"68beb61bd7fae32ebbb40253",
+				"resourceName":"oracledb_execute_sql",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_2M0ro-1",
+			"id":"n_9l0pg",
+			"index":3,
+			"inputs":{
+				"performAsync":false,
+				"objectSourceResourceName":"oracledb_execute_sql_metadata",
+				"sql":"SELECT * FROM FLINKUSERNEW.JSON_TEST_TABLE_UJ"
+			},
+			"skip":false,
+			"subTitle":"Oracle DB",
+			"title":"Execute a SQL statement",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"oracledb",
+				"resourceVersion":3397,
+				"connectionId":"68beb61bd7fae32ebbb40253",
+				"resourceName":"oracledb_export_query_result",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_2M0ro-1",
+			"id":"n_VGCDV",
+			"index":4,
+			"inputs":{
+				"quote":"SINGLE_QUOTES",
+				"delimiter":"PIPE",
+				"skipHeaderRow":false,
+				"sql":"SELECT * FROM FLINKUSERNEW.JSON_TEST_TABLE_UJ"
+			},
+			"skip":false,
+			"subTitle":"Oracle DB",
+			"title":"Export query result",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"csv_by_unifyapps",
+				"resourceVersion":904,
+				"resourceName":"csv_by_unifyapps_for_each_row_or_rows",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_2M0ro-1",
+			"id":"n_b1sxm",
+			"index":5,
+			"inputs":{
+				"startFromRow":1,
+				"file":"{{ n_VGCDV.outputs.file }}",
+				"quote":"'",
+				"headerRow":true,
+				"columns":[
+					"ID",
+					"JSON_DATA"
+				],
+				"delimiter":"|",
+				"batch":false,
+				"encoding":"UTF-8",
+				"batchSize":100
+			},
+			"skip":false,
+			"subTitle":"CSV by UnifyApps",
+			"title":"Consume data from CSV file",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"slack",
+				"resourceVersion":6313,
+				"connectionId":"68ee4f084a9bd03512023f9b",
+				"resourceName":"slack_post_message_in_channel",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_b1sxm@_2M0ro-1@l",
+			"id":"n_2hQYg",
+			"index":6,
+			"inputs":{
+				"link_names":true,
+				"messageType":"text",
+				"channel":"C06J76727S9",
+				"text":"{{ n_b1sxm.outputs.item.JSON_DATA }}",
+				"mrkdwn":true
+			},
+			"skip":false,
+			"subTitle":"Slack",
+			"title":"Post message",
 			"type":"ACTION"
 		}
 	],
@@ -115,5 +229,5 @@
 	"tags":[
 		
 	],
-	"version":7
+	"version":8
 }
