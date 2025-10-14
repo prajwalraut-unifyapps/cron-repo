@@ -1,6 +1,6 @@
 {
 	"appsUsed":[
-		"storage_by_unifyapps"
+		
 	],
 	"createdTime":1759987267245,
 	"deleted":false,
@@ -367,6 +367,13 @@
 			"fromNodeId":"n_gHo2n",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_mQSNe",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_mQSNe",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"_2lQ6v",
 			"type":"next"
 		},
@@ -395,15 +402,8 @@
 			"fromNodeId":"n_A61AD",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_eRunB",
-			"type":"loop"
-		},
-		{
-			"fromNodeId":"n_eRunB",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"n_IOD6c",
-			"type":"next"
+			"type":"loop"
 		},
 		{
 			"fromNodeId":"n_IOD6c",
@@ -414,6 +414,20 @@
 		},
 		{
 			"fromNodeId":"n_ldeqF",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_6dI4K",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_6dI4K",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_c0IOj",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_c0IOj",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_g0Tmj",
@@ -651,7 +665,7 @@
 	"id":"68e7464399f9fc69e110e3db",
 	"lastModifiedBy":45011,
 	"lcName":"multi tenancy v2 | move all assets",
-	"modifiedTime":1760418948216,
+	"modifiedTime":1760433961970,
 	"name":"Multi Tenancy V2 | Move All assets",
 	"nodes":[
 		{
@@ -3960,18 +3974,6 @@
 										"assetVersion":{
 											"type":"string",
 											"title":"Asset Version"
-										},
-										"assetSetting":{
-											"type":"object",
-											"properties":{
-												"recordsSelection":{
-													"type":"string",
-													"title":"Records Selection"
-												}
-											},
-											"additionalProperties":false,
-											"title":"Asset Setting",
-											"required":[]
 										}
 									},
 									"required":[]
@@ -4012,18 +4014,6 @@
 									"assetVersion":{
 										"type":"string",
 										"title":"Asset Version"
-									},
-									"assetSetting":{
-										"type":"object",
-										"properties":{
-											"recordsSelection":{
-												"type":"string",
-												"title":"Records Selection"
-											}
-										},
-										"additionalProperties":false,
-										"title":"Asset Setting",
-										"required":[]
 									}
 								},
 								"required":[]
@@ -4041,7 +4031,10 @@
 			"additional":{
 				"xsdSchemaConfig":{
 					"root":{}
-				}
+				},
+				"visibleOptionalFields":[
+					"root.parameters.filterList.items"
+				]
 			},
 			"context":{
 				"appName":"code_by_unifyapps",
@@ -4067,14 +4060,51 @@
 								"type":"string"
 							},
 							"title":"Changeset supported Asset Class List"
+						},
+						"filter":{
+							"type":"object",
+							"properties":{
+								"op":{
+									"type":"string",
+									"title":"Op"
+								},
+								"field":{
+									"type":"string",
+									"title":"Field"
+								},
+								"values":{
+									"type":"array",
+									"items":{
+										"type":"string"
+									},
+									"title":"Values"
+								}
+							},
+							"additionalProperties":false,
+							"title":"Filter",
+							"required":[]
 						}
 					}
 				},
-				"code":"return [\n  \"csAssetClassList\" : [\n    \"e_interface\",\n    \"e_business_hours\", \n    \"e_template\",\n    \"e_data_catalog_table\",\n    \"e_streams\",\n    \"e_campaign\",\n    \"e_data_source\",\n    \"e_component\", \n    \"e_env_variables\",\n    \"e_code_snippet\",\n    \"e_business_holiday\",\n    \"e_data_catalog_asset\",\n    \"e_decision_table\",\n    \"e_java_archive\",\n    \"e_python_function\",\n    \"e_on_prem_group\",\n    \"e_on_prem_agent\",\n    \"ai_agent\",\n    \"ai_agent_llm_models\"\n    \"e_masking_keys\",\n    \"e_masking_config\",\n    \"e_platform_navigation\"\n  ]\n]\n",
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"filterList":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Filter List"
+						}
+					}
+				},
+				"code":"def \"csAssetClassList\" : [\n    \"e_interface\",\n    \"e_business_hours\", \n    \"e_template\",\n    \"e_data_catalog_table\",\n    \"e_streams\",\n    \"e_campaign\",\n    \"e_data_source\",\n    \"e_component\", \n    \"e_env_variables\",\n    \"e_code_snippet\",\n    \"e_business_holiday\",\n    \"e_data_catalog_asset\",\n    \"e_decision_table\",\n    \"e_java_archive\",\n    \"e_python_function\",\n    \"e_on_prem_group\",\n    \"e_on_prem_agent\",\n    \"ai_agent\",\n    \"ai_agent_llm_models\"\n    \"e_masking_keys\",\n    \"e_masking_config\",\n    \"e_platform_navigation\"\n  ]\nreturn [\n  \"filter\" : [\n    \"op\" : \"IN\",\n    \"field\": \"id\",\n    \"values\" : binding.hasVariable('filterList') ? filterList : []\n  ]\n]\n",
 				"compile_static":false,
 				"captureStdOutput":false
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Exhaustive Asset Class List",
 			"title":"Execute Groovy code",
 			"type":"ACTION"
@@ -4126,23 +4156,7 @@
 						}
 					}
 				},
-				"input":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"filterList"
-					],
-					"properties":{
-						"filterList":{
-							"type":"array",
-							"items":{
-								"type":"string"
-							},
-							"title":"Filter List"
-						}
-					}
-				},
-				"code":"return [\n  \"filter\" : [\n    \"op\" : \"IN\",\n    \"field\": \"id\",\n    \"values\" : binding.hasVariable('filterList') ? filterList : []\n  ]\n]",
+				"code":"def csAssetClassList = [\n  \"e_interface\",\n  \"e_business_hours\", \n  \"e_template\",\n  \"e_data_catalog_table\",\n  \"e_streams\",\n  \"e_campaign\",\n  \"e_data_source\",\n  \"e_component\", \n  \"e_env_variables\",\n  \"e_code_snippet\",\n  \"e_business_holiday\",\n  \"e_data_catalog_asset\",\n  \"e_decision_table\",\n  \"e_java_archive\",\n  \"e_python_function\",\n  \"e_on_prem_group\",\n  \"e_on_prem_agent\",\n  \"ai_agent\",\n  \"ai_agent_llm_models\",\n  \"e_masking_keys\",\n  \"e_masking_config\",\n  \"e_platform_navigation\"\n]\nreturn [\n  \"filter\" : [\n    \"op\" : \"IN\",\n    \"field\": \"id\",\n    \"values\" : csAssetClassList\n  ]\n]",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -4160,6 +4174,29 @@
 		},
 		{
 			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":996,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_6tLoP@_WUbts-1@12",
+			"id":"n_mQSNe",
+			"index":47,
+			"inputs":{
+				"code":"def csAssetClassList = [\n  \"e_interface\",\n  \"e_business_hours\", \n  \"e_template\",\n  \"e_data_catalog_table\",\n  \"e_streams\",\n  \"e_campaign\",\n  \"e_data_source\",\n  \"e_component\", \n  \"e_env_variables\",\n  \"e_code_snippet\",\n  \"e_business_holiday\",\n  \"e_data_catalog_asset\",\n  \"e_decision_table\",\n  \"e_java_archive\",\n  \"e_python_function\",\n  \"e_on_prem_group\",\n  \"e_on_prem_agent\",\n  \"ai_agent\",\n  \"ai_agent_llm_models\",\n  \"e_masking_keys\",\n  \"e_masking_config\",\n  \"e_platform_navigation\"\n]\nreturn [\n  \"filter\" : [\n    \"op\" : \"IN\",\n    \"field\": \"id\",\n    \"values\" : csAssetClassList\n  ]\n]",
+				"compile_static":false,
+				"captureStdOutput":false
+			},
+			"skip":true,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"standard_entities",
 				"resourceVersion":1193,
 				"resourceName":"standard_entities_fetch_entities",
@@ -4170,7 +4207,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_6tLoP@_WUbts-1@12",
 			"id":"_2lQ6v",
-			"index":47,
+			"index":48,
 			"inputs":{
 				"projections":[
 					{
@@ -4278,7 +4315,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_6tLoP@_WUbts-1@12",
 			"id":"n_N2EZ4",
-			"index":48,
+			"index":49,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ _2lQ6v.outputs.objects }}",
@@ -4301,7 +4338,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_N2EZ4@n_6tLoP@_WUbts-1@12@l",
 			"id":"_WZpbE",
-			"index":49,
+			"index":50,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -4324,7 +4361,7 @@
 			},
 			"inputs":{
 				"offset":0,
-				"limit":250
+				"limit":1000
 			},
 			"outputSchema":{
 				"dynamic":false,
@@ -4361,7 +4398,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_N2EZ4@n_6tLoP@_WUbts-1@12@l",
 			"id":"n_A61AD",
-			"index":50,
+			"index":51,
 			"inputs":{
 				"condition":{
 					"filters":[
@@ -4381,39 +4418,6 @@
 			"subTitle":"Loop",
 			"title":"While loop",
 			"type":"LOOP"
-		},
-		{
-			"context":{
-				"appName":"storage_by_unifyapps",
-				"resourceVersion":4555,
-				"resourceName":"storage_by_unifyapps_fetch_records",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":true,
-			"fallbackMode":"STOP",
-			"groupId":"n_A61AD@n_N2EZ4@n_6tLoP@_WUbts-1@12@l@l",
-			"id":"n_eRunB",
-			"index":51,
-			"inputs":{
-				"object_type":"{{ n_N2EZ4.outputs.item.columns.id }}",
-				"includeRoleMappings":false,
-				"includeCurrentUserPermissions":false,
-				"translationsOption":"DEFAULT",
-				"page":{
-					"paginateBy":"OFFSET",
-					"limit":"{{ _WZpbE.outputs.limit }}",
-					"offset":"{{ _WZpbE.outputs.offset }}"
-				},
-				"numberOfRecordsToFetch":"MULTIPLE",
-				"readThroughSessionVariables":false,
-				"includeTotalCount":false,
-				"fetchDeployedEntity":false
-			},
-			"skip":false,
-			"subTitle":"Storage by UnifyApps",
-			"title":"Fetch records",
-			"type":"ACTION"
 		},
 		{
 			"context":{
@@ -4458,7 +4462,7 @@
 						}
 					}
 				},
-				"code":"return [\n  \"options\" : [\n    \"entity_type\" : \n  ]\n]",
+				"code":"return [\n  \"options\" : [\n    \"entity_type\" : entity_type\n  ]\n]",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -4487,8 +4491,8 @@
 				"options":"{{ n_IOD6c.outputs.result.options }}",
 				"lookupType":"ENTITY",
 				"page":{
-					"limit":20,
-					"offset":0
+					"limit":"{{ _WZpbE.outputs.limit }}",
+					"offset":"{{ _WZpbE.outputs.offset }}"
 				},
 				"type":"ByQuery",
 				"fields":[
@@ -4499,6 +4503,103 @@
 			"skip":false,
 			"subTitle":"Standard entities by UnifyApps",
 			"title":"Lookup Request",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":1075,
+				"resourceName":"utility_by_unifyapps_to_json_string",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_A61AD@n_N2EZ4@n_6tLoP@_WUbts-1@12@l@l",
+			"id":"n_6dI4K",
+			"index":54,
+			"inputs":{
+				"object":"{{ n_ldeqF.outputs.response }}"
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Serialise object to JSON string",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":1064,
+				"resourceName":"utility_by_unifyapps_to_json_object",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_A61AD@n_N2EZ4@n_6tLoP@_WUbts-1@12@l@l",
+			"id":"n_c0IOj",
+			"index":55,
+			"inputs":{
+				"jsonSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"cursor":{
+							"type":"object",
+							"properties":{
+								"next":{
+									"type":"string",
+									"title":"next"
+								}
+							},
+							"title":"cursor",
+							"additionalProperties":false
+						},
+						"hasMore":{
+							"type":"boolean",
+							"title":"hasMore"
+						},
+						"objects":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"deleted":{
+										"type":"boolean",
+										"title":"deleted"
+									},
+									"entityType":{
+										"type":"string",
+										"title":"entityType"
+									},
+									"id":{
+										"type":"string",
+										"title":"id"
+									},
+									"standard":{
+										"type":"boolean",
+										"title":"standard"
+									},
+									"version":{
+										"type":"integer",
+										"title":"version"
+									}
+								},
+								"additionalProperties":false
+							},
+							"title":"objects"
+						},
+						"type":{
+							"type":"string",
+							"title":"type"
+						}
+					}
+				},
+				"jsonString":"{{ n_6dI4K.outputs.result }}"
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Deserialise string to JSON object",
 			"type":"ACTION"
 		},
 		{
@@ -4521,15 +4622,15 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_A61AD@n_N2EZ4@n_6tLoP@_WUbts-1@12@l@l",
 			"id":"n_g0Tmj",
-			"index":54,
+			"index":56,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
 					"ua:type":"mappedArray",
-					"source":"{{ n_eRunB.outputs.objects }}",
+					"source":"{{ n_c0IOj.outputs.result.objects }}",
 					"items":{
-						"assetClass":"{{ n_eRunB.outputs.objects[0].entityType }}",
-						"assetId":"{{ n_eRunB.outputs.objects[0].id }}"
+						"assetClass":"{{ n_c0IOj.outputs.result.objects[0].entityType }}",
+						"assetId":"{{ n_c0IOj.outputs.result.objects[0].id }}"
 					}
 				},
 				"listName":"{{ _ONxnw.outputs.items[0] }}"
@@ -4551,13 +4652,13 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_A61AD@n_N2EZ4@n_6tLoP@_WUbts-1@12@l@l",
 			"id":"n_YsehO",
-			"index":55,
+			"index":57,
 			"inputs":{
 				"loop":"n_A61AD",
 				"conditions":{
 					"filters":[
 						{
-							"property":"=LEN({{ n_eRunB.outputs.objects }})",
+							"property":"=LEN({{ n_c0IOj.outputs.result.objects }})",
 							"filter":{
 								"operator":"LT",
 								"value":"{{ _WZpbE.outputs.limit }}"
@@ -4584,7 +4685,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_A61AD@n_N2EZ4@n_6tLoP@_WUbts-1@12@l@l",
 			"id":"n_2bWYd",
-			"index":56,
+			"index":58,
 			"inputs":{
 				"variables":[
 					{
@@ -4619,7 +4720,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"_piwsf",
-			"index":57,
+			"index":59,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4662,7 +4763,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"_iNozL",
-			"index":58,
+			"index":60,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4701,7 +4802,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"_8s44u",
-			"index":59,
+			"index":61,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4740,7 +4841,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"_5eBdm",
-			"index":60,
+			"index":62,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4779,7 +4880,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"_RjBnb",
-			"index":61,
+			"index":63,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4818,7 +4919,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"_tuccK",
-			"index":62,
+			"index":64,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4857,7 +4958,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"_UYEQr",
-			"index":63,
+			"index":65,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4896,7 +4997,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"_ChT56",
-			"index":64,
+			"index":66,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4935,7 +5036,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"_4c1ZS",
-			"index":65,
+			"index":67,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -4974,7 +5075,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"_pMSRG",
-			"index":66,
+			"index":68,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -5013,7 +5114,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"n_xq3VK",
-			"index":67,
+			"index":69,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
@@ -5052,7 +5153,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"n_dbGfT",
-			"index":68,
+			"index":70,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -5144,7 +5245,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"n_IaArG",
-			"index":69,
+			"index":71,
 			"inputs":{
 				"repeatMode":"BATCH",
 				"listSource":"{{ n_dbGfT.outputs.result.modifiedAssets }}",
@@ -5173,7 +5274,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_IaArG@_WUbts-1@l",
 			"id":"n_oMses",
-			"index":70,
+			"index":72,
 			"inputs":{
 				"assetDetails":{
 					"ua:type":"mappedArray",
@@ -5208,7 +5309,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_IaArG@_WUbts-1@l",
 			"id":"n_qZEAG",
-			"index":71,
+			"index":73,
 			"inputs":{
 				"itemToAdd":{
 					"changesetId":"{{ n_oMses.outputs.changesetId }}"
@@ -5233,7 +5334,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_WUbts-1",
 			"id":"n_Kzv5a",
-			"index":72,
+			"index":74,
 			"inputs":{
 				"result":{
 					"result":"success"
@@ -5262,5 +5363,5 @@
 	"tags":[
 		
 	],
-	"version":60
+	"version":62
 }
