@@ -1,51 +1,212 @@
 {
 	"appsUsed":[
-		
+		"mongo"
 	],
 	"createdTime":1760445150790,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_FDJcr",
+			"fromNodeId":"n_O5QGD",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_NQwog",
+			"toNodeId":"n_CLY7O",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_CLY7O",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_r0K7q",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_CLY7O",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_I1Iu1",
 			"type":"next"
 		}
 	],
 	"id":"68ee42dec605850b0c28acc0",
 	"lastModifiedBy":47174,
 	"lcName":"eid_lessthan",
-	"modifiedTime":1760445150790,
+	"modifiedTime":1760445330192,
 	"name":"EID_LESSTHAN",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":833,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_FDJcr-1",
-			"id":"_FDJcr",
-			"index":0,
+			"id":"n_O5QGD",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"insert":{
+								"type":"string",
+								"title":"Insert"
+							}
+						},
+						"additionalProperties":false,
+						"required":[
+							"insert"
+						]
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_FDJcr-1",
-			"id":"_NQwog",
-			"index":0,
+			"id":"n_CLY7O",
+			"index":2,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_O5QGD.outputs.body.insert }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					}
+				],
+				"operator":"AND"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.record.document.items.rdfg",
+					"root.record.document.items._id",
+					"root.record.document.items.e_id"
+				]
+			},
+			"context":{
+				"appName":"mongo",
+				"resourceVersion":3173,
+				"connectionId":"67611f4f6a57de6ef9ae99a4",
+				"resourceName":"mongodb_insert_documents_batch",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_CLY7O@_FDJcr-1@y",
+			"id":"n_r0K7q",
+			"index":3,
+			"inputs":{
+				"document_schema":{
+					"type":"object",
+					"properties":{
+						"document":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"rdfg":{
+										"type":"string"
+									},
+									"_id":{
+										"type":"string"
+									},
+									"e_id":{
+										"type":"string",
+										"title":"E Id"
+									}
+								},
+								"required":[]
+							}
+						}
+					}
+				},
+				"record":{
+					"document":{
+						"items":{
+							"rdfg":"ROHAN",
+							"_id":"1",
+							"e_id":"{{ __RUN__.outputs.executionId }}"
+						},
+						"ua:type":"mappedArray"
+					}
+				},
+				"set_null_value":false,
+				"collection":"uatqa_collection"
+			},
+			"skip":false,
+			"subTitle":"MongoDB",
+			"title":"Insert document",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"mongo",
+				"resourceVersion":5487,
+				"connectionId":"67611f4f6a57de6ef9ae99a4",
+				"resourceName":"mongodb_delete_documents",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_CLY7O@_FDJcr-1@n",
+			"id":"n_I1Iu1",
+			"index":4,
+			"inputs":{
+				"filter":{
+					"filters":[
+						{
+							"property":"_id",
+							"filter":{
+								"operator":"EXISTS",
+								"details":{
+									"fieldType":"TEXT"
+								}
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"collection":"uatqa_collection"
+			},
+			"skip":false,
+			"subTitle":"MongoDB",
+			"title":"Delete documents",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":47174,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +220,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
