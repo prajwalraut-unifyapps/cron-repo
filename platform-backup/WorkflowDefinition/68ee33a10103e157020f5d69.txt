@@ -6,46 +6,185 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_u8yQI",
+			"fromNodeId":"n_kJ5rT",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_EXjcp",
+			"toNodeId":"n_IA1Dz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_IA1Dz",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_4EOKf",
 			"type":"next"
 		}
 	],
 	"id":"68ee33a10103e157020f5d69",
 	"lastModifiedBy":1246,
 	"lcName":"custtask",
-	"modifiedTime":1760441249551,
+	"modifiedTime":1760442096868,
 	"name":"custTask",
 	"nodes":[
 		{
+			"context":{
+				"appName":"ai_evaluator_by_unifyapps",
+				"resourceVersion":390,
+				"resourceName":"ai_evaluator_by_unifyapps_trigger_task_execution"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_u8yQI-1",
-			"id":"_u8yQI",
-			"index":0,
+			"id":"n_kJ5rT",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"properties":{
+						"actual_output":{
+							"type":"string"
+						},
+						"retrieved_context":{
+							"type":"string"
+						},
+						"tools_called":{
+							"type":"array",
+							"items":{
+								"type":"object"
+							}
+						},
+						"cost":{
+							"type":"number"
+						},
+						"additional":{
+							"title":"Additional Output Properties",
+							"type":"object",
+							"additionalProperties":true
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"properties":{
+						"input":{
+							"type":"string"
+						},
+						"expected_output":{
+							"type":"string"
+						},
+						"context":{
+							"type":"string"
+						},
+						"expected_tools":{
+							"type":"array",
+							"items":{
+								"type":"object"
+							}
+						},
+						"additional":{
+							"title":"Additional Input Properties",
+							"type":"object",
+							"additionalProperties":true
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"AI Evaluator by UnifyApps",
+			"title":"Trigger task execution",
 			"trigger":{
 				"type":"EVENT"
 			},
 			"type":"START"
 		},
 		{
+			"additional":{
+				"xsdSchemaConfig":{
+					"root":{}
+				}
+			},
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":46,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_u8yQI-1",
-			"id":"_EXjcp",
-			"index":0,
+			"id":"n_IA1Dz",
+			"index":2,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"additionalOutputParameters":{
+							"type":"object",
+							"properties":{
+								"Text1":{
+									"type":"string",
+									"title":"Text1"
+								}
+							},
+							"title":"additionalOutputParameters",
+							"additionalProperties":false
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"Text1":{
+							"type":"string",
+							"title":"Text1"
+						}
+					}
+				},
+				"code":"def obj = [:]\n\n// Get all variables from binding and add them to obj\nbinding.variables.each { key, value ->\n    // Filter out system variables (optional, but recommended)\n    if (!key.startsWith('_') && key != 'obj') {\n        obj[key] = value\n    }\n}\n\nreturn [additionalOutputParameters : obj]",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"Text1":"abc"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"ai_evaluator_by_unifyapps",
+				"resourceVersion":345,
+				"resourceName":"ai_evaluator_by_unifyapps_return_response_to_task_execution",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_u8yQI-1",
+			"id":"n_4EOKf",
+			"index":3,
+			"inputs":{
+				"result":{
+					"additional":"{{ n_IA1Dz.outputs.result.additionalOutputParameters.Text1 }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"AI Evaluator by UnifyApps",
+			"title":"Respond to task execution",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1246,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +198,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
