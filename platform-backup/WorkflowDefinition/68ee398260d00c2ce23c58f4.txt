@@ -155,7 +155,7 @@
 	"id":"68ee398260d00c2ce23c58f4",
 	"lastModifiedBy":39715,
 	"lcName":"validate azure ad token",
-	"modifiedTime":1760443207974,
+	"modifiedTime":1760444106082,
 	"name":"Validate Azure Ad Token",
 	"nodes":[
 		{
@@ -714,7 +714,7 @@
 						}
 					}
 				},
-				"code":"import com.nimbusds.jose.JWSAlgorithm\nimport com.nimbusds.jose.jwk.JWK\nimport com.nimbusds.jose.jwk.JWKSet\nimport com.nimbusds.jose.jwk.RSAKey\nimport com.nimbusds.jwt.SignedJWT\nimport com.nimbusds.jose.proc.BadJWSException\n\ndef getSigningKey(keys, kid) {\n    def jwkSet = new JWKSet(keys.collect { JWK.parse(it) })\n    def key = jwkSet.getKeyByKeyId(kid)\n    if (key == null) {\n        throw new Exception(\"Key not found\")\n    }\n    return key\n}\n\ndef verifyToken(String token, List<Map> keys) {\n    def signedJWT = SignedJWT.parse(token)\n    def header = signedJWT.header\n    def kid = header.keyID\n\n    def key = getSigningKey(keys, kid)\n\n    if (!(key instanceof RSAKey)) {\n        throw new Exception(\"Unsupported key type: ${key.keyType}\")\n    }\n\n    def verifier = new com.nimbusds.jose.crypto.RSASSAVerifier(key.toRSAPublicKey())\n\n    if (!signedJWT.verify(verifier)) {\n        throw new Exception(\"Token signature verification failed\")\n    }\n\n    def claims = signedJWT.payload.toJSONObject()\n\n    // Optional expiration check\n    def exp = signedJWT.getJWTClaimsSet().getExpirationTime()\n    if (exp != null && exp.before(new Date())) {\n        throw new Exception(\"Token has expired\")\n    }\n\n    return claims\n}\n\n// Example usage\ntry {\n    def decoded = verifyToken(token, keys)  // 'token' is JWT string, 'keys' is List<Map> of JWKs\n    def result = [\"decoded\": decoded]\n    return result\n} catch (Exception e) {\n    def result = [\"error\": e.message]\n    return result\n}\n",
+				"code":"import com.nimbusds.jose.jwk.JWKSet\nimport com.nimbusds.jose.jwk.source.ImmutableJWKSet\nimport com.nimbusds.jose.jwk.source.JWKSource\nimport com.nimbusds.jose.proc.JWSVerificationKeySelector\nimport com.nimbusds.jose.proc.SecurityContext\nimport com.nimbusds.jwt.proc.ConfigurableJWTProcessor\nimport com.nimbusds.jwt.proc.DefaultJWTProcessor\nimport com.nimbusds.jose.JWSAlgorithm\n\ndef verifyToken(token, keys) {\n    def jwkSet = new JWKSet(keys.collect { it as Map })\n    JWKSource<SecurityContext> keySource = new ImmutableJWKSet<>(jwkSet)\n    ConfigurableJWTProcessor<SecurityContext> processor = new DefaultJWTProcessor<>()\n    processor.setJWSKeySelector(new JWSVerificationKeySelector<>(JWSAlgorithm.RS256, keySource))\n    \n    // Will throw exception if signature invalid or token expired\n    def claims = processor.process(token, null)\n    return claims\n}\n\n// Usage\ntry {\n    def decoded = verifyToken(token, keys)\n    return [\"decoded\": decoded]\n} catch (Exception e) {\n    return [\"error\": e.message]\n}\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -1060,5 +1060,5 @@
 	"tags":[
 		
 	],
-	"version":6
+	"version":7
 }
