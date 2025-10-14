@@ -1,6 +1,7 @@
 {
 	"appsUsed":[
-		
+		"openai",
+		"storage_by_unifyapps"
 	],
 	"createdTime":1760435476300,
 	"deleted":false,
@@ -9,14 +10,21 @@
 			"fromNodeId":"n_hyJBp",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_tJvw8",
+			"toNodeId":"n_2LWT7",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_2LWT7",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_FUGxM",
 			"type":"next"
 		}
 	],
 	"id":"68ee1d149d3b3d07e8e7dba0",
 	"lastModifiedBy":189589,
 	"lcName":"greif | mca analysis",
-	"modifiedTime":1760435486658,
+	"modifiedTime":1760435874352,
 	"name":"Greif | MCA Analysis",
 	"nodes":[
 		{
@@ -31,7 +39,34 @@
 			"groupId":"_iOJL7-1",
 			"id":"n_hyJBp",
 			"index":1,
-			"inputs":{},
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"result"
+					],
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"Result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"order_id"
+					],
+					"properties":{
+						"order_id":{
+							"type":"string",
+							"title":"Order Id"
+						}
+					}
+				}
+			},
 			"skip":false,
 			"subTitle":"Callable",
 			"title":"Trigger via automation",
@@ -41,14 +76,53 @@
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":1806,
+				"resourceName":"storage_by_unifyapps_get_record_by_id",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_iOJL7-1",
-			"id":"_tJvw8",
+			"id":"n_2LWT7",
 			"index":2,
+			"inputs":{
+				"object_type":"greif_issues",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
+				"id":"{{ n_hyJBp.outputs.order_id }}",
+				"readThroughSessionVariables":false
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch record by ID",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"openai",
+				"resourceVersion":5492,
+				"connectionId":"68ea9540a5e5253b2d030eea",
+				"resourceName":"openai_send_message",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_iOJL7-1",
+			"id":"n_FUGxM",
+			"index":3,
+			"inputs":{
+				"response_format":"text",
+				"model":"gpt-3.5-turbo",
+				"message":"You are an AI assistant that performs Root Cause Analysis (RCA) and suggests corrective actions for customer escalations at Greif, based on extracted data from previous analysis.\nYour input will be a structured JSON object with details such as category, customer name, issue summary, sentiment, urgency, and severity.\nYour goal is to interpret this structured data and infer the most probable root cause and recommended next action.\nYour Tasks\nAnalyze the issue summary and category to infer a likely root cause.\nSuggest one recommended action that Greif’s internal team should take to resolve it.\nExtract or note any relevant date reference (if available).\nOutput Format\n:\n{   \"recommended_action\": \"<short actionable next step>\",   \"root_cause_analysis\": \"<probable underlying cause>\",   \"date_mentioned\": \"<date or 'not_found'>\" } \nExample\nInput (from previous step):\n{   \"category\": \"Delivery / Shipment Issue\",   \"customer_name\": \"Puneet\",   \"order_id\": \"000111\",    \"summary\": \"Order 000111 is delayed by 3 days beyond the scheduled delivery date.\" } \nOutput:\n{   \"recommended_action\": \"Contact logistics to confirm dispatch and update the customer immediately.\",   \"root_cause_analysis\": \"Likely delay in transportation or missed dispatch scheduling.\",   }"
+			},
+			"skip":false,
+			"subTitle":"OpenAI",
+			"title":"Send message to OpenAI models",
 			"type":"ACTION"
 		}
 	],
@@ -69,5 +143,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
