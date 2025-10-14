@@ -32,12 +32,19 @@
 			"fromNodeId":"n_B6DdR",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_7EPcS",
+			"toNodeId":"n_4DfA1",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"n_hwlgS",
 			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_4DfA1",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_4DfA1",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_7EPcS",
@@ -89,6 +96,14 @@
 		},
 		{
 			"fromNodeId":"n_oVxuh",
+			"name":"success",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Iw1ST",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_oVxuh",
 			"name":"error",
 			"priority":0,
 			"skip":false,
@@ -96,7 +111,7 @@
 			"type":"error"
 		},
 		{
-			"fromNodeId":"n_oVxuh",
+			"fromNodeId":"n_Iw1ST",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_cMPbz",
@@ -166,7 +181,7 @@
 	"id":"68eca1193ef30311dc734a35",
 	"lastModifiedBy":33,
 	"lcName":"dt | askt | entra token login",
-	"modifiedTime":1760440291295,
+	"modifiedTime":1760441190769,
 	"name":"DT | AskT | Entra Token Login",
 	"nodes":[
 		{
@@ -202,11 +217,17 @@
 				"setup":{
 					"type":"object",
 					"additionalProperties":false,
-					"required":[],
+					"required":[
+						"identityProviderId"
+					],
 					"properties":{
 						"access_token":{
 							"type":"string",
 							"title":"Access Token"
+						},
+						"identityProviderId":{
+							"type":"string",
+							"title":"Identity Provider Id"
 						}
 					}
 				}
@@ -239,9 +260,15 @@
 						"filter":{
 							"operator":"MISSING"
 						}
+					},
+					{
+						"property":"{{ n_SyUHw.outputs.identityProviderId }}",
+						"filter":{
+							"operator":"MISSING"
+						}
 					}
 				],
-				"operator":"AND"
+				"operator":"OR"
 			},
 			"skip":false,
 			"subTitle":"Condition",
@@ -273,6 +300,25 @@
 		},
 		{
 			"context":{
+				"appName":"auth_by_unifyapps",
+				"resourceVersion":881,
+				"resourceName":"auth_by_unifyapps_fetch_identity_providers",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_CqyLP-1",
+			"id":"n_4DfA1",
+			"index":4,
+			"inputs":{},
+			"skip":false,
+			"subTitle":"Auth by UnifyApps",
+			"title":"Fetch Identity Providers",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"variable_by_unifyapps",
 				"resourceVersion":1053,
 				"resourceName":"variable_by_unifyapps_create_variables",
@@ -283,7 +329,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_7EPcS",
-			"index":4,
+			"index":5,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -300,14 +346,6 @@
 							"type":"string",
 							"title":"User Details Request Verb"
 						},
-						"appId":{
-							"type":"string",
-							"title":"Application ID"
-						},
-						"tenantId":{
-							"type":"string",
-							"title":"Tenant ID"
-						},
 						"Idp":{
 							"type":"object",
 							"properties":{
@@ -534,17 +572,13 @@
 					"required":[
 						"userInfoRequestUrl",
 						"userDetailsRequestVerb",
-						"appId",
-						"tenantId",
 						"Idp"
 					]
 				}
 			},
 			"inputs":{
 				"userDetailsRequestVerb":"GET",
-				"appId":"89e0bc1e-5fe0-4e4e-8a81-fd8154a70bdf",
-				"userInfoRequestUrl":"https://graph.microsoft.com/oidc/userinfo",
-				"tenantId":"86e5eadd-81e9-4032-8caa-c419ab9d61ae"
+				"userInfoRequestUrl":"https://graph.microsoft.com/oidc/userinfo"
 			},
 			"outputSchema":{
 				"dynamic":false,
@@ -560,14 +594,6 @@
 							"type":"string",
 							"title":"User Details Request Verb"
 						},
-						"appId":{
-							"type":"string",
-							"title":"Application ID"
-						},
-						"tenantId":{
-							"type":"string",
-							"title":"Tenant ID"
-						},
 						"Idp":{
 							"type":"object",
 							"properties":{
@@ -794,8 +820,6 @@
 					"required":[
 						"userInfoRequestUrl",
 						"userDetailsRequestVerb",
-						"appId",
-						"tenantId",
 						"Idp"
 					]
 				}
@@ -817,7 +841,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_RYC8T",
-			"index":5,
+			"index":6,
 			"inputs":{
 				"token":"{{ n_SyUHw.outputs.access_token }}"
 			},
@@ -838,7 +862,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_yXePL",
-			"index":6,
+			"index":7,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -897,7 +921,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"_oA20F",
-			"index":7,
+			"index":8,
 			"inputs":{
 				"filters":[
 					{
@@ -927,7 +951,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_oA20F@_CqyLP-1@y",
 			"id":"_5KIGJ",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"result":{
 					"authenticated":false
@@ -950,7 +974,7 @@
 			"fallbackMode":"MANUAL",
 			"groupId":"_CqyLP-1",
 			"id":"n_oVxuh",
-			"index":9,
+			"index":10,
 			"inputs":{
 				"isAsync":false,
 				"enableProxy":false,
@@ -1065,6 +1089,54 @@
 		},
 		{
 			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":997,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_oVxuh@_CqyLP-1@success",
+			"id":"n_Iw1ST",
+			"index":11,
+			"inputs":{
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"userInfo",
+						"IdpProviderConfig"
+					],
+					"properties":{
+						"userInfo":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"User Info"
+						},
+						"IdpProviderConfig":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"Idp Provider Config"
+						}
+					}
+				},
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"userInfo":"{{ n_oVxuh.outputs.result }}",
+					"IdpProviderConfig":"{{ n_7EPcS.outputs.Idp.providerConfig }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Get IDP Username",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":1071,
 				"resourceName":"callables_return_to_automation",
@@ -1075,7 +1147,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_oVxuh@_CqyLP-1@error",
 			"id":"n_01KmV",
-			"index":10,
+			"index":12,
 			"inputs":{
 				"result":{
 					"authenticated":false
@@ -1098,7 +1170,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_cMPbz",
-			"index":11,
+			"index":13,
 			"inputs":{
 				"filters":[
 					{
@@ -1127,7 +1199,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_cMPbz@_CqyLP-1@y",
 			"id":"n_yiePM",
-			"index":12,
+			"index":14,
 			"inputs":{
 				"result":{
 					"authenticated":false
@@ -1150,7 +1222,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_j6NIa",
-			"index":13,
+			"index":15,
 			"inputs":{
 				"fetchBy":"username",
 				"applicationId":"",
@@ -1173,7 +1245,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_grF3i",
-			"index":14,
+			"index":16,
 			"inputs":{
 				"filters":[
 					{
@@ -1202,7 +1274,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_grF3i@_CqyLP-1@y",
 			"id":"_nT8i3",
-			"index":15,
+			"index":17,
 			"inputs":{
 				"result":{
 					"authenticated":false
@@ -1225,7 +1297,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_CqyLP-1",
 			"id":"n_rThQZ",
-			"index":16,
+			"index":18,
 			"inputs":{
 				"result":{
 					"authenticated":true,
@@ -1255,5 +1327,5 @@
 	"tags":[
 		
 	],
-	"version":9
+	"version":10
 }
