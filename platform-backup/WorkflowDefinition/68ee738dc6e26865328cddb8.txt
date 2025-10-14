@@ -1,51 +1,119 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
 	"createdTime":1760457613308,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_3q1nk",
+			"fromNodeId":"n_sMfuh",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_s1gR7",
+			"toNodeId":"n_t6yPG",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_t6yPG",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_4cQn5",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_4cQn5",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_t6yPG",
 			"type":"next"
 		}
 	],
 	"id":"68ee738dc6e26865328cddb8",
 	"lastModifiedBy":161958,
 	"lcName":"pollingevents-ritik",
-	"modifiedTime":1760457613308,
+	"modifiedTime":1760458020078,
 	"name":"pollingEvents-ritik",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":833,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_3q1nk-1",
-			"id":"_3q1nk",
-			"index":0,
+			"id":"n_sMfuh",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":953,
+				"resourceName":"streams_by_unifyapps_poll_events",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_3q1nk-1",
-			"id":"_s1gR7",
-			"index":0,
+			"id":"n_t6yPG",
+			"index":2,
+			"inputs":{
+				"streamId":"e_68eabc88211e14402e5c1583",
+				"repeatMode":"BATCH",
+				"captureIterations":false,
+				"batchSize":24
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Streams by UnifyApps",
+			"title":"Polls for new events from stream",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":4555,
+				"resourceName":"storage_by_unifyapps_create_record",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_t6yPG@_3q1nk-1@l",
+			"id":"n_4cQn5",
+			"index":3,
+			"inputs":{
+				"writeThroughSessionVariables":false,
+				"object_type":"polling_object_ritik",
+				"skipIfBlank":false,
+				"record":{
+					"index":"{{ n_t6yPG.outputs.item[0].event.cnt }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Create record",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":161958,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +127,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
