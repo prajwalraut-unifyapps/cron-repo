@@ -5,12 +5,12 @@
 	"createdTime":1760362979832,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760378270612,
+		"deployedAt":1760382849646,
 		"deployedBy":1728,
-		"deployedDefinitionId":"68ed3d9eb8302d5b37567763",
+		"deployedDefinitionId":"68ed4f81879aea1c38bbc503",
 		"status":"DEPLOYED",
-		"version":14,
-		"workflowVersion":13
+		"version":17,
+		"workflowVersion":16
 	},
 	"description":"",
 	"edges":[
@@ -18,11 +18,18 @@
 			"fromNodeId":"n_K5uTV",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_FGDHQ",
+			"toNodeId":"n_ExIKA",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_FGDHQ",
+			"fromNodeId":"n_ExIKA",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Of8N5",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Of8N5",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_GacS8",
@@ -37,9 +44,9 @@
 		}
 	],
 	"id":"68ed01e34e4e6a22624d84e9",
-	"lastModifiedBy":1728,
+	"lastModifiedBy":46030,
 	"lcName":"wf",
-	"modifiedTime":1760379000101,
+	"modifiedTime":1760431185145,
 	"name":"wf",
 	"nodes":[
 		{
@@ -80,28 +87,60 @@
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_dgrmO-1",
-			"id":"n_FGDHQ",
+			"id":"n_ExIKA",
 			"index":0,
 			"inputs":{
 				"callableInterfaceId":"__ua__knowledge_search_interface",
 				"parameters":{
-					"AISearchInstructions":"Search about any new investments or funding rounds of the company UnifyApps",
-					"knowledges":[
-						{
-							"type":"knowledge",
-							"id":"knowledge_geOJk"
-						},
-						{
-							"type":"GLOBAL"
-						}
-					],
-					"name":"Searches internal knowledge for UnifyApps' new\ninvestments or funding rounds.",
+					"AISearchInstructions":"Search the knowledge",
+					"knowledges":[],
+					"name":"search knowledge",
 					"model":"e_686654b81257d219bd7958d5"
 				}
 			},
 			"skip":false,
 			"subTitle":"Search the Knowledge",
-			"title":"Searches internal knowledge for UnifyApps' new\ninvestments or funding rounds.",
+			"title":"search knowledge",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"workflow_agent_ask_ai_agent",
+				"resourceVersion":30,
+				"resourceName":"workflow_agent_ask_ai_agent_default",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_dgrmO-1",
+			"id":"n_Of8N5",
+			"index":0,
+			"inputs":{
+				"callableInterfaceId":"__ua__ask_ai_agent_interface",
+				"parameters":{
+					"instructions":"You are an Employee Support Copilot that helps employees resolve issues \nThese are the following steps you will be taking :\n1. Identify user intent from messages.\n2. Classify Issues as Hardware or Software based on the User Query and store in an string variable \"Intent\"\n3. If the intent is Identified, Search Knowledge Base for relevant guides and respond with knowledge result\n\nAsk no clarifying questions, just infer from the user query and search the knowledge base\n",
+					"model":"e_686654b81257d219bd7958dc",
+					"knowledges":[
+						{
+							"type":"knowledge",
+							"id":"knowledge_chtOq"
+						}
+					],
+					"responseSchema":{
+						"type":"object",
+						"properties":{
+							"output":{
+								"type":"string"
+							}
+						}
+					},
+					"name":"Creates an AI agent to assist with employee issues"
+				}
+			},
+			"skip":false,
+			"subTitle":"Agent",
+			"title":"Creates an AI agent to assist with employee issues",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -120,9 +159,9 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"Respond ",
-					"model":"e_686654b81257d219bd7958d5",
-					"name":"Crafts AI response format and tone using specified\nmodel and instructions."
+					"responseInstructions":"Be Polite, Greet the user \nIdentify the user query from the input and refer the knowledge",
+					"name":"Crafts AI response format and tone using specified\nmodel and instructions.",
+					"model":"e_686654b81257d219bd7958d5"
 				}
 			},
 			"skip":false,
@@ -157,5 +196,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":14
+	"version":17
 }
