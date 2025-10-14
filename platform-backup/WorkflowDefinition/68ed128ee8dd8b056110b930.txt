@@ -16,6 +16,13 @@
 			"fromNodeId":"n_zqGYJ",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_lRz8z",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_lRz8z",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_8rN3c",
 			"type":"next"
 		},
@@ -37,7 +44,7 @@
 	"id":"68ed128ee8dd8b056110b930",
 	"lastModifiedBy":161163,
 	"lcName":"test_mongo",
-	"modifiedTime":1760423831589,
+	"modifiedTime":1760432164806,
 	"name":"Test_Mongo",
 	"nodes":[
 		{
@@ -74,7 +81,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_t3Hry-1",
 			"id":"n_zqGYJ",
@@ -350,6 +357,38 @@
 		{
 			"additional":{
 				"visibleOptionalFields":[
+					"root.itemsToAdd.items.name",
+					"root.itemsToAdd.items.city_code"
+				]
+			},
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1009,
+				"resourceName":"variable_by_unifyapps_add_item_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_t3Hry-1",
+			"id":"n_lRz8z",
+			"index":3,
+			"inputs":{
+				"itemToAdd":{
+					"name":"New_Test",
+					"city_code":"1234567"
+				},
+				"insertLocation":"END",
+				"listName":"{{ n_zqGYJ.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Add item to list",
+			"type":"ACTION"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
 					"root.updateDocuments.items.filter",
 					"root.updateDocuments.items.updateFields.items.fieldName",
 					"root.updateDocuments.items.updateFields.items.actionType",
@@ -371,7 +410,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t3Hry-1",
 			"id":"n_8rN3c",
-			"index":3,
+			"index":4,
 			"inputs":{
 				"document_schema":{
 					"type":"object",
@@ -428,28 +467,26 @@
 					"items":{
 						"upsert":true,
 						"multi":true,
-						"updateFields":{
-							"items":{
-								"actionType":"SET",
-								"fieldName":"City",
-								"setValue":"{{ n_zqGYJ.outputs.items[0].name }}"
-							},
-							"ua:type":"mappedArray"
-						},
 						"filter":{
 							"filters":[
 								{
-									"property":"City",
+									"property":"_id",
 									"filter":{
-										"operator":"EXISTS",
+										"operator":"EQUAL",
 										"details":{
 											"fieldType":"TEXT"
-										}
+										},
+										"value":"{{ n_zqGYJ.outputs.items[0].city_code }}"
 									}
 								}
 							],
 							"operator":"AND"
-						}
+						},
+						"updateFields":[
+							{
+								"actionType":"SET"
+							}
+						]
 					},
 					"ua:type":"mappedArray",
 					"source":"{{ n_zqGYJ.outputs.items }}"
@@ -476,11 +513,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_t3Hry-1",
 			"id":"n_2tvwe",
-			"index":4,
+			"index":5,
 			"inputs":{
 				"filter":{
 					"filters":[
@@ -501,7 +538,7 @@
 					{
 						"fieldName":"City",
 						"actionType":"SET",
-						"setValue":"tesing"
+						"setValue":"{{ n_zqGYJ.outputs.items[0].name }}"
 					}
 				],
 				"upsert":true,
@@ -526,7 +563,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t3Hry-1",
 			"id":"n_ors5p",
-			"index":5,
+			"index":6,
 			"inputs":{
 				"document_schema":{
 					"type":"object",
@@ -599,5 +636,5 @@
 	"tags":[
 		
 	],
-	"version":10
+	"version":11
 }
