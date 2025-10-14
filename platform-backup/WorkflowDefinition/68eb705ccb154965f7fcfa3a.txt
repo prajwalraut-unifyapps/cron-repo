@@ -2,8 +2,16 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1760376231531,
+	"createdTime":1760281938427,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760377927461,
+		"deployedBy":46030,
+		"deployedDefinitionId":"68ed3c47b8302d5b37566968",
+		"status":"DEPLOYED",
+		"version":9,
+		"workflowVersion":22
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_K6Tzl",
@@ -89,6 +97,36 @@
 			"fromNodeId":"n_f75TY",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_o1Jmz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_o1Jmz",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_bH71s",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_bH71s",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Q8lTK",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Q8lTK",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_aoJsw",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_o1Jmz",
+			"name":"no",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_aoJsw",
 			"type":"next"
 		},
@@ -111,6 +149,7 @@
 		"configs":[
 			{
 				"permissions":[
+					"VIEW_RUNS",
 					"V"
 				],
 				"principalType":"GLOBAL"
@@ -118,9 +157,9 @@
 		]
 	},
 	"id":"68eb705ccb154965f7fcfa3a",
-	"lastModifiedBy":0,
+	"lastModifiedBy":1728,
 	"lcName":"workflow agent | prompt",
-	"modifiedTime":1760376231531,
+	"modifiedTime":1760438745343,
 	"name":"Workflow Agent | Prompt",
 	"nodes":[
 		{
@@ -209,6 +248,10 @@
 						"caseId":{
 							"type":"string",
 							"title":"Case Id"
+						},
+						"aiAgentId":{
+							"type":"string",
+							"title":"Ai Agent Id"
 						}
 					}
 				}
@@ -242,12 +285,20 @@
 						"content":{
 							"type":"string",
 							"title":"Content"
+						},
+						"model":{
+							"type":"string",
+							"title":"Model"
 						}
 					},
-					"required":[]
+					"required":[
+						"model"
+					]
 				}
 			},
-			"inputs":{},
+			"inputs":{
+				"model":"{{ n_K6Tzl.outputs.model }}"
+			},
 			"outputSchema":{
 				"dynamic":false,
 				"schema":{
@@ -257,9 +308,15 @@
 						"content":{
 							"type":"string",
 							"title":"Content"
+						},
+						"model":{
+							"type":"string",
+							"title":"Model"
 						}
 					},
-					"required":[]
+					"required":[
+						"model"
+					]
 				}
 			},
 			"skip":false,
@@ -313,7 +370,7 @@
 				"includeTotalCount":false
 			},
 			"skip":false,
-			"subTitle":"Storage by UnifyApps",
+			"subTitle":"Messages in chat",
 			"title":"Fetch records",
 			"type":"ACTION"
 		},
@@ -575,8 +632,90 @@
 				}
 			},
 			"skip":false,
-			"subTitle":"Code by UnifyApps",
+			"subTitle":"Prompt Generation",
 			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":447,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_qjvmd-1",
+			"id":"n_o1Jmz",
+			"index":11,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ Fon3J.outputs.model }}",
+						"filter":{
+							"operator":"MISSING"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"model not present?",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":592,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_o1Jmz@_qjvmd-1@y",
+			"id":"n_bH71s",
+			"index":12,
+			"inputs":{
+				"automationId":"67a48d37f8f1744841dabb63",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"aiAgentId":"{{ n_sGDbt.outputs.aiAgentId }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"get agent",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":508,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_o1Jmz@_qjvmd-1@y",
+			"id":"n_Q8lTK",
+			"index":13,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ Fon3J.outputs.model }}",
+						"value":"{{ n_bH71s.outputs.properties.topicExecutionSettings.topicExecutionModel }}"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"set model",
+			"title":"Update variables",
 			"type":"ACTION"
 		},
 		{
@@ -591,14 +730,14 @@
 			"fallbackMode":"STOP",
 			"groupId":"_qjvmd-1",
 			"id":"n_aoJsw",
-			"index":11,
+			"index":14,
 			"inputs":{
 				"automationId":"66dfd76eb70dad256986b784",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"modelId":"{{ n_K6Tzl.outputs.model }}",
+					"modelId":"{{ Fon3J.outputs.model }}",
 					"content":"{{ n_f75TY.outputs.result.prompt }}",
 					"type":"text",
 					"response_format":"text",
@@ -607,7 +746,7 @@
 				}
 			},
 			"skip":false,
-			"subTitle":"Callable",
+			"subTitle":"simple call llm",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
 		},
@@ -623,12 +762,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"_qjvmd-1",
 			"id":"n_ifmLg",
-			"index":12,
+			"index":15,
 			"inputs":{
 				"jsonString":"{{ n_aoJsw.outputs.llmResponse }}"
 			},
 			"skip":false,
-			"subTitle":"Utility by UnifyApps",
+			"subTitle":"Deserialise op",
 			"title":"Deserialise string to JSON object",
 			"type":"ACTION"
 		},
@@ -644,7 +783,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_qjvmd-1",
 			"id":"n_H2HdV",
-			"index":13,
+			"index":16,
 			"inputs":{
 				"result":"{{ n_ifmLg.outputs.result }}"
 			},
@@ -654,7 +793,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":0,
+	"ownerUserId":46030,
 	"schemaReferences":[
 		
 	],
@@ -667,9 +806,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
+	"standard":false,
 	"tags":[
 		
 	],
-	"version":14
+	"version":23
 }
