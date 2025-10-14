@@ -7,12 +7,12 @@
 	"createdTime":1760362726729,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760376796709,
-		"deployedBy":85476,
-		"deployedDefinitionId":"68ed37dcb8302d5b37563f78",
+		"deployedAt":1760385689880,
+		"deployedBy":189589,
+		"deployedDefinitionId":"68ed5a99879aea1c38bc2461",
 		"status":"DEPLOYED",
-		"version":12,
-		"workflowVersion":68
+		"version":13,
+		"workflowVersion":69
 	},
 	"edges":[
 		{
@@ -104,7 +104,7 @@
 	"id":"68ecbd095dec97614aa65277",
 	"lastModifiedBy":189589,
 	"lcName":"greif | issue classify",
-	"modifiedTime":1760385686210,
+	"modifiedTime":1760433472615,
 	"name":"Greif | Issue Classify",
 	"nodes":[
 		{
@@ -577,7 +577,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"n_mBCpd@_g4vZt-1@l",
 			"id":"n_jI7Gl",
@@ -585,7 +585,7 @@
 			"inputs":{
 				"response_format":"json_object",
 				"model":"gpt-3.5-turbo",
-				"message":"You are an expert AI assistant that classifies and extracts information from customer escalation emails for Greif, a global industrial packaging company.\nYour goal is to:\nCategorize the main issue type of the message data from {{ n_jXAuL.outputs.decodedText }}Extract key entities — customer name and order ID (if present).\n\nAvailable Issue Categories\nProduct Quality Issue – Defects, leakage, contamination, wrong specification, damaged packaging.\nDelivery / Shipment Issue – Late delivery, missing items, incorrect shipment, transport damage.\nOrder / Billing Issue – Invoice mismatch, wrong price, missing PO, credit note or payment issue.\nTechnical / Specification Query – Product certification, datasheet, chemical compatibility, or compliance questions.\nService / Communication Complaint – Poor response, escalation, follow-up complaints, or dissatisfaction with support.\nReconditioning / Sustainability Request – Container pickup, recycling, or problems with reconditioned packaging.\nEntity Extraction Rules\ncustomer_name:\nThe name of the customer or sender mentioned in the email (e.g., in signature or greeting).\nIf not found, return \"unknown\".\norder_id:\nExtract the order number, purchase order (PO), or reference number (e.g., “Order #12345” or “PO-7841”).\nIf not found, return \"not_found\".\nOutput Format\nReturn only this JSON object:\n{ \"category\": \"<one of the 6 categories>\", \"customer_name\": \"<name or 'unknown'>\", \"order_id\": \"<order id or 'not_found'>\" } \nExamples\nExample 1:\nInput:\nHi Team,\nWe received the shipment two days late and two drums were missing. Please look into Order #7845.\nRegards,\nJohn Mathews, ABC Chemicals\nOutput:\n{ \"category\": \"Delivery / Shipment Issue\", \"customer_name\": \"John Mathews\", \"order_id\": \"7845\" } \nExample 2:\nInput:\nHello,\nThe invoice we received does not match our PO quantity. Kindly review.\n– Team Supply Desk\nOutput:\n{ \"category\": \"Order / Billing Issue\", \"customer_name\": \"Team Supply Desk\", \"order_id\": \"not_found\" } \nExample 3:\nInput:\nHello Greif Support,\nCan you confirm if this drum type is UN-rated for hazardous materials?\nThanks,\nPriya from ChemCorp\nOutput:\n{ \"category\": \"Technical / Specification Query\", \"customer_name\": \"Priya\", \"order_id\": \"not_found\" } \nWould you like me to add a fallback “Other / Unclear” category (for emails that don’t fit any of the six types) — or should the model always force a classification into one of these six?\n\ngenerate the output strictly in json format"
+				"message":"ou are an AI assistant that reads customer escalation emails from Gmail for Greif , a global industrial packaging company.\nYour goal is to extract structured, factual data from {{ n_jXAuL.outputs.decodedText }} and classify the type of issue.\nYour Tasks\nCategorize the issue into one of six predefined categories.\nExtract key entities — customer name, order ID, and any date references.\nAnalyze tone and urgency to assess how critical the escalation is.\nSummarize the issue in one short sentence.\nAvailable Categories\nProduct Quality Issue\nDelivery / Shipment Issue\nOrder / Billing Issue\nTechnical / Specification Query\nService / Communication Complaint\nReconditioning / Sustainability Request\nOutput Format\nReturn strictly this JSON object:\n{   \"category\": \"<one of the 6 categories>\",   \"customer_name\": \"<name or 'unknown'>\",   \"order_id\": \"<order id or 'not_found'>\",   \"sentiment\": \"<positive | neutral | negative>\",   \"urgency\": \"<low | medium | high>\",   \"severity\": \"<low | moderate | critical>\",   \"summary\": \"<short issue summary>\" } \nExample\nInput (from Gmail):\n\"My order with order_id 000111 has not been delivered yet though the delivery date passed 3 days ago.\n– Puneet\"\nOutput:\n{   \"category\": \"Delivery / Shipment Issue\",   \"customer_name\": \"Puneet\",   \"order_id\": \"000111\",   \"sentiment\": \"negative\",   \"urgency\": \"high\",   \"severity\": \"critical\",   \"summary\": \"Order 000111 is delayed by 3 days beyond the scheduled delivery date.\" }\n\ngenerate the output strictly in json format"
 			},
 			"skip":false,
 			"subTitle":"OpenAI",
@@ -734,5 +734,5 @@
 	"tags":[
 		
 	],
-	"version":69
+	"version":70
 }
