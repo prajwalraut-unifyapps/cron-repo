@@ -9,11 +9,11 @@
 			"fromNodeId":"n_JdqiB",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_SUHbv",
+			"toNodeId":"n_Gmm9r",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_SUHbv",
+			"fromNodeId":"n_Gmm9r",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_Q7kxp",
@@ -21,6 +21,20 @@
 		},
 		{
 			"fromNodeId":"n_Q7kxp",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_J9seo",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_J9seo",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_lg1AM",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_lg1AM",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_T0I17",
@@ -37,7 +51,7 @@
 	"id":"68ed45b0d2b62915aa677448",
 	"lastModifiedBy":43498,
 	"lcName":"[dnt] entity ai agent action child tenant publisher | create",
-	"modifiedTime":1760380493062,
+	"modifiedTime":1760433283198,
 	"name":"[DNT] Entity AI Agent Action Child Tenant Publisher | Create",
 	"nodes":[
 		{
@@ -47,7 +61,7 @@
 				"resourceName":"storage_by_unifyapps_on_create_record"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_bx2gc-1",
 			"id":"n_JdqiB",
@@ -65,33 +79,33 @@
 		},
 		{
 			"context":{
-				"appName":"standard_entities",
-				"resourceVersion":0,
-				"resourceName":"standard_entities_fetch_entities",
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":4549,
+				"resourceName":"storage_by_unifyapps_fetch_records",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_bx2gc-1",
-			"id":"n_SUHbv",
+			"id":"n_Gmm9r",
 			"index":2,
 			"inputs":{
-				"projections":[
-					{
-						"aggregationFunction":"GROUP",
-						"name":"id"
-					},
-					{
-						"aggregationFunction":"GROUP",
-						"name":"domain"
-					}
-				],
-				"entityType":"CustomerEnvironment"
+				"object_type":"child_tenant",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":100
+				},
+				"numberOfRecordsToFetch":"MULTIPLE",
+				"readThroughSessionVariables":false,
+				"includeTotalCount":false
 			},
 			"skip":false,
-			"subTitle":"Standard entities by UnifyApps",
-			"title":"Fetch entities",
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch Child Tenant records",
 			"type":"ACTION"
 		},
 		{
@@ -391,6 +405,70 @@
 		},
 		{
 			"context":{
+				"appName":"callables",
+				"resourceVersion":1092,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_bx2gc-1",
+			"id":"n_J9seo",
+			"index":4,
+			"inputs":{
+				"automationId":"68e9f3658a89042ce909eec5",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"assetClass":"{{ n_JdqiB.outputs.entityType }}",
+					"assetId":"{{ n_JdqiB.outputs.id }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.itemsToAdd.items.assetVersion"
+				]
+			},
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":960,
+				"resourceName":"variable_by_unifyapps_add_items_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_bx2gc-1",
+			"id":"n_lg1AM",
+			"index":5,
+			"inputs":{
+				"insertLocation":"END",
+				"itemsToAdd":{
+					"ua:type":"mappedArray",
+					"source":"{{ n_J9seo.outputs.applicationDependentAssets }}",
+					"items":{
+						"assetId":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetId }}",
+						"assetVersion":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetVersion }}",
+						"assetClass":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetClass }}"
+					}
+				},
+				"listName":"{{ n_Q7kxp.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Add items to list",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"standard_entities",
 				"resourceVersion":109,
 				"resourceName":"standard_entities_submit_changeset",
@@ -401,7 +479,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bx2gc-1",
 			"id":"n_T0I17",
-			"index":4,
+			"index":6,
 			"inputs":{
 				"assetDetails":{
 					"source":"{{ n_Q7kxp.outputs.items }}",
@@ -413,10 +491,10 @@
 				},
 				"envIds":{
 					"ua:type":"mappedArray",
-					"source":"{{ n_SUHbv.outputs.objects }}",
-					"items":"{{ n_SUHbv.outputs.objects[0].columns.id }}"
+					"source":"{{ n_Gmm9r.outputs.objects }}",
+					"items":"{{ n_Gmm9r.outputs.objects[0].properties.connectedEnvId }}"
 				},
-				"name":"Env Variable Deployment - ({{ n_JdqiB.outputs.id }})"
+				"name":"AI Agent Action Deployment - ({{ n_JdqiB.outputs.id }})"
 			},
 			"skip":false,
 			"subTitle":"Standard entities by UnifyApps",
@@ -428,11 +506,11 @@
 				"appName":"stop"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_bx2gc-1",
 			"id":"n_zbl7z",
-			"index":5,
+			"index":7,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -456,5 +534,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":5
 }
