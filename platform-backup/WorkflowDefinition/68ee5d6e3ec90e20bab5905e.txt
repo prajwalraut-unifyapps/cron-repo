@@ -4,6 +4,15 @@
 	],
 	"createdTime":1760451950812,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760451950997,
+		"deployedBy":189565,
+		"deployedDefinitionId":"68ee5d6e3ec90e20bab5905f",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":0
+	},
+	"description":"",
 	"edges":[
 		{
 			"fromNodeId":"n_1JNC7",
@@ -74,7 +83,7 @@
 			"name":"default",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_fc4uc",
+			"toNodeId":"n_0xQqM",
 			"type":"branch"
 		},
 		{
@@ -85,7 +94,7 @@
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_fc4uc",
+			"fromNodeId":"n_0xQqM",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_g2dBV",
@@ -102,7 +111,7 @@
 	"id":"68ee5d6e3ec90e20bab5905e",
 	"lastModifiedBy":189565,
 	"lcName":"test case 1 hr",
-	"modifiedTime":1760451950812,
+	"modifiedTime":1760452081687,
 	"name":"Test case 1 HR",
 	"nodes":[
 		{
@@ -218,7 +227,7 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__knowledge_search_interface",
 				"parameters":{
-					"AISearchInstructions":"Step 2: If the intent is Identified \nSearch Confluence Knowledge Base for relevant guides.\nrespond with knowledge result",
+					"AISearchInstructions":"Step 2: If the intent is Identified \nSearch Confluence Knowledge Base for relevant guides.\nrespond with knowledge result{{ n_EMamb.outputs.output }}{{ n_RR4mD.outputs.output }}",
 					"knowledges":[],
 					"name":"Searches company's internal knowledge using a\nspecified model and interface.",
 					"model":"e_686654b81257d219bd7958d5"
@@ -447,27 +456,37 @@
 		},
 		{
 			"context":{
-				"appName":"workflow_agent_generate_response",
-				"resourceVersion":154,
-				"resourceName":"workflow_agent_generate_response_default",
+				"appName":"workflow_agent_ask_ai_agent",
+				"resourceVersion":31,
+				"resourceName":"workflow_agent_ask_ai_agent_default",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_z84xX@_jz9HD-1@default",
-			"id":"n_fc4uc",
+			"id":"n_0xQqM",
 			"index":0,
 			"inputs":{
-				"callableInterfaceId":"__ua__generate_response_interface",
+				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
+					"instructions":"give answer to user query based on the knowledge base {{ n_ceoVg.outputs.response }}",
 					"model":"e_686654b81257d219bd7958d5",
-					"name":"Crafts AI response format and tone using specified\nmodel and interface."
+					"knowledges":[],
+					"responseSchema":{
+						"type":"object",
+						"properties":{
+							"output":{
+								"type":"string"
+							}
+						}
+					},
+					"name":"Creates a mini-agent to handle a specific task\nbased on provided knowledge and instructions."
 				}
 			},
 			"skip":false,
-			"subTitle":"Respond",
-			"title":"Crafts AI response format and tone using specified\nmodel and interface.",
+			"subTitle":"Agent",
+			"title":"Creates a mini-agent to handle a specific task\nbased on provided knowledge and instructions.",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -486,8 +505,9 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"model":"e_686654b81257d219bd7958d5",
-					"name":"Crafts AI response format and tone (60 characters)"
+					"responseInstructions":"Respond to user according to steps above",
+					"name":"Crafts AI response format and tone (60 characters)",
+					"model":"e_686654b81257d219bd7958d5"
 				}
 			},
 			"skip":false,
@@ -516,15 +536,11 @@
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
-		"enableVariableLogging":true,
-		"route":{
-			"default":false,
-			"tierName":"global"
-		}
+		"enableVariableLogging":true
 	},
 	"standard":false,
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":0
+	"version":1
 }
