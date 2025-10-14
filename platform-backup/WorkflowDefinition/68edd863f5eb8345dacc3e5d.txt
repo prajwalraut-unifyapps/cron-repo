@@ -1,51 +1,187 @@
 {
 	"appsUsed":[
-		
+		"freshdesk"
 	],
 	"createdTime":1760417891004,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_U73C8",
+			"fromNodeId":"n_BARdI",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_hTup5",
+			"toNodeId":"n_PS5wi",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_PS5wi",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_FcGig",
 			"type":"next"
 		}
 	],
 	"id":"68edd863f5eb8345dacc3e5d",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2nzpcmyxozt",
-	"modifiedTime":1760417891004,
+	"modifiedTime":1760417947516,
 	"name":"cacheQA2NzPcMYxOzT",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2485,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_U73C8-1",
-			"id":"_U73C8",
-			"index":0,
+			"id":"n_BARdI",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"companyId":{
+							"type":"string",
+							"title":"companyId"
+						},
+						"contactId":{
+							"type":"string",
+							"title":"contactId"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":10393,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_contact",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_U73C8-1",
+			"id":"n_PS5wi",
+			"index":2,
+			"inputs":{
+				"contactId":"{{ n_BARdI.outputs.contactId }}"
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"maxLeaseTimeUnit":"SECONDS",
+					"maxWaitDurationUnit":"SECONDS"
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":true,
+					"postHooks":[
+						{
+							"continueOnFailure":true,
+							"parameters":{
+								"companyId":"{{ n_BARdI.outputs.companyId }}"
+							},
+							"workflowId":"68edd837f5eb8345dacc3c71"
+						}
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get contact",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2488,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_U73C8-1",
-			"id":"_hTup5",
-			"index":0,
+			"id":"n_FcGig",
+			"index":3,
+			"inputs":{
+				"result":{
+					"result":"{{ n_PS5wi.outputs.email }}"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +195,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":2
 }
