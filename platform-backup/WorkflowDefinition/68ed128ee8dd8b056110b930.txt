@@ -16,6 +16,13 @@
 			"fromNodeId":"n_zqGYJ",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_8rN3c",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_8rN3c",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_2tvwe",
 			"type":"next"
 		},
@@ -28,9 +35,9 @@
 		}
 	],
 	"id":"68ed128ee8dd8b056110b930",
-	"lastModifiedBy":155543,
+	"lastModifiedBy":161163,
 	"lcName":"test_mongo",
-	"modifiedTime":1760368978217,
+	"modifiedTime":1760423737709,
 	"name":"Test_Mongo",
 	"nodes":[
 		{
@@ -67,7 +74,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_t3Hry-1",
 			"id":"n_zqGYJ",
@@ -284,6 +291,10 @@
 										"name":{
 											"type":"string",
 											"title":"Name"
+										},
+										"city_code":{
+											"type":"string",
+											"title":"City Code"
 										}
 									},
 									"required":[]
@@ -297,7 +308,8 @@
 				"createList":{
 					"ua:type":"mappedArray",
 					"items":{
-						"name":"Ok"
+						"name":"Tested_Successfully",
+						"city_code":"29622900"
 					}
 				},
 				"ua:title":"List",
@@ -318,6 +330,10 @@
 									"name":{
 										"type":"string",
 										"title":"Name"
+									},
+									"city_code":{
+										"type":"string",
+										"title":"City Code"
 									}
 								},
 								"required":[]
@@ -329,6 +345,121 @@
 			"skip":false,
 			"subTitle":"Variable by UnifyApps",
 			"title":"Create list",
+			"type":"ACTION"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.updateDocuments.items.filter",
+					"root.updateDocuments.items.updateFields.items.fieldName",
+					"root.updateDocuments.items.updateFields.items.actionType",
+					"root.updateDocuments.items.upsert",
+					"root.updateDocuments.items.multi",
+					"root.deleteDocuments.items.filter",
+					"root.deleteDocuments.items.multi"
+				]
+			},
+			"context":{
+				"appName":"mongo",
+				"resourceVersion":305,
+				"connectionId":"681202198782846948e46c23",
+				"resourceName":"mongodb_bulk_write_documents",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_t3Hry-1",
+			"id":"n_8rN3c",
+			"index":3,
+			"inputs":{
+				"document_schema":{
+					"type":"object",
+					"properties":{
+						"document":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"Active":{
+										"type":"boolean"
+									},
+									"CustomFields":{
+										"type":"array",
+										"items":{
+											"type":"object",
+											"properties":{
+												"Field":{
+													"type":"string"
+												},
+												"Value":{
+													"type":"string"
+												}
+											}
+										}
+									},
+									"Email":{
+										"type":"string"
+									},
+									"Phone":{
+										"type":"string"
+									},
+									"Latitude":{
+										"type":"string"
+									},
+									"_id":{
+										"type":"string"
+									},
+									"City":{
+										"type":"string"
+									},
+									"Longitude":{
+										"type":"string"
+									},
+									"Name":{
+										"type":"string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"updateDocuments":{
+					"items":{
+						"upsert":true,
+						"multi":true,
+						"updateFields":{
+							"items":{
+								"actionType":"SET",
+								"fieldName":"City",
+								"setValue":"{{ n_zqGYJ.outputs.items[0].name }}"
+							},
+							"ua:type":"mappedArray",
+							"source":"{{ n_zqGYJ.outputs.items[0] }}"
+						},
+						"filter":{
+							"filters":[
+								{
+									"property":"City",
+									"filter":{
+										"operator":"EXISTS",
+										"details":{
+											"fieldType":"TEXT"
+										}
+									}
+								}
+							],
+							"operator":"AND"
+						}
+					},
+					"ua:type":"mappedArray",
+					"source":"{{ n_zqGYJ.outputs.items }}"
+				},
+				"collection":"client"
+			},
+			"skip":false,
+			"subTitle":"MongoDB",
+			"title":"Bulk Write documents",
 			"type":"ACTION"
 		},
 		{
@@ -346,11 +477,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_t3Hry-1",
 			"id":"n_2tvwe",
-			"index":3,
+			"index":4,
 			"inputs":{
 				"filter":{
 					"filters":[
@@ -378,7 +509,7 @@
 				"collection":"client",
 				"multi":true
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"MongoDB",
 			"title":"Update documents",
 			"type":"ACTION"
@@ -396,7 +527,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t3Hry-1",
 			"id":"n_ors5p",
-			"index":4,
+			"index":5,
 			"inputs":{
 				"document_schema":{
 					"type":"object",
@@ -469,5 +600,5 @@
 	"tags":[
 		
 	],
-	"version":8
+	"version":9
 }
