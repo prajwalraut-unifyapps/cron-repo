@@ -5,12 +5,12 @@
 	"createdTime":1760213352330,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760303585436,
+		"deployedAt":1760378561702,
 		"deployedBy":1,
-		"deployedDefinitionId":"68ec19e17cbff43ccfcb5a2c",
+		"deployedDefinitionId":"68ed3ec1f5eb8345dac801fe",
 		"status":"DEPLOYED",
-		"version":2,
-		"workflowVersion":51
+		"version":4,
+		"workflowVersion":54
 	},
 	"edges":[
 		{
@@ -166,7 +166,7 @@
 	"id":"68e79242227ee7054b5aa01b",
 	"lastModifiedBy":0,
 	"lcName":"[dt] api to trigger ai agent (streaming)",
-	"modifiedTime":1760376512319,
+	"modifiedTime":1760465638328,
 	"name":"[DT] API To Trigger AI Agent (Streaming)",
 	"nodes":[
 		{
@@ -669,7 +669,7 @@
 						}
 					}
 				},
-				"code":"def message = [:]\ndef fragments = []\ndef citations = []\ndef delta = binding.hasVariable(\"delta\") ? delta : null\n\nmessage[\"author\"] = \"bot\"\nmessage[\"messageId\"] = binding.hasVariable(\"messageId\") ? messageId : null\n\nif (messageType == \"SEARCHING\") {\n  fragments.add([\"text\": \"**Searching:** \"])\n  if (delta != null) {\n    fragments.add([\n        \"text\": delta,\n        \"querySuggestion\": [\n          \"query\": delta\n        ]\n      ])\n  }\n  message[\"messageType\"] = \"UPDATE\"\n\n} else if (messageType == \"THOUGHT\") {\n  if (delta != null) {\n    fragments.add([\"text\" : delta])\n  }\n  message[\"messageType\"] = \"UPDATE\"\n} else if (messageType == \"SOURCES\") {\n    fragments.add([\"text\": \"**Reading:** \"])\n    fragments.addAll(constructCitations(coPilotBlocks).collect{ it -> [\"structuredResults\" : [[\"document\" : it.sourceDocument]]]})\n    message[\"messageType\"] = \"UPDATE\"\n} else if (messageType == \"CITATION\") {\n  citations.addAll(constructCitations(coPilotBlocks))  \n  message[\"messageType\"] = \"CONTENT\"\n} else if (messageType == \"ANSWER\") {\n  if (delta != null) {\n      fragments.add([\"text\" : delta])\n  }\n  message[\"messageType\"] = \"CONTENT\"\n}\n\nif (!fragments.isEmpty()) {\n  message[\"fragments\"] = fragments\n}\nif (!citations.isEmpty()) {\n  message[\"citations\"] = citations\n}\n\nreturn [\n  \"response\" : [\"chatId\" : sessionId, \"messages\" : [message]]\n]\n\n\ndef constructCitations(def coPilotBlocks) {\n\n  def citations = coPilotBlocks[0]?.data?.citations\n\n  return citations.collect {  citation -> [\n      sourceDocument : [\n        \"id\": citation.uniqueEntityId,\n        \"title\": citation.name,\n        \"url\" : citation.referenceUrl,\n        \"metadata\": [\n          \"objectType\": getObjectType(citation.knowledgeSourceType),  \n          \"documentId\": citation.uniqueEntityId\n\n        // \"datasource\": \"yamunited\",  // knowledgeSetId TBD\n        // \"datasourceInstance\": \"custom_yamunited\",\n        // \"mimeType\": \"wiki\",                            // mimetype\n        // \"createTime\": \"1970-01-01T00:00:00Z\",\n        // \"updateTime\": \"1970-01-01T00:00:00Z\",\n        // \"visibility\": \"PUBLIC_VISIBLE\",\n        // \"datasourceId\": \"d75c5892c5d4f9fa0c6f35081ccf3d57a23455ab\",\n        // \"verification\": [\n        //   \"state\": \"UNVERIFIED\"\n        // ],\n        // \"documentCategory\": \"KNOWLEDGE_HUB\"\n        ]\n      ],\n      referenceRanges : [\n        [\"snippets\" :  citation?.chunkDetails?.collect{ it -> [ \"mimeType\": \"text/plain\",\"text\": it.chunkContent ] }]\n      ]\n    ]}\n}\n\n\ndef getObjectType(String knowledgeSourceType) {\n  switch(knowledgeSourceType) {\n    case \"WEBSITE\":\n      return \"wiki\"\n    case \"DOCUMENT\":\n      return \"Document\"\n    default:\n      return null\n  }\n}\n",
+				"code":"def message = [:]\ndef fragments = []\ndef citations = []\ndef delta = binding.hasVariable(\"delta\") ? delta : null\ndef coPilotBlocks = binding.hasVariable(\"coPilotBlocks\") ? coPilotBlocks : null\n\nmessage[\"author\"] = \"bot\"\nmessage[\"messageId\"] = binding.hasVariable(\"messageId\") ? messageId : null\n\nif (messageType == \"SEARCHING\") {\n  fragments.add([\"text\": \"**Searching:** \"])\n  if (delta != null) {\n    fragments.add([\n        \"text\": delta,\n        \"querySuggestion\": [\n          \"query\": delta\n        ]\n      ])\n  }\n  message[\"messageType\"] = \"UPDATE\"\n\n} else if (messageType == \"THOUGHT\") {\n  if (delta != null) {\n    fragments.add([\"text\" : delta])\n  }\n  message[\"messageType\"] = \"UPDATE\"\n} else if (messageType == \"SOURCES\") {\n    fragments.add([\"text\": \"**Reading:** \"])\n    fragments.addAll(constructCitations(coPilotBlocks).collect{ it -> [\"structuredResults\" : [[\"document\" : it.sourceDocument, \"referenceRanges\" : it.referenceRanges]]]})\n    message[\"messageType\"] = \"UPDATE\"\n} else if (messageType == \"CITATION\") {\n  citations.addAll(constructCitations(coPilotBlocks))  \n  message[\"messageType\"] = \"CONTENT\"\n} else if (messageType == \"ANSWER\") {\n  if (delta != null) {\n      fragments.add([\"text\" : delta])\n  }\n  citations.addAll(constructCitations(coPilotBlocks))  \n  message[\"messageType\"] = \"CONTENT\"\n}\n\nif (!fragments.isEmpty()) {\n  message[\"fragments\"] = fragments\n}\nif (!citations.isEmpty()) {\n  message[\"citations\"] = citations\n}\n\nreturn [\n  \"response\" : [\"chatId\" : sessionId, \"messages\" : [message]]\n]\n\n\ndef constructCitations(def coPilotBlocks) {\n  if (coPilotBlocks == null) {\n    return []\n  }\n\n  def citations = coPilotBlocks[0]?.data?.citations\n\n  return citations.collect {  citation -> [\n      sourceDocument : [\n        \"id\": citation.uniqueEntityId,\n        \"title\": citation.name,\n        \"url\" : citation.referenceUrl,\n        \"metadata\": [\n          \"objectType\": getObjectType(citation.knowledgeSourceType),  \n          \"documentId\": citation.uniqueEntityId\n\n        // \"datasource\": \"yamunited\",  // knowledgeSetId TBD\n        // \"datasourceInstance\": \"custom_yamunited\",\n        // \"mimeType\": \"wiki\",                            // mimetype\n        // \"createTime\": \"1970-01-01T00:00:00Z\",\n        // \"updateTime\": \"1970-01-01T00:00:00Z\",\n        // \"visibility\": \"PUBLIC_VISIBLE\",\n        // \"datasourceId\": \"d75c5892c5d4f9fa0c6f35081ccf3d57a23455ab\",\n        // \"verification\": [\n        //   \"state\": \"UNVERIFIED\"\n        // ],\n        // \"documentCategory\": \"KNOWLEDGE_HUB\"\n        ]\n      ],\n      referenceRanges : [\n        [\"snippets\" :  citation?.chunkDetails?.collect{ it -> [ \"mimeType\": \"text/plain\",\"text\": it.chunkContent, \"chunkNumber\": it.chunkNumber ] }]\n      ]\n    ]}\n}\n\n\ndef getObjectType(String knowledgeSourceType) {\n  switch(knowledgeSourceType) {\n    case \"WEBSITE\":\n      return \"wiki\"\n    case \"DOCUMENT\":\n      return \"Document\"\n    default:\n      return null\n  }\n}\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -945,5 +945,5 @@
 	"tags":[
 		
 	],
-	"version":52
+	"version":55
 }
