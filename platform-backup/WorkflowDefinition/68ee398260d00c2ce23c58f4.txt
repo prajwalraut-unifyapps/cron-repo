@@ -155,7 +155,7 @@
 	"id":"68ee398260d00c2ce23c58f4",
 	"lastModifiedBy":39715,
 	"lcName":"validate azure ad token",
-	"modifiedTime":1760444106082,
+	"modifiedTime":1760444290189,
 	"name":"Validate Azure Ad Token",
 	"nodes":[
 		{
@@ -165,7 +165,7 @@
 				"resourceName":"webhooks_default"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_6Puoh-1",
 			"id":"n_qzrFe",
@@ -191,7 +191,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_6Puoh-1",
 			"id":"n_ET0k2",
@@ -278,7 +278,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_6Puoh-1",
 			"id":"n_HxMj7",
@@ -347,7 +347,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_6Puoh-1",
 			"id":"n_Sy0Hw",
@@ -402,7 +402,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_6Puoh-1",
 			"id":"n_3E5R1",
@@ -431,7 +431,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"MANUAL",
 			"groupId":"n_3E5R1@_6Puoh-1@y",
 			"id":"n_7xsRp",
@@ -562,7 +562,7 @@
 				"appName":"stop"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_7xsRp@n_3E5R1@_6Puoh-1@y@error",
 			"id":"n_9qBw3",
@@ -580,7 +580,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_7xsRp@n_3E5R1@_6Puoh-1@y@error",
 			"id":"_buXRg",
@@ -714,7 +714,7 @@
 						}
 					}
 				},
-				"code":"import com.nimbusds.jose.jwk.JWKSet\nimport com.nimbusds.jose.jwk.source.ImmutableJWKSet\nimport com.nimbusds.jose.jwk.source.JWKSource\nimport com.nimbusds.jose.proc.JWSVerificationKeySelector\nimport com.nimbusds.jose.proc.SecurityContext\nimport com.nimbusds.jwt.proc.ConfigurableJWTProcessor\nimport com.nimbusds.jwt.proc.DefaultJWTProcessor\nimport com.nimbusds.jose.JWSAlgorithm\n\ndef verifyToken(token, keys) {\n    def jwkSet = new JWKSet(keys.collect { it as Map })\n    JWKSource<SecurityContext> keySource = new ImmutableJWKSet<>(jwkSet)\n    ConfigurableJWTProcessor<SecurityContext> processor = new DefaultJWTProcessor<>()\n    processor.setJWSKeySelector(new JWSVerificationKeySelector<>(JWSAlgorithm.RS256, keySource))\n    \n    // Will throw exception if signature invalid or token expired\n    def claims = processor.process(token, null)\n    return claims\n}\n\n// Usage\ntry {\n    def decoded = verifyToken(token, keys)\n    return [\"decoded\": decoded]\n} catch (Exception e) {\n    return [\"error\": e.message]\n}\n",
+				"code":"import com.nimbusds.jose.jwk.JWKSet\nimport com.nimbusds.jose.jwk.source.ImmutableJWKSet\nimport com.nimbusds.jose.jwk.source.JWKSource\nimport com.nimbusds.jose.proc.JWSVerificationKeySelector\nimport com.nimbusds.jose.proc.SecurityContext\nimport com.nimbusds.jwt.proc.ConfigurableJWTProcessor\nimport com.nimbusds.jwt.proc.DefaultJWTProcessor\nimport com.nimbusds.jose.JWSAlgorithm\n\nimport com.nimbusds.jose.jwk.JWK\nimport com.nimbusds.jose.jwk.JWKSet\n\ndef convertToMap(obj) {\n    if (obj instanceof com.alibaba.fastjson2.JSONObject) {\n        return obj.toJavaObject(Map)  // convert FastJSON object to a Java Map\n    }\n    return obj\n}\n\ndef verifyToken(String token, List keys) {\n    def convertedKeys = keys.collect { convertToMap(it) }\n    def jwkSet = new JWKSet(convertedKeys.collect { JWK.parse(it) })\n    \n    def signedJWT = com.nimbusds.jwt.SignedJWT.parse(token)\n    def key = jwkSet.getKeyByKeyId(signedJWT.header.keyID)\n    \n    if (key == null) {\n        return [error: \"No key found for kid: ${signedJWT.header.keyID}\"]\n    }\n    \n    def verifier = new com.nimbusds.jose.crypto.RSASSAVerifier(key.toRSAPublicKey())\n    if (!signedJWT.verify(verifier)) {\n        return [error: \"Token signature verification failed\"]\n    }\n    \n    return [decoded: signedJWT.payload.toJSONObject()]\n}\n\n// Usage\ntry {\n    def decoded = verifyToken(token, keys)\n    // return [\"decoded\": decoded]\n    return decoded\n} catch (Exception e) {\n    return [\"error\": e.message]\n}\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -787,7 +787,7 @@
 				"appName":"stop"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_NWFBG@n_3E5R1@_6Puoh-1@y@error",
 			"id":"n_7U91x",
@@ -805,7 +805,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_NWFBG@n_3E5R1@_6Puoh-1@y@error",
 			"id":"_ykicF",
@@ -833,7 +833,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_3E5R1@_6Puoh-1@y",
 			"id":"n_cJWiB",
@@ -886,7 +886,7 @@
 				"appName":"stop"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_cJWiB@n_3E5R1@_6Puoh-1@y@y",
 			"id":"n_JIYvA",
@@ -904,7 +904,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_cJWiB@n_3E5R1@_6Puoh-1@y@y",
 			"id":"n_q1A6h",
@@ -938,7 +938,7 @@
 				"appName":"stop"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_cJWiB@n_3E5R1@_6Puoh-1@y@n",
 			"id":"n_ahFJu",
@@ -956,7 +956,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_cJWiB@n_3E5R1@_6Puoh-1@y@n",
 			"id":"_GOWnv",
@@ -984,7 +984,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_3E5R1@_6Puoh-1@n",
 			"id":"n_hsux6",
@@ -1004,7 +1004,7 @@
 				"appName":"stop"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_3E5R1@_6Puoh-1@n",
 			"id":"n_S4hua",
@@ -1022,7 +1022,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_3E5R1@_6Puoh-1@n",
 			"id":"n_9hMgd",
@@ -1060,5 +1060,5 @@
 	"tags":[
 		
 	],
-	"version":7
+	"version":8
 }
