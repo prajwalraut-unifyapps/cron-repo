@@ -6,46 +6,84 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_I8pwT",
+			"fromNodeId":"n_FhC9X",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_8v8gd",
+			"toNodeId":"n_xwPWv",
 			"type":"next"
 		}
 	],
 	"id":"68ee45dcc605850b0c28c893",
 	"lastModifiedBy":43523,
 	"lcName":"run playwright python",
-	"modifiedTime":1760445916856,
+	"modifiedTime":1760445978726,
 	"name":"run playwright python",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":833,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_I8pwT-1",
-			"id":"_I8pwT",
-			"index":0,
+			"id":"n_FhC9X",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":942,
+				"resourceName":"code_by_unifyapps_python",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_I8pwT-1",
-			"id":"_8v8gd",
-			"index":0,
+			"id":"n_xwPWv",
+			"index":2,
+			"inputs":{
+				"configurationMode":"MANUAL",
+				"code":"import asyncio\nimport json\nimport os\nimport sys\nfrom pathlib import Path\nimport urllib.parse\nfrom playwright.async_api import async_playwright, Page, BrowserContext\nfrom dotenv import load_dotenv\n\n# Load environment variables\nload_dotenv(override=True)\n\nSENSITIVE_DATA = {}\n\n\n# --- Helper Functions (from playwright_script_helpers.py) ---\nfrom playwright.async_api import Page\n\n\n# --- Helper Function for Replacing Sensitive Data ---\ndef replace_sensitive_data(text: str, sensitive_map: dict) -> str:\n\t\"\"\"Replaces sensitive data placeholders in text.\"\"\"\n\tif not isinstance(text, str):\n\t\treturn text\n\tfor placeholder, value in sensitive_map.items():\n\t\treplacement_value = str(value) if value is not None else ''\n\t\ttext = text.replace(f'<secret>{placeholder}</secret>', replacement_value)\n\treturn text\n\n\n# --- Helper Function for Robust Action Execution ---\nclass PlaywrightActionError(Exception):\n\t\"\"\"Custom exception for errors during Playwright script action execution.\"\"\"\n\n\tpass\n\n\nasync def _try_locate_and_act(page: Page, selector: str, action_type: str, text: str | None = None, step_info: str = '') -> None:\n\t\"\"\"\n\tAttempts an action (click/fill) with XPath fallback by trimming prefixes.\n\tRaises PlaywrightActionError if the action fails after all fallbacks.\n\t\"\"\"\n\tprint(f'Attempting {action_type} ({step_info}) using selector: {repr(selector)}')\n\toriginal_selector = selector\n\tMAX_FALLBACKS = 50  # Increased fallbacks\n\t# Increased timeouts for potentially slow pages\n\tINITIAL_TIMEOUT = 10000  # Milliseconds for the first attempt (10 seconds)\n\tFALLBACK_TIMEOUT = 1000  # Shorter timeout for fallback attempts (1 second)\n\n\ttry:\n\t\tlocator = page.locator(selector).first\n\t\tif action_type == 'click':\n\t\t\tawait locator.click(timeout=INITIAL_TIMEOUT)\n\t\telif action_type == 'fill' and text is not None:\n\t\t\tawait locator.fill(text, timeout=INITIAL_TIMEOUT)\n\t\telse:\n\t\t\t# This case should ideally not happen if called correctly\n\t\t\traise PlaywrightActionError(f\"Invalid action_type '{action_type}' or missing text for fill. ({step_info})\")\n\t\tprint(f\"  Action '{action_type}' successful with original selector.\")\n\t\tawait page.wait_for_timeout(500)  # Wait after successful action\n\t\treturn  # Successful exit\n\texcept Exception as e:\n\t\tprint(f\"  Warning: Action '{action_type}' failed with original selector ({repr(selector)}): {e}. Starting fallback...\")\n\n\t\t# Fallback only works for XPath selectors\n\t\tif not selector.startswith('xpath='):\n\t\t\t# Raise error immediately if not XPath, as fallback won't work\n\t\t\traise PlaywrightActionError(\n\t\t\t\tf\"Action '{action_type}' failed. Fallback not possible for non-XPath selector: {repr(selector)}. ({step_info})\"\n\t\t\t)\n\n\t\txpath_parts = selector.split('=', 1)\n\t\tif len(xpath_parts) < 2:\n\t\t\traise PlaywrightActionError(\n\t\t\t\tf\"Action '{action_type}' failed. Could not extract XPath string from selector: {repr(selector)}. ({step_info})\"\n\t\t\t)\n\t\txpath = xpath_parts[1]  # Correctly get the XPath string\n\n\t\tsegments = [seg for seg in xpath.split('/') if seg]\n\n\t\tfor i in range(1, min(MAX_FALLBACKS + 1, len(segments))):\n\t\t\ttrimmed_xpath_raw = '/'.join(segments[i:])\n\t\t\tfallback_xpath = f'xpath=//{trimmed_xpath_raw}'\n\n\t\t\tprint(f'    Fallback attempt {i}/{MAX_FALLBACKS}: Trying selector: {repr(fallback_xpath)}')\n\t\t\ttry:\n\t\t\t\tlocator = page.locator(fallback_xpath).first\n\t\t\t\tif action_type == 'click':\n\t\t\t\t\tawait locator.click(timeout=FALLBACK_TIMEOUT)\n\t\t\t\telif action_type == 'fill' and text is not None:\n\t\t\t\t\ttry:\n\t\t\t\t\t\tawait locator.clear(timeout=FALLBACK_TIMEOUT)\n\t\t\t\t\t\tawait page.wait_for_timeout(100)\n\t\t\t\t\texcept Exception as clear_error:\n\t\t\t\t\t\tprint(f'    Warning: Failed to clear field during fallback ({step_info}): {clear_error}')\n\t\t\t\t\tawait locator.fill(text, timeout=FALLBACK_TIMEOUT)\n\n\t\t\t\tprint(f\"    Action '{action_type}' successful with fallback selector: {repr(fallback_xpath)}\")\n\t\t\t\tawait page.wait_for_timeout(500)\n\t\t\t\treturn  # Successful exit after fallback\n\t\t\texcept Exception as fallback_e:\n\t\t\t\tprint(f'    Fallback attempt {i} failed: {fallback_e}')\n\t\t\t\tif i == MAX_FALLBACKS:\n\t\t\t\t\t# Raise exception after exhausting fallbacks\n\t\t\t\t\traise PlaywrightActionError(\n\t\t\t\t\t\tf\"Action '{action_type}' failed after {MAX_FALLBACKS} fallback attempts. Original selector: {repr(original_selector)}. ({step_info})\"\n\t\t\t\t\t)\n\n\t# This part should not be reachable if logic is correct, but added as safeguard\n\traise PlaywrightActionError(f\"Action '{action_type}' failed unexpectedly for {repr(original_selector)}. ({step_info})\")\n\n# --- End Helper Functions ---\nasync def run_generated_script():\n    global SENSITIVE_DATA\n    async with async_playwright() as p:\n        browser = None\n        context = None\n        page = None\n        exit_code = 0 # Default success exit code\n        try:\n            print('Launching chromium browser...')\n            browser = await p.chromium.launch(headless=False)\n            context = await browser.new_context(permissions=['clipboard-read', 'clipboard-write'], no_viewport=True)\n            print('Browser context created.')\n            # Initial page handling\n            if context.pages:\n                page = context.pages[0]\n                print('Using initial page provided by context.')\n            else:\n                page = await context.new_page()\n                print('Created a new page as none existed.')\n            print('\\n--- Starting Generated Script Execution ---')\n\n            # --- Step 1 ---\n            # Action 1\n            print(f\"Navigating to: https://www.google.com (Step 1, Action 1)\")\n            await page.goto(\"https://www.google.com\", timeout=5000)\n            await page.wait_for_load_state('load', timeout=5000)\n            await page.wait_for_timeout(1000)\n\n            # --- Step 2 ---\n            # Action 2\n            print(\"\\n--- Task marked as Done by agent (Step 2, Action 1) ---\")\n            print(f\"Agent reported success: True\")\n            # Final Message from agent (may contain placeholders):\n            final_message = replace_sensitive_data(\"Successfully opened google.com.\", SENSITIVE_DATA)\n            print(final_message)\n        except PlaywrightActionError as pae:\n            print(f'\\n--- Playwright Action Error: {pae} ---', file=sys.stderr)\n            exit_code = 1\n        except Exception as e:\n            print(f'\\n--- An unexpected error occurred: {e} ---', file=sys.stderr)\n            import traceback\n            traceback.print_exc()\n            exit_code = 1\n        finally:\n            print('\\n--- Generated Script Execution Finished ---')\n            print('Closing browser/context...')\n            if context:\n                 try: await context.close()\n                 except Exception as ctx_close_err: print(f'  Warning: could not close context: {ctx_close_err}', file=sys.stderr)\n            if browser:\n                 try: await browser.close()\n                 except Exception as browser_close_err: print(f'  Warning: could not close browser: {browser_close_err}', file=sys.stderr)\n            print('Browser/context closed.')\n            # Exit with the determined exit code\n            if exit_code != 0:\n                print(f'Script finished with errors (exit code {exit_code}).', file=sys.stderr)\n                sys.exit(exit_code)\n\n# --- Script Entry Point ---\nif __name__ == '__main__':\n    if os.name == 'nt':\n        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())\n    asyncio.run(run_generated_script())",
+				"imports":[
+					"asyncio",
+					"json",
+					"os",
+					"sys",
+					"pathlib",
+					"urllib",
+					"playwright",
+					"dotenv"
+				],
+				"isAsync":false,
+				"python_version":"3.12",
+				"captureStdOutput":false
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Python script",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":43523,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +97,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
