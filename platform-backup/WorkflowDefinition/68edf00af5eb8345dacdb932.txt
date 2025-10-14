@@ -6,46 +6,226 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_SimOs",
+			"fromNodeId":"n_IaAIM",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_7ub8C",
+			"toNodeId":"n_OFqOM",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_OFqOM",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_imnxA",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_imnxA",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_go4F1",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_go4F1",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_imnxA",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_imnxA",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_QOje8",
 			"type":"next"
 		}
 	],
 	"id":"68edf00af5eb8345dacdb932",
 	"lastModifiedBy":1,
 	"lcName":"loopslocalxrcimbidmu",
-	"modifiedTime":1760423946893,
+	"modifiedTime":1760423970528,
 	"name":"loopsLocalXRCImbidMu",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2485,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_SimOs-1",
-			"id":"_SimOs",
-			"index":0,
+			"id":"n_IaAIM",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"Output":{
+							"type":"integer",
+							"title":"Output"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"Input":{
+							"type":"integer",
+							"title":"Input"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2373,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_SimOs-1",
-			"id":"_7ub8C",
-			"index":0,
+			"id":"n_OFqOM",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"A":{
+							"type":"integer",
+							"title":"A"
+						}
+					}
+				}
+			},
+			"inputs":{
+				"A":0
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"A":{
+							"type":"integer",
+							"title":"A"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":145,
+				"resourceName":"loop_while",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_SimOs-1",
+			"id":"n_imnxA",
+			"index":3,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"{{ n_OFqOM.outputs.A }}",
+							"filter":{
+								"operator":"NOT_EQUAL",
+								"value":"{{ n_IaAIM.outputs.Input }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":false
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2370,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_imnxA@_SimOs-1@l",
+			"id":"n_go4F1",
+			"index":4,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_OFqOM.outputs.A }}",
+						"value":"=SUM({{ n_OFqOM.outputs.A }},1)"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2488,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_SimOs-1",
+			"id":"n_QOje8",
+			"index":5,
+			"inputs":{
+				"result":{
+					"Output":"{{ n_OFqOM.outputs.A }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +239,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
