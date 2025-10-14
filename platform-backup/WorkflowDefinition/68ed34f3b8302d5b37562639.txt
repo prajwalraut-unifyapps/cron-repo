@@ -9,25 +9,39 @@
 			"fromNodeId":"n_Vnfhl",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_SUHbv",
+			"toNodeId":"n_Gmm9r",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_SUHbv",
+			"fromNodeId":"n_Gmm9r",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_Q7kxp",
+			"toNodeId":"_UcgI3",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_Q7kxp",
+			"fromNodeId":"_UcgI3",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_T0I17",
+			"toNodeId":"n_J9seo",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_T0I17",
+			"fromNodeId":"n_J9seo",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_lg1AM",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_lg1AM",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_cSkoQ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_cSkoQ",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_zbl7z",
@@ -37,7 +51,7 @@
 	"id":"68ed34f3b8302d5b37562639",
 	"lastModifiedBy":43498,
 	"lcName":"[dnt] entity decision table child tenant publisher | create",
-	"modifiedTime":1760378368349,
+	"modifiedTime":1760433709890,
 	"name":"[DNT] Entity Decision Table Child Tenant Publisher | Create",
 	"nodes":[
 		{
@@ -65,33 +79,33 @@
 		},
 		{
 			"context":{
-				"appName":"standard_entities",
-				"resourceVersion":0,
-				"resourceName":"standard_entities_fetch_entities",
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":4549,
+				"resourceName":"storage_by_unifyapps_fetch_records",
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Z5VZr-1",
-			"id":"n_SUHbv",
+			"id":"n_Gmm9r",
 			"index":2,
 			"inputs":{
-				"projections":[
-					{
-						"aggregationFunction":"GROUP",
-						"name":"id"
-					},
-					{
-						"aggregationFunction":"GROUP",
-						"name":"domain"
-					}
-				],
-				"entityType":"CustomerEnvironment"
+				"object_type":"child_tenant",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":100
+				},
+				"numberOfRecordsToFetch":"MULTIPLE",
+				"readThroughSessionVariables":false,
+				"includeTotalCount":false
 			},
 			"skip":false,
-			"subTitle":"Standard entities by UnifyApps",
-			"title":"Fetch entities",
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch Child Tenant records",
 			"type":"ACTION"
 		},
 		{
@@ -102,10 +116,10 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Z5VZr-1",
-			"id":"n_Q7kxp",
+			"id":"_UcgI3",
 			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
@@ -385,8 +399,72 @@
 				}
 			},
 			"skip":false,
-			"subTitle":"Variable by UnifyApps",
+			"subTitle":"Dependency List",
 			"title":"Create list",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1092,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Z5VZr-1",
+			"id":"n_J9seo",
+			"index":4,
+			"inputs":{
+				"automationId":"68e9f3658a89042ce909eec5",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"assetClass":"{{ n_Vnfhl.outputs.entityType }}",
+					"assetId":"{{ n_Vnfhl.outputs.id }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Get Dependencies",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.itemsToAdd.items.assetVersion"
+				]
+			},
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":960,
+				"resourceName":"variable_by_unifyapps_add_items_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Z5VZr-1",
+			"id":"n_lg1AM",
+			"index":5,
+			"inputs":{
+				"insertLocation":"END",
+				"itemsToAdd":{
+					"ua:type":"mappedArray",
+					"source":"{{ n_J9seo.outputs.applicationDependentAssets }}",
+					"items":{
+						"assetId":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetId }}",
+						"assetVersion":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetVersion }}",
+						"assetClass":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetClass }}"
+					}
+				},
+				"listName":"{{ _UcgI3.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Add in Dependency List",
+			"title":"Add items to list",
 			"type":"ACTION"
 		},
 		{
@@ -397,24 +475,24 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Z5VZr-1",
-			"id":"n_T0I17",
-			"index":4,
+			"id":"_cSkoQ",
+			"index":6,
 			"inputs":{
 				"assetDetails":{
-					"source":"{{ n_Q7kxp.outputs.items }}",
+					"source":"{{ _UcgI3.outputs.items }}",
 					"ua:type":"mappedArray",
 					"items":{
-						"assetClass":"{{ n_Q7kxp.outputs.items[0].assetClass }}",
-						"assetId":"{{ n_Q7kxp.outputs.items[0].assetId }}"
+						"assetClass":"{{ _UcgI3.outputs.items[0].assetClass }}",
+						"assetId":"{{ _UcgI3.outputs.items[0].assetId }}"
 					}
 				},
 				"envIds":{
 					"ua:type":"mappedArray",
-					"source":"{{ n_SUHbv.outputs.objects }}",
-					"items":"{{ n_SUHbv.outputs.objects[0].columns.id }}"
+					"source":"{{ n_Gmm9r.outputs.objects }}",
+					"items":"{{ n_Gmm9r.outputs.objects[0].properties.connectedEnvId }}"
 				},
 				"name":"Decision Table Deployment - ({{ n_Vnfhl.outputs.id }})"
 			},
@@ -432,7 +510,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_Z5VZr-1",
 			"id":"n_zbl7z",
-			"index":5,
+			"index":7,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -456,5 +534,5 @@
 	"tags":[
 		
 	],
-	"version":4
+	"version":5
 }
