@@ -9,26 +9,33 @@
 			"fromNodeId":"n_kjjJc",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_XRMru",
+			"toNodeId":"n_c5Ffh",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_XRMru",
+			"fromNodeId":"n_c5Ffh",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_jLDEZ",
+			"toNodeId":"n_Q4KS6",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Q4KS6",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_RZ0db",
 			"type":"loop"
 		},
 		{
-			"fromNodeId":"n_jLDEZ",
+			"fromNodeId":"n_RZ0db",
 			"name":"loopback",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_XRMru",
+			"toNodeId":"n_Q4KS6",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_XRMru",
+			"fromNodeId":"n_Q4KS6",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_pQsQr",
@@ -38,7 +45,7 @@
 	"id":"68edf202f5eb8345dacdcf0c",
 	"lastModifiedBy":1,
 	"lcName":"hg",
-	"modifiedTime":1760428147644,
+	"modifiedTime":1760428475474,
 	"name":"hg",
 	"nodes":[
 		{
@@ -64,34 +71,303 @@
 		},
 		{
 			"context":{
-				"appName":"pdf_by_unifyapps",
-				"resourceVersion":2196,
-				"resourceName":"pdf_by_unifyapps_for_each_page",
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2370,
+				"resourceName":"variable_by_unifyapps_create_list",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_EX0lT-1",
-			"id":"n_XRMru",
+			"id":"n_c5Ffh",
 			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{
+					"createList":{
+						"ui:title":"",
+						"ua:type":{
+							"ui:widget":"hidden"
+						},
+						"items":{
+							"ui:title":"Initial list items",
+							"ui:description":"Set the initial values of the list (defaults to empty)"
+						},
+						"ui:order":[
+							"*",
+							"items"
+						]
+					},
+					"ua:title":{
+						"ui:widget":"hidden"
+					},
+					"ua:list_type":{
+						"ui:widget":"hidden"
+					}
+				},
+				"schema":{
+					"allOf":[
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"OBJECT"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"items":{
+												"type":"object",
+												"properties":{}
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"STRING"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of String"
+											},
+											"items":{
+												"type":"string"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"INTEGER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Integers"
+											},
+											"items":{
+												"type":"integer"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"NUMBER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Numbers"
+											},
+											"items":{
+												"type":"number"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"BOOLEAN"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Booleans"
+											},
+											"items":{
+												"type":"boolean"
+											}
+										}
+									}
+								}
+							}
+						}
+					],
+					"format":"ua:list",
+					"type":"object",
+					"properties":{
+						"ua:title":{
+							"type":"string"
+						},
+						"ua:list_type":{
+							"type":"string",
+							"title":"List Type",
+							"oneOf":[
+								{
+									"const":"OBJECT",
+									"title":"Object"
+								},
+								{
+									"const":"STRING",
+									"title":"String"
+								},
+								{
+									"const":"NUMBER",
+									"title":"Number"
+								},
+								{
+									"const":"INTEGER",
+									"title":"Integer"
+								},
+								{
+									"const":"BOOLEAN",
+									"title":"Boolean"
+								}
+							],
+							"default":"OBJECT"
+						},
+						"createList":{
+							"type":"object",
+							"properties":{
+								"ua:type":{
+									"type":"string",
+									"default":"mappedArray"
+								},
+								"source":{
+									"type":"string",
+									"format":"ua:source",
+									"title":"List Item Source"
+								},
+								"items":{
+									"additionalProperties":false,
+									"type":[
+										"object",
+										"string",
+										"number",
+										"boolean",
+										"integer"
+									],
+									"properties":{}
+								}
+							}
+						}
+					}
+				}
+			},
 			"inputs":{
-				"file":"https://arxiv.org/pdf/2407.02987"
+				"createList":{
+					"ua:type":"mappedArray"
+				},
+				"ua:list_type":"STRING"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"type":"object",
+					"properties":{
+						"items":{
+							"type":"array",
+							"title":"List",
+							"disableActions":true,
+							"items":{
+								"type":"string"
+							}
+						}
+					}
+				}
 			},
 			"skip":false,
-			"subTitle":"PDF by UnifyApps",
-			"title":"Read text from PDF file",
-			"type":"LOOP"
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create list",
+			"type":"ACTION"
 		},
 		{
+			"context":{
+				"appName":"pdf_by_unifyapps",
+				"resourceVersion":2193,
+				"resourceName":"pdf_by_unifyapps_for_each_split_file",
+				"type":"APPLICATION"
+			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"n_XRMru@_EX0lT-1@l",
-			"id":"n_jLDEZ",
+			"groupId":"_EX0lT-1",
+			"id":"n_Q4KS6",
 			"index":3,
-			"skip":true,
-			"title":"Select an app and action",
+			"inputs":{
+				"pageCount":5,
+				"fileDetails":"https://arxiv.org/pdf/2407.02987",
+				"splitType":"splitByPage"
+			},
+			"skip":false,
+			"subTitle":"PDF by UnifyApps",
+			"title":"Split PDF file",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2371,
+				"resourceName":"variable_by_unifyapps_add_item_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_Q4KS6@_EX0lT-1@l",
+			"id":"n_RZ0db",
+			"index":4,
+			"inputs":{
+				"itemToAdd":"{{ n_Q4KS6.outputs.item }}",
+				"insertLocation":"START",
+				"listName":"{{ n_c5Ffh.outputs.items[0] }}"
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Add item to list",
 			"type":"ACTION"
 		},
 		{
@@ -106,9 +382,9 @@
 			"fallbackMode":"STOP",
 			"groupId":"_EX0lT-1",
 			"id":"n_pQsQr",
-			"index":4,
+			"index":5,
 			"inputs":{
-				"result":"{{ n_XRMru.outputs.item }}"
+				"result":"{{ n_RZ0db.outputs.success }}"
 			},
 			"skip":false,
 			"subTitle":"Callable",
@@ -133,5 +409,5 @@
 	"tags":[
 		
 	],
-	"version":11
+	"version":12
 }
