@@ -9,69 +9,85 @@
 			"fromNodeId":"n_xpvpq",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_Gmm9r",
+			"toNodeId":"_MLlSx",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_Gmm9r",
+			"fromNodeId":"_MLlSx",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_Q7kxp",
+			"toNodeId":"_nUupO",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_Q7kxp",
+			"fromNodeId":"_nUupO",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_J9seo",
+			"toNodeId":"n_FsZg1",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_J9seo",
+			"fromNodeId":"n_FsZg1",
+			"name":"yes",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_lg1AM",
+			"toNodeId":"_b9e92",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"_b9e92",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_ONnFJ",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_lg1AM",
+			"fromNodeId":"_ONnFJ",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_T0I17",
+			"toNodeId":"_hgfGB",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_T0I17",
+			"fromNodeId":"_hgfGB",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_zbl7z",
+			"toNodeId":"_MHbhA",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_FsZg1",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_MHbhA",
 			"type":"next"
 		}
 	],
 	"id":"68ee3e61c605850b0c286b49",
 	"lastModifiedBy":43498,
 	"lcName":"[dnt] entity topics ai agent child tenant publisher | on change",
-	"modifiedTime":1760444001613,
+	"modifiedTime":1760444103998,
 	"name":"[DNT] Entity Topics AI Agent Child Tenant Publisher | On Change",
 	"nodes":[
 		{
 			"context":{
 				"appName":"storage_by_unifyapps",
-				"resourceVersion":4546,
-				"resourceName":"storage_by_unifyapps_on_create_record"
+				"resourceVersion":4527,
+				"resourceName":"storage_by_unifyapps_on_any_change"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_VvQJZ-1",
 			"id":"n_xpvpq",
 			"index":1,
 			"inputs":{
-				"object_type":"e_topic_ai_agent"
+				"object_type":"Topic(AI Agent)"
 			},
 			"skip":false,
 			"subTitle":"Storage by UnifyApps",
-			"title":"New record",
+			"title":"Changed record",
 			"trigger":{
 				"type":"EVENT"
 			},
@@ -85,10 +101,10 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_VvQJZ-1",
-			"id":"n_Gmm9r",
+			"id":"_MLlSx",
 			"index":2,
 			"inputs":{
 				"object_type":"child_tenant",
@@ -116,10 +132,10 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_VvQJZ-1",
-			"id":"n_Q7kxp",
+			"id":"_nUupO",
 			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
@@ -357,15 +373,15 @@
 				"createList":{
 					"ua:type":"mappedArray",
 					"items":{
-						"assetId":"{{ n_xpvpq.outputs.id }}",
-						"assetClass":"{{ n_xpvpq.outputs.entityType }}"
+						"assetId":"{{ n_xpvpq.outputs.object.id }}",
+						"assetVersion":"{{ n_xpvpq.outputs.object.version }}",
+						"assetClass":"{{ n_xpvpq.outputs.object.entityType }}"
 					}
 				},
 				"ua:title":"List",
 				"ua:list_type":"OBJECT"
 			},
 			"outputSchema":{
-				"type":"SCHEMA",
 				"dynamic":false,
 				"schema":{
 					"type":"object",
@@ -400,9 +416,39 @@
 				}
 			},
 			"skip":false,
-			"subTitle":"Dependancy List",
+			"subTitle":"Dependency List",
 			"title":"Create list",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_VvQJZ-1",
+			"id":"n_FsZg1",
+			"index":4,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_CVFkm.outputs.change_type }}",
+						"filter":{
+							"operator":"NOT_EQUAL",
+							"value":"DELETED"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
 		},
 		{
 			"context":{
@@ -412,23 +458,23 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"_VvQJZ-1",
-			"id":"n_J9seo",
-			"index":4,
+			"groupId":"n_FsZg1@_VvQJZ-1@y",
+			"id":"_b9e92",
+			"index":5,
 			"inputs":{
 				"automationId":"68e9f3658a89042ce909eec5",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"assetClass":"{{ n_xpvpq.outputs.entityType }}",
-					"assetId":"{{ n_xpvpq.outputs.id }}"
+					"assetClass":"{{ n_xpvpq.outputs.object.entityType }}",
+					"assetId":"{{ n_xpvpq.outputs.object.id }}"
 				}
 			},
 			"skip":false,
-			"subTitle":"Get Assets and Dependencies",
+			"subTitle":"Get Dependencies",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
 		},
@@ -445,26 +491,26 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"_VvQJZ-1",
-			"id":"n_lg1AM",
-			"index":5,
+			"groupId":"n_FsZg1@_VvQJZ-1@y",
+			"id":"_ONnFJ",
+			"index":6,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
 					"ua:type":"mappedArray",
-					"source":"{{ n_J9seo.outputs.applicationDependentAssets }}",
+					"source":"{{ _b9e92.outputs.applicationDependentAssets }}",
 					"items":{
-						"assetId":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetId }}",
-						"assetVersion":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetVersion }}",
-						"assetClass":"{{ n_J9seo.outputs.applicationDependentAssets[0].assetClass }}"
+						"assetId":"{{ _b9e92.outputs.applicationDependentAssets[0].assetId }}",
+						"assetVersion":"{{ _b9e92.outputs.applicationDependentAssets[0].assetVersion }}",
+						"assetClass":"{{ _b9e92.outputs.applicationDependentAssets[0].assetClass }}"
 					}
 				},
-				"listName":"{{ n_Q7kxp.outputs.items[0] }}"
+				"listName":"{{ _nUupO.outputs.items[0] }}"
 			},
 			"skip":false,
-			"subTitle":"Add dependencies",
+			"subTitle":"Add in Dependency List",
 			"title":"Add items to list",
 			"type":"ACTION"
 		},
@@ -481,27 +527,27 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
-			"groupId":"_VvQJZ-1",
-			"id":"n_T0I17",
-			"index":6,
+			"groupId":"n_FsZg1@_VvQJZ-1@y",
+			"id":"_hgfGB",
+			"index":7,
 			"inputs":{
 				"assetDetails":{
-					"source":"{{ n_Q7kxp.outputs.items }}",
+					"source":"{{ _nUupO.outputs.items }}",
 					"ua:type":"mappedArray",
 					"items":{
-						"assetClass":"{{ n_Q7kxp.outputs.items[0].assetClass }}",
-						"assetId":"{{ n_Q7kxp.outputs.items[0].assetId }}",
-						"assetVersion":"{{ n_Q7kxp.outputs.items[0].assetVersion }}"
+						"assetClass":"{{ _nUupO.outputs.items[0].assetClass }}",
+						"assetId":"{{ _nUupO.outputs.items[0].assetId }}",
+						"assetVersion":"{{ _nUupO.outputs.items[0].assetVersion }}"
 					}
 				},
 				"envIds":{
 					"ua:type":"mappedArray",
-					"source":"{{ n_Gmm9r.outputs.objects }}",
-					"items":"{{ n_Gmm9r.outputs.objects[0].properties.connectedEnvId }}"
+					"source":"{{ _MLlSx.outputs.objects }}",
+					"items":"{{ _MLlSx.outputs.objects[0].properties.connectedEnvId }}"
 				},
-				"name":"AI Agent Topic Deployment - ({{ n_xpvpq.outputs.id }})"
+				"name":"AI Agent Deployment - ({{ n_xpvpq.outputs.object.id }}:{{ n_xpvpq.outputs.change_type }})"
 			},
 			"skip":false,
 			"subTitle":"Standard entities by UnifyApps",
@@ -513,11 +559,11 @@
 				"appName":"stop"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_VvQJZ-1",
-			"id":"n_zbl7z",
-			"index":7,
+			"id":"_MHbhA",
+			"index":8,
 			"skip":false,
 			"subTitle":"Stop",
 			"title":"Stop",
@@ -541,5 +587,5 @@
 	"tags":[
 		"Multi Tenant CS"
 	],
-	"version":0
+	"version":1
 }
