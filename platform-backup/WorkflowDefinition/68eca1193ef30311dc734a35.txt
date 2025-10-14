@@ -211,7 +211,7 @@
 	"id":"68eca1193ef30311dc734a35",
 	"lastModifiedBy":33,
 	"lcName":"dt | askt | entra token login",
-	"modifiedTime":1760447685851,
+	"modifiedTime":1760447899278,
 	"name":"DT | AskT | Entra Token Login",
 	"nodes":[
 		{
@@ -1355,6 +1355,19 @@
 			"id":"n_ooczQ",
 			"index":18,
 			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"user":{
+							"type":"object",
+							"properties":{},
+							"additionalProperties":false,
+							"title":"User"
+						}
+					}
+				},
 				"code":"def getText = { sourceMap, jsonPath ->\n    if (!sourceMap || !jsonPath) {\n        return null\n    }\n    def keys = jsonPath.replaceFirst(\"^/\", \"\").split('/')\n    \n    def result = keys.inject(sourceMap) { current, key ->\n        current?.\"${key}\"\n    }\n    return result?.toString()\n}\n\nif (!binding.hasVariable('providerConfig') || !binding.hasVariable('userDetails')) {\n  return [error: \"providerConfig or userDetails missing from input binding\"]\n}\n\n\ndef user = [:]\n\nuser.username = getText(userDetails, providerConfig.usernameJsonPath)\nuser.name = getText(userDetails, providerConfig.nameJsonPath)\nif (!user.name) {\n    def firstName = getText(userDetails, providerConfig.firstNameJsonPath)\n    def lastName = getText(userDetails, providerConfig.lastNameJsonPath)\n    def constructedName = [firstName, lastName].findAll { it }.join(' ')\n    if (constructedName) {\n        user.name = constructedName\n    }\n}\n\nif (!user.name) {\n    user.name = user.username\n}\n\n\nuser.contactDetails = [\n    email: getText(userDetails, providerConfig.emailJsonPath),\n    phoneNumber: getText(userDetails, providerConfig.phoneNumberJsonPath)\n]\n\ndef customProperties = [:]\n\nproviderConfig.additionalAttributesJsonPath?.each { key, path ->\n    customProperties[key] = getText(userDetails, path)\n}\n\nif (binding.hasVariable('accessTokenDetails') && providerConfig.additionalAccessTokenAttributesJsonPath) {\n    providerConfig.additionalAccessTokenAttributesJsonPath.each { key, path ->\n        customProperties[key] = getText(accessTokenDetails, path)\n    }\n}\n\nif (binding.hasVariable('idTokenClaims') && providerConfig.additionalAttributesFromIdTokenClaims) {\n    providerConfig.additionalAttributesFromIdTokenClaims.each { key, path ->\n        customProperties[key] = getText(idTokenClaims, path)\n    }\n}\n\nif (binding.hasVariable('accessTokenClaims') && providerConfig.additionalAttributesFromAccessTokenClaims) {\n    providerConfig.additionalAttributesFromAccessTokenClaims.each { key, path ->\n        customProperties[key] = getText(accessTokenClaims, path)\n    }\n}\n\nif (binding.hasVariable('queryParams') && providerConfig.additionalAttributesFromQueryParams) {\n    providerConfig.additionalAttributesFromQueryParams.each { key, paramName ->\n        def value = queryParams.get(paramName)\n        customProperties[key] = (value instanceof List) ? value.first() : value\n    }\n}\n\nuser.customProperties = customProperties\nuser.ssoLogin = true\n\nreturn ['user': user ]",
 				"compile_static":false,
 				"captureStdOutput":false
@@ -1450,5 +1463,5 @@
 	"tags":[
 		
 	],
-	"version":15
+	"version":16
 }
