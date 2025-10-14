@@ -5,12 +5,12 @@
 	"createdTime":1760440336743,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760440336866,
+		"deployedAt":1760440536456,
 		"deployedBy":189565,
-		"deployedDefinitionId":"68ee30107be72763587916ac",
+		"deployedDefinitionId":"68ee30d89624da781576889e",
 		"status":"DEPLOYED",
-		"version":1,
-		"workflowVersion":0
+		"version":3,
+		"workflowVersion":2
 	},
 	"description":"",
 	"edges":[
@@ -25,6 +25,13 @@
 			"fromNodeId":"n_tBt2a",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_V3Ycr",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_V3Ycr",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"DUMMY_RETURN_NODE_ID",
 			"type":"next"
 		}
@@ -32,7 +39,7 @@
 	"id":"68ee30107be72763587916a7",
 	"lastModifiedBy":189565,
 	"lcName":"test_new_wf_agent",
-	"modifiedTime":1760440498221,
+	"modifiedTime":1760440605438,
 	"name":"Test_new_WF_Agent",
 	"nodes":[
 		{
@@ -79,7 +86,7 @@
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
 					"name":"Intent Detector",
-					"instructions":"You are an Employee Support Copilot that helps employees resolve HR and IT issues automatically\nThese are the following steps you will be taking :\nIdentify user intent from messages.\nSearch Confluence from your knowledge base for solutions.\nProvide step-by-step answers.\nEscalate to ServiceNow when automation cannot resolve the issue.\nNotify and monitor ticket progress.\n\nStep 1. Only Detect Intent of the user You will need to detect what is the intent of the employee based on their inquiry\nFor example when the user says \"My laptop camera isn't working\"\n--> \"INTENT” -->if(intent == HARDWARE)\n\nStore it in a variable called 'Intent'",
+					"instructions":"You are an Employee Support Copilot that helps employees resolve HR and IT issues automatically\nThese are the following steps you will be taking :\n\nStep 1. Only Detect Intent of the user You will need to detect what is the intent of the employee based on their inquiry\nFor example when the user says \"My laptop camera isn't working\"\n--> \"INTENT” -->if(intent == HARDWARE)\n\nStore it in a variable called 'Intent'\n\nDO NOT GIVE Any answers but what has been asked above ",
 					"model":"e_686654b81257d219bd7958d5",
 					"knowledges":[],
 					"responseSchema":{
@@ -95,6 +102,32 @@
 			"skip":false,
 			"subTitle":"Agent",
 			"title":"Intent Detector",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"workflow_agent_generate_response",
+				"resourceVersion":154,
+				"resourceName":"workflow_agent_generate_response_default",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_MuhE4-1",
+			"id":"n_V3Ycr",
+			"index":0,
+			"inputs":{
+				"callableInterfaceId":"__ua__generate_response_interface",
+				"parameters":{
+					"responseInstructions":"Respond what the intent of the user was",
+					"name":"Response checker",
+					"model":"e_686654b81257d219bd7958d5"
+				}
+			},
+			"skip":false,
+			"subTitle":"Respond",
+			"title":"Response checker",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -124,5 +157,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":1
+	"version":3
 }
