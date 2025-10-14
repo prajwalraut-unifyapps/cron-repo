@@ -5,12 +5,12 @@
 	"createdTime":1760384402843,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760454454939,
+		"deployedAt":1760454456693,
 		"deployedBy":175259,
-		"deployedDefinitionId":"68ee67363ec90e20bab5cd1d",
+		"deployedDefinitionId":"68ee67383ec90e20bab5cd35",
 		"status":"DEPLOYED",
-		"version":29,
-		"workflowVersion":28
+		"version":30,
+		"workflowVersion":29
 	},
 	"description":"",
 	"edges":[
@@ -39,7 +39,7 @@
 	"id":"68ed5592879aea1c38bc0074",
 	"lastModifiedBy":175259,
 	"lcName":"testaditya",
-	"modifiedTime":1760454456613,
+	"modifiedTime":1760454724264,
 	"name":"testaditya",
 	"nodes":[
 		{
@@ -86,7 +86,7 @@
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
 					"name":"Creates an Employee Support Copilot agent to handle\nuser queries and search knowledge base.",
-					"instructions":"As an Employee Support Copilot, perform the following tasks:\n\n1. Analyse user messages to determine their intent.\n2. Categorize issues as either \"Hardware\" or \"Software\" based on the user query, and store the result in a string variable named \"Intent\".\n3. Always search the knowledge base and try to find a matching solution to the user problem\n4. Set the value of SolutionFound to \"Yes\" if knowledge is found, otherwise set it to \"No\"\n\nInfer the user's intent from their query without asking for clarification, and search the knowledge base accordingly.\nDo not give a generic answer\n\nif not present then throw the ticket on monday using the tool present",
+					"instructions":"As an Employee Support Copilot, perform the following tasks:\n\n1. Analyse user messages to determine their intent.\n2. Categorize issues as either \"Hardware\" or \"Software\" based on the user query, and store the result in a string variable named \"Intent\".\n3. Always search the knowledge base and try to find a matching solution to the user problem\n4. Set the value of SolutionFound to \"Yes\" if knowledge is found, otherwise set it to \"No\"\nIF YOU DO NOT FIND ANY KNOWLEDGE PRESENT IN THE KNOWLEDGE BASE, RAISE THE TICKET TO MONDAY USING THE TOOL PRESENT AND RESPOND TO THE USER SAYING \"Ticket Raised\"\nInfer the user's intent from their query without asking for clarification, and search the knowledge base accordingly.\nDo not give a generic answer\n\nif not present then throw the ticket on monday using the tool present",
 					"model":"e_686654b81257d219bd7958d5",
 					"knowledges":[
 						{
@@ -113,7 +113,7 @@
 								],
 								"description":"Indicates whether a solution was found in the knowledge base"
 							},
-							"Solution":{
+							"KnowledgeBaseResponse":{
 								"type":"string",
 								"description":"The solution found in the knowledge base, if any"
 							},
@@ -128,18 +128,22 @@
 										"type":"string",
 										"description":"Unique identifier for the created ticket"
 									},
-									"url":{
+									"status":{
 										"type":"string",
-										"format":"uri",
-										"description":"URL of the created ticket in Monday"
+										"description":"Current status of the created ticket"
 									}
 								},
 								"description":"Details of the ticket created on Monday, if applicable"
+							},
+							"ResponseToUser":{
+								"type":"string",
+								"description":"The final response to be sent to the user"
 							}
 						},
 						"required":[
 							"Intent",
-							"SolutionFound"
+							"SolutionFound",
+							"ResponseToUser"
 						]
 					},
 					"tools":{
@@ -170,7 +174,7 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"Greet user and provide user with a solution ",
+					"responseInstructions":"print {{ n_t44Te.outputs.SolutionFound }}",
 					"name":"Generates AI response with greeting using specified\nmodel and instructions.",
 					"model":"e_686654b81257d219bd7958d5"
 				}
@@ -207,5 +211,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":29
+	"version":30
 }
