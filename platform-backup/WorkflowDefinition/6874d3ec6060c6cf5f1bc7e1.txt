@@ -5,12 +5,12 @@
 	"createdTime":1754468931219,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760529864437,
-		"deployedBy":0,
-		"deployedDefinitionId":"68ef8dc815076a51390878d1",
+		"deployedAt":1760532644427,
+		"deployedBy":44109,
+		"deployedDefinitionId":"68ef98a41ff997436ed212e7",
 		"status":"DEPLOYED",
-		"version":36,
-		"workflowVersion":141
+		"version":37,
+		"workflowVersion":143
 	},
 	"edges":[
 		{
@@ -135,7 +135,7 @@
 	"id":"6874d3ec6060c6cf5f1bc7e1",
 	"lastModifiedBy":44109,
 	"lcName":"workflow agent | save workflow",
-	"modifiedTime":1760532644331,
+	"modifiedTime":1760533199540,
 	"name":"Workflow Agent | Save Workflow",
 	"nodes":[
 		{
@@ -504,7 +504,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"wEa8T-1",
 			"id":"n_CWYZe",
@@ -540,7 +540,7 @@
 						}
 					}
 				},
-				"code":"\n\nList addHooksToNodes(List nodes) {\n    def workflowId = \"68ef8b5815076a5139086565\"\n\n    // Random \"thought\" templates\n    def thoughtTemplates = [\n        \"Executing the tool %s to assist you.\",\n        \"Executing %s for your request.\",\n        \"Let's solve this using the tool %s.\",\n        \"Executing %s to help you out.\",\n        \"Using %s to solve your query.\",\n        \"Solving this with the tool %s.\",\n        \"Getting help from the tool %s.\",\n        \"Let's use the tool %s for this.\",\n        \"Executing the tool %s.\"\n    ]\n\n    nodes.eachWithIndex { node, i ->\n        // Skip first node (index 0)\n        if (i == 0) return\n\n        if (node?.title) {\n            // Pick a random thought template\n            // def template = thoughtTemplates[new Random().nextInt(thoughtTemplates.size())]\n            def thought = node.title\n\n            // Construct hookConfig\n            def hookConfig = [\n                enabled: true,\n                postHooks: [],\n                preHooks: [[\n                    continueOnFailure: true,\n                    parameters: [ thought: thought ],\n                    workflowId: workflowId\n                ]]\n            ]\n\n            // Ensure options object exists\n            if (!node.options) node.options = [:]\n\n            // Add or replace hookConfig\n            node.options.hookConfig = hookConfig\n        }\n    }\n\n    return nodes\n}\n\n\n    \ndef isScheduled = false;\nif(binding.hasVariable('workflowDefination'))\n{\n    def updatedWorkflowDefination = workflowDefination\n    // add prehook for thought\n    for (item in updatedWorkflowDefination?.nodes) {\n        updatedWorkflowDefination.nodes = addHooksToNodes(updatedWorkflowDefination.nodes)\n    }\n\n    // trigger type SCHEDULED\n    if (updatedWorkflowDefination?.nodes && updatedWorkflowDefination.nodes.size() > 0 && updatedWorkflowDefination.nodes[0]?.additional && updatedWorkflowDefination.nodes[0].additional[\"ua:triggerType\"] == \"SCHEDULE\") {\n       isScheduled = true;\n    }\n\n    return [ 'workflowDefination': updatedWorkflowDefination , 'isScheduled': isScheduled]\n}\n\nreturn [ 'isScheduled': isScheduled, 'workflowDefination': [:] ]\n\n",
+				"code":"\n\nList addHooksToNodes(List nodes) {\n    def workflowId = \"68ef8b5815076a5139086565\"\n\n    // Random \"thought\" templates\n    def thoughtTemplates = [\n        \"Executing the tool %s to assist you.\",\n        \"Executing %s for your request.\",\n        \"Let's solve this using the tool %s.\",\n        \"Executing %s to help you out.\",\n        \"Using %s to solve your query.\",\n        \"Solving this with the tool %s.\",\n        \"Getting help from the tool %s.\",\n        \"Let's use the tool %s for this.\",\n        \"Executing the tool %s.\"\n    ]\n\n    nodes.eachWithIndex { node, i ->\n        // Skip first node (index 0)\n        if (i == 0) return\n        if(node?.context?.appName == 'branch' || node?.context?.appName == 'branch_condition') return\n\n        if (node?.title) {\n            // Pick a random thought template\n            // def template = thoughtTemplates[new Random().nextInt(thoughtTemplates.size())]\n            def thought = node.title\n\n            // Construct hookConfig\n            def hookConfig = [\n                enabled: true,\n                postHooks: [],\n                preHooks: [[\n                    continueOnFailure: true,\n                    parameters: [ thought: thought ],\n                    workflowId: workflowId\n                ]]\n            ]\n\n            // Ensure options object exists\n            if (!node.options) node.options = [:]\n\n            // Add or replace hookConfig\n            node.options.hookConfig = hookConfig\n        }\n    }\n\n    return nodes\n}\n\n\n    \ndef isScheduled = false;\nif(binding.hasVariable('workflowDefination'))\n{\n    def updatedWorkflowDefination = workflowDefination\n    // add prehook for thought\n    for (item in updatedWorkflowDefination?.nodes) {\n        updatedWorkflowDefination.nodes = addHooksToNodes(updatedWorkflowDefination.nodes)\n    }\n\n    // trigger type SCHEDULED\n    if (updatedWorkflowDefination?.nodes && updatedWorkflowDefination.nodes.size() > 0 && updatedWorkflowDefination.nodes[0]?.additional && updatedWorkflowDefination.nodes[0].additional[\"ua:triggerType\"] == \"SCHEDULE\") {\n       isScheduled = true;\n    }\n\n    return [ 'workflowDefination': updatedWorkflowDefination , 'isScheduled': isScheduled]\n}\n\nreturn [ 'isScheduled': isScheduled, 'workflowDefination': [:] ]\n\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -996,5 +996,5 @@
 	"tags":[
 		
 	],
-	"version":143
+	"version":144
 }
