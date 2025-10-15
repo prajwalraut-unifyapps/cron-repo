@@ -5,12 +5,12 @@
 	"createdTime":1747000719921,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760024913639,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68e7d951e4155b0b0f30af50",
+		"deployedAt":1760468081347,
+		"deployedBy":1,
+		"deployedDefinitionId":"68ee9c71248c7940ea1b639e",
 		"status":"DEPLOYED",
-		"version":101,
-		"workflowVersion":129
+		"version":114,
+		"workflowVersion":148
 	},
 	"edges":[
 		{
@@ -64,7 +64,7 @@
 	"id":"67b719cd21729f617c16f742",
 	"lastModifiedBy":0,
 	"lcName":"fetch collect slot tool",
-	"modifiedTime":1760034435662,
+	"modifiedTime":1760550450225,
 	"name":"Fetch collect slot tool",
 	"nodes":[
 		{
@@ -256,6 +256,8 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"toolInputSchema":{
 							"type":"object",
@@ -263,12 +265,12 @@
 							"additionalProperties":false,
 							"title":"Tool Input Schema"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"slots":{
 							"type":"array",
@@ -279,12 +281,11 @@
 							},
 							"title":"Slots"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
+				"code":"def slots = binding.hasVariable('slots') ? (binding.getVariable('slots') ?: []) : []\n\ndef properties = (slots ?: []).collectEntries { slot ->\n    [\n        (slot.name): [\n            \"type\": slot.type,\n            \"enum\": slot.choices?.collect { it.id },\n            \"description\": slot.description\n        ].findAll { k, v -> v != null }\n    ]\n}\n\nreturn [\n    \"toolInputSchema\": [\n        \"type\": \"object\",\n        \"properties\": properties,\n        \"required\": (slots ?: []).collect { it.name }.findAll { it }\n    ]\n]",
 				"compile_static":false,
-				"code":"def hasSlots = binding.hasVariable(\"slots\")\ndef properties = hasSlots ? slots.collectEntries { slot ->\n    [\n        (slot.name): [\n            \"type\": slot.type,\n            \"enum\": slot.choices?.collect { it.id },\n            \"description\": slot.description\n        ].findAll { k, v -> v != null }\n    ]\n} : [:]\n\nreturn [\n    \"toolInputSchema\": [\n        \"type\": \"object\",\n        \"properties\": properties,\n        \"required\": hasSlots ? slots.collect { it.name } : []\n    ]\n]",
+				"captureStdOutput":false,
 				"parameters":{
 					"slots":{
 						"source":"{{ mPePs.outputs.collectSlotInputs.slots }}",
@@ -412,5 +413,5 @@
 		"AI Agent",
 		"Internal"
 	],
-	"version":130
+	"version":149
 }
