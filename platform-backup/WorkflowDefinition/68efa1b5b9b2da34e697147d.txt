@@ -6,46 +6,383 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_FV53i",
+			"fromNodeId":"n_fcJcp",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_y5dnO",
+			"toNodeId":"n_Sljq4",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Sljq4",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_jZ8Jo",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_jZ8Jo",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_xIRGG",
+			"type":"scope"
+		},
+		{
+			"fromNodeId":"n_xIRGG",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_7imlJ",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_7imlJ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_FvU5j",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_FvU5j",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_7imlJ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_xIRGG",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_EBgcq",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_7imlJ",
+			"name":"scope-loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_jZ8Jo",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_EBgcq",
+			"name":"scope-loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_jZ8Jo",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_jZ8Jo",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_HqrTH",
 			"type":"next"
 		}
 	],
 	"id":"68efa1b5b9b2da34e697147d",
 	"lastModifiedBy":1,
 	"lcName":"loopslocaljegdkmvqlf",
-	"modifiedTime":1760534965647,
+	"modifiedTime":1760534995173,
 	"name":"loopsLocalJEgDkmvqLf",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":142,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_FV53i-1",
-			"id":"_FV53i",
-			"index":0,
+			"id":"n_fcJcp",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"input":{
+								"type":"integer",
+								"title":"input"
+							}
+						},
+						"additionalProperties":false
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2429,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_FV53i-1",
-			"id":"_y5dnO",
-			"index":0,
+			"id":"n_Sljq4",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"integer",
+							"title":"i"
+						},
+						"j":{
+							"type":"integer",
+							"title":"j"
+						},
+						"num":{
+							"type":"integer",
+							"title":"num"
+						}
+					}
+				}
+			},
+			"inputs":{
+				"num":"{{ n_fcJcp.outputs.body.input }}",
+				"i":1,
+				"j":2
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"integer",
+							"title":"i"
+						},
+						"j":{
+							"type":"integer",
+							"title":"j"
+						},
+						"num":{
+							"type":"integer",
+							"title":"num"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"scope",
+				"resourceVersion":143,
+				"resourceName":"scope_trigger_scope",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_FV53i-1",
+			"id":"n_jZ8Jo",
+			"index":3,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"{{ n_Sljq4.outputs.i }}",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"1"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"subTitle":"Scope",
+			"title":"Trigger Scope",
+			"type":"SCOPE"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":142,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION",
+				"scopeNodeId":"n_jZ8Jo"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_jZ8Jo@_FV53i-1@s",
+			"id":"n_xIRGG",
+			"index":4,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_Sljq4.outputs.j }}",
+						"filter":{
+							"operator":"LT",
+							"value":"10"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":146,
+				"resourceName":"loop_while",
+				"type":"APPLICATION",
+				"scopeNodeId":"n_jZ8Jo"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_xIRGG@n_jZ8Jo@_FV53i-1@s@y",
+			"id":"n_7imlJ",
+			"index":5,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"{{ n_Sljq4.outputs.num }}",
+							"filter":{
+								"operator":"LTE",
+								"value":"4"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":true
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2426,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION",
+				"scopeNodeId":"n_jZ8Jo"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_7imlJ@n_xIRGG@n_jZ8Jo@_FV53i-1@s@y@l",
+			"id":"n_FvU5j",
+			"index":6,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_Sljq4.outputs.num }}",
+						"value":"=SUM({{ n_Sljq4.outputs.num }},1)"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2429,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION",
+				"scopeNodeId":"n_jZ8Jo"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_xIRGG@n_jZ8Jo@_FV53i-1@s@n",
+			"id":"n_EBgcq",
+			"index":7,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"random":{
+							"type":"integer",
+							"title":"random"
+						}
+					}
+				}
+			},
+			"inputs":{
+				"random":22
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"random":{
+							"type":"integer",
+							"title":"random"
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_FV53i-1",
+			"id":"n_HqrTH",
+			"index":8,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +396,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
