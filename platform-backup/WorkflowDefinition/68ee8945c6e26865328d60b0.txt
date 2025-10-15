@@ -6,12 +6,12 @@
 	"createdTime":1760463173275,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760465331484,
+		"deployedAt":1760468032618,
 		"deployedBy":46673,
-		"deployedDefinitionId":"68ee91b32d6a557313985d3e",
+		"deployedDefinitionId":"68ee9c402d6a55731398f9fc",
 		"status":"DEPLOYED",
-		"version":9,
-		"workflowVersion":8
+		"version":12,
+		"workflowVersion":11
 	},
 	"description":"",
 	"edges":[
@@ -26,18 +26,18 @@
 			"fromNodeId":"n_jiLzT",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_IlmbX",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_IlmbX",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"n_9gVEi",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"n_9gVEi",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_FzcVS",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_FzcVS",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_nQW1S",
@@ -68,7 +68,7 @@
 	"id":"68ee8945c6e26865328d60b0",
 	"lastModifiedBy":46673,
 	"lcName":"support agent",
-	"modifiedTime":1760465434763,
+	"modifiedTime":1760519906392,
 	"name":"Support Agent",
 	"nodes":[
 		{
@@ -156,46 +156,6 @@
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_OIiYY-1",
-			"id":"n_IlmbX",
-			"index":0,
-			"inputs":{
-				"callableInterfaceId":"__ua__ask_ai_agent_interface",
-				"parameters":{
-					"name":"Web Agent",
-					"instructions":"Identify industry-specific use cases implemented by companies, as reported by consulting firms like Bain, BCG, KPMG, and other industry analysts, using web-based research tools.{{ n_jiLzT.outputs.category }}{{ n_jiLzT.outputs.description }}",
-					"model":"e_686654b81257d219bd7958d5",
-					"knowledges":[],
-					"responseSchema":{
-						"type":"object",
-						"properties":{
-							"output":{
-								"type":"string"
-							}
-						}
-					},
-					"tools":{
-						"defaultTools":[
-							"webSearch"
-						]
-					}
-				}
-			},
-			"skip":false,
-			"subTitle":"Agent",
-			"title":"Web Agent",
-			"type":"CALL_INTERFACE_WORKFLOW"
-		},
-		{
-			"context":{
-				"appName":"workflow_agent_ask_ai_agent",
-				"resourceVersion":33,
-				"resourceName":"workflow_agent_ask_ai_agent_default",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"_OIiYY-1",
 			"id":"n_9gVEi",
 			"index":0,
 			"inputs":{
@@ -226,6 +186,38 @@
 			"skip":false,
 			"subTitle":"Agent",
 			"title":"Support Agent",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"workflow_agent_search_knowledge",
+				"resourceVersion":154,
+				"resourceName":"workflow_agent_search_knowledge_default",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_OIiYY-1",
+			"id":"n_FzcVS",
+			"index":0,
+			"inputs":{
+				"callableInterfaceId":"__ua__knowledge_search_interface",
+				"parameters":{
+					"AISearchInstructions":"Searches company's internal knowledge using a\nspecified model and global knowledge type.",
+					"knowledges":[
+						{
+							"type":"knowledge",
+							"id":"e_68ee966782cfd305cf896a32"
+						}
+					],
+					"name":"Search Confluence",
+					"model":"e_686654b81257d219bd7958d5"
+				}
+			},
+			"skip":false,
+			"subTitle":"Search the Knowledge",
+			"title":"Search Confluence",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -274,7 +266,23 @@
 			"index":0,
 			"inputs":{
 				"link_names":true,
-				"messageType":"text",
+				"messageType":"blocks",
+				"Attach":[
+					{
+						"attachmentsType":"attachmentBlock",
+						"attachmentsBlock":{
+							"color":"#36a64f",
+							"pretext":"",
+							"fields":[],
+							"mrkdwn_in":[
+								"text",
+								"pretext",
+								"fields",
+								"footer"
+							]
+						}
+					}
+				],
 				"channel":"C09LGJK6Y0J",
 				"text":"Issue raised around {{ n_jiLzT.outputs.category }}. {{ n_jiLzT.outputs.description }}\n\nThe response sent to user was {{ n_9gVEi.outputs.output }} ",
 				"mrkdwn":true
@@ -337,5 +345,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":9
+	"version":12
 }
