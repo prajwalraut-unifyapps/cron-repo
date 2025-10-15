@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1755674344596,
+	"createdTime":1754468997029,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760117600074,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68e9436064af142a5db30216",
+		"deployedAt":1760438745310,
+		"deployedBy":1728,
+		"deployedDefinitionId":"68ee29d9c59fc97d30ec3adc",
 		"status":"DEPLOYED",
-		"version":85,
-		"workflowVersion":111
+		"version":34,
+		"workflowVersion":64
 	},
 	"edges":[
 		{
@@ -24,18 +24,11 @@
 			"fromNodeId":"n_9Kl6I",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_G2Muz",
+			"toNodeId":"n_KdmAh",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_G2Muz",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"kESBl",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"kESBl",
+			"fromNodeId":"n_KdmAh",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_I2G8B",
@@ -43,6 +36,43 @@
 		},
 		{
 			"fromNodeId":"n_I2G8B",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_o1Jmz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_o1Jmz",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_bH71s",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_bH71s",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Q8lTK",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Q8lTK",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"q5Ajz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_o1Jmz",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"q5Ajz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"q5Ajz",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"5OAuZ",
@@ -74,6 +104,7 @@
 		"configs":[
 			{
 				"permissions":[
+					"VIEW_RUNS",
 					"V"
 				],
 				"principalType":"GLOBAL"
@@ -81,9 +112,9 @@
 		]
 	},
 	"id":"684b3c0c7aefd45f1ab9da99",
-	"lastModifiedBy":0,
+	"lastModifiedBy":1728,
 	"lcName":"workflow agent | reply to user",
-	"modifiedTime":1760376419604,
+	"modifiedTime":1760518223886,
 	"name":"Workflow Agent | Reply to User",
 	"nodes":[
 		{
@@ -100,6 +131,7 @@
 			"index":1,
 			"inputs":{
 				"result":{
+					"required":[],
 					"ua:modal":{
 						"field_type":"STRING",
 						"is_optional":true
@@ -109,11 +141,11 @@
 							"type":"string",
 							"title":"Final Answer"
 						}
-					},
-					"required":[]
+					}
 				},
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"setup":{
+					"required":[],
 					"ua:modal":{
 						"field_type":"STRING",
 						"is_optional":true
@@ -123,12 +155,15 @@
 							"type":"string",
 							"title":"AI Response Instructions"
 						},
-						"responseStyle":{
+						"name":{
 							"type":"string",
-							"title":"Response Style"
+							"title":"Name"
+						},
+						"model":{
+							"type":"string",
+							"title":"Model"
 						}
-					},
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -155,14 +190,18 @@
 			"inputs":{
 				"variableSchema":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"caseId":{
 							"type":"string",
 							"title":"Case Id"
+						},
+						"aiAgentId":{
+							"type":"string",
+							"title":"Ai Agent Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -172,76 +211,57 @@
 		},
 		{
 			"context":{
-				"appName":"storage_by_unifyapps",
-				"resourceVersion":10,
-				"resourceName":"storage_by_unifyapps_get_record_by_id",
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":525,
+				"resourceName":"variable_by_unifyapps_create_variables",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_bdySk-1",
-			"id":"n_G2Muz",
+			"id":"n_KdmAh",
 			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"model":{
+							"type":"string",
+							"title":"Model"
+						}
+					},
+					"required":[
+						"model"
+					]
+				}
+			},
 			"inputs":{
-				"object_type":"e_ai_agent_conversation_state",
-				"includeRoleMappings":false,
-				"includeCurrentUserPermissions":false,
-				"id":"{{ n_9Kl6I.outputs.caseId }}",
-				"readThroughSessionVariables":false
+				"model":"{{ n_KDi4z.outputs.model }}"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"model":{
+							"type":"string",
+							"title":"Model"
+						}
+					},
+					"required":[
+						"model"
+					]
+				}
 			},
 			"skip":false,
-			"subTitle":"Storage by UnifyApps",
-			"title":"Fetch record by ID",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"storage_by_unifyapps",
-				"resourceVersion":120,
-				"resourceName":"storage_by_unifyapps_fetch_records",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"_bdySk-1",
-			"id":"kESBl",
-			"index":4,
-			"inputs":{
-				"triggerInputCondition":{
-					"filters":[
-						{
-							"property":"properties_caseId",
-							"filter":{
-								"operator":"EQUAL",
-								"value":"{{ n_9Kl6I.outputs.caseId }}"
-							}
-						}
-					],
-					"operator":"AND"
-				},
-				"object_type":"service_hub_message",
-				"includeRoleMappings":false,
-				"includeCurrentUserPermissions":false,
-				"sortBy":[
-					{
-						"field":"cTm",
-						"order":"ASC"
-					}
-				],
-				"page":{
-					"paginateBy":"OFFSET",
-					"limit":2000,
-					"offset":0
-				},
-				"numberOfRecordsToFetch":"MULTIPLE",
-				"readThroughSessionVariables":false,
-				"includeTotalCount":false
-			},
-			"skip":true,
-			"subTitle":"Storage by UnifyApps",
-			"title":"Fetch records",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
 		},
 		{
@@ -256,21 +276,23 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bdySk-1",
 			"id":"n_I2G8B",
-			"index":5,
+			"index":4,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"prompt":{
 							"type":"string",
 							"title":"Prompt"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"content":{
 							"type":"string",
@@ -280,12 +302,11 @@
 							"type":"string",
 							"title":"Instructions"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"def hasContent = binding.hasVariable('content') && content\ndef hasInstructions = binding.hasVariable('instructions') && instructions\n\ndef promptParts = []\n\nif (hasContent) {\n  promptParts << \"Previous Messages:\\n\" + content + \"\\n\"\n}\n\nif (hasInstructions) {\n  promptParts << \"Instructions:\\n\" + instructions + \"\\n\"\n}\n\ndef promptHeader = \"Taking reference from the information provided below, generate a response accordingly.\"\n\ndef finalPrompt = ([promptHeader] + promptParts).join(\"\\n\")\n\nreturn [prompt: finalPrompt]\n",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"instructions":"{{ n_KDi4z.outputs.responseInstructions }}"
 				}
@@ -293,6 +314,148 @@
 			"skip":false,
 			"subTitle":"Code by UnifyApps",
 			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":447,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_bdySk-1",
+			"id":"n_o1Jmz",
+			"index":5,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_KdmAh.outputs.model }}",
+						"filter":{
+							"operator":"MISSING"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"model not present?",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":592,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_o1Jmz@_bdySk-1@y",
+			"id":"n_bH71s",
+			"index":6,
+			"inputs":{
+				"automationId":"67a48d37f8f1744841dabb63",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"aiAgentId":"{{ n_9Kl6I.outputs.aiAgentId }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"get agent",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":508,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_o1Jmz@_bdySk-1@y",
+			"id":"n_Q8lTK",
+			"index":7,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_KdmAh.outputs.model }}",
+						"value":"{{ n_bH71s.outputs.properties.topicExecutionSettings.topicExecutionModel }}"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"set model",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":50,
+				"resourceName":"variable_by_unifyapps_set_session_variable",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_bdySk-1",
+			"id":"q5Ajz",
+			"index":8,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"ua_taskExecutionModel":{
+							"type":"string",
+							"title":"Ua Task Execution Model"
+						},
+						"supportsStreaming":{
+							"type":"boolean",
+							"title":"Supports Streaming"
+						}
+					},
+					"required":[]
+				}
+			},
+			"inputs":{
+				"supportsStreaming":true,
+				"ua_taskExecutionModel":"{{ n_KdmAh.outputs.model }}"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"ua_taskExecutionModel":{
+							"type":"string",
+							"title":"Ua Task Execution Model"
+						},
+						"supportsStreaming":{
+							"type":"boolean",
+							"title":"Supports Streaming"
+						}
+					},
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"model in session",
+			"title":"Set Session Variables",
 			"type":"ACTION"
 		},
 		{
@@ -307,7 +470,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bdySk-1",
 			"id":"5OAuZ",
-			"index":6,
+			"index":9,
 			"inputs":{
 				"automationId":"67850d225384a9541846f5b9",
 				"runtimeConnections":{},
@@ -315,7 +478,7 @@
 				"version":"-1",
 				"parameters":{
 					"caseId":"{{ n_9Kl6I.outputs.caseId }}",
-					"aiAgentId":"{{ n_G2Muz.outputs.properties.currentAIAgentId }}",
+					"aiAgentId":"{{ n_9Kl6I.outputs.aiAgentId }}",
 					"instructionsToAppend":"{{ n_I2G8B.outputs.result.prompt }}"
 				}
 			},
@@ -336,7 +499,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bdySk-1",
 			"id":"n_6Wsej",
-			"index":7,
+			"index":10,
 			"inputs":{
 				"automationId":"66ab81a6a1c8b020e8374956",
 				"runtimeConnections":{},
@@ -366,7 +529,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bdySk-1",
 			"id":"n_ZCqSv",
-			"index":8,
+			"index":11,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -421,7 +584,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_bdySk-1",
 			"id":"n_KT0Lz",
-			"index":9,
+			"index":12,
 			"inputs":{
 				"result":{
 					"finalAnswer":"{{ n_ZCqSv.outputs.properties.content.text }}"
@@ -433,7 +596,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":0,
+	"ownerUserId":-1,
 	"schemaReferences":[
 		
 	],
@@ -446,9 +609,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
+	"standard":false,
 	"tags":[
 		
 	],
-	"version":112
+	"version":65
 }
