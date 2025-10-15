@@ -1,51 +1,189 @@
 {
 	"appsUsed":[
-		
+		"clickup"
 	],
 	"createdTime":1760503464753,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_5NGXM",
+			"fromNodeId":"n_60aGP",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_pTU3P",
+			"toNodeId":"n_Bfl97",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Bfl97",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_QoTnQ",
 			"type":"next"
 		}
 	],
 	"id":"68ef26a8248c7940ea1efc42",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2uugznqjmig",
-	"modifiedTime":1760503464753,
+	"modifiedTime":1760503500517,
 	"name":"cacheQA2UUgZNqJMig",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2547,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_5NGXM-1",
-			"id":"_5NGXM",
-			"index":0,
+			"id":"n_60aGP",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"team_id":{
+							"type":"string",
+							"title":"team_id"
+						},
+						"space_id":{
+							"type":"string",
+							"title":"space_id"
+						},
+						"folder_id":{
+							"type":"string",
+							"title":"folder_id"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"clickup",
+				"resourceVersion":11970,
+				"connectionId":"67b0442665d0907dc7f5d402",
+				"resourceName":"clickup_get_folder_details",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_5NGXM-1",
-			"id":"_pTU3P",
-			"index":0,
+			"id":"n_Bfl97",
+			"index":2,
+			"inputs":{
+				"team_id":"{{ n_60aGP.outputs.team_id }}",
+				"folder_id":"{{ n_60aGP.outputs.folder_id }}",
+				"space_id":"{{ n_60aGP.outputs.space_id }}"
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"maxLeaseTimeUnit":"SECONDS",
+					"maxWaitDurationUnit":"SECONDS"
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"cacheKey":"{{ n_60aGP.outputs.folder_id }}",
+					"enabled":true,
+					"timeToLive":"60",
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"ClickUp",
+			"title":"Get folder details",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2550,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_5NGXM-1",
+			"id":"n_QoTnQ",
+			"index":3,
+			"inputs":{
+				"result":{
+					"result":"{{ n_Bfl97.outputs.name }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +197,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
