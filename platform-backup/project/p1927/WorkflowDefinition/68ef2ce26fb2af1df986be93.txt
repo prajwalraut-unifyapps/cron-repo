@@ -6,47 +6,108 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_6pa8r",
+			"fromNodeId":"n_SznAQ",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_v3fuR",
+			"toNodeId":"n_G4UsH",
 			"type":"next"
 		}
 	],
 	"id":"68ef2ce26fb2af1df986be93",
 	"lastModifiedBy":39715,
 	"lcName":"[virtu-oci-jwt-token-fn]getjwttokenfromemail",
-	"modifiedTime":1760505058771,
+	"modifiedTime":1760510436407,
 	"name":"[virtu-oci-jwt-token-fn]GetJWTTokenFromEmail",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1127,
+				"resourceName":"callables_from_api"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_6pa8r-1",
-			"id":"_6pa8r",
-			"index":0,
+			"id":"n_SznAQ",
+			"index":1,
+			"inputs":{
+				"request":{
+					"headers":{
+						"type":"object",
+						"additionalProperties":false,
+						"required":[],
+						"properties":{
+							"email":{
+								"type":"string",
+								"title":"Email"
+							}
+						}
+					},
+					"contentType":"application/json"
+				},
+				"endpointType":"REST",
+				"streamingResponse":false
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via API",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":191,
+				"resourceName":"code_by_unifyapps_csharp",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_6pa8r-1",
-			"id":"_v3fuR",
-			"index":0,
+			"id":"n_G4UsH",
+			"index":2,
+			"inputs":{
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"email",
+						"V5ClientID",
+						"V5ClientSecret"
+					],
+					"properties":{
+						"email":{
+							"type":"string",
+							"title":"Email"
+						},
+						"V5ClientID":{
+							"type":"string",
+							"title":"V5ClientID"
+						},
+						"V5ClientSecret":{
+							"type":"string",
+							"title":"V5ClientSecret"
+						}
+					}
+				},
+				"code":"using System.IdentityModel.Tokens.Jwt;\nusing System.Net.Http;\nusing System.Threading.Tasks;\nusing System.Net.Http.Headers;\nusing System.Security.Claims;\nusing System.Security.Cryptography;\nusing System.Text;\nusing System.Text.RegularExpressions;\nusing Microsoft.Extensions.Logging;\nusing Microsoft.IdentityModel.Tokens;\nusing Newtonsoft.Json;\nusing System.Net;\n\nHttpClient tokenClinet = IHttpClientFactory.CreateClient(\"AccessToken\");\nHttpClient employeeClient = IHttpClientFactory.CreateClient(\"EmployeeURL\");\nHttpClient bsClient = IHttpClientFactory.CreateClient(\"BSGet\");\n\nasync Task<string> GetPersonNumberFromEmail(string email)\n{\n    string personNumberString = \"\";\n    HttpRequestMessage getPersonNumberUserRequest = new HttpRequestMessage(HttpMethod.Get, string.Format(\"?onlyData=true&q=upper(emails.EmailAddress)='{0}'\", email.ToUpper()));\n    HttpRequestMessage getTokenRequest = new HttpRequestMessage() { Method = HttpMethod.Post, Content = new StringContent(string.Format(\"client_id={0}&grant_type=client_credentials&client_secret={1}\", V5ClientID, V5ClientSecret), Encoding.UTF8, \"application/x-www-form-urlencoded\") };\n    try\n    {\n        if (Regex.IsMatch(email, @\"^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$\",RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250)))\n        {\n            HttpResponseMessage getTokenApiResponseForEmployee = await tokenClinet.SendAsync(getTokenRequest);\n            dynamic objectsForEmployee = JsonConvert.DeserializeObject<dynamic>(getTokenApiResponseForEmployee.EnsureSuccessStatusCode().Content.ReadAsStringAsync().Result)!;\n            employeeClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(objectsForEmployee.token_type.ToString(), objectsForEmployee.access_token.ToString());\n            HttpResponseMessage personNumberApiResponse = await employeeClient.SendAsync(getPersonNumberUserRequest);\n            dynamic personNumber = JsonConvert.DeserializeObject<dynamic>(personNumberApiResponse.EnsureSuccessStatusCode().Content.ReadAsStringAsync().Result)!;\n            if (personNumber.items.Count == 1)\n            {\n                personNumberString = personNumber.items[0].PersonNumber;\n            }\n        }\n        else\n        {\n            // _logger.LogInformation(\"Please provide valid email\");\n        }\n    }\n    catch (Exception ex)\n    {\n        // _logger.LogError(ex, ex.Message);\n        throw;\n    }\n    return personNumberString;\n}\n\n\nstring GenerateJWTToken(string personNumber)\n{\n  string jwtString = \"\";\n  if (!string.IsNullOrEmpty(personNumber))\n  {\n      var privateKeyBytes = Convert.FromBase64String(Environment.GetEnvironmentVariable(\"private-key\")!);\n      using var rsa = RSA.Create();\n      rsa.ImportPkcs8PrivateKey(privateKeyBytes, out _);\n      var signingCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)\n      {\n          CryptoProviderFactory = new CryptoProviderFactory { CacheSignatureProviders = false }\n      };\n      var now = DateTime.Now;\n      var jwt = new JwtSecurityToken(\n          issuer: Environment.GetEnvironmentVariable(\"client-id\")!,\n          claims: new Claim[] {\n          new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(now.AddHours(1)).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),\n          new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),\n          new Claim(JwtRegisteredClaimNames.Sub, personNumber),\n          new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),\n          new Claim(JwtRegisteredClaimNames.Aud,Environment.GetEnvironmentVariable(\"audience\")!)\n          },\n          signingCredentials: signingCredentials\n      );\n      jwt.Header.Add(JwtHeaderParameterNames.Kid, Environment.GetEnvironmentVariable(\"certificate-alias\")!);\n      jwtString = new JwtSecurityTokenHandler().WriteToken(jwt);\n  }\n  return jwtString;\n}\n\n\nasync Task<string> getJWTForOCI(string jwt)\n{\n    string jwtString = \"\";\n    HttpRequestMessage getTokenRequest = new HttpRequestMessage(HttpMethod.Post, \"token\");\n    getTokenRequest.Content = new StringContent(string.Format(\"grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion={0}&scope={1}\", jwt, Environment.GetEnvironmentVariable(\"app-scope\")), Encoding.UTF8, \"application/x-www-form-urlencoded\");\n    try\n    {\n        if (!string.IsNullOrEmpty(jwt))\n        {\n            HttpResponseMessage getTokenApiResponseForEmployee = await bsClient.SendAsync(getTokenRequest);\n            dynamic objectsForEmployee = JsonConvert.DeserializeObject<dynamic>(getTokenApiResponseForEmployee.EnsureSuccessStatusCode().Content.ReadAsStringAsync().Result)!;\n            jwtString = objectsForEmployee.access_token.ToString();\n        }\n        else\n        {\n            // _logger.LogInformation(\"JWT is empty\");\n        }\n    }\n    catch (Exception ex)\n    {\n        // _logger.LogError(ex, ex.Message);\n        throw;\n    }\n    return jwtString;\n}\n\nstring GetJWTFromEmail(string email)\n{\n  return getJWTForOCI(GenerateJWTToken(GetPersonNumberFromEmail(email).Result)).Result;\n}\n\nstring token = \"\";\n\ntry\n{\n  token = GetJWTFromEmail(email);\n}\ncatch (Exception ex)\n{\n  // _logger.LogError(ex, ex.Message);\n}\nstring jwtToken = \"\";\nif (string.IsNullOrEmpty(token))\n{\n  jwtToken = \"request (body/header) is not valid\";\n}\nelse {\n  jwtToken = token\n}\n",
+				"isAsync":false
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute CSharp script",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":39715,
 	"projectId":1927,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +121,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
