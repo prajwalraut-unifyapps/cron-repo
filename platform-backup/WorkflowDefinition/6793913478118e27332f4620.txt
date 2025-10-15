@@ -5,12 +5,12 @@
 	"createdTime":1747000743379,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759948473587,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68e6aeb9a991021e3f9abaa8",
+		"deployedAt":1760467994179,
+		"deployedBy":1,
+		"deployedDefinitionId":"68ee9c1a248c7940ea1b5920",
 		"status":"DEPLOYED",
-		"version":109,
-		"workflowVersion":135
+		"version":124,
+		"workflowVersion":156
 	},
 	"edges":[
 		{
@@ -133,6 +133,43 @@
 			"fromNodeId":"_YCIwl",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_93YKr",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_93YKr",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_bNmaO",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_bNmaO",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_YNXZm",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_YNXZm",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_4oFIP",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_4oFIP",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"0NXbR",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_93YKr",
+			"name":"no",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"0NXbR",
 			"type":"next"
 		},
@@ -206,9 +243,9 @@
 		]
 	},
 	"id":"6793913478118e27332f4620",
-	"lastModifiedBy":1,
+	"lastModifiedBy":0,
 	"lcName":"session file indexer",
-	"modifiedTime":1760012261291,
+	"modifiedTime":1760550479815,
 	"name":"Session File Indexer",
 	"nodes":[
 		{
@@ -222,10 +259,14 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"9wNwo",
-			"index":0,
+			"index":1,
 			"inputs":{
 				"result":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"response"
+					],
 					"properties":{
 						"response":{
 							"type":"string",
@@ -235,14 +276,15 @@
 							"type":"string",
 							"title":"Knowledge Id"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"response"
-					]
+					}
 				},
 				"setup":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"caseId",
+						"file"
+					],
 					"properties":{
 						"caseId":{
 							"type":"string",
@@ -257,13 +299,17 @@
 						"addToAgentId":{
 							"type":"string",
 							"title":"Add To Agent Id"
+						},
+						"addToKnowledgeSet":{
+							"type":"string",
+							"title":"Add To Knowledge Set"
+						},
+						"metadataIndexing":{
+							"type":"boolean",
+							"title":"metadataIndexing",
+							"help":"Text To SQL Indexing for Excel Or CSV Files"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"caseId",
-						"file"
-					]
+					}
 				}
 			},
 			"skip":false,
@@ -286,7 +332,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"9xuAM",
-			"index":0,
+			"index":2,
 			"inputs":{
 				"filters":[
 					{
@@ -315,11 +361,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"9xuAM@7eLiR-1@y",
 			"id":"qOXIw",
-			"index":0,
+			"index":3,
 			"inputs":{
 				"object_type":"e_ai_agent_conversation_state",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"id":"{{ 9wNwo.outputs.caseId }}",
 				"readThroughSessionVariables":false
 			},
@@ -340,7 +387,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"Ogj2K",
-			"index":0,
+			"index":4,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -393,10 +440,17 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"OYJGP",
-			"index":0,
+			"index":5,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"isUrl",
+						"url",
+						"mimeType",
+						"name"
+					],
 					"properties":{
 						"isUrl":{
 							"type":"boolean",
@@ -425,17 +479,14 @@
 							"type":"string",
 							"title":"Random String"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"isUrl",
-						"url",
-						"mimeType",
-						"name"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"file"
+					],
 					"properties":{
 						"file":{
 							"type":"object",
@@ -450,19 +501,21 @@
 						"addToAgentId":{
 							"type":"string",
 							"title":"Add To Agent Id"
+						},
+						"addToKnowledgeSet":{
+							"type":"string",
+							"title":"Add To Knowledge Set"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"file"
-					]
+					}
 				},
+				"code":"def fileExtensionToMimeType = [\n    \"xlsx\"  : \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n    \"xlsm\"  : \"application/vnd.ms-excel.sheet.macroEnabled.12\",\n    \"csv\"   : \"text/csv\",\n    \"docx\"  : \"application/vnd.openxmlformats-officedocument.wordprocessingml.document\",\n    \"doc\"   : \"application/msword\",\n    \"txt\"   : \"text/plain\",\n    \"pptx\"  : \"application/vnd.openxmlformats-officedocument.presentationml.presentation\",\n    \"ppt\"   : \"application/vnd.ms-powerpoint\",\n    \"pdf\"   : \"application/pdf\"\n]\n\ndef sourcePath = file.get('source')\ndef fileExtension = sourcePath.tokenize('.')[-1]\n\ndef mimeType = fileExtensionToMimeType[fileExtension]\n\ndef chars = ('A'..'Z') + ('a'..'z') + ('0'..'9')\ndef random = new Random()\ndef randomString = (1..6).collect { chars[random.nextInt(chars.size())] }.join()\nString accessibleTo = \"\";\nif(binding.hasVariable('addToAgentId')) {\n    accessibleTo = \"ai_agent/\" + addToAgentId\n}\nelse if(binding.hasVariable('addToKnowledgeSet')) {\n    accessibleTo = \"knowledge_set/\" + addToKnowledgeSet\n} else {\n     accessibleTo = \"service_hub_case/\" + caseId\n}\n\nreturn[\n        'isUrl': file.sourceType == \"URL\",\n        'url': file.get('source'),\n        'mimeType': mimeType,\n        'name':file.get(\"name\"),\n        \"accessibleTo\": [accessibleTo],\n        'randomString' : randomString\n]",
 				"compile_static":false,
-				"code":"def fileExtensionToMimeType = [\n    \"xlsx\"  : \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n    \"xlsm\"  : \"application/vnd.ms-excel.sheet.macroEnabled.12\",\n    \"csv\"   : \"text/csv\",\n    \"docx\"  : \"application/vnd.openxmlformats-officedocument.wordprocessingml.document\",\n    \"doc\"   : \"application/msword\",\n    \"txt\"   : \"text/plain\",\n    \"pptx\"  : \"application/vnd.openxmlformats-officedocument.presentationml.presentation\",\n    \"ppt\"   : \"application/vnd.ms-powerpoint\",\n    \"pdf\"   : \"application/pdf\"\n]\n\ndef sourcePath = file.get('source')\ndef fileExtension = sourcePath.tokenize('.')[-1]\n\ndef mimeType = fileExtensionToMimeType[fileExtension]\n\ndef chars = ('A'..'Z') + ('a'..'z') + ('0'..'9')\ndef random = new Random()\ndef randomString = (1..6).collect { chars[random.nextInt(chars.size())] }.join()\n\nreturn[\n        'isUrl': file.sourceType == \"URL\",\n        'url': file.get('source'),\n        'mimeType': mimeType,\n        'name':file.get(\"name\"),\n        \"accessibleTo\": binding.hasVariable(\"addToAgentId\")? [\"ai_agent/\" + addToAgentId] : [\"service_hub_case/\" + caseId],\n        'randomString' : randomString\n]",
+				"captureStdOutput":false,
 				"parameters":{
 					"file":"{{ 9wNwo.outputs.file }}",
 					"caseId":"{{ 9wNwo.outputs.caseId }}",
-					"addToAgentId":"{{ 9wNwo.outputs.addToAgentId }}"
+					"addToAgentId":"{{ 9wNwo.outputs.addToAgentId }}",
+					"addToKnowledgeSet":"{{ 9wNwo.outputs.addToKnowledgeSet }}"
 				}
 			},
 			"skip":false,
@@ -482,7 +535,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"f7yDq",
-			"index":0,
+			"index":6,
 			"inputs":{
 				"filters":[
 					{
@@ -512,7 +565,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"f7yDq@7eLiR-1@y",
 			"id":"HJgli",
-			"index":0,
+			"index":7,
 			"inputs":{
 				"url":"{{ OYJGP.outputs.result.url }}"
 			},
@@ -533,10 +586,14 @@
 			"fallbackMode":"STOP",
 			"groupId":"f7yDq@7eLiR-1@y",
 			"id":"WLeog",
-			"index":0,
+			"index":8,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"file"
+					],
 					"properties":{
 						"file":{
 							"type":"object",
@@ -544,14 +601,14 @@
 							"additionalProperties":false,
 							"title":"File"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"file"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"fileDetailsFromPath"
+					],
 					"properties":{
 						"fileDetails":{
 							"type":"object",
@@ -566,15 +623,12 @@
 							"additionalProperties":false,
 							"title":"File Details From Path"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"fileDetailsFromPath"
-					]
+					}
 				},
-				"compile_static":false,
 				"code":"def finalFileDetails = fileDetails;\nfinalFileDetails = new HashMap<>(fileDetailsFromPath)\nfinalFileDetails.put(\"fileType\", fileDetails.fileType)\ndef file = binding.hasVariable('fileDetails') ? [\n        \"name\": finalFileDetails.name,\n        \"source\": finalFileDetails.source,\n        \"fileType\": finalFileDetails.fileType,\n        \"sourceType\":finalFileDetails.sourceType\n    ] : null\nif (!finalFileDetails.containsKey(\"sourceType\")){\n    file[\"sourceType\"] = \"CLOUD_STORAGE\"\n}\nreturn ['file':file]",
+				"compile_static":false,
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"fileDetails":"{{ 9wNwo.outputs.file }}",
 					"fileDetailsFromPath":"{{ HJgli.outputs.file }}"
@@ -597,7 +651,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"f7yDq@7eLiR-1@y",
 			"id":"S4tCk",
-			"index":0,
+			"index":9,
 			"inputs":{
 				"variables":[
 					{
@@ -623,7 +677,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"f7yDq@7eLiR-1@n",
 			"id":"jRxqE",
-			"index":0,
+			"index":10,
 			"inputs":{
 				"variables":[
 					{
@@ -705,25 +759,25 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"H7ng4",
-			"index":0,
+			"index":11,
 			"inputs":{
+				"writeThroughSessionVariables":false,
 				"object_type":"knowledge",
+				"skipIfBlank":false,
 				"record":{
-					"enabled":true,
-					"sourceType":"FILE",
-					"name":"{{ OYJGP.outputs.result.name }}",
-					"status":"SYNCING",
-					"accessibleTo":{
-						"source":"{{ OYJGP.outputs.result.accessibleTo }}",
-						"ua:type":"mappedArray",
-						"items":"{{ OYJGP.outputs.result.accessibleTo[0] }}"
-					},
 					"fileDetails":{
 						"name":"{{ OYJGP.outputs.result.name }}",
 						"fileType":"{{ OYJGP.outputs.result.mimeType }}",
 						"url":"{{ OYJGP.outputs.result.url }}"
 					},
+					"sourceType":"FILE",
+					"name":"{{ OYJGP.outputs.result.name }}",
+					"status":"SYNCING",
+					"enabled":false,
 					"settings":{
+						"enrichment":{
+							"enabled":false
+						},
 						"indexingStrategySettings":{
 							"mimeTypeOverride":{
 								"items":{
@@ -740,6 +794,15 @@
 								"ua:type":"mappedArray"
 							}
 						}
+					},
+					"newIndexingFlowEnabled":false,
+					"forwardGrabberScheduled":false,
+					"realtimeIndexingEnabled":false,
+					"knowledgeScheduleEnabled":false,
+					"accessibleTo":{
+						"source":"{{ OYJGP.outputs.result.accessibleTo }}",
+						"ua:type":"mappedArray",
+						"items":"{{ OYJGP.outputs.result.accessibleTo[0] }}"
 					}
 				}
 			},
@@ -760,7 +823,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"cZrCR",
-			"index":0,
+			"index":12,
 			"inputs":{
 				"automationId":"679b63bad2256d4d7f32464f",
 				"runtimeConnections":{},
@@ -788,7 +851,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"ERDww",
-			"index":0,
+			"index":13,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
@@ -804,6 +867,7 @@
 					"operator":"AND"
 				},
 				"object_type":"knowledge",
+				"skipIfBlank":false,
 				"updateFields":[
 					{
 						"fieldName":"properties.additionalDetails.embeddingModel",
@@ -815,7 +879,8 @@
 				"page":{
 					"offset":0,
 					"limit":20
-				}
+				},
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"update",
@@ -834,7 +899,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"_63ZMo",
-			"index":0,
+			"index":14,
 			"inputs":{
 				"file":"{{ Ogj2K.outputs.file }}"
 			},
@@ -855,10 +920,12 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"_YCIwl",
-			"index":0,
+			"index":15,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"chunkMetadata":{
 							"type":"object",
@@ -866,12 +933,14 @@
 							"additionalProperties":false,
 							"title":"Chunk Metadata"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"path"
+					],
 					"properties":{
 						"fileDetails":{
 							"type":"object",
@@ -889,15 +958,12 @@
 							"type":"string",
 							"title":"Path"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"path"
-					]
+					}
 				},
+				"code":"def chunkMetadata = [:]\nif(binding.hasVariable('fileDetails')) chunkMetadata.putAll(fileDetails)\nchunkMetadata.put(\"referenceUrl\", path)\nchunkMetadata.put('date' , System.currentTimeMillis())\nreturn [ \"chunkMetadata\" : chunkMetadata]",
 				"compile_static":false,
-				"code":"def chunkMetadata = [:]\nif(binding.hasVariable('fileDetails')) chunkMetadata.putAll(fileDetails)\nchunkMetadata.put(\"referenceUrl\", path)\nreturn [ \"chunkMetadata\" : chunkMetadata]",
 				"isAsync":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"path":"{{ _63ZMo.outputs.path }}",
 					"fileDetails":"{{ Ogj2K.outputs.file }}"
@@ -907,6 +973,168 @@
 			"subTitle":"make chunk metadata",
 			"title":"Execute Groovy code",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":447,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"7eLiR-1",
+			"id":"n_93YKr",
+			"index":16,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ 9wNwo.outputs.metadataIndexing }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"true"
+						}
+					},
+					{
+						"filters":[
+							{
+								"property":"{{ OYJGP.outputs.result.mimeType }}",
+								"filter":{
+									"operator":"EQUAL",
+									"value":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+								}
+							},
+							{
+								"property":"{{ OYJGP.outputs.result.mimeType }}",
+								"filter":{
+									"operator":"EQUAL",
+									"value":"text/csv"
+								}
+							}
+						],
+						"operator":"OR"
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"metadataIndexing",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":592,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_93YKr@7eLiR-1@y",
+			"id":"n_bNmaO",
+			"index":17,
+			"inputs":{
+				"automationId":"6729177526f70f5310b25dcf",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"file":"{{ Ogj2K.outputs.file }}",
+					"knowledgeId":"{{ H7ng4.outputs.id }}",
+					"mimeType":"{{ OYJGP.outputs.result.mimeType }}",
+					"uniqueEntityId":"{{ 9wNwo.outputs.addToAgentId }}_{{ 9wNwo.outputs.caseId }}_{{ OYJGP.outputs.result.randomString }}",
+					"chunkMetadata":"{{ _YCIwl.outputs.result.chunkMetadata }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Excel File Indexing For SQL",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":16,
+				"resourceName":"storage_by_unifyapps_update_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_93YKr@7eLiR-1@y",
+			"id":"_YNXZm",
+			"index":18,
+			"inputs":{
+				"numberOfRecordsToUpdate":"SINGLE",
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"id",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"{{ H7ng4.outputs.id }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"object_type":"knowledge",
+				"skipIfBlank":false,
+				"updateFields":[
+					{
+						"fieldName":"properties.status",
+						"actionType":"SET",
+						"setValue":"COMPLETED"
+					},
+					{
+						"fieldName":"properties.readVersion",
+						"actionType":"SET",
+						"setValue":"1"
+					},
+					{
+						"fieldName":"properties.enabled",
+						"actionType":"SET",
+						"setValue":"true"
+					}
+				],
+				"skipIfEmpty":false,
+				"page":{
+					"offset":0,
+					"limit":20
+				},
+				"unsetIfNull":false
+			},
+			"skip":false,
+			"subTitle":"update",
+			"title":"Update records by query",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":583,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_93YKr@7eLiR-1@y",
+			"id":"n_4oFIP",
+			"index":19,
+			"inputs":{
+				"result":{
+					"response":"true",
+					"knowledgeId":"{{ H7ng4.outputs.id }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Respond To Automation",
+			"title":"Respond to automation",
+			"type":"STOP"
 		},
 		{
 			"context":{
@@ -920,7 +1148,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"0NXbR",
-			"index":0,
+			"index":20,
 			"inputs":{
 				"automationId":"6708d0a1e5c64343ba9b24c8",
 				"runtimeConnections":{},
@@ -955,7 +1183,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"n_VVej6",
-			"index":0,
+			"index":21,
 			"inputs":{
 				"filters":[
 					{
@@ -984,7 +1212,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_VVej6@7eLiR-1@y",
 			"id":"_FsnjW",
-			"index":0,
+			"index":22,
 			"inputs":{
 				"automationId":"66af3ff4cd79b321cb478a37",
 				"runtimeConnections":{},
@@ -1024,7 +1252,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"_cRmRF",
-			"index":0,
+			"index":23,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ 0NXbR.outputs.chunks }}",
@@ -1047,7 +1275,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_cRmRF@7eLiR-1@l",
 			"id":"_GIVc5",
-			"index":0,
+			"index":24,
 			"inputs":{
 				"automationId":"66af3ff4cd79b321cb478a37",
 				"runtimeConnections":{},
@@ -1085,7 +1313,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"burne",
-			"index":0,
+			"index":25,
 			"inputs":{
 				"numberOfRecordsToUpdate":"SINGLE",
 				"triggerInputCondition":{
@@ -1101,6 +1329,7 @@
 					"operator":"AND"
 				},
 				"object_type":"knowledge",
+				"skipIfBlank":false,
 				"updateFields":[
 					{
 						"fieldName":"properties.status",
@@ -1111,13 +1340,19 @@
 						"fieldName":"properties.readVersion",
 						"actionType":"SET",
 						"setValue":"1"
+					},
+					{
+						"fieldName":"properties.enabled",
+						"actionType":"SET",
+						"setValue":"true"
 					}
 				],
 				"skipIfEmpty":false,
 				"page":{
 					"offset":0,
 					"limit":20
-				}
+				},
+				"unsetIfNull":false
 			},
 			"skip":false,
 			"subTitle":"update",
@@ -1136,7 +1371,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"7eLiR-1",
 			"id":"AyORW",
-			"index":0,
+			"index":26,
 			"inputs":{
 				"result":{
 					"response":"true",
@@ -1154,9 +1389,9 @@
 		
 	],
 	"settings":{
-		"enableNodeLevelLogging":false,
-		"enableRunLogging":false,
-		"enableVariableLogging":false,
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
 		"route":{
 			"default":false,
 			"tierName":"global"
@@ -1167,5 +1402,5 @@
 		"AI Agent",
 		"Knowledge"
 	],
-	"version":136
+	"version":157
 }
