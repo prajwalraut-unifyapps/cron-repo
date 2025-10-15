@@ -6,46 +6,167 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_1Nnq8",
+			"fromNodeId":"n_pyE75",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_p2ZXk",
+			"toNodeId":"n_BnZ7b",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_BnZ7b",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_fvL9d",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_fvL9d",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_BnZ7b",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_BnZ7b",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_TizFi",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_TizFi",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_IgwdP",
 			"type":"next"
 		}
 	],
 	"id":"68efa021452cd87a94c07d95",
 	"lastModifiedBy":1,
 	"lcName":"testing stream change",
-	"modifiedTime":1760534561658,
+	"modifiedTime":1760534993514,
 	"name":"testing stream change",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":142,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_1Nnq8-1",
-			"id":"_1Nnq8",
-			"index":0,
+			"id":"n_pyE75",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":2572,
+				"resourceName":"streams_by_unifyapps_poll_events",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_1Nnq8-1",
-			"id":"_p2ZXk",
-			"index":0,
+			"id":"n_BnZ7b",
+			"index":2,
+			"inputs":{
+				"streamId":"e_68ef3d8cbad53558cbb50a50",
+				"repeatMode":"SINGLE",
+				"captureIterations":false,
+				"batchSize":1,
+				"consumerGroup":"abcde",
+				"commitOption":"MANUAL_COMMIT"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Streams by UnifyApps",
+			"title":"Polls for new events from stream",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":2529,
+				"resourceName":"streams_by_unifyapps_commit_offsets",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_BnZ7b@_1Nnq8-1@l",
+			"id":"n_fvL9d",
+			"index":3,
+			"inputs":{
+				"streamId":"e_68ef3d8cbad53558cbb50a50",
+				"consumerGroup":"abcde",
+				"timeout":3000
+			},
+			"skip":false,
+			"subTitle":"Streams by UnifyApps",
+			"title":"Commits offsets",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_1Nnq8-1",
+			"id":"n_TizFi",
+			"index":4,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":2572,
+				"resourceName":"streams_by_unifyapps_publish_event",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_1Nnq8-1",
+			"id":"n_IgwdP",
+			"index":5,
+			"inputs":{
+				"streamId":"e_68ef3d8cbad53558cbb50a50",
+				"skipInputValidation":false,
+				"event":{
+					"count":1
+				}
+			},
+			"skip":false,
+			"subTitle":"Streams by UnifyApps",
+			"title":"Publish event to stream",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +180,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
