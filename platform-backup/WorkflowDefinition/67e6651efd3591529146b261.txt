@@ -5,12 +5,12 @@
 	"createdTime":1747000728374,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760378611517,
+		"deployedAt":1760467998709,
 		"deployedBy":1,
-		"deployedDefinitionId":"68ed3ef3f5eb8345dac803d3",
+		"deployedDefinitionId":"68ee9c1e248c7940ea1b59aa",
 		"status":"DEPLOYED",
-		"version":111,
-		"workflowVersion":264
+		"version":113,
+		"workflowVersion":267
 	},
 	"edges":[
 		{
@@ -59,6 +59,13 @@
 		},
 		{
 			"fromNodeId":"7dDjY",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_NVJel",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_NVJel",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"lKKHE",
@@ -113,12 +120,19 @@
 			"fromNodeId":"iyy4K",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"qREpe",
+			"toNodeId":"_Y7yeZ",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"w5ljJ",
 			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_Y7yeZ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_Y7yeZ",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"qREpe",
@@ -243,7 +257,7 @@
 	"id":"67e6651efd3591529146b261",
 	"lastModifiedBy":0,
 	"lcName":"apply pii to knowledge chunk",
-	"modifiedTime":1760465576427,
+	"modifiedTime":1760550535131,
 	"name":"Apply PII to knowledge chunk",
 	"nodes":[
 		{
@@ -319,9 +333,17 @@
 													"behaviour":{
 														"type":"string",
 														"title":"behaviour"
+													},
+													"appliesTo":{
+														"type":"array",
+														"items":{
+															"type":"string"
+														},
+														"title":"Applies To"
 													}
 												},
-												"additionalProperties":false
+												"additionalProperties":false,
+												"required":[]
 											},
 											"title":"patterns"
 										}
@@ -339,13 +361,29 @@
 										"ids":{
 											"type":"array",
 											"items":{
-												"type":"string"
+												"type":"object",
+												"properties":{
+													"id":{
+														"type":"string",
+														"title":"Id"
+													},
+													"appliesTo":{
+														"type":"array",
+														"items":{
+															"type":"string"
+														},
+														"title":"Applies To"
+													}
+												},
+												"additionalProperties":false,
+												"required":[]
 											},
 											"title":"ids"
 										}
 									},
 									"title":"automations",
-									"additionalProperties":false
+									"additionalProperties":false,
+									"required":[]
 								},
 								"piiByUA":{
 									"type":"object",
@@ -364,6 +402,10 @@
 						"parentType":{
 							"type":"string",
 							"title":"Parent Type"
+						},
+						"callFor":{
+							"type":"string",
+							"title":"Call For"
 						}
 					}
 				}
@@ -565,6 +607,92 @@
 			"type":"ACTION"
 		},
 		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.parameters.inputPatterns.items"
+				]
+			},
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":528,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ZrWT9-1",
+			"id":"n_NVJel",
+			"index":7,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"patterns":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{
+									"name":{
+										"type":"string",
+										"title":"Name"
+									},
+									"pattern":{
+										"type":"string",
+										"title":"Pattern"
+									},
+									"behaviour":{
+										"type":"string",
+										"title":"Behaviour"
+									}
+								},
+								"additionalProperties":false,
+								"required":[]
+							},
+							"title":"Patterns"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"callFor":{
+							"type":"string",
+							"title":"Call For"
+						},
+						"inputPatterns":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{},
+								"additionalProperties":false
+							},
+							"title":"Input Patterns"
+						}
+					}
+				},
+				"code":"if(binding.hasVariable(\"callFor\") && binding.hasVariable(\"inputPatterns\")) {\n  def patterns = inputPatterns.findAll { item ->\n        item?.appliesTo && item.appliesTo.contains(callFor)\n    }.collect { item ->\n        item.findAll { k, v -> k != 'appliesTo' }\n    }\n    return [ \"patterns\": patterns]\n}\n\nreturn []",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"callFor":"{{ YL4M8.outputs.callFor }}",
+					"inputPatterns":{
+						"source":"{{ YL4M8.outputs.piiMasking.regex.patterns }}",
+						"ua:type":"mappedArray",
+						"items":"{{ YL4M8.outputs.piiMasking.regex.patterns[0] }}"
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"applies to filter",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
 			"context":{
 				"appName":"if_else",
 				"resourceVersion":174,
@@ -576,7 +704,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ZrWT9-1",
 			"id":"lKKHE",
-			"index":7,
+			"index":8,
 			"inputs":{
 				"filters":[
 					{
@@ -587,7 +715,7 @@
 						}
 					},
 					{
-						"property":"=LEN({{ YL4M8.outputs.piiMasking.regex.patterns }})",
+						"property":"=LEN({{ n_NVJel.outputs.result.patterns }})",
 						"filter":{
 							"operator":"GT",
 							"value":"0"
@@ -597,7 +725,7 @@
 				"operator":"AND"
 			},
 			"skip":false,
-			"subTitle":"Condition",
+			"subTitle":"Regex",
 			"title":"Condition",
 			"type":"IF_ELSE"
 		},
@@ -613,23 +741,23 @@
 			"fallbackMode":"STOP",
 			"groupId":"lKKHE@ZrWT9-1@y",
 			"id":"fPyyH",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"automationId":"67e669196b919460b368dce2",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
+					"text":"{{ 7dDjY.outputs.modifiedText }}",
 					"regexPatterns":{
 						"ua:type":"mappedArray",
-						"source":"{{ YL4M8.outputs.piiMasking.regex.patterns }}",
 						"items":{
-							"name":"{{ YL4M8.outputs.piiMasking.regex.patterns[0].name }}",
-							"pattern":"{{ YL4M8.outputs.piiMasking.regex.patterns[0].pattern }}",
-							"behaviour":"{{ YL4M8.outputs.piiMasking.regex.patterns[0].behaviour }}"
-						}
-					},
-					"text":"{{ 7dDjY.outputs.modifiedText }}"
+							"name":"{{ n_NVJel.outputs.result.patterns[0].name }}",
+							"pattern":"{{ n_NVJel.outputs.result.patterns[0].pattern }}",
+							"behaviour":"{{ n_NVJel.outputs.result.patterns[0].behaviour }}"
+						},
+						"source":"{{ n_NVJel.outputs.result.patterns }}"
+					}
 				}
 			},
 			"skip":false,
@@ -649,7 +777,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"lKKHE@ZrWT9-1@y",
 			"id":"YllHz",
-			"index":9,
+			"index":10,
 			"inputs":{
 				"variables":[
 					{
@@ -679,7 +807,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ZrWT9-1",
 			"id":"w5ljJ",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"filters":[
 					{
@@ -700,7 +828,7 @@
 				"operator":"AND"
 			},
 			"skip":false,
-			"subTitle":"Condition",
+			"subTitle":"PII",
 			"title":"Condition",
 			"type":"IF_ELSE"
 		},
@@ -716,7 +844,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"w5ljJ@ZrWT9-1@y",
 			"id":"RFWE5",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"inputText":"{{ 7dDjY.outputs.modifiedText }}"
 			},
@@ -737,7 +865,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"w5ljJ@ZrWT9-1@y",
 			"id":"iyy4K",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"variables":[
 					{
@@ -752,6 +880,77 @@
 			"type":"ACTION"
 		},
 		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.parameters.inputIds.items"
+				]
+			},
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":528,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"ZrWT9-1",
+			"id":"_Y7yeZ",
+			"index":14,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"ids":{
+							"type":"array",
+							"items":{
+								"type":"string",
+								"required":[]
+							},
+							"title":"Ids"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"callFor":{
+							"type":"string",
+							"title":"Call For"
+						},
+						"inputIds":{
+							"type":"array",
+							"items":{
+								"type":"object",
+								"properties":{},
+								"additionalProperties":false
+							},
+							"title":"Input Ids"
+						}
+					}
+				},
+				"code":"if(binding.hasVariable(\"callFor\") && binding.hasVariable(\"inputIds\")) {\n  def ids = inputIds.findAll { item ->\n        item?.appliesTo && item.appliesTo.contains(callFor)\n    }.collect { item ->\n        item.findAll { k, v -> k != 'appliesTo' }\n    }\n    return [ \"ids\": ids]\n}\n\nreturn []",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"callFor":"{{ YL4M8.outputs.callFor }}",
+					"inputIds":{
+						"source":"{{ YL4M8.outputs.piiMasking.automations.ids }}",
+						"ua:type":"mappedArray",
+						"items":"{{ YL4M8.outputs.piiMasking.automations.ids[0] }}"
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"applies to filter",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
 			"context":{
 				"appName":"if_else",
 				"resourceVersion":403,
@@ -763,7 +962,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ZrWT9-1",
 			"id":"qREpe",
-			"index":13,
+			"index":15,
 			"inputs":{
 				"filters":[
 					{
@@ -774,7 +973,7 @@
 						}
 					},
 					{
-						"property":"=LEN({{ YL4M8.outputs.piiMasking.automations.ids }})",
+						"property":"=LEN({{ _Y7yeZ.outputs.result.ids }})",
 						"filter":{
 							"operator":"GT",
 							"value":"0"
@@ -800,10 +999,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"qREpe@ZrWT9-1@y",
 			"id":"1yXbA",
-			"index":14,
+			"index":16,
 			"inputs":{
 				"repeatMode":"SINGLE",
-				"listSource":"{{ YL4M8.outputs.piiMasking.automations.ids }}",
+				"listSource":"{{ _Y7yeZ.outputs.result.ids }}",
 				"captureIterations":false
 			},
 			"skip":false,
@@ -823,16 +1022,17 @@
 			"fallbackMode":"STOP",
 			"groupId":"1yXbA@qREpe@ZrWT9-1@y@l",
 			"id":"AzBr0",
-			"index":15,
+			"index":17,
 			"inputs":{
 				"callableInterfaceId":"__ua_pii_mask_chunk_interface",
-				"runtimeConnections":{},
+				"runtimeConnections":"",
 				"synchronous":true,
+				"triggerWorkflowWithRuntimeType":"DEFAULT",
 				"callableInterfaces":[],
 				"fallbackWorkflowId":"{{ 1yXbA.outputs.item }}",
 				"parameters":{
-					"metadata":"{{ YL4M8.outputs.metadata }}",
-					"text":"{{ 7dDjY.outputs.modifiedText }}"
+					"text":"{{ 7dDjY.outputs.modifiedText }}",
+					"metadata":"{{ YL4M8.outputs.metadata }}"
 				}
 			},
 			"skip":false,
@@ -852,7 +1052,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"1yXbA@qREpe@ZrWT9-1@y@l",
 			"id":"u0o1G",
-			"index":16,
+			"index":18,
 			"inputs":{
 				"variables":[
 					{
@@ -882,7 +1082,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"1yXbA@qREpe@ZrWT9-1@y@l",
 			"id":"Csvtp",
-			"index":17,
+			"index":19,
 			"inputs":{
 				"filters":[
 					{
@@ -925,7 +1125,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"Csvtp@1yXbA@qREpe@ZrWT9-1@y@l@y",
 			"id":"Lseys",
-			"index":18,
+			"index":20,
 			"inputs":{
 				"loop":"1yXbA"
 			},
@@ -946,21 +1146,23 @@
 			"fallbackMode":"STOP",
 			"groupId":"ZrWT9-1",
 			"id":"SpyLH",
-			"index":19,
+			"index":21,
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"isModified":{
 							"type":"boolean",
 							"title":"isModified"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"originalText":{
 							"type":"string",
@@ -970,12 +1172,11 @@
 							"type":"string",
 							"title":"modifiedText"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				},
-				"compile_static":false,
 				"code":"return originalText!=modifiedText",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"originalText":"{{ YL4M8.outputs.text }}",
 					"modifiedText":"{{ 7dDjY.outputs.modifiedText }}"
@@ -998,7 +1199,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ZrWT9-1",
 			"id":"0F7XM",
-			"index":20,
+			"index":22,
 			"inputs":{
 				"filters":[
 					{
@@ -1048,7 +1249,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"0F7XM@ZrWT9-1@y",
 			"id":"b66uk",
-			"index":21,
+			"index":23,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1175,7 +1376,7 @@
 			"fallbackMode":"CONTINUE",
 			"groupId":"0F7XM@ZrWT9-1@y",
 			"id":"n_zYRZZ",
-			"index":22,
+			"index":24,
 			"inputs":{
 				"automationId":"68c51597269ad81cc750a3ca",
 				"runtimeConnections":{},
@@ -1268,7 +1469,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"ZrWT9-1",
 			"id":"QDnRy",
-			"index":23,
+			"index":25,
 			"inputs":{
 				"result":{
 					"proceed":"{{ 7dDjY.outputs.proceed }}",
@@ -1297,5 +1498,5 @@
 		}
 	},
 	"standard":true,
-	"version":265
+	"version":268
 }
