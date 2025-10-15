@@ -6,46 +6,102 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_65xO5",
+			"fromNodeId":"n_Kt8cu",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_HUZJM",
+			"toNodeId":"n_hjAVF",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_hjAVF",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_fjulZ",
 			"type":"next"
 		}
 	],
 	"id":"68ef9cf11ff997436ed23c47",
 	"lastModifiedBy":39713,
 	"lcName":"testmongointapi",
-	"modifiedTime":1760533745463,
+	"modifiedTime":1760534616770,
 	"name":"testMongoIntAPI",
 	"nodes":[
 		{
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":833,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_65xO5-1",
-			"id":"_65xO5",
-			"index":0,
+			"id":"n_Kt8cu",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json"
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":1003,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_65xO5-1",
-			"id":"_HUZJM",
-			"index":0,
+			"id":"n_hjAVF",
+			"index":2,
+			"inputs":{
+				"code":"// Needed imports from your application and the MongoDB driver\nimport io.quarkus.arc.Arc;\nimport com.unifyapps.infra.mongo.MongoTemplateFactory;\nimport com.unifyapps.infra.mongo.MongoTemplate;\nimport org.bson.Document;\nimport com.mongodb.client.MongoCollection;\nimport com.mongodb.client.model.UpdateOptions;\nimport com.mongodb.client.result.UpdateResult;\nimport org.bson.conversions.Bson;\n\n// 1. Define constants for your operation\nlong customerId = 1L;\nString resourceType = \"Workflow\";\nString collectionName = \"DeployedWorkflowDefinition\";\n\n// 2. Inject the MongoTemplateFactory service using Arc container\ndef mongoTemplateFactory = Arc.container().instance(MongoTemplateFactory.class).get();\n\n// 3. Get the specific MongoTemplate for the customer and resource\nMongoTemplate mongoTemplate = mongoTemplateFactory.getMongoTemplate(customerId, { -> resourceType });\n\n// 4. Get the raw MongoDB collection object\nMongoCollection<Document> collection = mongoTemplate.getCollection(collectionName);\n\n// 5. Define the filter (query) document\nDocument filter = new Document(\"nodes.context.appName\", \"storage_by_unifyapps\");\n\n// 6. Define the update document with the placeholder\nDocument update = new Document(\"\\$set\", \n    new Document(\"nodes.\\$[elem].inputs.Unset if Null\", true)\n);\n\n// 7. Define the arrayFilters in an UpdateOptions object\nList<Bson> arrayFilters = [\n    new Document(\"elem.context.appName\", \"storage_by_unifyapps\")\n];\nUpdateOptions options = new UpdateOptions().arrayFilters(arrayFilters);\n\n// 8. Execute the updateMany command with all three parts: filter, update, and options\nUpdateResult result = collection.updateMany(filter, update, options);\n\n// 9. Return the number of documents modified\nreturn result.getModifiedCount();",
+				"compile_static":false,
+				"captureStdOutput":false
+			},
+			"skip":true,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":1003,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_65xO5-1",
+			"id":"n_fjulZ",
+			"index":3,
+			"inputs":{
+				"code":"// Needed imports from your application and the MongoDB driver\nimport io.quarkus.arc.Arc;\nimport com.unifyapps.infra.mongo.MongoTemplateFactory;\nimport com.unifyapps.infra.mongo.MongoTemplate;\nimport org.bson.Document;\nimport com.mongodb.client.MongoCollection;\nimport com.mongodb.client.model.UpdateOptions;\nimport com.mongodb.client.result.UpdateResult;\nimport org.bson.conversions.Bson;\n\n// 1. Define constants for your operation\nlong customerId = 1L;\nString resourceType = \"Workflow\";\nString collectionName = \"DeployedWorkflowDefinition\";\n\n// 2. Inject the MongoTemplateFactory service using Arc container\ndef mongoTemplateFactory = Arc.container().instance(MongoTemplateFactory.class).get();\n\n// 3. Get the specific MongoTemplate for the customer and resource\nMongoTemplate mongoTemplate = mongoTemplateFactory.getMongoTemplate(customerId, { -> resourceType });\n\n// 4. Get the raw MongoDB collection object\nMongoCollection<Document> collection = mongoTemplate.getCollection(collectionName);\n\n// 5. CHANGED: Define a more specific filter to target only one document by name\nDocument filter = new Document(\"name\", \"TestMongoAPICurl\")\n    .append(\"nodes.context.appName\", \"storage_by_unifyapps\");\n\n// 6. Define the update document with the placeholder\nDocument update = new Document(\"\\$set\", \n    new Document(\"nodes.\\$[elem].inputs.Unset if Null\", true)\n);\n\n// 7. Define the arrayFilters in an UpdateOptions object\nList<Bson> arrayFilters = [\n    new Document(\"elem.context.appName\", \"storage_by_unifyapps\")\n];\nUpdateOptions options = new UpdateOptions().arrayFilters(arrayFilters);\n\n// 8. CHANGED: Execute updateOne to ensure only a single document is modified\nUpdateResult result = collection.updateOne(filter, update, options);\n\n// 9. Return the number of documents modified (will be 0 or 1)\nreturn result.getModifiedCount();",
+				"compile_static":false,
+				"captureStdOutput":false
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":39713,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +115,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
