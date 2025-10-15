@@ -44,7 +44,7 @@
 	"id":"68ef9cf11ff997436ed23c47",
 	"lastModifiedBy":39713,
 	"lcName":"testmongointapi",
-	"modifiedTime":1760544325826,
+	"modifiedTime":1760545847236,
 	"name":"testMongoIntAPI",
 	"nodes":[
 		{
@@ -178,7 +178,7 @@
 			"id":"n_0hhcw",
 			"index":6,
 			"inputs":{
-				"code":"// Imports...\nimport io.quarkus.arc.Arc;\nimport com.unifyapps.infra.mongo.MongoTemplateFactory;\nimport com.unifyapps.infra.mongo.MongoTemplate;\nimport com.mongodb.client.MongoClient;\nimport com.mongodb.client.MongoDatabase;\nimport com.mongodb.client.MongoCollection;\nimport org.bson.Document;\nimport com.mongodb.client.model.UpdateOptions;\nimport com.mongodb.client.result.UpdateResult;\nimport org.bson.conversions.Bson;\n\n// 1. Define constants\nlong customerId = 1L;\nString resourceType = \"Workflow\";\nString collectionName = \"DeployedWorkflowDefinition\";\nString CORRECT_DATABASE_NAME = \"CUSTOMER_WORKFLOW_1\";\n\n// 2. Get the client\ndef mongoTemplateFactory = Arc.container().instance(MongoTemplateFactory.class).get();\nMongoTemplate mongoTemplate = mongoTemplateFactory.getMongoTemplate(customerId, { -> resourceType });\nMongoClient mongoClient = mongoTemplate.getMongoClient();\n\n// 3. Manually get the database and collection\nMongoDatabase database = mongoClient.getDatabase(CORRECT_DATABASE_NAME);\nMongoCollection<Document> collection = database.getCollection(collectionName);\n\n// 4. Filter for the specific test document\nDocument filter = new Document(\"name\", \"TestMongoAPICurl\")\n    .append(\"nodes.context.appName\", \"storage_by_unifyapps\");\n\n// 5. Define the update operation to set the value to FALSE for this test\nDocument update = new Document(\"\\$set\", \n    new Document(\"nodes.\\$[elem].inputs.unsetIfNull\", true) // <-- CHANGED TO FALSE FOR TEST\n);\n\n// 6. Define the arrayFilters\nList<Bson> arrayFilters = [\n    new Document(\"elem.context.appName\", \"storage_by_unifyapps\")\n];\nUpdateOptions options = new UpdateOptions().arrayFilters(arrayFilters);\n\n// 7. Execute the updateOne command\nUpdateResult result = collection.updateMany(filter, update, options);\n\n// 8. This should now return 1\nreturn result.getModifiedCount();",
+				"code":"\nimport io.quarkus.arc.Arc;\nimport com.unifyapps.infra.mongo.MongoTemplateFactory;\nimport com.unifyapps.infra.mongo.MongoTemplate;\nimport com.mongodb.client.MongoClient;\nimport com.mongodb.client.MongoDatabase;\nimport com.mongodb.client.MongoCollection;\nimport org.bson.Document;\nimport com.mongodb.client.model.UpdateOptions;\nimport com.mongodb.client.result.UpdateResult;\nimport org.bson.conversions.Bson;\n\nlong customerId = 1L;\nString resourceType = \"Workflow\";\nString collectionName = \"DeployedWorkflowDefinition\";\nString CORRECT_DATABASE_NAME = \"CUSTOMER_WORKFLOW_1\";\n\ndef mongoTemplateFactory = Arc.container().instance(MongoTemplateFactory.class).get();\nMongoTemplate mongoTemplate = mongoTemplateFactory.getMongoTemplate(customerId, { -> resourceType });\nMongoClient mongoClient = mongoTemplate.getMongoClient();\n\nMongoDatabase database = mongoClient.getDatabase(CORRECT_DATABASE_NAME);\nMongoCollection<Document> collection = database.getCollection(collectionName);\n\nDocument filter = new Document(\"name\", \"TestMongoAPICurl\")\n    .append(\"nodes.context.appName\", \"storage_by_unifyapps\");\n\nDocument update = new Document(\"\\$set\", \n    new Document(\"nodes.\\$[elem].inputs.unsetIfNull\", true)\n);\n\nList<Bson> arrayFilters = [\n    new Document(\"elem.context.appName\", \"storage_by_unifyapps\")\n];\nUpdateOptions options = new UpdateOptions().arrayFilters(arrayFilters);\nUpdateResult result = collection.updateMany(filter, update, options);\nreturn result.getModifiedCount();",
 				"compile_static":false,
 				"captureStdOutput":false
 			},
@@ -205,5 +205,5 @@
 	"tags":[
 		
 	],
-	"version":9
+	"version":10
 }
