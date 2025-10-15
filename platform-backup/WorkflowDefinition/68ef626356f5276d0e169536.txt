@@ -5,12 +5,12 @@
 	"createdTime":1760518755249,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760519888734,
-		"deployedBy":426,
-		"deployedDefinitionId":"68ef66d056f5276d0e16c5c5",
+		"deployedAt":1760520133681,
+		"deployedBy":1728,
+		"deployedDefinitionId":"68ef67c556f5276d0e16cf71",
 		"status":"DEPLOYED",
-		"version":4,
-		"workflowVersion":3
+		"version":5,
+		"workflowVersion":4
 	},
 	"description":"",
 	"edges":[
@@ -39,7 +39,7 @@
 	"id":"68ef626356f5276d0e169536",
 	"lastModifiedBy":1728,
 	"lcName":"new_agent",
-	"modifiedTime":1760520133371,
+	"modifiedTime":1760520562899,
 	"name":"new_agent",
 	"nodes":[
 		{
@@ -84,29 +84,44 @@
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
 					"name":"Creates a mini-agent to handle a specific task\nusing a predefined model and interface.",
-					"instructions":"Using the user query classify its sentiment and give me the emotion of user",
+					"instructions":"use the knowledge and answer user query",
 					"model":"e_686654b81257d219bd7958d5",
-					"knowledges":[],
+					"knowledges":[
+						{
+							"type":"knowledge",
+							"id":"knowledge_PzYh7"
+						}
+					],
 					"responseSchema":{
 						"type":"object",
 						"properties":{
-							"sentiment":{
+							"answer":{
 								"type":"string",
-								"description":"The classified sentiment of the user query.",
-								"enum":[
-									"positive",
-									"negative",
-									"neutral"
-								]
+								"description":"The response to the user's query based on the AI's knowledge."
 							},
-							"emotion":{
-								"type":"string",
-								"description":"The identified emotion of the user based on the query."
+							"confidence":{
+								"type":"number",
+								"description":"A score between 0 and 1 indicating the AI's confidence in the answer.",
+								"minimum":0,
+								"maximum":1
+							},
+							"sources":{
+								"type":"array",
+								"items":{
+									"type":"string"
+								},
+								"description":"List of sources or references used to generate the answer, if applicable."
+							},
+							"relatedTopics":{
+								"type":"array",
+								"items":{
+									"type":"string"
+								},
+								"description":"List of related topics that might be of interest to the user based on their query."
 							}
 						},
 						"required":[
-							"sentiment",
-							"emotion"
+							"answer"
 						]
 					}
 				}
@@ -132,7 +147,7 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"Using the emotion of user, answer in the opposite emotion,\nEmotion: {{ n_Hb1pu.outputs.emotion }}, sentiment:{{ n_Hb1pu.outputs.sentiment }}",
+					"responseInstructions":"Respond to user using\nagent answer: {{ n_Hb1pu.outputs.answer }}",
 					"name":"Crafts AI agent's response format and tone",
 					"model":"e_686654b81257d219bd7958d5"
 				}
@@ -169,5 +184,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":4
+	"version":5
 }
