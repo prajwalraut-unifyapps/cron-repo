@@ -6,32 +6,306 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_REA0b",
+			"fromNodeId":"n_M1Evr",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_m7cAQ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_m7cAQ",
+			"name":"1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_m7cAQ@1",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_m7cAQ@1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_kVqxr",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_m7cAQ",
+			"name":"2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_m7cAQ@2",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_m7cAQ@2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_HKLPs",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_kVqxr",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"_4TlLz",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_HKLPs",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_4TlLz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_m7cAQ",
+			"name":"default",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_4TlLz",
+			"type":"branch"
 		}
 	],
 	"id":"68efa212b9b2da34e6971aaf",
 	"lastModifiedBy":1,
 	"lcName":"dnt_customhttpapplicationsoapexecute",
-	"modifiedTime":1760535058742,
+	"modifiedTime":1760539615758,
 	"name":"Dnt_CustomHttpApplicationSoapExecute",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2549,
+				"resourceName":"callables_from_api"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_REA0b-1",
-			"id":"_REA0b",
-			"index":0,
+			"id":"n_M1Evr",
+			"index":1,
+			"inputs":{
+				"request":{
+					"headers":{
+						"type":"object",
+						"additionalProperties":false,
+						"required":[],
+						"properties":{
+							"Status":{
+								"type":"string",
+								"title":"Status"
+							}
+						}
+					},
+					"contentType":"application/json"
+				},
+				"endpointType":"SOAP",
+				"response":[
+					{
+						"name":"200",
+						"status":200,
+						"body":{
+							"type":"object",
+							"additionalProperties":false,
+							"required":[
+								"checkstatus"
+							],
+							"properties":{
+								"checkstatus":{
+									"type":"string",
+									"title":"checkstatus"
+								}
+							}
+						}
+					},
+					{
+						"name":"201",
+						"status":200,
+						"body":{
+							"type":"object",
+							"additionalProperties":false,
+							"required":[
+								"checkstatus"
+							],
+							"properties":{
+								"checkstatus":{
+									"type":"string",
+									"title":"checkstatus"
+								}
+							}
+						}
+					}
+				],
+				"soapVersion":"v1.2",
+				"streamingResponse":false
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via API",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"branch",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_REA0b-1",
+			"id":"n_m7cAQ",
+			"index":2,
+			"inputs":{
+				"branches":[
+					{
+						"id":"1",
+						"inputs":{
+							"name":"Soap _statusCode 200",
+							"conditions":{
+								"filters":[
+									{
+										"property":"{{ n_9G5LU.outputs.headers.Status }}",
+										"filter":{
+											"operator":"EQUAL",
+											"value":"200"
+										}
+									}
+								],
+								"operator":"AND"
+							}
+						}
+					},
+					{
+						"id":"2",
+						"inputs":{
+							"name":"Soap _statusCode 201",
+							"conditions":{
+								"filters":[
+									{
+										"property":"{{ n_9G5LU.outputs.headers.Status }}",
+										"filter":{
+											"operator":"EQUAL",
+											"value":"201"
+										}
+									}
+								],
+								"operator":"AND"
+							}
+						}
+					},
+					{
+						"id":"default"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Branch",
+			"title":"",
+			"type":"BRANCH"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceVersion":0,
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_m7cAQ@_REA0b-1@1",
+			"id":"n_m7cAQ@1",
+			"index":3,
+			"inputs":{
+				"name":"Soap _statusCode 200",
+				"conditions":{
+					"filters":[
+						{
+							"property":"{{ n_9G5LU.outputs.headers.Status }}",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"200"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"subTitle":"",
+			"title":"",
+			"type":"BRANCH_CONDITION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":19,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_m7cAQ@_REA0b-1@1",
+			"id":"n_kVqxr",
+			"index":4,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_200",
+				"body":{
+					"checkStatus":"{{ n_9G5LU.outputs.headers.Status }}"
+				},
+				"status":200
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceVersion":0,
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_m7cAQ@_REA0b-1@2",
+			"id":"n_m7cAQ@2",
+			"index":5,
+			"inputs":{
+				"name":"Soap _statusCode 201",
+				"conditions":{
+					"filters":[
+						{
+							"property":"{{ n_9G5LU.outputs.headers.Status }}",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"201"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"title":"",
+			"type":"BRANCH_CONDITION"
+		},
+		{
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_m7cAQ@_REA0b-1@2",
+			"id":"n_HKLPs",
+			"index":6,
+			"skip":false,
+			"title":"Select an app and action",
+			"type":"ACTION"
 		},
 		{
 			"debug":false,
@@ -39,13 +313,16 @@
 			"fallbackMode":"STOP",
 			"groupId":"_REA0b-1",
 			"id":"_4TlLz",
-			"index":0,
+			"index":7,
 			"skip":false,
 			"title":"Select an app and action",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +336,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
