@@ -5,12 +5,12 @@
 	"createdTime":1760442640288,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760529732300,
+		"deployedAt":1760529895049,
 		"deployedBy":173449,
-		"deployedDefinitionId":"68ef8d4415076a51390873f1",
+		"deployedDefinitionId":"68ef8de715076a51390879da",
 		"status":"DEPLOYED",
-		"version":29,
-		"workflowVersion":29
+		"version":30,
+		"workflowVersion":30
 	},
 	"description":"",
 	"edges":[
@@ -46,7 +46,7 @@
 	"id":"68ee391060d00c2ce23c4dab",
 	"lastModifiedBy":173449,
 	"lcName":"123213",
-	"modifiedTime":1760529894877,
+	"modifiedTime":1760529978737,
 	"name":"123213",
 	"nodes":[
 		{
@@ -93,7 +93,7 @@
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
 					"name":"Creates a mini-agent for a specific task using GPT-4",
-					"instructions":"Step 1.A: Detect intent.\nYou will need to detect what is the intent of the employee based on their inquiry\nFor example when the user says \"My laptop camera isn't working\"\n--> \"INTENT” -->if(intent == HARDWARE)\nOnly give responses specific to the hardware that is correlated to the mentioned issue\n\nStep 2: Search knowledge base for the issue (max 5 steps).\nReply to the user in natural language.\nDO NOT GIVE GENERIC ADVICE. If no Knowledge result is found, then pass it on to Step 4.\nIF NO KNOWLEDGE FOUND\nStep 4: Escalation (If Not Found or Unresolved)\nIf KnowledgeResult.found == false or user reports “still not working”: end with thanks\n",
+					"instructions":"Step 1.A: Detect intent.\nYou will need to detect what is the intent of the employee based on their inquiry\nFor example when the user says \"My laptop camera isn't working\"\n--> \"INTENT” -->if(intent == HARDWARE)\nOnly give responses specific to the hardware that is correlated to the mentioned issue\n\nStep 2: Search knowledge base for the issue (max 5 steps).\nReply to the user in natural language.\nDO NOT GIVE GENERIC ADVICE. If no Knowledge result is found, then pass it on to Step 3.\nIF NO KNOWLEDGE FOUND\nStep 3: Escalation (If Not Found or Unresolved)\nIf KnowledgeResult.found == false or user reports “still not working”: end with thanks\n",
 					"model":"e_686654b81257d219bd7958d5",
 					"knowledges":[
 						{
@@ -101,6 +101,9 @@
 						}
 					],
 					"responseSchema":{
+						"ua:modal":{
+							"field_type":"STRING"
+						},
 						"type":"object",
 						"properties":{
 							"intent":{
@@ -112,7 +115,7 @@
 								"properties":{
 									"found":{
 										"type":"boolean",
-										"description":"Indicates if a solution was found in the knowledge base"
+										"description":"Indicates if a relevant knowledge base entry was found"
 									},
 									"steps":{
 										"type":"array",
@@ -120,13 +123,13 @@
 											"type":"string"
 										},
 										"maxItems":5,
-										"description":"Steps to resolve the issue, if found"
+										"description":"Steps to resolve the issue, if found in the knowledge base"
 									}
 								}
 							},
 							"response":{
 								"type":"string",
-								"description":"Natural language response to the user"
+								"description":"Natural language response to the user's inquiry"
 							},
 							"escalation":{
 								"type":"boolean",
@@ -134,7 +137,7 @@
 							},
 							"closingMessage":{
 								"type":"string",
-								"description":"Closing message, especially for escalation cases"
+								"description":"Closing message, especially if escalation is needed"
 							}
 						},
 						"required":[
@@ -242,5 +245,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":30
+	"version":31
 }
