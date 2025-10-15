@@ -2,15 +2,15 @@
 	"appsUsed":[
 		"storage_by_unifyapps"
 	],
-	"createdTime":1760376155913,
+	"createdTime":1760281937837,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760378636202,
-		"deployedBy":1,
-		"deployedDefinitionId":"68ed3f0cf5eb8345dac80518",
+		"deployedAt":1760467734600,
+		"deployedBy":1728,
+		"deployedDefinitionId":"68ee9b162d6a55731398efd3",
 		"status":"DEPLOYED",
-		"version":2,
-		"workflowVersion":9
+		"version":14,
+		"workflowVersion":19
 	},
 	"edges":[
 		{
@@ -155,6 +155,13 @@
 			"fromNodeId":"n_92BzV",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_kgHrE",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_kgHrE",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"_aBACL",
 			"type":"next"
 		},
@@ -177,6 +184,7 @@
 		"configs":[
 			{
 				"permissions":[
+					"VIEW_RUNS",
 					"V"
 				],
 				"principalType":"GLOBAL"
@@ -184,9 +192,9 @@
 		]
 	},
 	"id":"68ea9499fe0c701e6dbf323a",
-	"lastModifiedBy":0,
+	"lastModifiedBy":1728,
 	"lcName":"workflow agent | ask an ai agent",
-	"modifiedTime":1760465540037,
+	"modifiedTime":1760518221123,
 	"name":"Workflow Agent | Ask an AI Agent",
 	"nodes":[
 		{
@@ -811,7 +819,7 @@
 						}
 					}
 				},
-				"code":"def hasResponseSchema = binding.hasVariable('responseSchema') && responseSchema\ndef hasInstructions = binding.hasVariable('instructions') && instructions\ndef hasTools = binding.hasVariable('tools') && tools\ndef hasKnowledges = binding.hasVariable('knowledges') && knowledges\ndef hasContext = binding.hasVariable('context') && context\n\n\ndef promptParts = []\n\nif (hasResponseSchema) {\n    // Convert schema to JSON manually\n    def schemaJson = convertToJson(responseSchema)\n    promptParts << \"Nothing else besides this output following correct schema is needed. Exact response schema to follow:\\n${schemaJson}\\n\"\n}\nif (hasContext) {\n    promptParts << \"Use this as context:\\n ${context}\\n\"\n}\nif (hasInstructions) {\n    promptParts << \"Instructions:\\n${instructions}\\n\"\n}\n\ndef promptHeader = \"Following the instructions provided below, generate a response following output schema accordingly.\"\n\ndef finalPrompt = promptParts.isEmpty() \n    ? promptHeader \n    : ([promptHeader] + promptParts).join(\"\\n\")\n\n// Process tools\ndef toolIds = []\ndef webSearch = false\ndef deepSearch = false\n\nif (hasTools) {\n    if (tools.toolList) {\n        toolIds = tools.toolList.collect { it.toString() }\n    }\n    \n    if (tools.defaultTools) {\n        webSearch = tools.defaultTools.any { it.toString().equalsIgnoreCase('webSearch') }\n        deepSearch = tools.defaultTools.any { it.toString().equalsIgnoreCase('deepSearch') }\n    }\n}\n\n// Process knowledges\ndef knowledgeSetIds = []\ndef knowledgeIds = []\n\nif (hasKnowledges) {\n    knowledges.each { knowledge ->\n        if (knowledge.type == 'knowledge_set' || knowledge.type == 'GLOBAL') {\n            knowledgeSetIds << knowledge.id\n            if (knowledge.type == 'GLOBAL') {\n                knowledgeSetIds << 'GLOBAL'\n            }\n        } else if (knowledge.type == 'knowledge') {\n            knowledgeIds << knowledge.id\n        }\n    }\n}\n\nreturn [\n    prompt: finalPrompt,\n    toolIds: toolIds,\n    webSearch: webSearch,\n    deepSearch: deepSearch,\n    knowledgeSetIds: knowledgeSetIds,\n    knowledgeIds: knowledgeIds\n]\n\n// Helper method to convert Map/List to JSON string\ndef convertToJson(obj, indent = 0) {\n    def indentStr = \"  \" * indent\n    def nextIndentStr = \"  \" * (indent + 1)\n    \n    if (obj instanceof Map) {\n        if (obj.isEmpty()) return \"{}\"\n        def entries = obj.collect { k, v ->\n            \"${nextIndentStr}\\\"${k}\\\": ${convertToJson(v, indent + 1)}\"\n        }.join(\",\\n\")\n        return \"{\\n${entries}\\n${indentStr}}\"\n    } else if (obj instanceof List) {\n        if (obj.isEmpty()) return \"[]\"\n        def items = obj.collect { v ->\n            \"${nextIndentStr}${convertToJson(v, indent + 1)}\"\n        }.join(\",\\n\")\n        return \"[\\n${items}\\n${indentStr}]\"\n    } else if (obj instanceof String) {\n        return \"\\\"${obj.replace('\"', '\\\\\"')}\\\"\"\n    } else if (obj instanceof Number || obj instanceof Boolean) {\n        return obj.toString()\n    } else if (obj == null) {\n        return \"null\"\n    } else {\n        return \"\\\"${obj.toString()}\\\"\"\n    }\n}",
+				"code":"def hasResponseSchema = binding.hasVariable('responseSchema') && responseSchema\ndef hasInstructions = binding.hasVariable('instructions') && instructions\ndef hasTools = binding.hasVariable('tools') && tools\ndef hasKnowledges = binding.hasVariable('knowledges') && knowledges\ndef hasContext = binding.hasVariable('context') && context\n\n\ndef promptParts = []\n\nif (hasResponseSchema) {\n    // Convert schema to JSON manually\n    def schemaJson = convertToJson(responseSchema)\n    promptParts << \"Nothing else besides this output following correct schema is needed. Exact response schema to follow:\\n${schemaJson}\\n\"\n}\nif (hasContext) {\n    promptParts << \"Use this as context:\\n ${context}\\n\"\n}\nif (hasInstructions) {\n    promptParts << \"Instructions:\\n${instructions}\\n\"\n}\n\ndef promptHeader = \"Following the instructions provided below, generate a response following output schema accordingly.\"\n\ndef finalPrompt = promptParts.isEmpty() \n    ? promptHeader \n    : ([promptHeader] + promptParts).join(\"\\n\")\n\n// Process tools\ndef toolIds = ['e_68ef36abd3af8155c30a18fc']\ndef webSearch = false\ndef deepSearch = false\n\nif (hasTools) {\n    if (tools.toolList) {\n        toolIds = tools.toolList.collect { it.toString() }\n    }\n    \n    if (tools.defaultTools) {\n        webSearch = tools.defaultTools.any { it.toString().equalsIgnoreCase('webSearch') }\n        deepSearch = tools.defaultTools.any { it.toString().equalsIgnoreCase('deepSearch') }\n    }\n}\n\n// Process knowledges\ndef knowledgeSetIds = []\ndef knowledgeIds = []\n\nif (hasKnowledges) {\n    knowledges.each { knowledge ->\n        if (knowledge.type == 'knowledge_set' || knowledge.type == 'GLOBAL') {\n            knowledgeSetIds << knowledge.id\n            if (knowledge.type == 'GLOBAL') {\n                knowledgeSetIds << 'GLOBAL'\n            }\n        } else if (knowledge.type == 'knowledge') {\n            knowledgeIds << knowledge.id\n        }\n    }\n}\n\nreturn [\n    prompt: finalPrompt,\n    toolIds: toolIds,\n    webSearch: webSearch,\n    deepSearch: deepSearch,\n    knowledgeSetIds: knowledgeSetIds,\n    knowledgeIds: knowledgeIds\n]\n\n// Helper method to convert Map/List to JSON string\ndef convertToJson(obj, indent = 0) {\n    def indentStr = \"  \" * indent\n    def nextIndentStr = \"  \" * (indent + 1)\n    \n    if (obj instanceof Map) {\n        if (obj.isEmpty()) return \"{}\"\n        def entries = obj.collect { k, v ->\n            \"${nextIndentStr}\\\"${k}\\\": ${convertToJson(v, indent + 1)}\"\n        }.join(\",\\n\")\n        return \"{\\n${entries}\\n${indentStr}}\"\n    } else if (obj instanceof List) {\n        if (obj.isEmpty()) return \"[]\"\n        def items = obj.collect { v ->\n            \"${nextIndentStr}${convertToJson(v, indent + 1)}\"\n        }.join(\",\\n\")\n        return \"[\\n${items}\\n${indentStr}]\"\n    } else if (obj instanceof String) {\n        return \"\\\"${obj.replace('\"', '\\\\\"')}\\\"\"\n    } else if (obj instanceof Number || obj instanceof Boolean) {\n        return obj.toString()\n    } else if (obj == null) {\n        return \"null\"\n    } else {\n        return \"\\\"${obj.toString()}\\\"\"\n    }\n}",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -1007,37 +1015,9 @@
 							"type":"string",
 							"title":"Ai Agent Ua Instructions"
 						},
-						"ai_agent_ua_steps":{
-							"type":"array",
-							"items":{
-								"type":"object",
-								"properties":{
-									"instructions":{
-										"type":"string",
-										"title":"Instructions"
-									},
-									"nodes":{
-										"type":"array",
-										"items":{
-											"type":"object",
-											"properties":{},
-											"additionalProperties":false
-										},
-										"title":"Nodes"
-									}
-								},
-								"additionalProperties":false,
-								"required":[]
-							},
-							"title":"Ai Agent Ua Steps"
-						},
 						"ai_agent_ua_goal":{
 							"type":"string",
 							"title":"Ai Agent Ua Goal"
-						},
-						"ai_agent_ua_test_mode":{
-							"type":"boolean",
-							"title":"Ai Agent Ua Test Mode"
 						},
 						"ai_agent_ua_role":{
 							"type":"string",
@@ -1071,6 +1051,10 @@
 						"ua_taskExecutionModel":{
 							"type":"string",
 							"title":"Ua Task Execution Model"
+						},
+						"ai_agent_runtime_knowledge_tools":{
+							"type":"boolean",
+							"title":"Ai Agent Runtime Knowledge Tools"
 						}
 					},
 					"required":[]
@@ -1088,11 +1072,11 @@
 					"ua:type":"mappedArray",
 					"items":"{{ n_I2G8B.outputs.result.knowledgeSetIds[0] }}"
 				},
+				"ai_agent_runtime_knowledge_tools":true,
 				"ai_agent_default_tools":{
 					"webSearch":"{{ n_I2G8B.outputs.result.webSearch }}",
 					"deepResearch":"{{ n_I2G8B.outputs.result.deepSearch }}"
 				},
-				"ai_agent_ua_test_mode":true,
 				"ai_agent_ua_knowledgeIds":{
 					"ua:type":"mappedArray",
 					"source":"{{ n_I2G8B.outputs.result.knowledgeIds }}",
@@ -1127,37 +1111,9 @@
 							"type":"string",
 							"title":"Ai Agent Ua Instructions"
 						},
-						"ai_agent_ua_steps":{
-							"type":"array",
-							"items":{
-								"type":"object",
-								"properties":{
-									"instructions":{
-										"type":"string",
-										"title":"Instructions"
-									},
-									"nodes":{
-										"type":"array",
-										"items":{
-											"type":"object",
-											"properties":{},
-											"additionalProperties":false
-										},
-										"title":"Nodes"
-									}
-								},
-								"additionalProperties":false,
-								"required":[]
-							},
-							"title":"Ai Agent Ua Steps"
-						},
 						"ai_agent_ua_goal":{
 							"type":"string",
 							"title":"Ai Agent Ua Goal"
-						},
-						"ai_agent_ua_test_mode":{
-							"type":"boolean",
-							"title":"Ai Agent Ua Test Mode"
 						},
 						"ai_agent_ua_role":{
 							"type":"string",
@@ -1191,6 +1147,10 @@
 						"ua_taskExecutionModel":{
 							"type":"string",
 							"title":"Ua Task Execution Model"
+						},
+						"ai_agent_runtime_knowledge_tools":{
+							"type":"boolean",
+							"title":"Ai Agent Runtime Knowledge Tools"
 						}
 					},
 					"required":[]
@@ -1218,8 +1178,8 @@
 				"callableInterfaceId":"__ua__invoke_ai_agent_by_unifyapps",
 				"defaultFallbackWorkflowId":"68050ca67df58855654804a0",
 				"parameters":{
-					"userQuery":"{{ n_2omrf.outputs.instructions }}",
-					"aiAgentId":"e_simple_llm_agent",
+					"userQuery":"{{ n_I2G8B.outputs.result.prompt }}",
+					"aiAgentId":"workflow_agent_mini_agent",
 					"triggerWorkflowWithRuntimeType":"IN_MEMORY"
 				}
 			},
@@ -1227,6 +1187,27 @@
 			"subTitle":"AI Agents",
 			"title":"Invoke Agent",
 			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":0,
+				"resourceName":"utility_by_unifyapps_to_json_object",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_lvGDB-1",
+			"id":"n_kgHrE",
+			"index":18,
+			"inputs":{
+				"jsonString":"{{ n_92BzV.outputs.publicResponse[0].text }}"
+			},
+			"skip":false,
+			"subTitle":"Utility by UnifyApps",
+			"title":"Deserialise string to JSON object",
+			"type":"ACTION"
 		},
 		{
 			"context":{
@@ -1240,7 +1221,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_lvGDB-1",
 			"id":"_aBACL",
-			"index":18,
+			"index":19,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1250,6 +1231,15 @@
 					"type":"object",
 					"properties":{
 						"ai_agent_ua_knowledgeIds":{
+							"0":{
+								"type":"array",
+								"items":{
+									"type":"object",
+									"properties":{},
+									"additionalProperties":false
+								},
+								"title":"Ai Agent Ua Knowledge Ids"
+							},
 							"type":"array",
 							"items":{
 								"type":"object",
@@ -1270,30 +1260,6 @@
 						"ai_agent_ua_instructions":{
 							"type":"string",
 							"title":"Ai Agent Ua Instructions"
-						},
-						"ai_agent_ua_steps":{
-							"type":"array",
-							"items":{
-								"type":"object",
-								"properties":{
-									"instructions":{
-										"type":"string",
-										"title":"Instructions"
-									},
-									"nodes":{
-										"type":"array",
-										"items":{
-											"type":"object",
-											"properties":{},
-											"additionalProperties":false
-										},
-										"title":"Nodes"
-									}
-								},
-								"additionalProperties":false,
-								"required":[]
-							},
-							"title":"Ai Agent Ua Steps"
 						},
 						"ai_agent_ua_goal":{
 							"type":"string",
@@ -1335,6 +1301,10 @@
 						"ua_taskExecutionModel":{
 							"type":"string",
 							"title":"Ua Task Execution Model"
+						},
+						"ai_agent_runtime_knowledge_tools":{
+							"type":"boolean",
+							"title":"Ai Agent Runtime Knowledge Tools"
 						}
 					},
 					"required":[]
@@ -1348,6 +1318,15 @@
 					"type":"object",
 					"properties":{
 						"ai_agent_ua_knowledgeIds":{
+							"0":{
+								"type":"array",
+								"items":{
+									"type":"object",
+									"properties":{},
+									"additionalProperties":false
+								},
+								"title":"Ai Agent Ua Knowledge Ids"
+							},
 							"type":"array",
 							"items":{
 								"type":"object",
@@ -1368,30 +1347,6 @@
 						"ai_agent_ua_instructions":{
 							"type":"string",
 							"title":"Ai Agent Ua Instructions"
-						},
-						"ai_agent_ua_steps":{
-							"type":"array",
-							"items":{
-								"type":"object",
-								"properties":{
-									"instructions":{
-										"type":"string",
-										"title":"Instructions"
-									},
-									"nodes":{
-										"type":"array",
-										"items":{
-											"type":"object",
-											"properties":{},
-											"additionalProperties":false
-										},
-										"title":"Nodes"
-									}
-								},
-								"additionalProperties":false,
-								"required":[]
-							},
-							"title":"Ai Agent Ua Steps"
 						},
 						"ai_agent_ua_goal":{
 							"type":"string",
@@ -1433,6 +1388,10 @@
 						"ua_taskExecutionModel":{
 							"type":"string",
 							"title":"Ua Task Execution Model"
+						},
+						"ai_agent_runtime_knowledge_tools":{
+							"type":"boolean",
+							"title":"Ai Agent Runtime Knowledge Tools"
 						}
 					},
 					"required":[]
@@ -1455,7 +1414,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_lvGDB-1",
 			"id":"FHTNw",
-			"index":19,
+			"index":20,
 			"inputs":{
 				"automationId":"67a31b86addac8605df79166",
 				"runtimeConnections":{},
@@ -1477,7 +1436,7 @@
 					}
 				}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Ingest Agent Response",
 			"title":"Call automation",
 			"type":"CALL_WORKFLOW"
@@ -1494,11 +1453,9 @@
 			"fallbackMode":"STOP",
 			"groupId":"_lvGDB-1",
 			"id":"n_tAQuy",
-			"index":20,
+			"index":21,
 			"inputs":{
-				"result":{
-					"Success":true
-				}
+				"result":"{{ n_kgHrE.outputs.result }}"
 			},
 			"skip":false,
 			"subTitle":"Callable",
@@ -1506,7 +1463,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":0,
+	"ownerUserId":46030,
 	"schemaReferences":[
 		
 	],
@@ -1519,9 +1476,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
+	"standard":false,
 	"tags":[
 		
 	],
-	"version":10
+	"version":20
 }
