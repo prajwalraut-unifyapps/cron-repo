@@ -44,7 +44,7 @@
 	"id":"68ef9cf11ff997436ed23c47",
 	"lastModifiedBy":39713,
 	"lcName":"testmongointapi",
-	"modifiedTime":1760545847236,
+	"modifiedTime":1760545929032,
 	"name":"testMongoIntAPI",
 	"nodes":[
 		{
@@ -132,7 +132,7 @@
 			"id":"n_3sJHN",
 			"index":4,
 			"inputs":{
-				"code":"// Imports for both the UnifyApps framework and the raw MongoDB driver\nimport io.quarkus.arc.Arc;\nimport com.unifyapps.infra.mongo.MongoTemplateFactory;\nimport com.unifyapps.infra.mongo.MongoTemplate;\nimport com.mongodb.client.MongoClient;\nimport com.mongodb.client.MongoDatabase;\nimport com.mongodb.client.MongoCollection;\nimport org.bson.Document;\nimport java.util.ArrayList;\nimport java.util.List;\n\n// 1. Define the context for the query\nlong customerId = 1L;\nString resourceType = \"Workflow\";\nString collectionName = \"DeployedWorkflowDefinition\";\n\n// 2. Inject the MongoTemplateFactory to get configured components\ndef mongoTemplateFactory = Arc.container().instance(MongoTemplateFactory.class).get();\nMongoTemplate mongoTemplate = mongoTemplateFactory.getMongoTemplate(customerId, { -> resourceType });\n\n// --- RAW MONGO CLIENT APPROACH ---\n\n// 3. Discover the correct database name and get the raw client from the template\nString databaseName = mongoTemplate.getDatabase().getName();\nMongoClient mongoClient = mongoTemplate.getMongoClient();\n\nprintln(\"Attempting to connect to database: \" + databaseName);\n// 4. Manually get the database and collection using the raw client\nMongoDatabase database = mongoClient.getDatabase(\"CUSTOMER_WORKFLOW_1\");\nMongoCollection<Document> collection = database.getCollection(collectionName);\n// return collection.getNamespace();\n// return collection.countDocuments();\n// 5. Perform a raw find().limit(5) operation on the collection\nList<Document> documents = collection.find().limit(5).into(new ArrayList<>());\n\n// 6. Return the list of raw BSON documents\nreturn documents;",
+				"code":"\nimport io.quarkus.arc.Arc;\nimport com.unifyapps.infra.mongo.MongoTemplateFactory;\nimport com.unifyapps.infra.mongo.MongoTemplate;\nimport com.mongodb.client.MongoClient;\nimport com.mongodb.client.MongoDatabase;\nimport com.mongodb.client.MongoCollection;\nimport org.bson.Document;\nimport java.util.ArrayList;\nimport java.util.List;\n\nlong customerId = 1L;\nString resourceType = \"Workflow\";\nString collectionName = \"DeployedWorkflowDefinition\";\n\ndef mongoTemplateFactory = Arc.container().instance(MongoTemplateFactory.class).get();\nMongoTemplate mongoTemplate = mongoTemplateFactory.getMongoTemplate(customerId, { -> resourceType });\n\nString databaseName = mongoTemplate.getDatabase().getName();\nMongoClient mongoClient = mongoTemplate.getMongoClient();\n\nprintln(\"Attempting to connect to database: \" + databaseName);\nMongoDatabase database = mongoClient.getDatabase(\"CUSTOMER_WORKFLOW_1\");\nMongoCollection<Document> collection = database.getCollection(collectionName);\nList<Document> documents = collection.find().limit(5).into(new ArrayList<>());\nreturn documents;",
 				"compile_static":false,
 				"captureStdOutput":false
 			},
@@ -155,7 +155,7 @@
 			"id":"n_6jPgL",
 			"index":5,
 			"inputs":{
-				"code":"// Imports for both the UnifyApps framework and the raw MongoDB driver\nimport io.quarkus.arc.Arc;\nimport com.unifyapps.infra.mongo.MongoTemplateFactory;\nimport com.unifyapps.infra.mongo.MongoTemplate;\nimport com.mongodb.client.MongoClient;\nimport com.mongodb.client.MongoDatabase;\nimport com.mongodb.client.MongoCollection;\nimport org.bson.Document;\n\n// 1. Define constants for your operation\nlong customerId = 1L;\nString resourceType = \"Workflow\";\nString collectionName = \"DeployedWorkflowDefinition\";\nString CORRECT_DATABASE_NAME = \"CUSTOMER_WORKFLOW_1\"; // Using the correct uppercase name\n\n// 2. Inject the MongoTemplateFactory to get the configured client\ndef mongoTemplateFactory = Arc.container().instance(MongoTemplateFactory.class).get();\nMongoTemplate mongoTemplate = mongoTemplateFactory.getMongoTemplate(customerId, { -> resourceType });\nMongoClient mongoClient = mongoTemplate.getMongoClient();\n\n// 3. Manually get the database and collection\nMongoDatabase database = mongoClient.getDatabase(CORRECT_DATABASE_NAME);\nMongoCollection<Document> collection = database.getCollection(collectionName);\n\n// 4. Create a filter specifically for the document you want to find\nDocument filter = new Document(\"name\", \"TestMongoAPICurl\");\n\n// 5. CORRECTED LINE: Use find(filter).first() to retrieve a single document\nDocument document = collection.find(filter).first();\n\n// 6. Return the found document (will be null if not found)\nreturn document;",
+				"code":"\nimport io.quarkus.arc.Arc;\nimport com.unifyapps.infra.mongo.MongoTemplateFactory;\nimport com.unifyapps.infra.mongo.MongoTemplate;\nimport com.mongodb.client.MongoClient;\nimport com.mongodb.client.MongoDatabase;\nimport com.mongodb.client.MongoCollection;\nimport org.bson.Document;\n\nlong customerId = 1L;\nString resourceType = \"Workflow\";\nString collectionName = \"DeployedWorkflowDefinition\";\nString CORRECT_DATABASE_NAME = \"CUSTOMER_WORKFLOW_1\";\n\ndef mongoTemplateFactory = Arc.container().instance(MongoTemplateFactory.class).get();\nMongoTemplate mongoTemplate = mongoTemplateFactory.getMongoTemplate(customerId, { -> resourceType });\nMongoClient mongoClient = mongoTemplate.getMongoClient();\n\nMongoDatabase database = mongoClient.getDatabase(CORRECT_DATABASE_NAME);\nMongoCollection<Document> collection = database.getCollection(collectionName);\n\nDocument filter = new Document(\"name\", \"TestMongoAPICurl\");\n\nDocument document = collection.find(filter).first();\n\nreturn document;",
 				"compile_static":false,
 				"captureStdOutput":false
 			},
@@ -205,5 +205,5 @@
 	"tags":[
 		
 	],
-	"version":10
+	"version":11
 }
