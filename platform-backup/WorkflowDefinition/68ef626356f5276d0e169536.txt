@@ -4,6 +4,15 @@
 	],
 	"createdTime":1760518755249,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760518755427,
+		"deployedBy":426,
+		"deployedDefinitionId":"68ef626356f5276d0e169538",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":0
+	},
+	"description":"",
 	"edges":[
 		{
 			"fromNodeId":"n_dlVhM",
@@ -16,14 +25,21 @@
 			"fromNodeId":"n_Hb1pu",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_Y8541",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Y8541",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"DUMMY_RETURN_NODE_ID",
 			"type":"next"
 		}
 	],
 	"id":"68ef626356f5276d0e169536",
-	"lastModifiedBy":426,
+	"lastModifiedBy":1728,
 	"lcName":"new_agent",
-	"modifiedTime":1760518755249,
+	"modifiedTime":1760519127321,
 	"name":"new_agent",
 	"nodes":[
 		{
@@ -67,12 +83,63 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
-					"model":"e_686654b81257d219bd7958d5"
+					"name":"Creates a mini-agent to handle a specific task\nusing a predefined model and interface.",
+					"instructions":"Using the user query classify its sentiment and give me the emotion of user",
+					"model":"e_686654b81257d219bd7958d5",
+					"knowledges":[],
+					"responseSchema":{
+						"type":"object",
+						"properties":{
+							"sentiment":{
+								"type":"string",
+								"description":"The classified sentiment of the user query.",
+								"enum":[
+									"positive",
+									"negative",
+									"neutral"
+								]
+							},
+							"emotion":{
+								"type":"string",
+								"description":"The identified emotion of the user based on the query."
+							}
+						},
+						"required":[
+							"sentiment",
+							"emotion"
+						]
+					}
 				}
 			},
 			"skip":false,
 			"subTitle":"Agent",
-			"title":"Create a new mini-agent on the fly to handle a specific task",
+			"title":"Creates a mini-agent to handle a specific task\nusing a predefined model and interface.",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"workflow_agent_generate_response",
+				"resourceVersion":156,
+				"resourceName":"workflow_agent_generate_response_default",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_m67H3-1",
+			"id":"n_Y8541",
+			"index":0,
+			"inputs":{
+				"callableInterfaceId":"__ua__generate_response_interface",
+				"parameters":{
+					"responseInstructions":"Using the emotion of user, answer in the opposite emotion,\nEmotion: {{ n_Hb1pu.outputs.emotion }}, sentiment:{{ n_Hb1pu.outputs.sentiment }}",
+					"name":"Crafts AI agent's response format and tone",
+					"model":"e_686654b81257d219bd7958d5"
+				}
+			},
+			"skip":false,
+			"subTitle":"Respond",
+			"title":"Crafts AI agent's response format and tone",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -96,15 +163,11 @@
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
-		"enableVariableLogging":true,
-		"route":{
-			"default":false,
-			"tierName":"global"
-		}
+		"enableVariableLogging":true
 	},
 	"standard":false,
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":0
+	"version":1
 }
