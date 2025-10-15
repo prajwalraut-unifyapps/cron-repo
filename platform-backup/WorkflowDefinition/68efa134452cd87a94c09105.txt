@@ -16,8 +16,74 @@
 			"fromNodeId":"n_yTGBo",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_m7cAQ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_m7cAQ",
+			"name":"1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_m7cAQ@1",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_m7cAQ@1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_kVqxr",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_m7cAQ",
+			"name":"2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_m7cAQ@2",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_m7cAQ@2",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_HKLPs",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_kVqxr",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_7bd4z",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_2lWKD",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_7bd4z",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_5aYxT",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_7bd4z",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_HKLPs",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_7bd4z",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_m7cAQ",
+			"name":"default",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_7bd4z",
+			"type":"branch"
 		},
 		{
 			"fromNodeId":"n_7bd4z",
@@ -73,22 +139,6 @@
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_2lWKD",
-			"name":"scope-loopback",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_7bd4z",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_5aYxT",
-			"name":"scope-loopback",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_7bd4z",
-			"type":"next"
-		},
-		{
 			"fromNodeId":"n_7bd4z",
 			"priority":0,
 			"skip":false,
@@ -99,7 +149,7 @@
 	"id":"68efa134452cd87a94c09105",
 	"lastModifiedBy":1,
 	"lcName":"loopslocalttemccwzgs",
-	"modifiedTime":1760534867432,
+	"modifiedTime":1760535009152,
 	"name":"loopsLocalTTEMCcWZGS",
 	"nodes":[
 		{
@@ -109,7 +159,7 @@
 				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_0Tz7B-1",
 			"id":"n_7U5n4",
@@ -159,7 +209,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_0Tz7B-1",
 			"id":"n_yTGBo",
@@ -211,17 +261,178 @@
 		},
 		{
 			"context":{
-				"appName":"scope",
-				"resourceVersion":143,
-				"resourceName":"scope_trigger_scope",
+				"appName":"branch",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_0Tz7B-1",
-			"id":"n_7bd4z",
+			"id":"n_m7cAQ",
 			"index":3,
+			"inputs":{
+				"branches":[
+					{
+						"id":"1",
+						"inputs":{
+							"name":"Soap _statusCode 200",
+							"conditions":{
+								"filters":[
+									{
+										"property":"{{ n_9G5LU.outputs.headers.Status }}",
+										"filter":{
+											"operator":"EQUAL",
+											"value":"200"
+										}
+									}
+								],
+								"operator":"AND"
+							}
+						}
+					},
+					{
+						"id":"2",
+						"inputs":{
+							"name":"Soap _statusCode 201",
+							"conditions":{
+								"filters":[
+									{
+										"property":"{{ n_9G5LU.outputs.headers.Status }}",
+										"filter":{
+											"operator":"EQUAL",
+											"value":"201"
+										}
+									}
+								],
+								"operator":"AND"
+							}
+						}
+					},
+					{
+						"id":"default"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Branch",
+			"title":"",
+			"type":"BRANCH"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceVersion":0,
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_m7cAQ@_0Tz7B-1@1",
+			"id":"n_m7cAQ@1",
+			"index":4,
+			"inputs":{
+				"name":"Soap _statusCode 200",
+				"conditions":{
+					"filters":[
+						{
+							"property":"{{ n_9G5LU.outputs.headers.Status }}",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"200"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"subTitle":"",
+			"title":"",
+			"type":"BRANCH_CONDITION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":19,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_m7cAQ@_0Tz7B-1@1",
+			"id":"n_kVqxr",
+			"index":5,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_200",
+				"body":{
+					"checkStatus":"{{ n_9G5LU.outputs.headers.Status }}"
+				},
+				"status":200
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceVersion":0,
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_m7cAQ@_0Tz7B-1@2",
+			"id":"n_m7cAQ@2",
+			"index":6,
+			"inputs":{
+				"name":"Soap _statusCode 201",
+				"conditions":{
+					"filters":[
+						{
+							"property":"{{ n_9G5LU.outputs.headers.Status }}",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"201"
+							}
+						}
+					],
+					"operator":"AND"
+				}
+			},
+			"skip":false,
+			"title":"",
+			"type":"BRANCH_CONDITION"
+		},
+		{
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_m7cAQ@_0Tz7B-1@2",
+			"id":"n_HKLPs",
+			"index":7,
+			"skip":false,
+			"title":"Select an app and action",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"scope",
+				"resourceVersion":143,
+				"resourceName":"scope_trigger_scope",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_0Tz7B-1",
+			"id":"n_7bd4z",
+			"index":8,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -250,11 +461,11 @@
 				"scopeNodeId":"n_7bd4z"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_7bd4z@_0Tz7B-1@s",
 			"id":"n_efLFG",
-			"index":4,
+			"index":9,
 			"inputs":{
 				"filters":[
 					{
@@ -281,11 +492,11 @@
 				"scopeNodeId":"n_7bd4z"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_efLFG@n_7bd4z@_0Tz7B-1@s@y",
 			"id":"n_2lWKD",
-			"index":5,
+			"index":10,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ n_7U5n4.outputs.numArr }}",
@@ -305,11 +516,11 @@
 				"scopeNodeId":"n_7bd4z"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_2lWKD@n_efLFG@n_7bd4z@_0Tz7B-1@s@y@l",
 			"id":"n_ZscOh",
-			"index":6,
+			"index":11,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -355,11 +566,11 @@
 				"scopeNodeId":"n_7bd4z"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_efLFG@n_7bd4z@_0Tz7B-1@s@n",
 			"id":"n_5aYxT",
-			"index":7,
+			"index":12,
 			"inputs":{
 				"start":0,
 				"limit":"{{ n_7U5n4.outputs.num }}",
@@ -380,11 +591,11 @@
 				"scopeNodeId":"n_7bd4z"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_5aYxT@n_efLFG@n_7bd4z@_0Tz7B-1@s@n@l",
 			"id":"n_Sdkxs",
-			"index":8,
+			"index":13,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -429,11 +640,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_0Tz7B-1",
 			"id":"n_lrrew",
-			"index":9,
+			"index":14,
 			"inputs":{
 				"result":{
 					"output":"{{ n_yTGBo.outputs.i }}"
@@ -462,5 +673,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
