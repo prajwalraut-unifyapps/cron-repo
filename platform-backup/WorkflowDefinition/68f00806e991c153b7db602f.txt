@@ -4,6 +4,7 @@
 	],
 	"createdTime":1760561158893,
 	"deleted":false,
+	"description":"",
 	"edges":[
 		{
 			"fromNodeId":"n_oQwYv",
@@ -11,12 +12,56 @@
 			"skip":false,
 			"toNodeId":"n_x3RFM",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_x3RFM",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_ZBkfP",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_ZBkfP",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_jVHnA",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_jVHnA",
+			"name":"1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_jVHnA@1",
+			"type":"branch"
+		},
+		{
+			"fromNodeId":"n_jVHnA@1",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Jz4yc",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Jz4yc",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"DUMMY_RETURN_NODE_ID",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_jVHnA",
+			"name":"default",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"DUMMY_RETURN_NODE_ID",
+			"type":"branch"
 		}
 	],
 	"id":"68f00806e991c153b7db602f",
 	"lastModifiedBy":504,
 	"lcName":"hs test workflow agent",
-	"modifiedTime":1760561158893,
+	"modifiedTime":1760561485149,
 	"name":"hs test workflow agent",
 	"nodes":[
 		{
@@ -61,7 +106,8 @@
 				"callableInterfaceId":"__ua__knowledge_search_interface",
 				"parameters":{
 					"knowledges":[],
-					"model":"e_686654b81257d219bd7958d5"
+					"model":"e_686654b81257d219bd7958d5",
+					"name":"Searches company's internal knowledge using specified\nmodel and parameters."
 				}
 			},
 			"options":{
@@ -76,7 +122,7 @@
 						{
 							"continueOnFailure":true,
 							"parameters":{
-								"thought":"Search across company’s internal knowledge"
+								"thought":"Searches company's internal knowledge using specified\nmodel and parameters."
 							},
 							"workflowId":"68ef8b5815076a5139086565"
 						}
@@ -85,8 +131,133 @@
 			},
 			"skip":false,
 			"subTitle":"Search the Knowledge",
-			"title":"Search across company’s internal knowledge",
+			"title":"Searches company's internal knowledge using specified\nmodel and parameters.",
 			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"workflow_agent_search_knowledge",
+				"resourceVersion":160,
+				"resourceName":"workflow_agent_search_knowledge_default",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_xZjRU-1",
+			"id":"n_ZBkfP",
+			"index":0,
+			"inputs":{
+				"callableInterfaceId":"__ua__knowledge_search_interface",
+				"parameters":{
+					"knowledges":[],
+					"model":"e_686654b81257d219bd7958d5",
+					"name":"Searches company's internal knowledge using a\nspecified model and interface."
+				}
+			},
+			"options":{
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":true,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						{
+							"continueOnFailure":true,
+							"parameters":{
+								"thought":"Searches company's internal knowledge using a\nspecified model and interface."
+							},
+							"workflowId":"68ef8b5815076a5139086565"
+						}
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Search the Knowledge",
+			"title":"Searches company's internal knowledge using a\nspecified model and interface.",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"branch",
+				"resourceName":"branch",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_xZjRU-1",
+			"id":"n_jVHnA",
+			"index":0,
+			"inputs":{
+				"branches":[
+					{
+						"id":"1",
+						"inputs":{
+							"name":"Branch condition node for workflow decision making"
+						}
+					},
+					{
+						"id":"default"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Branch",
+			"title":"Branch",
+			"type":"BRANCH"
+		},
+		{
+			"context":{
+				"appName":"branch_condition",
+				"resourceName":"branch_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_jVHnA@_xZjRU-1@1",
+			"id":"n_jVHnA@1",
+			"index":0,
+			"inputs":{
+				"name":"Branch condition node for workflow decision making"
+			},
+			"skip":false,
+			"subTitle":"Branch Condition",
+			"title":"Branch condition node for workflow decision making",
+			"type":"BRANCH_CONDITION"
+		},
+		{
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_jVHnA@_xZjRU-1@1",
+			"id":"n_Jz4yc",
+			"index":0,
+			"options":{
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":true,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						{
+							"continueOnFailure":true,
+							"parameters":{
+								"thought":"Select an action"
+							},
+							"workflowId":"68ef8b5815076a5139086565"
+						}
+					]
+				}
+			},
+			"skip":false,
+			"title":"Select an action",
+			"type":"ACTION"
 		},
 		{
 			"context":{
@@ -110,15 +281,11 @@
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
-		"enableVariableLogging":true,
-		"route":{
-			"default":false,
-			"tierName":"global"
-		}
+		"enableVariableLogging":true
 	},
 	"standard":false,
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":0
+	"version":1
 }
