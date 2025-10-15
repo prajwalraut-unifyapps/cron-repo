@@ -5,12 +5,12 @@
 	"createdTime":1760281938540,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760331959061,
-		"deployedBy":1728,
-		"deployedDefinitionId":"68ec88b7bad7e67b95e54479",
+		"deployedAt":1760529864680,
+		"deployedBy":0,
+		"deployedDefinitionId":"68ef8dc815076a51390878d5",
 		"status":"DEPLOYED",
-		"version":3,
-		"workflowVersion":4
+		"version":7,
+		"workflowVersion":9
 	},
 	"edges":[
 		{
@@ -56,7 +56,7 @@
 	"id":"68ea85debdec112aba2a7b08",
 	"lastModifiedBy":46030,
 	"lcName":"workflow agent | improve with ai",
-	"modifiedTime":1760525016986,
+	"modifiedTime":1760536533820,
 	"name":"Workflow Agent | Improve with AI",
 	"nodes":[
 		{
@@ -91,6 +91,10 @@
 						"userQuery":{
 							"type":"string",
 							"title":"User Query"
+						},
+						"modelId":{
+							"type":"string",
+							"title":"Model Id"
 						}
 					}
 				}
@@ -139,7 +143,7 @@
 						}
 					}
 				},
-				"code":"def userQuery = binding.hasVariable('userQuery') ? userQuery : \"\"\n\nreturn [\n  \"prompt\": \"\"\"You are a query rephraser assistant. \nYour task is to rephrase user queries to make them clearer, more structured, and grammatically correct — \nwithout changing their meaning or intent.\n\nGuidelines:\n1. Preserve the user’s original intent and domain context.\n2. Eliminate ambiguity, slang, filler words, or unnecessary verbosity.\n3. Normalize references (e.g., \"it\", \"that thing\") if context allows.\n4. Output a concise, professional, and natural rephrasing in plain English.\n5. Do not answer the query — just rephrase it.\n6. If the query is a command, keep it as a command but make it cleaner and more actionable.\n7. If the user input is incomplete or vague, infer the most likely intended meaning from the text.\n8. If you come across any placeholder in the format '{{ somepill }}', leave it unchanged.\n\nReturn only the rephrased version. Do not include explanations or notes.\n\nUser Query : ${userQuery}\n\"\"\".toString()\n]",
+				"code":"def userQuery = binding.hasVariable('userQuery') ? userQuery : \"\"\n\nreturn [\n  \"prompt\": \"\"\"You are an expert prompt rewriter. Rephrase the user's input (instructions, queries, procedural steps) for clarity, readability, and professional tone, while preserving meaning, structure, examples, technical logic, and placeholders (enclosed double curly brackets).\n\nGuidelines:\n1. Maintain all steps, sub-steps, sequence numbers, and conditional flows.\n2. Keep examples, code snippets, keywords, and domain-specific terms unchanged.\n3. Use complete sentences, active voice, proper grammar, and consistent formatting.\n4. Do not add, remove, or merge content—only improve clarity and flow.\n5. Return only the rephrased text; no explanations.\n\nUser Query:\n${userQuery}\n\"\"\".toString()\n]\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -159,7 +163,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_1n3Ji-1",
 			"id":"n_qVSpG",
@@ -170,6 +174,7 @@
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
+					"modelId":"{{ n_sVV5k.outputs.modelId }}",
 					"content":"{{ n_gbr3D.outputs.result.prompt }}",
 					"type":"text",
 					"response_format":"text",
@@ -256,9 +261,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":false,
+	"standard":true,
 	"tags":[
 		
 	],
-	"version":5
+	"version":11
 }
