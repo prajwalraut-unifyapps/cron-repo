@@ -9,18 +9,18 @@
 			"fromNodeId":"n_18xho",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_ulEyd",
+			"toNodeId":"n_mV6VY",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_ulEyd",
+			"fromNodeId":"n_mV6VY",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_ubhFs",
+			"toNodeId":"n_IOBtB",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"_ubhFs",
+			"fromNodeId":"n_IOBtB",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_HoSXb",
@@ -33,42 +33,12 @@
 			"skip":false,
 			"toNodeId":"n_FvsJI",
 			"type":"next"
-		},
-		{
-			"fromNodeId":"n_HoSXb",
-			"name":"yes",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_CoBKg",
-			"type":"if"
-		},
-		{
-			"fromNodeId":"n_FvsJI",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_CoBKg",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_CoBKg",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_1Nn4Y",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_1Nn4Y",
-			"name":"success",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_2bgQ7",
-			"type":"next"
 		}
 	],
 	"id":"68ef4517248c7940ea208dd7",
 	"lastModifiedBy":1,
 	"lcName":"specific automation",
-	"modifiedTime":1760511460935,
+	"modifiedTime":1760511614711,
 	"name":"Specific automation",
 	"nodes":[
 		{
@@ -110,7 +80,7 @@
 		{
 			"context":{
 				"appName":"standard_entities",
-				"resourceVersion":99,
+				"resourceVersion":0,
 				"resourceName":"standard_entities_lookup_entities",
 				"type":"APPLICATION"
 			},
@@ -118,19 +88,14 @@
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Mj93R-1",
-			"id":"n_ulEyd",
+			"id":"n_mV6VY",
 			"index":2,
 			"inputs":{
 				"keys":[
 					"{{ n_18xho.outputs.body.workflowId }}"
 				],
 				"lookupType":"WORKFLOW_DEFINITION",
-				"page":{
-					"limit":20,
-					"offset":0
-				},
-				"type":"ByKeys",
-				"fields":[]
+				"type":"ByKeys"
 			},
 			"skip":false,
 			"subTitle":"Standard entities by UnifyApps",
@@ -140,7 +105,7 @@
 		{
 			"context":{
 				"appName":"code_by_unifyapps",
-				"resourceVersion":100,
+				"resourceVersion":2384,
 				"resourceName":"code_by_unifyapps_groovy",
 				"type":"APPLICATION"
 			},
@@ -148,17 +113,13 @@
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_Mj93R-1",
-			"id":"_ubhFs",
+			"id":"n_IOBtB",
 			"index":3,
 			"inputs":{
 				"output":{
 					"type":"object",
 					"additionalProperties":false,
-					"required":[
-						"enableNodeLevelLogging",
-						"enableRunLogging",
-						"enableVariableLogging"
-					],
+					"required":[],
 					"properties":{
 						"enableNodeLevelLogging":{
 							"type":"boolean",
@@ -177,10 +138,7 @@
 				"input":{
 					"type":"object",
 					"additionalProperties":false,
-					"required":[
-						"workflowDef",
-						"workflowId"
-					],
+					"required":[],
 					"properties":{
 						"workflowDef":{
 							"type":"object",
@@ -196,11 +154,7 @@
 				},
 				"code":"def workflowDef = binding.hasVariable(\"workflowDef\") ? workflowDef : null\ndef workflowId = binding.hasVariable(\"workflowId\") ? workflowId : null\ndef workflowDefinition = null\n\nif (workflowDef != null && workflowId != null) {\n    def obj = workflowDef[\"objects\"]\n    workflowDefinition = obj[workflowId]\n\n    if (workflowDefinition != null) {\n\n        return [\"enableNodeLevelLogging\":workflowDefinition[\"settings\"][\"enableNodeLevelLogging\"],\"enableRunLogging\":workflowDefinition[\"settings\"][\"enableRunLogging\"],\"enableVariableLogging\":workflowDefinition[\"settings\"][\"enableVariableLogging\"]]  \n    }\n}\n\nreturn [\"enableNodeLevelLogging\":true,\"enableRunLogging\":true,\"enableVariableLogging\":true]",
 				"compile_static":false,
-				"captureStdOutput":false,
-				"parameters":{
-					"workflowDef":"{{ n_ulEyd.outputs.response }}",
-					"workflowId":"{{ n_18xho.outputs.body.workflowId }}"
-				}
+				"captureStdOutput":false
 			},
 			"skip":false,
 			"subTitle":"Code by UnifyApps",
@@ -271,212 +225,6 @@
 			"subTitle":"Continue",
 			"title":"Continue",
 			"type":"CONTINUE"
-		},
-		{
-			"context":{
-				"appName":"code_by_unifyapps",
-				"resourceVersion":100,
-				"resourceName":"code_by_unifyapps_groovy",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":true,
-			"fallbackMode":"STOP",
-			"groupId":"_Mj93R-1",
-			"id":"n_CoBKg",
-			"index":6,
-			"inputs":{
-				"output":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"workflowDefinition"
-					],
-					"properties":{
-						"workflowDefinition":{
-							"type":"object",
-							"properties":{},
-							"additionalProperties":false,
-							"title":"Workflow Definition"
-						}
-					}
-				},
-				"input":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"workflowDef",
-						"workflowId"
-					],
-					"properties":{
-						"workflowDef":{
-							"type":"object",
-							"properties":{},
-							"additionalProperties":false,
-							"title":"Workflow Def"
-						},
-						"workflowId":{
-							"type":"string",
-							"title":"Workflow Id"
-						}
-					}
-				},
-				"code":"def workflowDef = binding.hasVariable(\"workflowDef\") ? workflowDef : null\ndef workflowId = binding.hasVariable(\"workflowId\") ? workflowId : null\ndef workflowDefinition = null\n\nif (workflowDef != null && workflowId != null) {\n    def obj = workflowDef[\"objects\"]\n    workflowDefinition = obj[workflowId]\n\n    if (workflowDefinition != null) {\n        workflowDefinition[\"settings\"][\"enableNodeLevelLogging\"] = false\n        workflowDefinition[\"settings\"][\"enableRunLogging\"] = false\n        workflowDefinition[\"settings\"][\"enableVariableLogging\"] = false\n    }\n}\n\nreturn [\"workflowDefinition\": workflowDefinition]",
-				"compile_static":false,
-				"captureStdOutput":false,
-				"parameters":{
-					"workflowDef":"{{ n_ulEyd.outputs.response }}",
-					"workflowId":"{{ n_18xho.outputs.body.workflowId }}"
-				}
-			},
-			"skip":false,
-			"subTitle":"Code by UnifyApps",
-			"title":"Execute Groovy code",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"standard_entities",
-				"resourceVersion":48,
-				"resourceName":"standard_entities_upsert_automation",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":true,
-			"fallbackMode":"MANUAL",
-			"groupId":"_Mj93R-1",
-			"id":"n_1Nn4Y",
-			"index":7,
-			"inputs":{
-				"workflowObject":"{{ n_CoBKg.outputs.result.workflowDefinition }}"
-			},
-			"options":{
-				"bulkheadConfig":{
-					"enabled":false,
-					"maxLeaseTimeUnit":"SECONDS",
-					"maxWaitDurationUnit":"SECONDS"
-				},
-				"businessHoursConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"cacheConfig":{
-					"enabled":false,
-					"usagePolicy":"ALWAYS"
-				},
-				"circuitBreakerConfig":{
-					"enabled":false
-				},
-				"disableLogging":false,
-				"enabledForReExecution":false,
-				"hookConfig":{
-					"enabled":false,
-					"postHooks":[
-						
-					],
-					"preHooks":[
-						
-					]
-				},
-				"logConfig":{
-					"enabled":false,
-					"logPolicies":[
-						
-					]
-				},
-				"rateLimitConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"retryConfig":{
-					"backOffFactor":null,
-					"captureRetries":false,
-					"enabled":false
-				},
-				"stepError":"MANUAL",
-				"telemetryConfig":{
-					"enableTelemetry":false,
-					"metricConfigs":[
-						
-					]
-				}
-			},
-			"skip":false,
-			"subTitle":"Standard entities by UnifyApps",
-			"title":"Upsert Automation",
-			"type":"ACTION"
-		},
-		{
-			"context":{
-				"appName":"standard_entities",
-				"resourceVersion":0,
-				"resourceName":"standard_entities_deploy_automation",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":true,
-			"fallbackMode":"CONTINUE",
-			"groupId":"n_1Nn4Y@_Mj93R-1@success",
-			"id":"n_2bgQ7",
-			"index":8,
-			"inputs":{
-				"workflowId":"{{ n_18xho.outputs.body.workflowId }}"
-			},
-			"options":{
-				"bulkheadConfig":{
-					"enabled":false,
-					"maxLeaseTimeUnit":"SECONDS",
-					"maxWaitDurationUnit":"SECONDS"
-				},
-				"businessHoursConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"cacheConfig":{
-					"enabled":false,
-					"usagePolicy":"ALWAYS"
-				},
-				"circuitBreakerConfig":{
-					"enabled":false
-				},
-				"disableLogging":false,
-				"enabledForReExecution":false,
-				"hookConfig":{
-					"enabled":false,
-					"postHooks":[
-						
-					],
-					"preHooks":[
-						
-					]
-				},
-				"logConfig":{
-					"enabled":false,
-					"logPolicies":[
-						
-					]
-				},
-				"rateLimitConfig":{
-					"enabled":false,
-					"waitForNextWindow":false
-				},
-				"retryConfig":{
-					"backOffFactor":null,
-					"captureRetries":false,
-					"enabled":false
-				},
-				"stepError":"CONTINUE",
-				"telemetryConfig":{
-					"enableTelemetry":false,
-					"metricConfigs":[
-						
-					]
-				}
-			},
-			"skip":false,
-			"subTitle":"Standard entities by UnifyApps",
-			"title":"Deploy automation",
-			"type":"ACTION"
 		}
 	],
 	"ownerUserId":1,
@@ -496,5 +244,5 @@
 	"tags":[
 		
 	],
-	"version":5
+	"version":6
 }
