@@ -5,12 +5,12 @@
 	"createdTime":1760442640288,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760509727147,
+		"deployedAt":1760529732300,
 		"deployedBy":173449,
-		"deployedDefinitionId":"68ef3f1f5cb19e238e337205",
+		"deployedDefinitionId":"68ef8d4415076a51390873f1",
 		"status":"DEPLOYED",
-		"version":28,
-		"workflowVersion":28
+		"version":29,
+		"workflowVersion":29
 	},
 	"description":"",
 	"edges":[
@@ -46,7 +46,7 @@
 	"id":"68ee391060d00c2ce23c4dab",
 	"lastModifiedBy":173449,
 	"lcName":"123213",
-	"modifiedTime":1760529731938,
+	"modifiedTime":1760529894877,
 	"name":"123213",
 	"nodes":[
 		{
@@ -93,7 +93,7 @@
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
 					"name":"Creates a mini-agent for a specific task using GPT-4",
-					"instructions":"Step 1.A: Detect intent.\nYou will need to detect what is the intent of the employee based on their inquiry\nFor example when the user says \"My laptop camera isn't working\"\n--> \"INTENT” -->if(intent == HARDWARE)\nOnly give responses specific to the hardware that is correlated to the mentioned issue\n\nStep 3: ONLY IF the knowledge Result is found: \nSummarise the article found in clear, actionable steps (max 5 steps).\nReply to the user in natural language.\nExample:\n“Here’s a guide that can help fix your camera:\n1. Open Device Manager\n2. Enable your camera device\n...\"\nDO NOT GIVE GENERIC ADVICE. If no Knowledge result is found, then pass it on to Step 4.\nIF NO KNOWLEDGE FOUND\nStep 4: Escalation (If Not Found or Unresolved)\nIf KnowledgeResult.found == false or user reports “still not working”: end with thanks\n",
+					"instructions":"Step 1.A: Detect intent.\nYou will need to detect what is the intent of the employee based on their inquiry\nFor example when the user says \"My laptop camera isn't working\"\n--> \"INTENT” -->if(intent == HARDWARE)\nOnly give responses specific to the hardware that is correlated to the mentioned issue\n\nStep 2: Search knowledge base for the issue (max 5 steps).\nReply to the user in natural language.\nDO NOT GIVE GENERIC ADVICE. If no Knowledge result is found, then pass it on to Step 4.\nIF NO KNOWLEDGE FOUND\nStep 4: Escalation (If Not Found or Unresolved)\nIf KnowledgeResult.found == false or user reports “still not working”: end with thanks\n",
 					"model":"e_686654b81257d219bd7958d5",
 					"knowledges":[
 						{
@@ -112,15 +112,15 @@
 								"properties":{
 									"found":{
 										"type":"boolean",
-										"description":"Indicates if relevant knowledge was found"
+										"description":"Indicates if a solution was found in the knowledge base"
 									},
-									"summary":{
+									"steps":{
 										"type":"array",
 										"items":{
 											"type":"string"
 										},
 										"maxItems":5,
-										"description":"Actionable steps summarized from the found article"
+										"description":"Steps to resolve the issue, if found"
 									}
 								}
 							},
@@ -131,13 +131,16 @@
 							"escalation":{
 								"type":"boolean",
 								"description":"Indicates if the issue needs to be escalated"
+							},
+							"closingMessage":{
+								"type":"string",
+								"description":"Closing message, especially for escalation cases"
 							}
 						},
 						"required":[
 							"intent",
 							"knowledgeResult",
-							"response",
-							"escalation"
+							"response"
 						]
 					},
 					"tools":{
@@ -239,5 +242,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":29
+	"version":30
 }
