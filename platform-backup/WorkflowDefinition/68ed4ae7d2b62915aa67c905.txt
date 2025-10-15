@@ -5,12 +5,12 @@
 	"createdTime":1760381671374,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760535813315,
+		"deployedAt":1760536419561,
 		"deployedBy":173449,
-		"deployedDefinitionId":"68efa5031ff997436ed2855b",
+		"deployedDefinitionId":"68efa7601ff997436ed299e8",
 		"status":"DEPLOYED",
-		"version":43,
-		"workflowVersion":42
+		"version":44,
+		"workflowVersion":43
 	},
 	"description":"",
 	"edges":[
@@ -39,7 +39,7 @@
 	"id":"68ed4ae7d2b62915aa67c905",
 	"lastModifiedBy":173449,
 	"lcName":"testdevashish",
-	"modifiedTime":1760536410724,
+	"modifiedTime":1760539842843,
 	"name":"testdevashish",
 	"nodes":[
 		{
@@ -86,7 +86,7 @@
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
 					"name":"Creates an Employee Support Copilot to handle HR/IT\nissues using a knowledge base.",
-					"instructions":"speak like a roman emperor\nRefer knowledge always",
+					"instructions":"Step 1.A: Detect intent. \nDetermine the employee's intent based on their inquiry. \nFor example, if the user states, \"My laptop camera isn't working\": \n→ \"INTENT\" → if(intent == HARDWARE) \nProvide responses that are specific to the hardware related to the reported issue.\n\nStep 2: Search the knowledge base for the issue (maximum of 5 steps). \nDO NOT PROVIDE GENERIC ADVICE. If no relevant knowledge is found, proceed to Step 3.\n\nStep 3: Escalation (If Not Found or Unresolved) \nIf KnowledgeResult.found == false or the user reports \"still not working,\" conclude the interaction with a thank you message.\n\nSend Email stating the result\n\n\n",
 					"model":"e_686654b81257d219bd7958d5",
 					"knowledges":[
 						{
@@ -97,72 +97,56 @@
 					"responseSchema":{
 						"type":"object",
 						"properties":{
-							"response":{
+							"intent":{
+								"type":"string",
+								"description":"Detected intent of the employee's inquiry"
+							},
+							"knowledgeResult":{
 								"type":"object",
 								"properties":{
-									"content":{
-										"type":"string",
-										"description":"The response content in the style of a Roman emperor."
-									},
-									"tone":{
-										"type":"string",
-										"enum":[
-											"authoritative",
-											"commanding",
-											"regal",
-											"imperious"
-										],
-										"description":"The tone of the response, befitting a Roman emperor."
-									},
-									"language":{
-										"type":"object",
-										"properties":{
-											"style":{
-												"type":"string",
-												"enum":[
-													"formal",
-													"archaic",
-													"grandiose"
-												],
-												"description":"The linguistic style used in the response."
-											},
-											"references":{
-												"type":"array",
-												"items":{
-													"type":"string"
-												},
-												"description":"References to Roman history, mythology, or culture used in the response."
-											}
-										}
-									},
-									"imperialDecree":{
+									"found":{
 										"type":"boolean",
-										"description":"Indicates whether the response is framed as an imperial decree."
+										"description":"Indicates if relevant knowledge was found"
+									},
+									"steps":{
+										"type":"array",
+										"items":{
+											"type":"string"
+										},
+										"maxItems":5,
+										"description":"Steps from the knowledge base to resolve the issue"
 									}
 								}
 							},
-							"metadata":{
+							"escalation":{
 								"type":"object",
 								"properties":{
-									"historicalAccuracy":{
-										"type":"string",
-										"enum":[
-											"high",
-											"medium",
-											"low"
-										],
-										"description":"The level of historical accuracy in the response."
+									"required":{
+										"type":"boolean",
+										"description":"Indicates if escalation is needed"
 									},
-									"emperorPersona":{
-										"type":"string",
-										"description":"The specific Roman emperor persona adopted for the response, if any."
+									"emailSent":{
+										"type":"boolean",
+										"description":"Indicates if an escalation email was sent"
 									}
 								}
+							},
+							"response":{
+								"type":"string",
+								"description":"The final response to be provided to the employee"
 							}
-						}
+						},
+						"required":[
+							"intent",
+							"knowledgeResult",
+							"escalation",
+							"response"
+						]
 					},
 					"tools":{
-						"toolList":[]
+						"toolList":[
+							"e_68efb49486c9eb2108873814"
+						]
 					}
 				}
 			},
@@ -206,7 +190,7 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"1. Begin the interaction with a polite greeting to the user.\n{{ n_TIPJn.outputs.response }}{{ n_TIPJn.outputs.metadata }}\nend the conversation printing {{ n_TIPJn.outputs.response.language.style }}",
+					"responseInstructions":"1. Begin the interaction with a polite greeting to the user.\n{{ n_TIPJn.outputs.response }}\nend the conversation printing {{ n_TIPJn.outputs.intent }}{{ n_TIPJn.outputs.knowledgeResult }}{{ n_TIPJn.outputs.escalation }}",
 					"name":"Crafts AI response format and tone in 60 chars max.",
 					"model":"e_686654b81257d219bd7958d5"
 				}
@@ -262,5 +246,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":43
+	"version":44
 }
