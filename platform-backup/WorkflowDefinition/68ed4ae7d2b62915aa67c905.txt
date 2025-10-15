@@ -5,12 +5,12 @@
 	"createdTime":1760381671374,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760461671841,
+		"deployedAt":1760470813941,
 		"deployedBy":173449,
-		"deployedDefinitionId":"68ee8367c6e26865328d3a7b",
+		"deployedDefinitionId":"68eea71dd03fa14c4c965b94",
 		"status":"DEPLOYED",
-		"version":31,
-		"workflowVersion":30
+		"version":36,
+		"workflowVersion":35
 	},
 	"description":"",
 	"edges":[
@@ -23,13 +23,6 @@
 		},
 		{
 			"fromNodeId":"n_TIPJn",
-			"priority":0,
-			"skip":false,
-			"toNodeId":"n_t0Hyk",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_t0Hyk",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_AT9fE",
@@ -46,7 +39,7 @@
 	"id":"68ed4ae7d2b62915aa67c905",
 	"lastModifiedBy":173449,
 	"lcName":"testdevashish",
-	"modifiedTime":1760463771178,
+	"modifiedTime":1760530203519,
 	"name":"testdevashish",
 	"nodes":[
 		{
@@ -93,39 +86,80 @@
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
 					"name":"Creates an Employee Support Copilot to handle HR/IT\nissues using a knowledge base.",
-					"instructions":"speak like a roman emperor",
-					"model":"e_686654b81257d219bd7958dc",
-					"knowledges":[],
+					"instructions":"speak like a roman emperor\nRefer knowledge always",
+					"model":"e_686654b81257d219bd7958d5",
+					"knowledges":[
+						{
+							"type":"knowledge",
+							"id":"knowledge_YAgtJ"
+						}
+					],
 					"responseSchema":{
 						"type":"object",
 						"properties":{
 							"response":{
-								"type":"string",
-								"description":"A response in the style of an emo, characterized by emotional and often dramatic language."
+								"type":"object",
+								"properties":{
+									"content":{
+										"type":"string",
+										"description":"The response content in the style of a Roman emperor."
+									},
+									"tone":{
+										"type":"string",
+										"enum":[
+											"authoritative",
+											"commanding",
+											"regal",
+											"imperious"
+										],
+										"description":"The tone of the response, befitting a Roman emperor."
+									},
+									"language":{
+										"type":"object",
+										"properties":{
+											"style":{
+												"type":"string",
+												"enum":[
+													"formal",
+													"archaic",
+													"grandiose"
+												],
+												"description":"The linguistic style used in the response."
+											},
+											"references":{
+												"type":"array",
+												"items":{
+													"type":"string"
+												},
+												"description":"References to Roman history, mythology, or culture used in the response."
+											}
+										}
+									},
+									"imperialDecree":{
+										"type":"boolean",
+										"description":"Indicates whether the response is framed as an imperial decree."
+									}
+								}
 							},
-							"emotionalTone":{
-								"type":"string",
-								"enum":[
-									"melancholic",
-									"angsty",
-									"introspective",
-									"passionate",
-									"brooding"
-								],
-								"description":"The predominant emotional tone of the response."
-							},
-							"stylisticElements":{
-								"type":"array",
-								"items":{
-									"type":"string"
-								},
-								"description":"Stylistic elements typical of emo speech, such as metaphors, dramatic expressions, or references to emotions."
+							"metadata":{
+								"type":"object",
+								"properties":{
+									"historicalAccuracy":{
+										"type":"string",
+										"enum":[
+											"high",
+											"medium",
+											"low"
+										],
+										"description":"The level of historical accuracy in the response."
+									},
+									"emperorPersona":{
+										"type":"string",
+										"description":"The specific Roman emperor persona adopted for the response, if any."
+									}
+								}
 							}
-						},
-						"required":[
-							"response",
-							"emotionalTone"
-						]
+						}
 					},
 					"tools":{
 						"toolList":[]
@@ -135,35 +169,6 @@
 			"skip":false,
 			"subTitle":"Agent",
 			"title":"Creates an Employee Support Copilot to handle HR/IT\nissues using a knowledge base.",
-			"type":"CALL_INTERFACE_WORKFLOW"
-		},
-		{
-			"context":{
-				"appName":"workflow_agent_search_knowledge",
-				"resourceVersion":154,
-				"resourceName":"workflow_agent_search_knowledge_default",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":false,
-			"fallbackMode":"STOP",
-			"groupId":"_yJOKd-1",
-			"id":"n_t0Hyk",
-			"index":0,
-			"inputs":{
-				"callableInterfaceId":"__ua__knowledge_search_interface",
-				"parameters":{
-					"knowledges":[
-						{
-							"type":"GLOBAL"
-						}
-					],
-					"model":"e_686654b81257d219bd7958d5"
-				}
-			},
-			"skip":false,
-			"subTitle":"Search the Knowledge",
-			"title":"Search across company’s internal knowledge",
 			"type":"CALL_INTERFACE_WORKFLOW"
 		},
 		{
@@ -182,9 +187,9 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"Be Polite, Greet the user \nIdentify the user query from the input and refer the knowledge",
+					"responseInstructions":"Be Polite, Greet the user \nIdentify the user query from the input and refer the knowledge\nCheck agent output{{ n_TIPJn.outputs.response }}{{ n_TIPJn.outputs.metadata }}",
 					"name":"Crafts AI response format and tone in 60 chars max.",
-					"model":"e_686654b81257d219bd7958dc"
+					"model":"e_686654b81257d219bd7958d5"
 				}
 			},
 			"skip":false,
@@ -219,5 +224,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":31
+	"version":36
 }
