@@ -9,18 +9,18 @@
 			"fromNodeId":"n_BWfKu",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_u3z18",
-			"type":"next"
-		},
-		{
-			"fromNodeId":"n_u3z18",
-			"priority":0,
-			"skip":false,
 			"toNodeId":"_wAt1k",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"_wAt1k",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_u3z18",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_u3z18",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_jAviR",
@@ -30,8 +30,15 @@
 			"fromNodeId":"n_jAviR",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_188Pp",
+			"toNodeId":"n_ti5JR",
 			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_ti5JR",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_188Pp",
+			"type":"next"
 		},
 		{
 			"fromNodeId":"n_188Pp",
@@ -52,7 +59,7 @@
 	"id":"68ef565d913d28037c013176",
 	"lastModifiedBy":39714,
 	"lcName":"demo11111",
-	"modifiedTime":1760516302958,
+	"modifiedTime":1760516417492,
 	"name":"demo11111",
 	"nodes":[
 		{
@@ -78,6 +85,29 @@
 		},
 		{
 			"context":{
+				"appName":"files_by_unifyapps",
+				"resourceVersion":931,
+				"resourceName":"files_by_unifyapps_upload_file",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Ekzdv-1",
+			"id":"_wAt1k",
+			"index":2,
+			"inputs":{
+				"fileName":"test",
+				"url":"https://ontheline.trincoll.edu/images/bookdown/sample-local-pdf.pdf",
+				"option":"url"
+			},
+			"skip":false,
+			"subTitle":"Files by UnifyApps",
+			"title":"Upload file",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"variable_by_unifyapps",
 				"resourceVersion":1044,
 				"resourceName":"variable_by_unifyapps_create_list",
@@ -88,7 +118,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_Ekzdv-1",
 			"id":"n_u3z18",
-			"index":2,
+			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -314,7 +344,10 @@
 			},
 			"inputs":{
 				"createList":{
-					"ua:type":"mappedArray"
+					"ua:type":"mappedArray",
+					"items":{
+						"file":"{{ _wAt1k.outputs.fileDetails }}"
+					}
 				},
 				"ua:title":"testListofFiles",
 				"ua:list_type":"OBJECT"
@@ -351,29 +384,6 @@
 		},
 		{
 			"context":{
-				"appName":"files_by_unifyapps",
-				"resourceVersion":931,
-				"resourceName":"files_by_unifyapps_upload_file",
-				"type":"APPLICATION"
-			},
-			"debug":false,
-			"dirty":true,
-			"fallbackMode":"STOP",
-			"groupId":"_Ekzdv-1",
-			"id":"_wAt1k",
-			"index":3,
-			"inputs":{
-				"fileName":"test",
-				"url":"https://ontheline.trincoll.edu/images/bookdown/sample-local-pdf.pdf",
-				"option":"url"
-			},
-			"skip":false,
-			"subTitle":"Files by UnifyApps",
-			"title":"Upload file",
-			"type":"ACTION"
-		},
-		{
-			"context":{
 				"appName":"loop",
 				"resourceVersion":36,
 				"resourceName":"loop_for",
@@ -399,6 +409,79 @@
 		{
 			"context":{
 				"appName":"variable_by_unifyapps",
+				"resourceVersion":1011,
+				"resourceName":"variable_by_unifyapps_add_item_to_list",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_jAviR@_Ekzdv-1@l",
+			"id":"n_ti5JR",
+			"index":5,
+			"inputs":{
+				"insertLocation":"END",
+				"listName":"{{ n_u3z18.outputs.items[0] }}"
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"maxLeaseTimeUnit":"SECONDS",
+					"maxWaitDurationUnit":"SECONDS"
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Add item to list",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
 				"resourceVersion":962,
 				"resourceName":"variable_by_unifyapps_add_items_to_list",
 				"type":"APPLICATION"
@@ -408,12 +491,11 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_jAviR@_Ekzdv-1@l",
 			"id":"n_188Pp",
-			"index":5,
+			"index":6,
 			"inputs":{
 				"insertLocation":"END",
 				"itemsToAdd":{
-					"ua:type":"mappedArray",
-					"source":"{{ _wAt1k.outputs.fileDetails.source }}"
+					"ua:type":"mappedArray"
 				},
 				"listName":"{{ n_u3z18.outputs.items[0] }}"
 			},
@@ -434,7 +516,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_Ekzdv-1",
 			"id":"n_Am7AV",
-			"index":6,
+			"index":7,
 			"inputs":{
 				"result":"{{ n_188Pp.outputs.success }}"
 			},
@@ -461,5 +543,5 @@
 	"tags":[
 		
 	],
-	"version":4
+	"version":5
 }
