@@ -1,6 +1,6 @@
 {
 	"appsUsed":[
-		"headout"
+		
 	],
 	"createdTime":1760537808707,
 	"deleted":false,
@@ -9,14 +9,21 @@
 			"fromNodeId":"n_LfjbS",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_hNw5m",
+			"toNodeId":"n_jVTx0",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_jVTx0",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_JqGzN",
 			"type":"next"
 		}
 	],
 	"id":"68efacd01ff997436ed2cd62",
-	"lastModifiedBy":124519,
+	"lastModifiedBy":21056,
 	"lcName":"test",
-	"modifiedTime":1760538044292,
+	"modifiedTime":1760541903741,
 	"name":"test",
 	"nodes":[
 		{
@@ -46,30 +53,92 @@
 		},
 		{
 			"context":{
-				"appName":"headout",
-				"resourceVersion":132,
-				"connectionId":"68e80a3bc1fbcd6e64c01e11",
-				"resourceName":"headout_list_product_listing_city",
+				"appName":"utility_by_unifyapps",
+				"resourceVersion":1068,
+				"resourceName":"utility_by_unifyapps_to_json_object",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_vZrzP-1",
-			"id":"n_hNw5m",
+			"id":"n_jVTx0",
 			"index":2,
 			"inputs":{
-				"userLatitude":25.2048,
-				"userLongitude":55.2708,
-				"offset":"0",
-				"cityCode":"Dubai",
-				"limit":100,
-				"language":"EN",
-				"currencyCode":"AED"
+				"jsonSchema":{
+					"type":"array",
+					"items":{
+						"type":"object",
+						"properties":{
+							"id":{
+								"type":"integer",
+								"title":"id"
+							},
+							"name":{
+								"type":"string",
+								"title":"name"
+							},
+							"email":{
+								"type":"string",
+								"title":"email"
+							}
+						},
+						"additionalProperties":false
+					}
+				},
+				"jsonString":"[{\"id\":1,\"name\":\"AliceJohnson\",\"email\":\"alice@example.com\"},{\"id\":2,\"name\":\"BobSmith\",\"email\":\"bob@example.com\"},{\"id\":3,\"name\":\"CharlieBrown\",\"email\":\"charlie@example.com\"},{\"id\":4,\"name\":\"DianaPrince\",\"email\":\"diana@example.com\"}]"
 			},
 			"skip":false,
-			"subTitle":"Headout",
-			"title":"List product listing by city",
+			"subTitle":"Utility by UnifyApps",
+			"title":"Deserialise string to JSON object",
+			"type":"ACTION"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.dropDownDetails.items.beginRow",
+					"root.dropDownDetails.items.endRow",
+					"root.dropDownDetails.items.beginColumn",
+					"root.dropDownDetails.items.endColumn",
+					"root.dropDownDetails.items.options.items",
+					"root.headerFormatMapping.items.headerName",
+					"root.headerFormatMapping.items.formatType"
+				]
+			},
+			"context":{
+				"appName":"excel_by_unifyapps",
+				"resourceVersion":899,
+				"resourceName":"excel_by_unifyapps_list_to_excel_file",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_vZrzP-1",
+			"id":"n_JqGzN",
+			"index":3,
+			"inputs":{
+				"fileName":"TestUnify",
+				"sheetName":"Testtttt",
+				"staticHeaders":[
+					{
+						"key":"Name",
+						"value":"{{ n_jVTx0.outputs.result[0].name }}"
+					},
+					{
+						"key":"Email",
+						"value":"{{ n_jVTx0.outputs.result[0].email }}"
+					}
+				],
+				"skipHeaderRow":true,
+				"headerType":"STATIC",
+				"dataSource":"{{ n_jVTx0.outputs.result }}",
+				"fileType":"xlsx",
+				"append":false
+			},
+			"skip":false,
+			"subTitle":"Excel by UnifyApps",
+			"title":"Write data to Excel file",
 			"type":"ACTION"
 		}
 	],
@@ -90,5 +159,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
