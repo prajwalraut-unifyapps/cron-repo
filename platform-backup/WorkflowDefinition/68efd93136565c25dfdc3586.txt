@@ -22,6 +22,22 @@
 			"type":"next"
 		},
 		{
+			"fromNodeId":"n_6pcMa",
+			"name":"success",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_EaF8A",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_6pcMa",
+			"name":"error",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_plOv7",
+			"type":"error"
+		},
+		{
 			"fromNodeId":"n_69dTd",
 			"name":"error",
 			"priority":0,
@@ -30,7 +46,14 @@
 			"type":"error"
 		},
 		{
-			"fromNodeId":"n_6pcMa",
+			"fromNodeId":"n_EaF8A",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_l74yv",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_plOv7",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_l74yv",
@@ -47,7 +70,7 @@
 	"id":"68efd93136565c25dfdc3586",
 	"lastModifiedBy":1,
 	"lcName":"cacheqa2vmhfcwqwfx",
-	"modifiedTime":1760549243972,
+	"modifiedTime":1760549277228,
 	"name":"cacheQA2VmhFcWQWFx",
 	"nodes":[
 		{
@@ -57,7 +80,7 @@
 				"resourceName":"callables_from_automation"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_VIfLS-1",
 			"id":"n_VclwN",
@@ -121,7 +144,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"MANUAL",
 			"groupId":"_VIfLS-1",
 			"id":"n_69dTd",
@@ -198,16 +221,114 @@
 			},
 			"debug":false,
 			"dirty":true,
-			"fallbackMode":"STOP",
+			"fallbackMode":"MANUAL",
 			"groupId":"n_69dTd@_VIfLS-1@success",
 			"id":"n_6pcMa",
 			"index":3,
 			"inputs":{
 				"contactId":"{{ n_VclwN.outputs.contactId }}"
 			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"maxLeaseTimeUnit":"SECONDS",
+					"maxWaitDurationUnit":"SECONDS"
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"MANUAL",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
+				}
+			},
 			"skip":false,
 			"subTitle":"Freshdesk",
 			"title":"Get contact",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":10491,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_contact",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_6pcMa@n_69dTd@_VIfLS-1@success@success",
+			"id":"n_EaF8A",
+			"index":4,
+			"inputs":{
+				"contactId":"{{ n_VclwN.outputs.contactIdTwo }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get contact",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"freshdesk",
+				"resourceVersion":10491,
+				"connectionId":"673ff5643994b6126ba5c516",
+				"resourceName":"freshdesk_get_company",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_6pcMa@n_69dTd@_VIfLS-1@success@error",
+			"id":"n_plOv7",
+			"index":5,
+			"inputs":{
+				"companyId":"{{ n_VclwN.outputs.companyIdTwo }}"
+			},
+			"skip":false,
+			"subTitle":"Freshdesk",
+			"title":"Get company",
 			"type":"ACTION"
 		},
 		{
@@ -219,11 +340,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_69dTd@_VIfLS-1@error",
 			"id":"n_LeQqr",
-			"index":4,
+			"index":6,
 			"inputs":{
 				"purpose":"{{ n_VclwN.outputs.purpose }}",
 				"channel":"{{ n_VclwN.outputs.channel }}"
@@ -241,11 +362,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_VIfLS-1",
 			"id":"n_l74yv",
-			"index":5,
+			"index":7,
 			"inputs":{
 				"result":{
 					"result":"{{ n_LeQqr.outputs.channel.purpose.value }}"
@@ -274,5 +395,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
