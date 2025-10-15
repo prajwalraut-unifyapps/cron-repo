@@ -658,7 +658,7 @@
 	"id":"6851442f9e30586f552a6d73",
 	"lastModifiedBy":45768,
 	"lcName":"call llm (ai agent) wrapper",
-	"modifiedTime":1760512919001,
+	"modifiedTime":1760512936703,
 	"name":"Call LLM (AI Agent) Wrapper",
 	"nodes":[
 		{
@@ -3154,7 +3154,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"nr1i4@_cDglt-1@6",
 			"id":"n_NWAA8",
@@ -3215,8 +3215,9 @@
 						}
 					}
 				},
+				"code":"import java.util.regex.Pattern\n\ndef messages = binding.hasVariable(\"messages\") ? binding.getVariable(\"messages\") : []\ndef formattedMessages = []\n\nfor (message in messages) {\n    if (message.role == \"assistant\") {\n        def finalAnswer = null\n        def toolCalls = []\n        \n        for (content in message.content) {\n            if (content.type == \"text\" && content.text) {\n                def pattern = Pattern.compile(\"Thought:\\\\s*(.*?)\\\\s*FinalAnswer:\\\\s*(.*)\", Pattern.DOTALL)\n                def matcher = pattern.matcher(content.text)\n                if (matcher.matches()) {\n                    finalAnswer = matcher.group(2)?.trim()\n                } else {\n                    def pattern2 = Pattern.compile(\".*?FinalAnswer:\\\\s*(.*)\", Pattern.DOTALL)\n                    def matcher2 = pattern2.matcher(content.text)\n                    if (matcher2.matches()) {\n                        finalAnswer = matcher2.group(1)?.trim()\n                    }\n                }\n            } else if (content.type == \"tool_use\") {\n                toolCalls << [\n                    \"name\": content.name,\n                    \"arguments\": content.input,\n                    \"id\": content.id\n                ]\n            }\n        }\n        \n        if (finalAnswer != null || !toolCalls.isEmpty()) {\n            def newContent = []\n            \n            if (finalAnswer != null) {\n                newContent << [\n                    \"type\": \"text\",\n                    \"text\": \"FinalAnswer:\" + finalAnswer\n                ]\n            }\n\n            if (!toolCalls.isEmpty()) {\n                for (toolCall in toolCalls) {\n                    newContent << [\n                        \"type\": \"tool_use\",\n                        \"id\": toolCall.id,\n                        \"name\": toolCall.name,\n                        \"input\": toolCall.arguments\n                    ]\n                }\n            }\n            \n            formattedMessages << [\n                \"role\": \"assistant\",\n                \"content\": newContent\n            ]\n        }\n    } else {\n        formattedMessages << message\n    }\n}\n\nreturn [\"formattedMessages\": formattedMessages]",
 				"compile_static":false,
-				"code":"import java.util.regex.Pattern\n\ndef messages = binding.hasVariable(\"messages\")?binding.getVariable(\"messages\"):[]\ndef formattedMessages = []\n// def publishCitationsToolUseId = \"\"\n\nfor (message in messages) {\n    if (message.role == \"assistant\") {\n        def finalAnswer = null\n        def toolCall = null\n        \n        for (content in message.content) {\n            if (content.type == \"text\" && content.text) {\n                def pattern = Pattern.compile(\"Thought:\\\\s*(.*?)\\\\s*FinalAnswer:\\\\s*(.*)\", Pattern.DOTALL)\n                def matcher = pattern.matcher(content.text)\n                if (matcher.matches()) {\n                    finalAnswer = matcher.group(2)?.trim()\n                } else {\n                    def pattern2 = Pattern.compile(\".*?FinalAnswer:\\\\s*(.*)\", Pattern.DOTALL)\n                    def matcher2 = pattern2.matcher(content.text)\n                    if (matcher2.matches()) {\n                        finalAnswer = matcher2.group(1)?.trim()\n                    }\n                }\n            } else if (content.type == \"tool_use\") {\n                toolCall = [\n                    \"id\": content.id,\n                    \"name\": content.name,\n                    \"arguments\": content.input\n                ]\n            }\n        }\n        \n        if (finalAnswer != null || toolCall != null) {\n            def newContent = []\n            \n            if (finalAnswer != null) {\n                newContent << [\n                    \"type\": \"text\",\n                    \"text\": \"FinalAnswer:\" + finalAnswer\n                ]\n            }\n\n            if(toolCall != null){\n                newContent << [\n                    \"type\": \"tool_use\",\n                    \"id\": toolCall.id,\n                    \"name\": toolCall.name,\n                    \"input\": toolCall.arguments\n                ]\n            }\n            \n            // if (toolCall != null) {\n            //     if(toolCall.name == \"PublishCitations\")\n            //     publishCitationsToolUseId = toolCall.id\n            //     //publish citations tool call is being handled separately for static thought\n            //     if(toolCall.name != \"PublishCitations\"){\n            //         newContent << [\n            //             \"type\": \"tool_use\",\n            //             \"id\": toolCall.id,\n            //             \"name\": toolCall.name,\n            //             \"input\": toolCall.arguments\n            //         ]\n            //     }\n            // }\n            \n            formattedMessages << [\n                \"role\": \"assistant\",\n                \"content\": newContent\n            ]\n        }\n    } else {\n        // if(message?.content[0]?.tool_use_id==publishCitationsToolUseId)\n        // continue\n        formattedMessages << message\n    }\n}\n\nreturn [\"formattedMessages\": formattedMessages]",
+				"captureStdOutput":false,
 				"parameters":{
 					"messages":{
 						"source":"{{ n_EYCFG.outputs.message }}",
@@ -5565,5 +5566,5 @@
 	"tags":[
 		
 	],
-	"version":117
+	"version":118
 }
