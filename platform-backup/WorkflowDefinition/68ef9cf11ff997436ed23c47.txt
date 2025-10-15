@@ -30,7 +30,7 @@
 	"id":"68ef9cf11ff997436ed23c47",
 	"lastModifiedBy":39713,
 	"lcName":"testmongointapi",
-	"modifiedTime":1760538755683,
+	"modifiedTime":1760539011709,
 	"name":"testMongoIntAPI",
 	"nodes":[
 		{
@@ -40,7 +40,7 @@
 				"resourceName":"webhooks_default"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_65xO5-1",
 			"id":"n_Kt8cu",
@@ -66,7 +66,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_65xO5-1",
 			"id":"n_hjAVF",
@@ -95,7 +95,7 @@
 			"id":"n_fjulZ",
 			"index":3,
 			"inputs":{
-				"code":"// Needed imports from your application and the MongoDB driver\nimport io.quarkus.arc.Arc;\nimport com.unifyapps.infra.mongo.MongoTemplateFactory;\nimport com.unifyapps.infra.mongo.MongoTemplate;\nimport org.bson.Document;\nimport com.mongodb.client.MongoCollection;\nimport com.mongodb.client.model.UpdateOptions;\nimport com.mongodb.client.result.UpdateResult;\nimport org.bson.conversions.Bson;\n\n// 1. Define constants for your operation\nlong customerId = 1L;\nString resourceType = \"Workflow\";\nString collectionName = \"DeployedWorkflowDefinition\";\n\n// 2. Inject the MongoTemplateFactory service using Arc container\ndef mongoTemplateFactory = Arc.container().instance(MongoTemplateFactory.class).get();\n\n// 3. Get the specific MongoTemplate for the customer and resource\nMongoTemplate mongoTemplate = mongoTemplateFactory.getMongoTemplate(customerId, { -> resourceType });\n\n// 4. CORRECTED LINE: Get the database first, then get the collection from the database\nMongoCollection<Document> collection = mongoTemplate.getDatabase().getCollection(collectionName);\n\n// 5. Define a more specific filter to target only one document by name\nDocument filter = new Document(\"name\", \"TestMongoAPICurl\")\n    .append(\"nodes.context.appName\", \"storage_by_unifyapps\");\n\n// 6. Define the update document with the placeholder\n// NOTE: I've also corrected \"unsetIfNull\" to match the original request \"Unset if Null\"\nDocument update = new Document(\"\\$set\", \n    new Document(\"nodes.\\$[elem].inputs.unsetIfNull\", true)\n);\n\n// 7. Define the arrayFilters in an UpdateOptions object\nList<Bson> arrayFilters = [\n    new Document(\"elem.context.appName\", \"storage_by_unifyapps\")\n];\nUpdateOptions options = new UpdateOptions().arrayFilters(arrayFilters);\n\n// 8. Execute updateOne to ensure only a single document is modified\nUpdateResult result = collection.updateOne(filter, update, options);\n\n// 9. Return the number of documents modified (will be 0 or 1)\nreturn result.getModifiedCount();",
+				"code":"\nimport io.quarkus.arc.Arc;\nimport com.unifyapps.infra.mongo.MongoTemplateFactory;\nimport com.unifyapps.infra.mongo.MongoTemplate;\nimport org.bson.Document;\nimport com.mongodb.client.MongoCollection;\nimport com.mongodb.client.model.UpdateOptions;\nimport com.mongodb.client.result.UpdateResult;\nimport org.bson.conversions.Bson;\n\n\nlong customerId = 1L;\nString resourceType = \"Workflow\";\nString collectionName = \"DeployedWorkflowDefinition\";\n\n\ndef mongoTemplateFactory = Arc.container().instance(MongoTemplateFactory.class).get();\nMongoTemplate mongoTemplate = mongoTemplateFactory.getMongoTemplate(customerId, { -> resourceType });\nMongoCollection<Document> collection = mongoTemplate.getDatabase().getCollection(collectionName);\nDocument filter = new Document(\"name\", \"TestMongoAPICurl\")\n    .append(\"nodes.context.appName\", \"storage_by_unifyapps\");\n\nDocument update = new Document(\"\\$set\", \n    new Document(\"nodes.\\$[elem].inputs.unsetIfNull\", true)\n);\nList<Bson> arrayFilters = [\n    new Document(\"elem.context.appName\", \"storage_by_unifyapps\")\n];\nUpdateOptions options = new UpdateOptions().arrayFilters(arrayFilters);\nUpdateResult result = collection.updateOne(filter, update, options);\nreturn result.getModifiedCount();",
 				"compile_static":false,
 				"captureStdOutput":false
 			},
@@ -112,7 +112,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_65xO5-1",
 			"id":"n_4tj3g",
@@ -145,5 +145,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":3
 }
