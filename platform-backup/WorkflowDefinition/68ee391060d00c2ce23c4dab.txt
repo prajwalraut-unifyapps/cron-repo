@@ -5,12 +5,12 @@
 	"createdTime":1760442640288,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760537569182,
+		"deployedAt":1760538582860,
 		"deployedBy":173449,
-		"deployedDefinitionId":"68efabe11ff997436ed2c627",
+		"deployedDefinitionId":"68efafd61ff997436ed2e969",
 		"status":"DEPLOYED",
-		"version":35,
-		"workflowVersion":35
+		"version":36,
+		"workflowVersion":36
 	},
 	"description":"",
 	"edges":[
@@ -46,7 +46,7 @@
 	"id":"68ee391060d00c2ce23c4dab",
 	"lastModifiedBy":173449,
 	"lcName":"123213",
-	"modifiedTime":1760538582121,
+	"modifiedTime":1760538855291,
 	"name":"123213",
 	"nodes":[
 		{
@@ -93,7 +93,7 @@
 				"callableInterfaceId":"__ua__ask_ai_agent_interface",
 				"parameters":{
 					"name":"Creates a mini-agent for a specific task using GPT-4",
-					"instructions":"Step 1.A: Detect intent.\nYou will need to detect what is the intent of the employee based on their inquiry\nFor example when the user says \"My laptop camera isn't working\"\n--> \"INTENT” -->if(intent == HARDWARE)\nOnly give responses specific to the hardware that is correlated to the mentioned issue\n\nStep 2: Search knowledge base for the issue (max 5 steps).\nDO NOT GIVE GENERIC ADVICE. If no Knowledge result is found, then pass it on to Step 3.\nIF NO KNOWLEDGE FOUND\nStep 3: Escalation (If Not Found or Unresolved)\nIf KnowledgeResult.found == false or user reports “still not working”: end with thanks\n",
+					"instructions":"Step 1.A: Identify the intent.\nDetermine the employee's intent based on their inquiry.\nFor example, if the user states, \"My laptop camera isn't working\":\n--> \"INTENT\" --> if(intent == HARDWARE)\nProvide responses that are specific to the hardware related to the reported issue.\n\nStep 2: Search the knowledge base for the issue (limit to a maximum of 5 steps).\nDO NOT PROVIDE GENERIC ADVICE. If no relevant knowledge is found, proceed to Step 3.\nIF NO KNOWLEDGE IS FOUND\n\nStep 3: Escalation (If Not Found or Unresolved)\nIf KnowledgeResult.found == false or the user indicates “still not working,” conclude the interaction with a thank you message.\nSet the value of Knowledge found to \"no\" if no knowledge is found; otherwise, set it to \"yes.\"",
 					"model":"e_686654b81257d219bd7958d5",
 					"knowledges":[
 						{
@@ -101,9 +101,6 @@
 						}
 					],
 					"responseSchema":{
-						"ua:modal":{
-							"field_type":"STRING"
-						},
 						"type":"object",
 						"properties":{
 							"intent":{
@@ -114,8 +111,12 @@
 								"type":"object",
 								"properties":{
 									"found":{
-										"type":"boolean",
-										"description":"Indicates if a relevant knowledge base entry was found"
+										"type":"string",
+										"enum":[
+											"yes",
+											"no"
+										],
+										"description":"Indicates whether knowledge was found for the issue"
 									},
 									"steps":{
 										"type":"array",
@@ -123,27 +124,28 @@
 											"type":"string"
 										},
 										"maxItems":5,
-										"description":"Steps to resolve the issue, if found in the knowledge base"
+										"description":"Steps to resolve the issue (max 5 steps)"
 									}
 								}
 							},
-							"response":{
-								"type":"string",
-								"description":"Natural language response to the user's inquiry"
-							},
 							"escalation":{
-								"type":"boolean",
-								"description":"Indicates if the issue needs to be escalated"
-							},
-							"closingMessage":{
-								"type":"string",
-								"description":"Closing message, especially if escalation is needed"
+								"type":"object",
+								"properties":{
+									"required":{
+										"type":"boolean",
+										"description":"Indicates whether escalation is required"
+									},
+									"message":{
+										"type":"string",
+										"description":"Escalation message or thanks if no escalation is required"
+									}
+								}
 							}
 						},
 						"required":[
 							"intent",
 							"knowledgeResult",
-							"response"
+							"escalation"
 						]
 					},
 					"tools":{
@@ -193,7 +195,7 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__workflow_agent_prompt",
 				"parameters":{
-					"instructions":"If knowledge is found by node 2, change value of SolutionFound to yes and say hala madrid at the end, else change the value to no and say forca barca",
+					"instructions":"If node 2 discovers knowledge, set the value of SolutionFound to \"yes\" and display \"hala madrid\" at the end. Otherwise, set the value to \"no\" and display \"forca barca\"{{ n_V7k7N.outputs.knowledgeResult.found }}.",
 					"model":"e_686654b81257d219bd7958d5",
 					"name":"Provides AI instructions based on node 2 results.",
 					"responseSchema":{
@@ -246,7 +248,7 @@
 			"inputs":{
 				"callableInterfaceId":"__ua__generate_response_interface",
 				"parameters":{
-					"responseInstructions":"Respond to the user query based on available knowledge. If the information is not available, inform the user that a ticket has been raised for further assistance. Cite the knowledge used\n{{ n_8NYsB.outputs.output }}{{ n_V7k7N.outputs.intent }}{{ n_V7k7N.outputs.knowledgeResult }}{{ n_V7k7N.outputs.response }}{{ n_V7k7N.outputs.escalation }}{{ n_V7k7N.outputs.closingMessage }}{{ n_8NYsB.outputs.output }}",
+					"responseInstructions":"Respond to the user query based on available knowledge. If the information is not available, inform the user that a ticket has been raised for further assistance. Cite the knowledge used\n{{ n_V7k7N.outputs.intent }}{{ n_V7k7N.outputs.knowledgeResult }}{{ n_V7k7N.outputs.escalation }}{{ n_8NYsB.outputs.output }}",
 					"name":"Calls an interface to generate AI response with\nspecified model and formatting parameters.",
 					"model":"e_686654b81257d219bd7958d5"
 				}
@@ -302,5 +304,5 @@
 	"tags":[
 		"WorkflowAgentAutomation"
 	],
-	"version":36
+	"version":37
 }
