@@ -2,19 +2,26 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1747000740654,
+	"createdTime":1744346439792,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760468082783,
-		"deployedBy":1,
-		"deployedDefinitionId":"68ee9c72248c7940ea1b63c2",
+		"deployedAt":1760296193513,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68ebfd010c3d19149a9e34d0",
 		"status":"DEPLOYED",
-		"version":114,
-		"workflowVersion":120
+		"version":57,
+		"workflowVersion":70
 	},
 	"edges":[
 		{
 			"fromNodeId":"rSxcy",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_kCW1L",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_kCW1L",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"Oqpz0",
@@ -22,6 +29,36 @@
 		},
 		{
 			"fromNodeId":"Oqpz0",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_b3Eqv",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_b3Eqv",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_RSENd",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_RSENd",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_qdD6r",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_qdD6r",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"EIzfe",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_RSENd",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"EIzfe",
@@ -39,6 +76,7 @@
 		"configs":[
 			{
 				"permissions":[
+					"VIEW_RUNS",
 					"V"
 				],
 				"principalType":"GLOBAL"
@@ -46,9 +84,9 @@
 		]
 	},
 	"id":"67f896b8b9f0db3c1460ad73",
-	"lastModifiedBy":0,
+	"lastModifiedBy":1728,
 	"lcName":"clarifyconnection tool",
-	"modifiedTime":1760550489631,
+	"modifiedTime":1760604254510,
 	"name":"ClarifyConnection Tool",
 	"nodes":[
 		{
@@ -62,7 +100,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"EGJGB-1",
 			"id":"rSxcy",
-			"index":0,
+			"index":1,
 			"inputs":{
 				"result":{
 					"additionalProperties":false,
@@ -134,6 +172,61 @@
 		},
 		{
 			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":533,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"EGJGB-1",
+			"id":"n_kCW1L",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"caseId":{
+							"type":"string",
+							"title":"Case Id"
+						}
+					},
+					"required":[
+						"caseId"
+					]
+				}
+			},
+			"inputs":{
+				"caseId":"{{ rSxcy.outputs.caseId }}"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"caseId":{
+							"type":"string",
+							"title":"Case Id"
+						}
+					},
+					"required":[
+						"caseId"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"code_by_unifyapps",
 				"resourceVersion":11,
 				"resourceName":"code_by_unifyapps_groovy",
@@ -144,7 +237,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"EGJGB-1",
 			"id":"Oqpz0",
-			"index":0,
+			"index":3,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -185,6 +278,92 @@
 		},
 		{
 			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":0,
+				"resourceName":"variable_by_unifyapps_get_session_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"EGJGB-1",
+			"id":"n_b3Eqv",
+			"index":4,
+			"inputs":{
+				"variableSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"parentCaseId":{
+							"type":"string",
+							"title":"Parent Case Id"
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Get Session Variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":447,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"EGJGB-1",
+			"id":"n_RSENd",
+			"index":5,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_b3Eqv.outputs.parentCaseId }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":516,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_RSENd@EGJGB-1@y",
+			"id":"n_qdD6r",
+			"index":6,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_kCW1L.outputs.caseId }}",
+						"value":"{{ n_b3Eqv.outputs.parentCaseId }}"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":199,
 				"resourceName":"callables_call_automation",
@@ -195,7 +374,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"EGJGB-1",
 			"id":"EIzfe",
-			"index":0,
+			"index":7,
 			"inputs":{
 				"automationId":"67f8976fb643cc0d35c6a1bb",
 				"runtimeConnections":{},
@@ -203,7 +382,7 @@
 				"version":"-1",
 				"parameters":{
 					"appName":"{{ Oqpz0.outputs.result.appName }}",
-					"caseId":"{{ rSxcy.outputs.caseId }}"
+					"caseId":"{{ n_kCW1L.outputs.caseId }}"
 				}
 			},
 			"skip":false,
@@ -223,7 +402,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"EGJGB-1",
 			"id":"pPudW",
-			"index":0,
+			"index":8,
 			"inputs":{
 				"result":{
 					"toolOutput":"Connection Collected successfully from user",
@@ -236,7 +415,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1,
+	"ownerUserId":1866,
 	"schemaReferences":[
 		
 	],
@@ -249,9 +428,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
+	"standard":false,
 	"tags":[
 		
 	],
-	"version":121
+	"version":72
 }
