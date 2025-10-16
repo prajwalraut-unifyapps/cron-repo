@@ -5,12 +5,12 @@
 	"createdTime":1760082008818,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760550743325,
+		"deployedAt":1760637393023,
 		"deployedBy":1,
-		"deployedDefinitionId":"68efdf57e09fb733aee422ac",
+		"deployedDefinitionId":"68f131d06ab2437612e6adb6",
 		"status":"DEPLOYED",
-		"version":7,
-		"workflowVersion":27
+		"version":10,
+		"workflowVersion":31
 	},
 	"edges":[
 		{
@@ -115,7 +115,7 @@
 	"id":"68e76e270e377b0bdc8c4a7f",
 	"lastModifiedBy":1,
 	"lcName":"[dt] retrieves the chat history api",
-	"modifiedTime":1760632073646,
+	"modifiedTime":1760645929949,
 	"name":"[DT] Retrieves the chat history API",
 	"nodes":[
 		{
@@ -180,6 +180,10 @@
 										"chat":{
 											"type":"object",
 											"properties":{
+												"id":{
+													"type":"string",
+													"title":"id"
+												},
 												"createTime":{
 													"type":"integer",
 													"title":"createTime"
@@ -380,95 +384,103 @@
 															"messageType":{
 																"type":"string",
 																"title":"messageType"
+															},
+															"createdTime":{
+																"type":"integer",
+																"title":"createdTime"
+															},
+															"caseId":{
+																"type":"string",
+																"title":"caseId"
+															},
+															"hasAttachments":{
+																"type":"boolean",
+																"title":"hasAttachments"
+															},
+															"additional":{
+																"type":"object",
+																"properties":{
+																	"parentMessageId":{
+																		"type":"string",
+																		"title":"parentMessageId"
+																	},
+																	"IsDataRAGExecuted":{
+																		"type":"boolean",
+																		"title":"IsDataRAGExecuted"
+																	},
+																	"streamingInProgress":{
+																		"type":"boolean",
+																		"title":"streamingInProgress"
+																	},
+																	"parallelToolCallEnabled":{
+																		"type":"boolean",
+																		"title":"parallelToolCallEnabled"
+																	},
+																	"temporaryMessage":{
+																		"type":"boolean",
+																		"title":"temporaryMessage"
+																	},
+																	"streamingCompletionTime":{
+																		"type":"integer",
+																		"title":"streamingCompletionTime"
+																	},
+																	"internalMessageType":{
+																		"type":"string",
+																		"title":"internalMessageType"
+																	},
+																	"sql_output":{
+																		"type":"string",
+																		"title":"sql_output"
+																	},
+																	"messageDeliveryStatus":{
+																		"type":"string",
+																		"title":"messageDeliveryStatus"
+																	},
+																	"firstResponseMessageId":{
+																		"type":"string",
+																		"title":"firstResponseMessageId"
+																	},
+																	"firstResponseMessageTime":{
+																		"type":"integer",
+																		"title":"firstResponseMessageTime"
+																	},
+																	"responseTime":{
+																		"type":"integer",
+																		"title":"responseTime"
+																	},
+																	"ttsDetails":{
+																		"type":"object",
+																		"properties":{
+																			"fileUrl":{
+																				"type":"string",
+																				"title":"fileUrl"
+																			}
+																		},
+																		"additionalProperties":false,
+																		"title":"ttsDetails",
+																		"required":[]
+																	}
+																},
+																"title":"additional",
+																"additionalProperties":false,
+																"required":[]
+															},
+															"fromCustomerUserId":{
+																"type":"string",
+																"title":"fromCustomerUserId"
+															},
+															"searchQueryId":{
+																"type":"string",
+																"title":"searchQueryId"
 															}
 														},
 														"additionalProperties":false
 													},
 													"title":"messages"
-												},
-												"messageType":{
-													"type":"string",
-													"title":"messageType"
-												},
-												"createdTime":{
-													"type":"integer",
-													"title":"createdTime"
-												},
-												"hasAttachments":{
-													"type":"boolean",
-													"title":"hasAttachments"
-												},
-												"additional":{
-													"type":"object",
-													"properties":{
-														"parentMessageId":{
-															"type":"string",
-															"title":"parentMessageId"
-														},
-														"IsDataRAGExecuted":{
-															"type":"boolean",
-															"title":"IsDataRAGExecuted"
-														},
-														"streamingInProgress":{
-															"type":"boolean",
-															"title":"streamingInProgress"
-														},
-														"parallelToolCallEnabled":{
-															"type":"boolean",
-															"title":"parallelToolCallEnabled"
-														},
-														"temporaryMessage":{
-															"type":"boolean",
-															"title":"temporaryMessage"
-														},
-														"streamingCompletionTime":{
-															"type":"integer",
-															"title":"streamingCompletionTime"
-														},
-														"internalMessageType":{
-															"type":"string",
-															"title":"internalMessageType"
-														},
-														"sql_output":{
-															"type":"string",
-															"title":"sql_output"
-														},
-														"messageDeliveryStatus":{
-															"type":"string",
-															"title":"messageDeliveryStatus"
-														},
-														"firstResponseMessageId":{
-															"type":"string",
-															"title":"firstResponseMessageId"
-														},
-														"firstResponseMessageTime":{
-															"type":"integer",
-															"title":"firstResponseMessageTime"
-														},
-														"responseTime":{
-															"type":"integer",
-															"title":"responseTime"
-														}
-													},
-													"title":"additional",
-													"additionalProperties":false
-												},
-												"fromCustomerUserId":{
-													"type":"string",
-													"title":"fromCustomerUserId"
-												},
-												"searchQueryId":{
-													"type":"string",
-													"title":"searchQueryId"
-												},
-												"id":{
-													"type":"string",
-													"title":"Id"
 												}
 											},
 											"title":"chat",
-											"additionalProperties":false,
-											"required":[]
+											"additionalProperties":false
 										}
 									},
 									"title":"chatResult",
@@ -1027,7 +1039,7 @@
 						}
 					}
 				},
-				"code":"if (!binding.hasVariable('message') || message == null) {\n  return [:]\n}\n\n/** ---------- helpers ---------- **/\n\n// From blocks -> collect message.message[*].data.citations\ndef collectBlockCitations = { List blocks ->\n  def cites = []\n  blocks?.each { b ->\n    if ((b?.blockType ?: '') == 'Citation') {\n      def c = b?.data?.citations\n      if (c instanceof List) cites.addAll(c)\n    }\n  }\n  cites\n}\n\n// Build snippets from chunkDetails -> [{ text, chunkNumber }]\ndef buildSnippets = { List chunkDetails ->\n  (chunkDetails instanceof List)\n    ? chunkDetails.collect { cd ->\n        def snip = [:]\n        if (cd?.chunkContent != null) snip.text = cd.chunkContent\n        if (cd?.chunkNumber  != null) snip.chunkNumber = cd.chunkNumber\n        snip\n      }.findAll { !it.isEmpty() }\n    : []\n}\n\n// Raw citation -> structuredResults item: { document:{...}, referenceRanges:[{snippets:[...]}] }\ndef mapCitationToStructuredResult = { Map c ->\n  if (!(c instanceof Map)) return null\n  def meta = [:]\n  if (c.fileType) meta.mimeType = c.fileType\n\n  def doc = [:]\n  if (c.uniqueEntityId)      doc.id = c.uniqueEntityId\n  else if (c.name)           doc.id = c.name\n  else if (c.referenceUrl)   doc.id = c.referenceUrl\n\n  if (c.name)          doc.title = c.name\n  if (c.referenceUrl)  doc.url   = c.referenceUrl\n  if (!meta.isEmpty()) doc.metadata = meta\n\n  def snippets = buildSnippets(c.chunkDetails)\n  def sr = [ document: doc ]\n  if (snippets) sr.referenceRanges = [[ snippets: snippets ]]\n  sr\n}\n\n// Raw citation -> top-level citations item: { sourceDocument:{...}, referenceRanges:[{snippets:[...]}] }\ndef mapCitationToSourceDocument = { Map c ->\n  if (!(c instanceof Map)) return null\n  def meta = [:]\n  if (c.fileType) meta.mimeType = c.fileType\n\n  def src = [:]\n  if (c.uniqueEntityId)      src.id = c.uniqueEntityId\n  else if (c.name)           src.id = c.name\n  else if (c.referenceUrl)   src.id = c.referenceUrl\n\n  if (c.referenceUrl)  src.url   = c.referenceUrl\n  if (c.name)          src.title = c.name\n  if (!meta.isEmpty()) src.metadata = meta\n\n  def snippets = buildSnippets(c.chunkDetails)\n  def entry = [ sourceDocument: src ]\n  if (snippets) entry.referenceRanges = [[ snippets: snippets ]]\n  entry\n}\n\ndef addIfPresent = { Map dst, String key, def val ->\n  if (val != null) dst[key] = val\n}\n\n/** ---------- transform the single message object ---------- **/\n\n// Base fragment: text (from first block). No attachments here anymore.\ndef baseFrag = [:]\ndef textVal = (message?.message instanceof List && message.message)\n    ? message.message[0]?.data?.text\n    : null\nif (textVal) baseFrag.text = textVal\n\n// Build attachment fragments: one fragment per attachment with { file: { ... } }\ndef attachmentFrags = []\nif (message.attachments instanceof List && !message.attachments.isEmpty()) {\n  message.attachments.each { att ->\n    def meta = [:]\n    if (att?.mimeType) meta.mimeType = att.mimeType\n\n    def fileObj = [:]\n    if (att?.id)   fileObj.id   = att.id\n    if (att?.url)  fileObj.url  = att.url\n    if (att?.name) fileObj.name = att.name\n    if (!meta.isEmpty()) fileObj.metadata = meta\n\n    if (!fileObj.isEmpty()) {\n      attachmentFrags << [ file: fileObj ]\n    }\n  }\n}\n\n// Collect citations only from block-level as per contract\ndef blockCitations = collectBlockCitations(message.message as List)\n\ndef modifiedMessage = [:]\naddIfPresent(modifiedMessage, 'messageId',   message.messageId)\naddIfPresent(modifiedMessage, 'messageType', message.messageType)\n\n// Routing by message.additional.internalMessageType\nif (message?.additional instanceof Map\n    && message.additional.containsKey('internalMessageType')\n    && message.additional.internalMessageType == 'THOUGHT') {\n  // Put citations into baseFrag.structuredResults\n  if (blockCitations) {\n    def structuredResults = blockCitations\n      .collect { mapCitationToStructuredResult(it as Map) }\n      .findAll { it != null && it.document instanceof Map && !it.document.isEmpty() }\n    if (structuredResults) {\n      baseFrag.structuredResults = structuredResults\n    }\n  }\n} else if (!(message?.additional instanceof Map)\n           || !message.additional.containsKey('internalMessageType')\n           || message.additional.internalMessageType == null) {\n  // No internalMessageType -> top-level citations\n  if (blockCitations) {\n    def mapped = blockCitations\n      .collect { mapCitationToSourceDocument(it as Map) }\n      .findAll { it?.sourceDocument && !it.sourceDocument.isEmpty() }\n    if (mapped) modifiedMessage.citations = mapped\n  }\n} else {\n  // internalMessageType present and not \"THOUGHT\" -> treat like non-THOUGHT (top-level)\n  if (blockCitations) {\n    def mapped = blockCitations\n      .collect { mapCitationToSourceDocument(it as Map) }\n      .findAll { it?.sourceDocument && !it.sourceDocument.isEmpty() }\n    if (mapped) modifiedMessage.citations = mapped\n  }\n}\n\n// Assemble fragments: base (if any) + one per attachment\ndef fragments = []\nif (!baseFrag.isEmpty()) fragments << baseFrag\nif (attachmentFrags) fragments.addAll(attachmentFrags)\nif (fragments) modifiedMessage.fragments = fragments\n\n// Pass-through\naddIfPresent(modifiedMessage, 'additional',         (message.additional instanceof Map) ? new LinkedHashMap(message.additional) : message.additional)\naddIfPresent(modifiedMessage, 'hasAttachments',     message.hasAttachments)\naddIfPresent(modifiedMessage, 'fromCustomerUserId', message.fromCustomerUserId)\naddIfPresent(modifiedMessage, 'createdTime',        message.createdTime)\naddIfPresent(modifiedMessage, 'searchQueryId',      message.searchQueryId)\n\nreturn [ modifiedMessage: modifiedMessage ]",
+				"code":"if (!binding.hasVariable('message') || message == null) {\n  return [:]\n}\n\n/** ---------- helpers ---------- **/\n\n// From blocks -> collect message.message[*].data.citations\ndef collectBlockCitations = { List blocks ->\n  def cites = []\n  blocks?.each { b ->\n    if ((b?.blockType ?: '') == 'Citation') {\n      def c = b?.data?.citations\n      if (c instanceof List) cites.addAll(c)\n    }\n  }\n  cites\n}\n\n// Build snippets from chunkDetails -> [{ text, chunkNumber }]\ndef buildSnippets = { List chunkDetails ->\n  (chunkDetails instanceof List)\n    ? chunkDetails.collect { cd ->\n        def snip = [:]\n        if (cd?.chunkContent != null) snip.text = cd.chunkContent\n        if (cd?.chunkNumber  != null) snip.chunkNumber = cd.chunkNumber\n        snip\n      }.findAll { !it.isEmpty() }\n    : []\n}\n\n// Raw citation -> structuredResults item: { document:{...}, referenceRanges:[{snippets:[...]}] }\ndef mapCitationToStructuredResult = { Map c ->\n  if (!(c instanceof Map)) return null\n  def meta = [:]\n  if (c.fileType) meta.mimeType = c.fileType\n\n  def doc = [:]\n  if (c.uniqueEntityId)      doc.id = c.uniqueEntityId\n  else if (c.name)           doc.id = c.name\n  else if (c.referenceUrl)   doc.id = c.referenceUrl\n\n  if (c.name)          doc.title = c.name\n  if (c.referenceUrl)  doc.url   = c.referenceUrl\n  if (!meta.isEmpty()) doc.metadata = meta\n\n  def snippets = buildSnippets(c.chunkDetails)\n  def sr = [ document: doc ]\n  if (snippets) sr.referenceRanges = [[ snippets: snippets ]]\n  sr\n}\n\n// Raw citation -> top-level citations item: { sourceDocument:{...}, referenceRanges:[{snippets:[...]}] }\ndef mapCitationToSourceDocument = { Map c ->\n  if (!(c instanceof Map)) return null\n  def meta = [:]\n  if (c.fileType) meta.mimeType = c.fileType\n\n  def src = [:]\n  if (c.uniqueEntityId)      src.id = c.uniqueEntityId\n  else if (c.name)           src.id = c.name\n  else if (c.referenceUrl)   src.id = c.referenceUrl\n\n  if (c.referenceUrl)  src.url   = c.referenceUrl\n  if (c.name)          src.title = c.name\n  if (!meta.isEmpty()) src.metadata = meta\n\n  def snippets = buildSnippets(c.chunkDetails)\n  def entry = [ sourceDocument: src ]\n  if (snippets) entry.referenceRanges = [[ snippets: snippets ]]\n  entry\n}\n\ndef addIfPresent = { Map dst, String key, def val ->\n  if (val != null) dst[key] = val\n}\n\n/** ---------- transform the single message object ---------- **/\n\n// Base fragment: text (from first block). No attachments here anymore.\ndef baseFrag = [:]\ndef textVal = (message?.message instanceof List && message.message)\n    ? message.message[0]?.data?.text\n    : null\nif (textVal) baseFrag.text = textVal\n\n// Build attachment fragments: one fragment per attachment with { file: { ... } }\ndef attachmentFrags = []\nif (message.attachments instanceof List && !message.attachments.isEmpty()) {\n  message.attachments.each { att ->\n    def meta = [:]\n    if (att?.mimeType) meta.mimeType = att.mimeType\n\n    def fileObj = [:]\n    if (att?.id)   fileObj.id   = att.id\n    if (att?.url)  fileObj.url  = att.url\n    if (att?.name) fileObj.name = att.name\n    if (!meta.isEmpty()) fileObj.metadata = meta\n\n    if (!fileObj.isEmpty()) {\n      attachmentFrags << [ file: fileObj ]\n    }\n  }\n}\n\n// Collect citations only from block-level as per contract\ndef blockCitations = collectBlockCitations(message.message as List)\n\ndef modifiedMessage = [:]\naddIfPresent(modifiedMessage, 'messageId',   message.messageId)\naddIfPresent(modifiedMessage, 'messageType', message.messageType)\n\n// Routing by message.additional.internalMessageType\nif (message?.additional instanceof Map\n    && message.additional.containsKey('internalMessageType')\n    && message.additional.internalMessageType == 'THOUGHT') {\n  // Put citations into baseFrag.structuredResults\n  if (blockCitations) {\n    def structuredResults = blockCitations\n      .collect { mapCitationToStructuredResult(it as Map) }\n      .findAll { it != null && it.document instanceof Map && !it.document.isEmpty() }\n    if (structuredResults) {\n      baseFrag.structuredResults = structuredResults\n    }\n  }\n} else if (!(message?.additional instanceof Map)\n           || !message.additional.containsKey('internalMessageType')\n           || message.additional.internalMessageType == null) {\n  // No internalMessageType -> top-level citations\n  if (blockCitations) {\n    def mapped = blockCitations\n      .collect { mapCitationToSourceDocument(it as Map) }\n      .findAll { it?.sourceDocument && !it.sourceDocument.isEmpty() }\n    if (mapped) modifiedMessage.citations = mapped\n  }\n} else {\n  // internalMessageType present and not \"THOUGHT\" -> treat like non-THOUGHT (top-level)\n  if (blockCitations) {\n    def mapped = blockCitations\n      .collect { mapCitationToSourceDocument(it as Map) }\n      .findAll { it?.sourceDocument && !it.sourceDocument.isEmpty() }\n    if (mapped) modifiedMessage.citations = mapped\n  }\n}\n\n// Assemble fragments: base (if any) + one per attachment\ndef fragments = []\nif (!baseFrag.isEmpty()) fragments << baseFrag\nif (attachmentFrags) fragments.addAll(attachmentFrags)\nif (fragments) modifiedMessage.fragments = fragments\n\n// Pass-through\naddIfPresent(modifiedMessage, 'caseId',             message.caseId)\naddIfPresent(modifiedMessage, 'additional',         (message.additional instanceof Map) ? new LinkedHashMap(message.additional) : message.additional)\naddIfPresent(modifiedMessage, 'hasAttachments',     message.hasAttachments)\naddIfPresent(modifiedMessage, 'fromCustomerUserId', message.fromCustomerUserId)\naddIfPresent(modifiedMessage, 'createdTime',        message.createdTime)\naddIfPresent(modifiedMessage, 'searchQueryId',      message.searchQueryId)\n\nreturn [ modifiedMessage: modifiedMessage ]",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -1088,9 +1100,9 @@
 				"body":{
 					"chatResult":{
 						"chat":{
+							"id":"{{ n_LQTKC.outputs.body.caseId }}",
 							"createTime":"{{ n_RtjNn.outputs.createdTime }}",
 							"updateTime":"{{ n_RtjNn.outputs.modifiedTime }}",
-							"id":"{{ n_LQTKC.outputs.body.caseId }}",
 							"messages":{
 								"ua:type":"mappedArray",
 								"source":"{{ n_cnKJ4.outputs.items }}",
@@ -1162,5 +1174,5 @@
 	"tags":[
 		
 	],
-	"version":29
+	"version":33
 }
