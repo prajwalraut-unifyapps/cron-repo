@@ -5,12 +5,12 @@
 	"createdTime":1760082008818,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760378562642,
+		"deployedAt":1760550743325,
 		"deployedBy":1,
-		"deployedDefinitionId":"68ed3ec2f5eb8345dac8020a",
+		"deployedDefinitionId":"68efdf57e09fb733aee422ac",
 		"status":"DEPLOYED",
-		"version":3,
-		"workflowVersion":22
+		"version":7,
+		"workflowVersion":27
 	},
 	"edges":[
 		{
@@ -29,6 +29,7 @@
 		},
 		{
 			"fromNodeId":"n_zYCxO",
+			"name":"success",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_apmBP",
@@ -76,12 +77,35 @@
 			"skip":false,
 			"toNodeId":"n_rYuMU",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_zYCxO",
+			"name":"error",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_hvdpI",
+			"type":"error"
+		},
+		{
+			"fromNodeId":"n_rYuMU",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_JMAAm",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_hvdpI",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_JMAAm",
+			"type":"next"
 		}
 	],
 	"grants":{
 		"configs":[
 			{
 				"permissions":[
+					"VIEW_RUNS",
 					"V"
 				],
 				"principalType":"GLOBAL"
@@ -89,12 +113,21 @@
 		]
 	},
 	"id":"68e76e270e377b0bdc8c4a7f",
-	"lastModifiedBy":0,
-	"lcName":"[dt] retrieves the chat history",
-	"modifiedTime":1760465603379,
-	"name":"[DT] Retrieves the chat history",
+	"lastModifiedBy":1,
+	"lcName":"[dt] retrieves the chat history api",
+	"modifiedTime":1760632073646,
+	"name":"[DT] Retrieves the chat history API",
 	"nodes":[
 		{
+			"additional":{
+				"xsdSchemaConfig":{
+					"root":{
+						"response":[
+							{}
+						]
+					}
+				}
+			},
 			"context":{
 				"appName":"callables",
 				"resourceVersion":0,
@@ -115,6 +148,14 @@
 							"caseId":{
 								"type":"string",
 								"title":"Case Id"
+							},
+							"limit":{
+								"type":"integer",
+								"title":"Limit"
+							},
+							"offset":{
+								"type":"integer",
+								"title":"Offset"
 							}
 						},
 						"additionalProperties":false,
@@ -129,6 +170,7 @@
 						"textBody":{
 							"type":"string"
 						},
+						"namespaces":[],
 						"body":{
 							"type":"object",
 							"properties":{
@@ -138,10 +180,6 @@
 										"chat":{
 											"type":"object",
 											"properties":{
-												"id":{
-													"type":"string",
-													"title":"id"
-												},
 												"createTime":{
 													"type":"integer",
 													"title":"createTime"
@@ -154,11 +192,278 @@
 													"type":"array",
 													"items":{
 														"type":"object",
-														"properties":{},
-														"additionalProperties":false,
-														"required":[]
+														"properties":{
+															"citations":{
+																"type":"array",
+																"items":{
+																	"type":"object",
+																	"properties":{
+																		"sourceDocument":{
+																			"type":"object",
+																			"properties":{
+																				"id":{
+																					"type":"string",
+																					"title":"id"
+																				},
+																				"title":{
+																					"type":"string",
+																					"title":"title"
+																				},
+																				"url":{
+																					"type":"string",
+																					"title":"url"
+																				},
+																				"metadata":{
+																					"type":"object",
+																					"properties":{
+																						"mimeType":{
+																							"type":"string",
+																							"title":"mimeType"
+																						}
+																					},
+																					"title":"metadata",
+																					"additionalProperties":false
+																				}
+																			},
+																			"title":"sourceDocument",
+																			"additionalProperties":false
+																		},
+																		"referenceRanges":{
+																			"type":"array",
+																			"items":{
+																				"type":"object",
+																				"properties":{
+																					"snippets":{
+																						"type":"array",
+																						"items":{
+																							"type":"object",
+																							"properties":{
+																								"text":{
+																									"type":"string",
+																									"title":"text"
+																								},
+																								"chunkNumber":{
+																									"type":"integer",
+																									"title":"chunkNumber"
+																								}
+																							},
+																							"additionalProperties":false
+																						},
+																						"title":"snippets"
+																					}
+																				},
+																				"additionalProperties":false
+																			},
+																			"title":"referenceRanges"
+																		}
+																	},
+																	"additionalProperties":false
+																},
+																"title":"citations"
+															},
+															"fragments":{
+																"type":"array",
+																"items":{
+																	"type":"object",
+																	"properties":{
+																		"structuredResults":{
+																			"type":"array",
+																			"items":{
+																				"type":"object",
+																				"properties":{
+																					"document":{
+																						"type":"object",
+																						"properties":{
+																							"id":{
+																								"type":"string",
+																								"title":"id"
+																							},
+																							"title":{
+																								"type":"string",
+																								"title":"title"
+																							},
+																							"url":{
+																								"type":"string",
+																								"title":"url"
+																							},
+																							"metadata":{
+																								"type":"object",
+																								"properties":{
+																									"mimeType":{
+																										"type":"string",
+																										"title":"mimeType"
+																									}
+																								},
+																								"title":"metadata",
+																								"additionalProperties":false
+																							}
+																						},
+																						"title":"document",
+																						"additionalProperties":false
+																					},
+																					"referenceRanges":{
+																						"type":"array",
+																						"items":{
+																							"type":"object",
+																							"properties":{
+																								"snippets":{
+																									"type":"array",
+																									"items":{
+																										"type":"object",
+																										"properties":{
+																											"text":{
+																												"type":"string",
+																												"title":"text"
+																											},
+																											"chunkNumber":{
+																												"type":"integer",
+																												"title":"chunkNumber"
+																											}
+																										},
+																										"additionalProperties":false
+																									},
+																									"title":"snippets"
+																								}
+																							},
+																							"additionalProperties":false
+																						},
+																						"title":"referenceRanges"
+																					}
+																				},
+																				"additionalProperties":false
+																			},
+																			"title":"structuredResults"
+																		},
+																		"text":{
+																			"type":"string",
+																			"title":"text"
+																		},
+																		"file":{
+																			"type":"object",
+																			"properties":{
+																				"id":{
+																					"type":"string",
+																					"title":"id"
+																				},
+																				"url":{
+																					"type":"string",
+																					"title":"url"
+																				},
+																				"name":{
+																					"type":"string",
+																					"title":"name"
+																				},
+																				"metadata":{
+																					"type":"object",
+																					"properties":{
+																						"mimeType":{
+																							"type":"string",
+																							"title":"mimeType"
+																						}
+																					},
+																					"title":"metadata",
+																					"additionalProperties":false
+																				}
+																			},
+																			"title":"file",
+																			"additionalProperties":false
+																		}
+																	},
+																	"additionalProperties":false
+																},
+																"title":"fragments"
+															},
+															"messageId":{
+																"type":"string",
+																"title":"messageId"
+															},
+															"messageType":{
+																"type":"string",
+																"title":"messageType"
+															}
+														},
+														"additionalProperties":false
 													},
 													"title":"messages"
+												},
+												"messageType":{
+													"type":"string",
+													"title":"messageType"
+												},
+												"createdTime":{
+													"type":"integer",
+													"title":"createdTime"
+												},
+												"hasAttachments":{
+													"type":"boolean",
+													"title":"hasAttachments"
+												},
+												"additional":{
+													"type":"object",
+													"properties":{
+														"parentMessageId":{
+															"type":"string",
+															"title":"parentMessageId"
+														},
+														"IsDataRAGExecuted":{
+															"type":"boolean",
+															"title":"IsDataRAGExecuted"
+														},
+														"streamingInProgress":{
+															"type":"boolean",
+															"title":"streamingInProgress"
+														},
+														"parallelToolCallEnabled":{
+															"type":"boolean",
+															"title":"parallelToolCallEnabled"
+														},
+														"temporaryMessage":{
+															"type":"boolean",
+															"title":"temporaryMessage"
+														},
+														"streamingCompletionTime":{
+															"type":"integer",
+															"title":"streamingCompletionTime"
+														},
+														"internalMessageType":{
+															"type":"string",
+															"title":"internalMessageType"
+														},
+														"sql_output":{
+															"type":"string",
+															"title":"sql_output"
+														},
+														"messageDeliveryStatus":{
+															"type":"string",
+															"title":"messageDeliveryStatus"
+														},
+														"firstResponseMessageId":{
+															"type":"string",
+															"title":"firstResponseMessageId"
+														},
+														"firstResponseMessageTime":{
+															"type":"integer",
+															"title":"firstResponseMessageTime"
+														},
+														"responseTime":{
+															"type":"integer",
+															"title":"responseTime"
+														}
+													},
+													"title":"additional",
+													"additionalProperties":false
+												},
+												"fromCustomerUserId":{
+													"type":"string",
+													"title":"fromCustomerUserId"
+												},
+												"searchQueryId":{
+													"type":"string",
+													"title":"searchQueryId"
+												},
+												"id":{
+													"type":"string",
+													"title":"Id"
 												}
 											},
 											"title":"chat",
@@ -167,13 +472,11 @@
 										}
 									},
 									"title":"chatResult",
-									"additionalProperties":false,
-									"required":[]
+									"additionalProperties":false
 								}
 							},
 							"additionalProperties":false
-						},
-						"namespaces":[]
+						}
 					},
 					{
 						"status":400,
@@ -198,6 +501,13 @@
 					},
 					{
 						"status":429,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						}
+					},
+					{
+						"status":500,
 						"contentType":"application/json",
 						"textBody":{
 							"type":"string"
@@ -249,7 +559,7 @@
 			},
 			"debug":false,
 			"dirty":false,
-			"fallbackMode":"STOP",
+			"fallbackMode":"MANUAL",
 			"groupId":"_MPdFP-1",
 			"id":"n_zYCxO",
 			"index":3,
@@ -259,7 +569,64 @@
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"caseId":"{{ n_LQTKC.outputs.body.caseId }}"
+					"caseId":"{{ n_LQTKC.outputs.body.caseId }}",
+					"limit":"{{ n_LQTKC.outputs.body.limit }}",
+					"offset":"{{ n_LQTKC.outputs.body.offset }}",
+					"sortOrder":"ASC"
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"maxLeaseTimeUnit":"SECONDS",
+					"maxWaitDurationUnit":"SECONDS"
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"MANUAL",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				},
+				"timeoutConfig":{
+					"enabled":false
 				}
 			},
 			"skip":false,
@@ -282,7 +649,7 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"_MPdFP-1",
+			"groupId":"n_zYCxO@_MPdFP-1@success",
 			"id":"n_apmBP",
 			"index":4,
 			"inputs":{
@@ -329,7 +696,7 @@
 					}
 				}
 			},
-			"skip":false,
+			"skip":true,
 			"subTitle":"Reverse conversation details list",
 			"title":"Execute Groovy code",
 			"type":"ACTION"
@@ -352,7 +719,7 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"_MPdFP-1",
+			"groupId":"n_zYCxO@_MPdFP-1@success",
 			"id":"n_cnKJ4",
 			"index":5,
 			"inputSchema":{
@@ -601,12 +968,12 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"_MPdFP-1",
+			"groupId":"n_zYCxO@_MPdFP-1@success",
 			"id":"n_HNnuw",
 			"index":6,
 			"inputs":{
 				"repeatMode":"SINGLE",
-				"listSource":"{{ n_apmBP.outputs.result.reversedConvDetails }}",
+				"listSource":"{{ n_zYCxO.outputs.messages }}",
 				"captureIterations":false
 			},
 			"skip":false,
@@ -629,7 +996,7 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_HNnuw@_MPdFP-1@l",
+			"groupId":"n_HNnuw@n_zYCxO@_MPdFP-1@success@l",
 			"id":"_zpJTM",
 			"index":7,
 			"inputs":{
@@ -660,7 +1027,7 @@
 						}
 					}
 				},
-				"code":"if (!binding.hasVariable('message') || message == null) {\n  return [:]\n}\n\ndef extractRawCitations = { List blocks, Map topLevelMsg ->\n  def cites = []\n  blocks?.each { b ->\n    if ((b?.blockType ?: '') == 'Citation') {\n      def c = b?.data?.citations\n      if (c instanceof List) cites.addAll(c)\n    }\n  }\n  if (topLevelMsg?.citations instanceof List) {\n    cites.addAll(topLevelMsg.citations)\n  }\n  cites\n}\n\n/**\n * Map a single raw citation from object-1 into object-2 shape:\n *   { sourceFile: { id, url, name, metadata: { mimeType }, chunkDetails: [...] } }\n */\ndef mapCitationToSourceFile = { Map c ->\n  if (!(c instanceof Map)) return null\n\n  def meta = [:]\n  if (c.fileType) meta.mimeType = c.fileType\n\n  def sourceFile = [:]\n  if (c.uniqueEntityId)      sourceFile.id = c.uniqueEntityId\n  else if (c.name)           sourceFile.id = c.name\n  else if (c.referenceUrl)   sourceFile.id = c.referenceUrl\n\n  if (c.referenceUrl)        sourceFile.url = c.referenceUrl\n  if (c.name)                sourceFile.name = c.name\n  if (!meta.isEmpty())       sourceFile.metadata = meta\n\n  if (c.chunkDetails instanceof List && !c.chunkDetails.isEmpty()) {\n    sourceFile.chunkDetails = c.chunkDetails\n  }\n\n  [ sourceFile: sourceFile ]\n}\n\n// safe text read\ndef frag = [:]\ndef textVal = (message?.message instanceof List && message.message)\n  ? message.message[0]?.data?.text\n  : null\nif (textVal) {\n  frag.text = textVal\n}\n\n// attachments -> fragments.file (first attachment)\nif (message.attachments instanceof List && !message.attachments.isEmpty()) {\n  def att = message.attachments[0]\n  def meta = [:]\n  if (att.mimeType) meta.mimeType = att.mimeType\n  if (message.createdTime) meta.uploadTime = message.createdTime\n\n  def fileObj = [\n    id      : att.id,\n    url     : att.url,\n    name    : att.name,\n    metadata: meta\n  ]\n  frag.file = fileObj\n}\n\ndef fragments = []\nif (!frag.isEmpty()) fragments << frag\n\n// citations mapping (object-1 -> object-2.citations[*].sourceFile)\ndef rawCitations = extractRawCitations(message.message as List, message)\ndef mappedCitations = rawCitations\n  ?.collect { mapCitationToSourceFile(it as Map) }\n  ?.findAll { it?.sourceFile && !it.sourceFile.isEmpty() } ?: null\n\ndef addIfPresent = { Map dst, String key, def val ->\n  if (val != null) dst[key] = val\n}\n\ndef modifiedMessage = [\n  messageId  : message.messageId,\n  messageType: message.messageType,\n  fragments  : fragments\n]\nif (mappedCitations) {\n  modifiedMessage.citations = mappedCitations\n}\n\naddIfPresent(modifiedMessage, 'caseId',            message.caseId)\naddIfPresent(modifiedMessage, 'additional',        (message.additional instanceof Map) ? new LinkedHashMap(message.additional) : message.additional)\naddIfPresent(modifiedMessage, 'hasAttachments',    message.hasAttachments)\naddIfPresent(modifiedMessage, 'fromCustomerUserId',message.fromCustomerUserId)\naddIfPresent(modifiedMessage, 'createdTime',       message.createdTime)\naddIfPresent(modifiedMessage, 'searchQueryId',     message.searchQueryId)\n\nreturn [modifiedMessage: modifiedMessage]",
+				"code":"if (!binding.hasVariable('message') || message == null) {\n  return [:]\n}\n\n/** ---------- helpers ---------- **/\n\n// From blocks -> collect message.message[*].data.citations\ndef collectBlockCitations = { List blocks ->\n  def cites = []\n  blocks?.each { b ->\n    if ((b?.blockType ?: '') == 'Citation') {\n      def c = b?.data?.citations\n      if (c instanceof List) cites.addAll(c)\n    }\n  }\n  cites\n}\n\n// Build snippets from chunkDetails -> [{ text, chunkNumber }]\ndef buildSnippets = { List chunkDetails ->\n  (chunkDetails instanceof List)\n    ? chunkDetails.collect { cd ->\n        def snip = [:]\n        if (cd?.chunkContent != null) snip.text = cd.chunkContent\n        if (cd?.chunkNumber  != null) snip.chunkNumber = cd.chunkNumber\n        snip\n      }.findAll { !it.isEmpty() }\n    : []\n}\n\n// Raw citation -> structuredResults item: { document:{...}, referenceRanges:[{snippets:[...]}] }\ndef mapCitationToStructuredResult = { Map c ->\n  if (!(c instanceof Map)) return null\n  def meta = [:]\n  if (c.fileType) meta.mimeType = c.fileType\n\n  def doc = [:]\n  if (c.uniqueEntityId)      doc.id = c.uniqueEntityId\n  else if (c.name)           doc.id = c.name\n  else if (c.referenceUrl)   doc.id = c.referenceUrl\n\n  if (c.name)          doc.title = c.name\n  if (c.referenceUrl)  doc.url   = c.referenceUrl\n  if (!meta.isEmpty()) doc.metadata = meta\n\n  def snippets = buildSnippets(c.chunkDetails)\n  def sr = [ document: doc ]\n  if (snippets) sr.referenceRanges = [[ snippets: snippets ]]\n  sr\n}\n\n// Raw citation -> top-level citations item: { sourceDocument:{...}, referenceRanges:[{snippets:[...]}] }\ndef mapCitationToSourceDocument = { Map c ->\n  if (!(c instanceof Map)) return null\n  def meta = [:]\n  if (c.fileType) meta.mimeType = c.fileType\n\n  def src = [:]\n  if (c.uniqueEntityId)      src.id = c.uniqueEntityId\n  else if (c.name)           src.id = c.name\n  else if (c.referenceUrl)   src.id = c.referenceUrl\n\n  if (c.referenceUrl)  src.url   = c.referenceUrl\n  if (c.name)          src.title = c.name\n  if (!meta.isEmpty()) src.metadata = meta\n\n  def snippets = buildSnippets(c.chunkDetails)\n  def entry = [ sourceDocument: src ]\n  if (snippets) entry.referenceRanges = [[ snippets: snippets ]]\n  entry\n}\n\ndef addIfPresent = { Map dst, String key, def val ->\n  if (val != null) dst[key] = val\n}\n\n/** ---------- transform the single message object ---------- **/\n\n// Base fragment: text (from first block). No attachments here anymore.\ndef baseFrag = [:]\ndef textVal = (message?.message instanceof List && message.message)\n    ? message.message[0]?.data?.text\n    : null\nif (textVal) baseFrag.text = textVal\n\n// Build attachment fragments: one fragment per attachment with { file: { ... } }\ndef attachmentFrags = []\nif (message.attachments instanceof List && !message.attachments.isEmpty()) {\n  message.attachments.each { att ->\n    def meta = [:]\n    if (att?.mimeType) meta.mimeType = att.mimeType\n\n    def fileObj = [:]\n    if (att?.id)   fileObj.id   = att.id\n    if (att?.url)  fileObj.url  = att.url\n    if (att?.name) fileObj.name = att.name\n    if (!meta.isEmpty()) fileObj.metadata = meta\n\n    if (!fileObj.isEmpty()) {\n      attachmentFrags << [ file: fileObj ]\n    }\n  }\n}\n\n// Collect citations only from block-level as per contract\ndef blockCitations = collectBlockCitations(message.message as List)\n\ndef modifiedMessage = [:]\naddIfPresent(modifiedMessage, 'messageId',   message.messageId)\naddIfPresent(modifiedMessage, 'messageType', message.messageType)\n\n// Routing by message.additional.internalMessageType\nif (message?.additional instanceof Map\n    && message.additional.containsKey('internalMessageType')\n    && message.additional.internalMessageType == 'THOUGHT') {\n  // Put citations into baseFrag.structuredResults\n  if (blockCitations) {\n    def structuredResults = blockCitations\n      .collect { mapCitationToStructuredResult(it as Map) }\n      .findAll { it != null && it.document instanceof Map && !it.document.isEmpty() }\n    if (structuredResults) {\n      baseFrag.structuredResults = structuredResults\n    }\n  }\n} else if (!(message?.additional instanceof Map)\n           || !message.additional.containsKey('internalMessageType')\n           || message.additional.internalMessageType == null) {\n  // No internalMessageType -> top-level citations\n  if (blockCitations) {\n    def mapped = blockCitations\n      .collect { mapCitationToSourceDocument(it as Map) }\n      .findAll { it?.sourceDocument && !it.sourceDocument.isEmpty() }\n    if (mapped) modifiedMessage.citations = mapped\n  }\n} else {\n  // internalMessageType present and not \"THOUGHT\" -> treat like non-THOUGHT (top-level)\n  if (blockCitations) {\n    def mapped = blockCitations\n      .collect { mapCitationToSourceDocument(it as Map) }\n      .findAll { it?.sourceDocument && !it.sourceDocument.isEmpty() }\n    if (mapped) modifiedMessage.citations = mapped\n  }\n}\n\n// Assemble fragments: base (if any) + one per attachment\ndef fragments = []\nif (!baseFrag.isEmpty()) fragments << baseFrag\nif (attachmentFrags) fragments.addAll(attachmentFrags)\nif (fragments) modifiedMessage.fragments = fragments\n\n// Pass-through\naddIfPresent(modifiedMessage, 'additional',         (message.additional instanceof Map) ? new LinkedHashMap(message.additional) : message.additional)\naddIfPresent(modifiedMessage, 'hasAttachments',     message.hasAttachments)\naddIfPresent(modifiedMessage, 'fromCustomerUserId', message.fromCustomerUserId)\naddIfPresent(modifiedMessage, 'createdTime',        message.createdTime)\naddIfPresent(modifiedMessage, 'searchQueryId',      message.searchQueryId)\n\nreturn [ modifiedMessage: modifiedMessage ]",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -688,7 +1055,7 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"n_HNnuw@_MPdFP-1@l",
+			"groupId":"n_HNnuw@n_zYCxO@_MPdFP-1@success@l",
 			"id":"n_0oA5N",
 			"index":8,
 			"inputs":{
@@ -711,7 +1078,7 @@
 			"debug":false,
 			"dirty":false,
 			"fallbackMode":"STOP",
-			"groupId":"_MPdFP-1",
+			"groupId":"n_zYCxO@_MPdFP-1@success",
 			"id":"n_rYuMU",
 			"index":9,
 			"inputs":{
@@ -721,9 +1088,9 @@
 				"body":{
 					"chatResult":{
 						"chat":{
-							"id":"{{ n_RtjNn.outputs.id }}",
 							"createTime":"{{ n_RtjNn.outputs.createdTime }}",
 							"updateTime":"{{ n_RtjNn.outputs.modifiedTime }}",
+							"id":"{{ n_LQTKC.outputs.body.caseId }}",
 							"messages":{
 								"ua:type":"mappedArray",
 								"source":"{{ n_cnKJ4.outputs.items }}",
@@ -737,6 +1104,44 @@
 			"skip":false,
 			"subTitle":"Callable",
 			"title":"Respond to API request",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":0,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_zYCxO@_MPdFP-1@error",
+			"id":"n_hvdpI",
+			"index":10,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"500_undefined",
+				"status":500
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_MPdFP-1",
+			"id":"n_JMAAm",
+			"index":11,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
 			"type":"STOP"
 		}
 	],
@@ -753,9 +1158,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
+	"standard":false,
 	"tags":[
 		
 	],
-	"version":23
+	"version":29
 }
