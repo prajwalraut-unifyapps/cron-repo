@@ -1,9 +1,17 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
 	"createdTime":1760532644179,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760550507295,
+		"deployedBy":44109,
+		"deployedDefinitionId":"68efde6b91b109323d445720",
+		"status":"DEPLOYED",
+		"version":2,
+		"workflowVersion":3
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_iXNDz",
@@ -16,11 +24,55 @@
 			"fromNodeId":"n_v0dZY",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_A8QxU",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_A8QxU",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_voEZz",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_voEZz",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_8iGMR",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_8iGMR",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_MWdNl",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_MWdNl",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_9FeTZ",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_8iGMR",
+			"name":"no",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_9FeTZ",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"n_9FeTZ",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_nPLqD",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_nPLqD",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"4MyKJ",
@@ -30,6 +82,13 @@
 			"fromNodeId":"4MyKJ",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"_t9Mhc",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"_t9Mhc",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_UeReO",
 			"type":"next"
 		}
@@ -37,7 +96,7 @@
 	"id":"68ef8b5815076a5139086565",
 	"lastModifiedBy":44109,
 	"lcName":"workflow agent | published thought",
-	"modifiedTime":1760532644179,
+	"modifiedTime":1760619850002,
 	"name":"Workflow Agent | Published thought",
 	"nodes":[
 		{
@@ -72,6 +131,14 @@
 						"thought":{
 							"type":"string",
 							"title":"Thought"
+						},
+						"workflowId":{
+							"type":"string",
+							"title":"Workflow Id"
+						},
+						"nodeId":{
+							"type":"string",
+							"title":"Node Id"
 						}
 					}
 				}
@@ -135,6 +202,162 @@
 		{
 			"context":{
 				"appName":"variable_by_unifyapps",
+				"resourceVersion":540,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_SYTCg-1",
+			"id":"n_A8QxU",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"thought":{
+							"type":"string",
+							"title":"Thought"
+						}
+					},
+					"required":[]
+				}
+			},
+			"inputs":{
+				"thought":"{{ n_v0dZY.outputs.result.thought }}"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"thought":{
+							"type":"string",
+							"title":"Thought"
+						}
+					},
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":839,
+				"resourceName":"storage_by_unifyapps_fetch_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_SYTCg-1",
+			"id":"n_voEZz",
+			"index":4,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"properties_workflowId",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"{{ n_iXNDz.outputs.workflowId }}"
+							}
+						},
+						{
+							"property":"properties_nodeId",
+							"filter":{
+								"operator":"EQUAL",
+								"value":"{{ n_iXNDz.outputs.nodeId }}"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"object_type":"workflow_agent_thought",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":20
+				},
+				"numberOfRecordsToFetch":"SINGLE",
+				"readThroughSessionVariables":false,
+				"includeTotalCount":false
+			},
+			"skip":false,
+			"subTitle":"thought from object",
+			"title":"Fetch records",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":447,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_SYTCg-1",
+			"id":"n_8iGMR",
+			"index":5,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_voEZz.outputs.properties.thought }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":523,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_8iGMR@_SYTCg-1@y",
+			"id":"n_MWdNl",
+			"index":6,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_A8QxU.outputs.thought }}",
+						"value":"{{ n_voEZz.outputs.properties.thought }}"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
 				"resourceVersion":535,
 				"resourceName":"variable_by_unifyapps_get_session_variables",
 				"type":"APPLICATION"
@@ -144,7 +367,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_SYTCg-1",
 			"id":"n_9FeTZ",
-			"index":3,
+			"index":7,
 			"inputs":{
 				"variableSchema":{
 					"type":"object",
@@ -169,6 +392,57 @@
 		},
 		{
 			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":524,
+				"resourceName":"variable_by_unifyapps_set_session_variable",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_SYTCg-1",
+			"id":"_nPLqD",
+			"index":8,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"thoughtGroupId":{
+							"type":"string",
+							"title":"Thought Group Id"
+						}
+					},
+					"required":[]
+				}
+			},
+			"inputs":{
+				"thoughtGroupId":"group_thought"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"thoughtGroupId":{
+							"type":"string",
+							"title":"Thought Group Id"
+						}
+					},
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"thoughtGroupId",
+			"title":"Set Session Variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"conv_ai_by_unifyapps",
 				"resourceVersion":7,
 				"resourceName":"conv_ai_by_unifyapps_publish_response",
@@ -179,7 +453,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_SYTCg-1",
 			"id":"4MyKJ",
-			"index":4,
+			"index":9,
 			"inputs":{
 				"callableInterfaceId":"__ua__publish_response_interface",
 				"defaultFallbackWorkflowId":"66fbed229edc4e0b6303cefd",
@@ -188,7 +462,7 @@
 					"responses":[
 						{
 							"language":"en",
-							"content":"{{ n_v0dZY.outputs.result.thought }}"
+							"content":"{{ n_A8QxU.outputs.thought }}"
 						}
 					],
 					"caseId":"{{ n_9FeTZ.outputs.caseId }}",
@@ -205,6 +479,57 @@
 		},
 		{
 			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":524,
+				"resourceName":"variable_by_unifyapps_set_session_variable",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_SYTCg-1",
+			"id":"_t9Mhc",
+			"index":10,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"thoughtGroupId":{
+							"type":"string",
+							"title":"Thought Group Id"
+						}
+					},
+					"required":[]
+				}
+			},
+			"inputs":{
+				"thoughtGroupId":"{{ 4MyKJ.outputs.messageId }}"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"thoughtGroupId":{
+							"type":"string",
+							"title":"Thought Group Id"
+						}
+					},
+					"required":[]
+				}
+			},
+			"skip":false,
+			"subTitle":"thoughtGroupId",
+			"title":"Set Session Variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":591,
 				"resourceName":"callables_return_to_automation",
@@ -215,7 +540,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_SYTCg-1",
 			"id":"n_UeReO",
-			"index":5,
+			"index":11,
 			"inputs":{
 				"result":{
 					"success":true
@@ -244,5 +569,5 @@
 	"tags":[
 		
 	],
-	"version":2
+	"version":4
 }
