@@ -6,46 +6,224 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_MQ8Lp",
+			"fromNodeId":"n_i92T3",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_KHx75",
+			"toNodeId":"n_Koz2g",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Koz2g",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_RLcmo",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_RLcmo",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_ewtlX",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_ewtlX",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_gVknw",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_RLcmo",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_gVknw",
 			"type":"next"
 		}
 	],
 	"id":"68f1383b6ab2437612e6c502",
 	"lastModifiedBy":1,
 	"lcName":"loopsqa2kxqcxcyfeb",
-	"modifiedTime":1760639035777,
+	"modifiedTime":1760639088275,
 	"name":"loopsQA2kXQcXcYFeb",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2639,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_MQ8Lp-1",
-			"id":"_MQ8Lp",
-			"index":0,
+			"id":"n_i92T3",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"integer",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"int":{
+							"type":"integer",
+							"title":"int"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2500,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_MQ8Lp-1",
-			"id":"_KHx75",
-			"index":0,
+			"id":"n_Koz2g",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"integer",
+							"title":"i"
+						}
+					}
+				}
+			},
+			"inputs":{
+				"i":6
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"integer",
+							"title":"i"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":144,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_MQ8Lp-1",
+			"id":"n_RLcmo",
+			"index":3,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_i92T3.outputs.int }}",
+						"filter":{
+							"operator":"STARTS_WITH",
+							"value":"{{ n_Koz2g.outputs.i }}"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2495,
+				"resourceName":"variable_by_unifyapps_find_and_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_RLcmo@_MQ8Lp-1@y",
+			"id":"n_ewtlX",
+			"index":4,
+			"inputs":{
+				"variables":[
+					{
+						"source":"i",
+						"value":"=SUM({{ n_Koz2g.outputs.i }},4)"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Find and update variable",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2642,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_MQ8Lp-1",
+			"id":"n_gVknw",
+			"index":5,
+			"inputs":{
+				"result":{
+					"result":"{{ n_Koz2g.outputs.i }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +237,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
