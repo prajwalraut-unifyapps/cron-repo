@@ -2,15 +2,15 @@
 	"appsUsed":[
 		
 	],
-	"createdTime":1747000722619,
+	"createdTime":1743599491928,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760378613514,
-		"deployedBy":1,
-		"deployedDefinitionId":"68ed3ef5f5eb8345dac803e6",
+		"deployedAt":1760296225671,
+		"deployedBy":-1,
+		"deployedDefinitionId":"68ebfd21672fcc41fb70f179",
 		"status":"DEPLOYED",
-		"version":113,
-		"workflowVersion":127
+		"version":60,
+		"workflowVersion":74
 	},
 	"edges":[
 		{
@@ -82,6 +82,36 @@
 			"fromNodeId":"cKuWx",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_UThit",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_UThit",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_Figd6",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Figd6",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_nxouq",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"_nxouq",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"e1dzD",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_Figd6",
+			"name":"no",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"e1dzD",
 			"type":"next"
 		},
@@ -97,6 +127,25 @@
 		"configs":[
 			{
 				"permissions":[
+					"A",
+					"EXPORT_AS_TEMPLATE",
+					"C",
+					"S",
+					"D",
+					"TEST",
+					"VIEW_RUNS",
+					"E",
+					"V",
+					"DEP"
+				],
+				"principalIds":[
+					"44109"
+				],
+				"principalType":"USER"
+			},
+			{
+				"permissions":[
+					"VIEW_RUNS",
 					"V"
 				],
 				"principalType":"GLOBAL"
@@ -104,9 +153,9 @@
 		]
 	},
 	"id":"67ed33625e47b355f5f93529",
-	"lastModifiedBy":0,
+	"lastModifiedBy":44109,
 	"lcName":"publish reading block",
-	"modifiedTime":1760465597760,
+	"modifiedTime":1760606510759,
 	"name":"Publish Reading Block",
 	"nodes":[
 		{
@@ -718,6 +767,109 @@
 		{
 			"context":{
 				"appName":"variable_by_unifyapps",
+				"resourceVersion":542,
+				"resourceName":"variable_by_unifyapps_get_session_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"4ZR9C-1",
+			"id":"n_UThit",
+			"index":10,
+			"inputs":{
+				"variableSchema":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"parentCaseId":{
+							"type":"string",
+							"title":"Parent Case Id"
+						},
+						"parentAgentId":{
+							"type":"string",
+							"title":"Parent Agent Id"
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Get Session Variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":447,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"4ZR9C-1",
+			"id":"n_Figd6",
+			"index":11,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_UThit.outputs.parentCaseId }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Workflow parent agent",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"conv_ai_by_unifyapps",
+				"resourceVersion":108,
+				"resourceName":"conv_ai_by_unifyapps_publish_response",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_Figd6@4ZR9C-1@y",
+			"id":"_nxouq",
+			"index":12,
+			"inputs":{
+				"callableInterfaceId":"__ua__publish_response_interface",
+				"defaultFallbackWorkflowId":"66fbed229edc4e0b6303cefd",
+				"parameters":{
+					"responses":[
+						{
+							"language":"en"
+						}
+					],
+					"caseId":"{{ n_UThit.outputs.parentCaseId }}",
+					"publishToEndUser":true,
+					"temporaryMessage":true,
+					"fromCustomerUserId":"{{ n_UThit.outputs.parentAgentId }}",
+					"async":false,
+					"coPilotBlocks":{
+						"source":"{{ KP9cp.outputs.result.coPilotBlocks }}",
+						"ua:type":"mappedArray",
+						"items":"{{ KP9cp.outputs.result.coPilotBlocks[0] }}"
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Conversation AI by UnifyApps",
+			"title":"Publish Response",
+			"type":"CALL_INTERFACE_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
 				"resourceVersion":2,
 				"resourceName":"variable_by_unifyapps_set_session_variable",
 				"type":"APPLICATION"
@@ -727,7 +879,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"4ZR9C-1",
 			"id":"e1dzD",
-			"index":10,
+			"index":13,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -775,7 +927,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"4ZR9C-1",
 			"id":"L2sH0",
-			"index":11,
+			"index":14,
 			"inputs":{
 				"result":{
 					"success":true,
@@ -788,7 +940,7 @@
 			"type":"STOP"
 		}
 	],
-	"ownerUserId":1,
+	"ownerUserId":1866,
 	"schemaReferences":[
 		
 	],
@@ -801,6 +953,6 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
-	"version":128
+	"standard":false,
+	"version":76
 }
