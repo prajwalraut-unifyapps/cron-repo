@@ -5,12 +5,12 @@
 	"createdTime":1747000738300,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1759324073612,
+		"deployedAt":1760551208822,
 		"deployedBy":1,
-		"deployedDefinitionId":"68dd27a9a15f9e7fa5e224ff",
+		"deployedDefinitionId":"68efe128e09fb733aee432eb",
 		"status":"DEPLOYED",
-		"version":93,
-		"workflowVersion":382
+		"version":124,
+		"workflowVersion":421
 	},
 	"edges":[
 		{
@@ -161,11 +161,34 @@
 			"fromNodeId":"tjJ53",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"mgYAY",
+			"toNodeId":"n_GxqCo",
 			"type":"next"
 		},
 		{
 			"fromNodeId":"xKlOV",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_GxqCo",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_GxqCo",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_KObfr",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_KObfr",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"mgYAY",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_GxqCo",
+			"name":"no",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"mgYAY",
@@ -183,9 +206,9 @@
 		]
 	},
 	"id":"67d5ca385c39266befb90a21",
-	"lastModifiedBy":-1,
+	"lastModifiedBy":0,
 	"lcName":"model based system prompt builder",
-	"modifiedTime":1759425197656,
+	"modifiedTime":1760636983938,
 	"name":"Model Based System Prompt Builder",
 	"nodes":[
 		{
@@ -364,7 +387,7 @@
 			},
 			"inputs":{
 				"response_format":"text",
-				"stream":false
+				"stream":true
 			},
 			"outputSchema":{
 				"dynamic":false,
@@ -455,27 +478,6 @@
 						"Template":{
 							"type":"string",
 							"title":"Template"
-						},
-						"_ua_variableDetails":{
-							"items":{
-								"type":"object",
-								"properties":{
-									"dataType":{
-										"type":"string",
-										"description":"Data type of the variable"
-									},
-									"name":{
-										"type":"string",
-										"description":"Name of the variable"
-									},
-									"description":{
-										"type":"string",
-										"description":"Description of the variable"
-									}
-								}
-							},
-							"type":"array",
-							"title":"Variable Details"
 						}
 					},
 					"required":[]
@@ -503,6 +505,7 @@
 				"object_type":"e_ai_agent_conversation_state",
 				"includeRoleMappings":false,
 				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
 				"id":"{{ a5oLe.outputs.caseId }}",
 				"readThroughSessionVariables":true
 			},
@@ -672,10 +675,6 @@
 					{
 						"source":"{{ WUqvw.outputs.Template }}",
 						"value":"{{ 9nT76.outputs.output }}"
-					},
-					{
-						"source":"{{ pamSx.outputs.stream }}",
-						"value":true
 					}
 				]
 			},
@@ -842,10 +841,6 @@
 					{
 						"source":"{{ WUqvw.outputs.Template }}",
 						"value":"{{ _uK4Qp.outputs.output }}"
-					},
-					{
-						"source":"{{ pamSx.outputs.stream }}",
-						"value":true
 					}
 				]
 			},
@@ -870,14 +865,14 @@
 			"inputs":{
 				"variableSchema":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[],
 					"properties":{
 						"supportsStreaming":{
 							"type":"boolean",
 							"title":"Supports Streaming"
 						}
-					},
-					"additionalProperties":false,
-					"required":[]
+					}
 				}
 			},
 			"skip":false,
@@ -968,6 +963,68 @@
 		},
 		{
 			"context":{
+				"appName":"if_else",
+				"resourceVersion":447,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"RfB9O-1",
+			"id":"n_GxqCo",
+			"index":21,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ d2ytg.outputs.streamingDisabled }}",
+						"filter":{
+							"operator":"EXISTS"
+						}
+					},
+					{
+						"property":"{{ d2ytg.outputs.streamingDisabled }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"true"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"streamingDisabled ?",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":508,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_GxqCo@RfB9O-1@y",
+			"id":"n_KObfr",
+			"index":22,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ pamSx.outputs.stream }}",
+						"value":false
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
 				"appName":"callables",
 				"resourceVersion":144,
 				"resourceName":"callables_return_to_automation",
@@ -978,20 +1035,10 @@
 			"fallbackMode":"STOP",
 			"groupId":"RfB9O-1",
 			"id":"mgYAY",
-			"index":21,
+			"index":23,
 			"inputs":{
 				"result":{
 					"compiledTemplate":"{{ WUqvw.outputs.Template }}",
-					"tools":{
-						"ua:type":"mappedArray",
-						"items":{
-							"name":"{{ pamSx.outputs.tools[0].name }}",
-							"id":"{{ pamSx.outputs.tools[0].id }}",
-							"description":"{{ pamSx.outputs.tools[0].description }}",
-							"toolInputSchema":"{{ pamSx.outputs.tools[0].toolInputSchema }}"
-						},
-						"source":"{{ pamSx.outputs.tools }}"
-					},
 					"response_format":"{{ pamSx.outputs.response_format }}",
 					"stream":"{{ pamSx.outputs.stream }}"
 				}
@@ -1020,5 +1067,5 @@
 	"tags":[
 		
 	],
-	"version":383
+	"version":422
 }
