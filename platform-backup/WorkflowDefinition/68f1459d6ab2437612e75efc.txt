@@ -1,52 +1,91 @@
 {
 	"appsUsed":[
-		
+		"slack",
+		"storage_by_unifyapps"
 	],
 	"createdTime":1760642461174,
 	"deleted":false,
 	"description":"description",
 	"edges":[
 		{
-			"fromNodeId":"_jDHxi",
+			"fromNodeId":"n_f7w5a",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_kXF0T",
+			"toNodeId":"n_V1EnJ",
 			"type":"next"
 		}
 	],
 	"id":"68f1459d6ab2437612e75efc",
 	"lastModifiedBy":1,
 	"lcName":"storagebyunifyapps_conditions_update record by id_trigger_117606402947350",
-	"modifiedTime":1760642461174,
+	"modifiedTime":1760642473023,
 	"name":"StorageByUnifyapps_Conditions_Update record by ID_trigger_117606402947350",
 	"nodes":[
 		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":8586,
+				"resourceName":"storage_by_unifyapps_on_update_record"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_jDHxi-1",
-			"id":"_jDHxi",
-			"index":0,
+			"id":"n_f7w5a",
+			"index":1,
+			"inputs":{
+				"triggerInputCondition":{
+					"filters":[
+						{
+							"property":"{{ n_f7w5a.outputs.properties.Name }}",
+							"filter":{
+								"operator":"EXISTS"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"object_type":"aulk19j"
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Storage by UnifyApps",
+			"title":"Updated record",
 			"trigger":{
 				"type":"EVENT"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"slack",
+				"resourceVersion":8561,
+				"connectionId":"662f8ddb91d8ba4394d0cce6",
+				"resourceName":"slack_post_message_in_channel",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_jDHxi-1",
-			"id":"_kXF0T",
-			"index":0,
+			"id":"n_V1EnJ",
+			"index":2,
+			"inputs":{
+				"link_names":true,
+				"messageType":"text",
+				"channel":"C07AKEPN1U3",
+				"text":"{{ n_f7w5a.outputs.id }}{{ n_f7w5a.outputs.properties }}",
+				"mrkdwn":true
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Slack",
+			"title":"Post message",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -60,5 +99,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
