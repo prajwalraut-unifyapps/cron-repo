@@ -178,7 +178,7 @@
 	"id":"68e7fb4450c30c5009b3bca6",
 	"lastModifiedBy":164544,
 	"lcName":"image scans",
-	"modifiedTime":1760602963161,
+	"modifiedTime":1760603094373,
 	"name":"Image Scans",
 	"nodes":[
 		{
@@ -2854,8 +2854,8 @@
 			},
 			"context":{
 				"appName":"variable_by_unifyapps",
-				"resourceVersion":1059,
-				"resourceName":"variable_by_unifyapps_create_variables",
+				"resourceVersion":1047,
+				"resourceName":"variable_by_unifyapps_create_list",
 				"type":"APPLICATION"
 			},
 			"debug":false,
@@ -2867,121 +2867,308 @@
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
-				"layout":{},
+				"layout":{
+					"createList":{
+						"ui:title":"",
+						"ua:type":{
+							"ui:widget":"hidden"
+						},
+						"items":{
+							"ui:title":"Initial list items",
+							"ui:description":"Set the initial values of the list (defaults to empty)"
+						},
+						"ui:order":[
+							"*",
+							"items"
+						]
+					},
+					"ua:title":{
+						"ui:widget":"hidden"
+					},
+					"ua:list_type":{
+						"ui:widget":"hidden"
+					}
+				},
 				"schema":{
-					"additionalProperties":false,
-					"type":"object",
-					"properties":{
-						"files":{
-							"type":"object",
-							"properties":{
-								"filesDetails":{
-									"type":"array",
-									"items":{
-										"type":"object",
-										"properties":{
-											"fileType":{
-												"type":"string",
-												"title":"fileType"
-											},
-											"name":{
-												"type":"string",
-												"title":"name"
-											},
-											"size":{
-												"type":"integer",
-												"title":"size"
-											},
-											"source":{
-												"type":"string",
-												"title":"source"
-											},
-											"sourceType":{
-												"type":"string",
-												"title":"sourceType"
-											},
-											"ua:type":{
-												"type":"string",
-												"title":"ua:type"
-											},
-											"link":{
-												"type":"string",
-												"title":"link"
-											}
-										},
-										"additionalProperties":false
-									},
-									"title":"filesDetails"
+					"allOf":[
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"OBJECT"
+									}
 								}
 							},
-							"additionalProperties":false
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"items":{
+												"type":"object",
+												"properties":{}
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"STRING"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of String"
+											},
+											"items":{
+												"type":"string"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"INTEGER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Integers"
+											},
+											"items":{
+												"type":"integer"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"NUMBER"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Numbers"
+											},
+											"items":{
+												"type":"number"
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"if":{
+								"properties":{
+									"ua:list_type":{
+										"const":"BOOLEAN"
+									}
+								}
+							},
+							"then":{
+								"properties":{
+									"createList":{
+										"type":"object",
+										"properties":{
+											"source":{
+												"type":"string",
+												"format":"ua:source",
+												"title":"List of Booleans"
+											},
+											"items":{
+												"type":"boolean"
+											}
+										}
+									}
+								}
+							}
 						}
-					},
-					"required":[
-						"files"
-					]
+					],
+					"format":"ua:list",
+					"type":"object",
+					"properties":{
+						"ua:title":{
+							"type":"string"
+						},
+						"ua:list_type":{
+							"type":"string",
+							"title":"List Type",
+							"oneOf":[
+								{
+									"const":"OBJECT",
+									"title":"Object"
+								},
+								{
+									"const":"STRING",
+									"title":"String"
+								},
+								{
+									"const":"NUMBER",
+									"title":"Number"
+								},
+								{
+									"const":"INTEGER",
+									"title":"Integer"
+								},
+								{
+									"const":"BOOLEAN",
+									"title":"Boolean"
+								}
+							],
+							"default":"OBJECT"
+						},
+						"createList":{
+							"type":"object",
+							"properties":{
+								"ua:type":{
+									"type":"string",
+									"default":"mappedArray"
+								},
+								"source":{
+									"type":"string",
+									"format":"ua:source",
+									"title":"List Item Source"
+								},
+								"items":{
+									"type":"object",
+									"properties":{
+										"filesDetails":{
+											"type":"array",
+											"items":{
+												"type":"object",
+												"properties":{
+													"fileType":{
+														"type":"string",
+														"title":"fileType"
+													},
+													"name":{
+														"type":"string",
+														"title":"name"
+													},
+													"source":{
+														"type":"string",
+														"title":"source"
+													},
+													"sourceType":{
+														"type":"string",
+														"title":"sourceType"
+													}
+												},
+												"additionalProperties":false,
+												"required":[]
+											},
+											"title":"filesDetails"
+										}
+									},
+									"additionalProperties":false
+								}
+							}
+						}
+					}
 				}
 			},
-			"inputs":{},
+			"inputs":{
+				"createList":{
+					"ua:type":"mappedArray",
+					"source":"{{ n_XNoQ8.outputs.filesDetails }}",
+					"items":{
+						"filesDetails":{
+							"source":"{{ n_XNoQ8.outputs.filesDetails[0] }}",
+							"ua:type":"mappedArray",
+							"items":{
+								"fileType":"{{ n_XNoQ8.outputs.filesDetails[0].fileType }}",
+								"name":"{{ n_XNoQ8.outputs.filesDetails[0].name }}",
+								"source":"{{ n_XNoQ8.outputs.filesDetails[0].source }}",
+								"sourceType":"{{ n_XNoQ8.outputs.filesDetails[0].sourceType }}"
+							}
+						}
+					}
+				},
+				"ua:title":"List",
+				"ua:list_type":"OBJECT"
+			},
 			"outputSchema":{
 				"dynamic":false,
 				"schema":{
-					"additionalProperties":false,
 					"type":"object",
 					"properties":{
-						"files":{
-							"type":"object",
-							"properties":{
-								"filesDetails":{
-									"type":"array",
-									"items":{
-										"type":"object",
-										"properties":{
-											"fileType":{
-												"type":"string",
-												"title":"fileType"
+						"items":{
+							"type":"array",
+							"title":"List",
+							"disableActions":true,
+							"items":{
+								"type":"object",
+								"properties":{
+									"filesDetails":{
+										"type":"array",
+										"items":{
+											"type":"object",
+											"properties":{
+												"fileType":{
+													"type":"string",
+													"title":"fileType"
+												},
+												"name":{
+													"type":"string",
+													"title":"name"
+												},
+												"source":{
+													"type":"string",
+													"title":"source"
+												},
+												"sourceType":{
+													"type":"string",
+													"title":"sourceType"
+												}
 											},
-											"name":{
-												"type":"string",
-												"title":"name"
-											},
-											"size":{
-												"type":"integer",
-												"title":"size"
-											},
-											"source":{
-												"type":"string",
-												"title":"source"
-											},
-											"sourceType":{
-												"type":"string",
-												"title":"sourceType"
-											},
-											"ua:type":{
-												"type":"string",
-												"title":"ua:type"
-											},
-											"link":{
-												"type":"string",
-												"title":"link"
-											}
+											"additionalProperties":false,
+											"required":[]
 										},
-										"additionalProperties":false
-									},
-									"title":"filesDetails"
+										"title":"filesDetails"
+									}
 								}
-							},
-							"additionalProperties":false
+							}
 						}
-					},
-					"required":[
-						"files"
-					]
+					}
 				}
 			},
 			"skip":false,
 			"subTitle":"Variable by UnifyApps",
-			"title":"Create variables",
+			"title":"Create list",
 			"type":"ACTION"
 		},
 		{
@@ -3093,5 +3280,5 @@
 		"enableVariableLogging":true
 	},
 	"standard":false,
-	"version":275
+	"version":276
 }
