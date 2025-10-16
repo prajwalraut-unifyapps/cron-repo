@@ -5,12 +5,12 @@
 	"createdTime":1753272415735,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760634698445,
+		"deployedAt":1760634978053,
 		"deployedBy":45771,
-		"deployedDefinitionId":"68f1274a9fef430db8bf97c2",
+		"deployedDefinitionId":"68f1286137cfbc6ae5857ba8",
 		"status":"DEPLOYED",
-		"version":43,
-		"workflowVersion":123
+		"version":44,
+		"workflowVersion":124
 	},
 	"edges":[
 		{
@@ -333,9 +333,9 @@
 		}
 	],
 	"id":"6880d05f00e9627ca8d16c4c",
-	"lastModifiedBy":45771,
+	"lastModifiedBy":155543,
 	"lcName":"upload-icon-file",
-	"modifiedTime":1760634975842,
+	"modifiedTime":1760636607416,
 	"name":"upload-icon-file",
 	"nodes":[
 		{
@@ -421,7 +421,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_rSnZj-1",
 			"id":"n_KEGRF",
@@ -429,6 +429,10 @@
 			"inputs":{
 				"output":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"files"
+					],
 					"properties":{
 						"files":{
 							"type":"array",
@@ -462,14 +466,14 @@
 							},
 							"title":"Files"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"files"
-					]
+					}
 				},
 				"input":{
 					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"tempFiles"
+					],
 					"properties":{
 						"tempFiles":{
 							"type":"array",
@@ -480,14 +484,11 @@
 							},
 							"title":"Temp Files"
 						}
-					},
-					"additionalProperties":false,
-					"required":[
-						"tempFiles"
-					]
+					}
 				},
-				"compile_static":false,
 				"code":"def files = []\n\nif (this.binding.hasVariable('tempFiles') && tempFiles instanceof List) {\n    tempFiles.each { tempFile ->\n        if (tempFile) {\n            files << [\n                fileType   : tempFile.fileType,\n                sourceType : tempFile.sourceType,\n                source     : tempFile.url,\n                name       : tempFile.name\n            ]\n        }\n    }\n}\n\nreturn [files: files]\n",
+				"compile_static":false,
+				"captureStdOutput":false,
 				"parameters":{
 					"tempFiles":{
 						"source":"{{ n_flWz0.outputs.files }}",
@@ -1054,14 +1055,14 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_rSnZj-1",
 			"id":"n_ryG5n",
 			"index":9,
 			"inputs":{
 				"repeatMode":"SINGLE",
-				"listSource":"{{ n_KEGRF.outputs.result.files }}",
+				"listSource":"{{ n_flWz0.outputs.files }}",
 				"captureIterations":false
 			},
 			"skip":false,
@@ -1448,7 +1449,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_aplKE@n_ryG5n@_rSnZj-1@l@1",
 			"id":"_TMtFy",
@@ -1951,5 +1952,5 @@
 	"tags":[
 		
 	],
-	"version":124
+	"version":125
 }
