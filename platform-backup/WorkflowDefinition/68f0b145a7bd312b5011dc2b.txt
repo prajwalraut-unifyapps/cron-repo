@@ -6,46 +6,142 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_VQO1p",
+			"fromNodeId":"n_ODnYY",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_bKEIG",
+			"toNodeId":"n_meBDk",
 			"type":"next"
+		},
+		{
+			"fromNodeId":"n_meBDk",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_2Hfu9",
+			"type":"if"
 		}
 	],
 	"id":"68f0b145a7bd312b5011dc2b",
 	"lastModifiedBy":31268,
 	"lcName":"tesitng streams",
-	"modifiedTime":1760604485410,
+	"modifiedTime":1760604560614,
 	"name":"tesitng streams",
 	"nodes":[
 		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":1677,
+				"resourceName":"streams_by_unifyapps_on_event"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_VQO1p-1",
-			"id":"_VQO1p",
-			"index":0,
+			"id":"n_ODnYY",
+			"index":1,
+			"inputs":{
+				"triggerAfterCompletion":false,
+				"messageLimit":1,
+				"streamId":"e_68f0b118878a8926f1b04362"
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Streams by UnifyApps",
+			"title":"Triggers on new event from stream",
 			"trigger":{
 				"type":"EVENT"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_VQO1p-1",
-			"id":"_bKEIG",
-			"index":0,
+			"id":"n_meBDk",
+			"index":2,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_ODnYY.outputs.group }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"123213"
+						}
+					}
+				],
+				"operator":"AND"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1060,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_meBDk@_VQO1p-1@y",
+			"id":"n_2Hfu9",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"group":{
+							"type":"string",
+							"title":"Group"
+						}
+					},
+					"required":[
+						"group"
+					]
+				}
+			},
+			"inputs":{
+				"group":"{{ n_ODnYY.outputs.group }}"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"group":{
+							"type":"string",
+							"title":"Group"
+						}
+					},
+					"required":[
+						"group"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":31268,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +155,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
