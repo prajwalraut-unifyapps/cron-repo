@@ -9,14 +9,14 @@
 			"fromNodeId":"_K9dXN",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_JEXmb",
+			"toNodeId":"n_TK6c4",
 			"type":"next"
 		}
 	],
 	"id":"68f06ce2e82cdf6e91dcc0fa",
 	"lastModifiedBy":517,
 	"lcName":"fix document",
-	"modifiedTime":1760586978486,
+	"modifiedTime":1760587163855,
 	"name":"fix document",
 	"nodes":[
 		{
@@ -25,7 +25,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_K9dXN-1",
 			"id":"_K9dXN",
-			"index":0,
+			"index":1,
 			"skip":false,
 			"title":"Select a trigger event",
 			"trigger":{
@@ -34,18 +34,33 @@
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":1004,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_K9dXN-1",
-			"id":"_JEXmb",
-			"index":0,
+			"id":"n_TK6c4",
+			"index":2,
+			"inputs":{
+				"code":"import com.mongodb.client.model.UpdateOptions\nimport com.unifyapps.infra.mongo.MongoTemplateFactory;\nimport com.mongodb.client.MongoDatabase;\nimport io.quarkus.arc.Arc;\nimport com.mongodb.client.MongoClient;\nimport com.mongodb.client.MongoCollection;\nimport org.bson.Document;\nimport com.unifyapps.infra.utils.JsonUtils\nimport org.bson.types.ObjectId;\nMongoTemplateFactory mongo = Arc.container().instance(MongoTemplateFactory.class).get();\nMongoClient client = mongo.getMongoTemplate(0, () -> \"API_PLATFORM\").getMongoClient()\nList<String> names = new ArrayList<>();\nclient.getDatabase(\"USER_CUSTOMER_2\").listCollectionNames().into(names);\nList<Document> docs = new ArrayList<>();\nMongoCollection apiEndpoint = client.getDatabase(\"USER_CUSTOMER_2\").getCollection(\"User\");\napiEndpoint.find(new Document()).limit(10).into(docs);\nreturn docs;",
+				"compile_static":false,
+				"captureStdOutput":false
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
 			"type":"ACTION"
 		}
 	],
 	"ownerUserId":517,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +74,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
