@@ -1,0 +1,253 @@
+{
+	"appsUsed":[
+		
+	],
+	"createdTime":1760614876039,
+	"deleted":false,
+	"edges":[
+		{
+			"fromNodeId":"n_ItvRp",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_g163t",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_g163t",
+			"name":"success",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_0ApP6",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_g163t",
+			"name":"error",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_SeAeg",
+			"type":"error"
+		}
+	],
+	"id":"68e8e816defc8209dc27d422",
+	"lastModifiedBy":30179,
+	"lcName":"oman | datedecryption",
+	"modifiedTime":1760614876039,
+	"name":"Oman | DateDecryption",
+	"nodes":[
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":109,
+				"resourceName":"callables_from_automation"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"_WjECM-1",
+			"id":"n_ItvRp",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"DecryptedOutput":{
+							"type":"string",
+							"title":"Decrypted Output"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"DateEncryptedValue":{
+							"type":"string",
+							"title":"Date Encrypted Value"
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
+			"trigger":{
+				"type":"CALLABLE"
+			},
+			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"code_by_unifyapps",
+				"resourceVersion":806,
+				"resourceName":"code_by_unifyapps_groovy",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"MANUAL",
+			"groupId":"_WjECM-1",
+			"id":"n_g163t",
+			"index":2,
+			"inputs":{
+				"output":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"decrypted":{
+							"type":"string",
+							"title":"Decrypted Text"
+						}
+					}
+				},
+				"input":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[],
+					"properties":{
+						"passPhrase":{
+							"type":"string",
+							"title":"Pass Phrase"
+						},
+						"cipherText":{
+							"type":"string",
+							"title":"Cipher Text"
+						}
+					}
+				},
+				"code":"import javax.crypto.Cipher\nimport javax.crypto.spec.IvParameterSpec\nimport javax.crypto.spec.SecretKeySpec\nimport javax.crypto.SecretKeyFactory\nimport javax.crypto.spec.PBEKeySpec\nimport javax.crypto.CipherOutputStream\nimport javax.crypto.CipherInputStream\nimport javax.crypto.SecretKey\nimport javax.crypto.spec.SecretKeySpec\nimport javax.crypto.spec.IvParameterSpec\nimport java.security.SecureRandom\nimport java.util.Base64\nimport java.text.SimpleDateFormat\n\nclass AESCipher {\n\n    static final int Keysize = 128\n    static final int DerivationIterations = 1000\n\n    static String encrypt(String plainText, String passPhrase) {\n        byte[] saltBytes = generateRandomBytes(16)\n        byte[] ivBytes = generateRandomBytes(16)\n\n        byte[] keyBytes = deriveKey(passPhrase, saltBytes, Keysize / 8)\n\n        SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, \"AES\")\n        IvParameterSpec ivParameterSpec = new IvParameterSpec(ivBytes)\n\n        Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\")\n        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec)\n\n        byte[] plainTextBytes = plainText.getBytes(\"UTF-8\")\n        byte[] cipherTextBytes = cipher.doFinal(plainTextBytes)\n\n        // Concatenate salt + iv + cipherText\n        byte[] combined = saltBytes + ivBytes + cipherTextBytes\n\n        return Base64.encoder.encodeToString(combined)\n    }\n\n    static String decrypt(String cipherText, String passPhrase) {\n        byte[] cipherTextBytesWithSaltAndIv = Base64.decoder.decode(cipherText)\n\n        byte[] saltBytes = cipherTextBytesWithSaltAndIv[0..15]\n        byte[] ivBytes = cipherTextBytesWithSaltAndIv[16..31]\n        byte[] cipherBytes = cipherTextBytesWithSaltAndIv[32..-1]\n\n        byte[] keyBytes = deriveKey(passPhrase, saltBytes, (int)(Keysize / 8))\n\n        SecretKeySpec secretKeySpec = new SecretKeySpec(keyBytes, \"AES\")\n        IvParameterSpec ivParameterSpec = new IvParameterSpec(ivBytes)\n\n        Cipher cipher = Cipher.getInstance(\"AES/CBC/PKCS5Padding\")\n        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec)\n\n        byte[] plainTextBytes = cipher.doFinal(cipherBytes)\n\n        return new String(plainTextBytes, \"UTF-8\")\n    }\n\n    static byte[] deriveKey(String passPhrase, byte[] salt, int keyLength) {\n        PBEKeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), salt, DerivationIterations, keyLength * 8)\n        SecretKeyFactory skf = SecretKeyFactory.getInstance(\"PBKDF2WithHmacSHA1\")\n        SecretKey key = skf.generateSecret(spec)\n        return key.getEncoded()\n    }\n\n    static byte[] generateRandomBytes(int length) {\n        byte[] bytes = new byte[length]\n        SecureRandom sr = new SecureRandom()\n        sr.nextBytes(bytes)\n        return bytes\n    }\n}\n\ndef e = new AESCipher()\ndef decrypted = e.decrypt(cipherText, passPhrase)\n\n// Format the decrypted date to dd-MMM-yyyy format (e.g., 26-Jul-2026)\ndef formattedDate = decrypted\ndef dateFormats = [\"yyyy-MM-dd\", \"dd/MM/yyyy\", \"MM/dd/yyyy\", \"dd-MM-yyyy\", \"yyyy/MM/dd\", \"ddMMyyyy\"]\ndef outputFormat = new SimpleDateFormat(\"dd-MMM-yyyy\")\n\nfor (format in dateFormats) {\n    try {\n        def inputFormat = new SimpleDateFormat(format)\n        inputFormat.setLenient(false)\n        def parsedDate = inputFormat.parse(decrypted)\n        formattedDate = outputFormat.format(parsedDate)\n        break\n    } catch (Exception ex) {\n        // Continue to next format\n    }\n}\n\nreturn [\"decrypted\" : formattedDate]",
+				"compile_static":false,
+				"captureStdOutput":false,
+				"parameters":{
+					"passPhrase":"dlfkgndljfioj9u8324ujsdfnmknweo8943",
+					"cipherText":"{{ n_ItvRp.outputs.DateEncryptedValue }}"
+				}
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"maxLeaseTimeUnit":"SECONDS",
+					"maxWaitDurationUnit":"SECONDS"
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false,
+					"slidingWindowType":"COUNT_BASED"
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"unit":"MINUTES",
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"MANUAL",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Code by UnifyApps",
+			"title":"Execute Groovy code",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_g163t@_WjECM-1@success",
+			"id":"n_0ApP6",
+			"index":3,
+			"inputs":{
+				"result":{
+					"DecryptedOutput":"{{ n_g163t.outputs.result.decrypted }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":false,
+			"fallbackMode":"STOP",
+			"groupId":"n_g163t@_WjECM-1@error",
+			"id":"_SeAeg",
+			"index":4,
+			"inputs":{
+				"result":{
+					"DecryptedOutput":"Something went wrong with Decryption"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
+		}
+	],
+	"ownerUserId":30179,
+	"schemaReferences":[
+		
+	],
+	"settings":{
+		"enableNodeLevelLogging":true,
+		"enableRunLogging":true,
+		"enableVariableLogging":true,
+		"route":{
+			"default":false,
+			"tierName":"global"
+		}
+	},
+	"standard":false,
+	"tags":[
+		
+	],
+	"version":4
+}
