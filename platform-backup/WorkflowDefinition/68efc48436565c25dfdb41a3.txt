@@ -6,46 +6,184 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_s6tlG",
+			"fromNodeId":"n_1hTao",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_FIEA2",
+			"toNodeId":"n_wS3Vg",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_wS3Vg",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_x1dB6",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_x1dB6",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_wS3Vg",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_wS3Vg",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_2Nslo",
 			"type":"next"
 		}
 	],
 	"id":"68efc48436565c25dfdb41a3",
 	"lastModifiedBy":1,
 	"lcName":"vfc",
-	"modifiedTime":1760543876704,
+	"modifiedTime":1760586491015,
 	"name":"vfc",
 	"nodes":[
 		{
+			"additional":{
+				"xsdSchemaConfig":{
+					"root":{
+						"request":{}
+					}
+				}
+			},
+			"context":{
+				"appName":"webhooks",
+				"resourceVersion":142,
+				"resourceName":"webhooks_default"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_s6tlG-1",
-			"id":"_s6tlG",
-			"index":0,
+			"id":"n_1hTao",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"array":{
+								"type":"array",
+								"items":{
+									"type":"string"
+								},
+								"title":"array"
+							}
+						},
+						"additionalProperties":false
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"EVENT"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":146,
+				"resourceName":"loop_for_each",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_s6tlG-1",
-			"id":"_FIEA2",
-			"index":0,
+			"id":"n_wS3Vg",
+			"index":2,
+			"inputs":{
+				"repeatMode":"SINGLE",
+				"listSource":"{{ n_1hTao.outputs.body.array }}",
+				"captureIterations":true
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Loop",
+			"title":"For each loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2491,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_wS3Vg@_s6tlG-1@l",
+			"id":"n_x1dB6",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"input":{
+							"type":"string",
+							"title":"Input"
+						}
+					},
+					"required":[
+						"input"
+					]
+				}
+			},
+			"inputs":{
+				"input":"{{ n_wS3Vg.outputs.item }}{{ n_wS3Vg.outputs.index }}"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"input":{
+							"type":"string",
+							"title":"Input"
+						}
+					},
+					"required":[
+						"input"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_s6tlG-1",
+			"id":"n_2Nslo",
+			"index":4,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +197,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
