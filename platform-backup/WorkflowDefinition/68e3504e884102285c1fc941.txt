@@ -9,11 +9,26 @@
 			"fromNodeId":"n_JQv9W",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"n_4aZwI",
+			"toNodeId":"n_l7gCd",
 			"type":"next"
 		},
 		{
-			"fromNodeId":"n_4aZwI",
+			"fromNodeId":"n_l7gCd",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_o3jTY",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_o3jTY",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_l7gCd",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_l7gCd",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_jiMff",
@@ -23,7 +38,7 @@
 	"id":"68e3504e884102285c1fc941",
 	"lastModifiedBy":1,
 	"lcName":"filetourl",
-	"modifiedTime":1760531418824,
+	"modifiedTime":1760597333619,
 	"name":"filetourl",
 	"nodes":[
 		{
@@ -54,28 +69,51 @@
 		},
 		{
 			"context":{
-				"appName":"auth_by_unifyapps",
-				"resourceVersion":0,
-				"resourceName":"auth_by_unifyapps_login",
+				"appName":"text_by_unifyapps",
+				"resourceVersion":2240,
+				"resourceName":"text_by_unifyapps_for_each_line_or_lines",
 				"type":"APPLICATION"
 			},
 			"debug":false,
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_JhLuI-1",
-			"id":"n_4aZwI",
+			"id":"n_l7gCd",
 			"index":2,
 			"inputs":{
-				"formData":{
-					"username":"admin",
-					"password":"Hello@135",
-					"rememberMe":true
-				},
-				"identityProviderId":"681b776b4227f11a226ced71"
+				"file":"https://www.w3.org/TR/2003/REC-PNG-20031110/iso_8859-1.txt",
+				"batch":false,
+				"encoding":"UTF-8",
+				"batchSize":100
 			},
 			"skip":false,
-			"subTitle":"Auth by UnifyApps",
-			"title":"Login to UnifyApps",
+			"subTitle":"Text Reader by UnifyApps",
+			"title":"Consume data from text file",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"files_by_unifyapps",
+				"resourceVersion":2430,
+				"resourceName":"files_by_unifyapps_create_temp_file",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_l7gCd@_JhLuI-1@l",
+			"id":"n_o3jTY",
+			"index":3,
+			"inputs":{
+				"isTmp":true,
+				"initialContentType":"plainText",
+				"initialContent":"{{ n_l7gCd.outputs.item }}",
+				"type":"SINGLE",
+				"fileType":"txt"
+			},
+			"skip":false,
+			"subTitle":"Files by UnifyApps",
+			"title":"Create a file",
 			"type":"ACTION"
 		},
 		{
@@ -90,10 +128,8 @@
 			"fallbackMode":"STOP",
 			"groupId":"_JhLuI-1",
 			"id":"n_jiMff",
-			"index":3,
-			"inputs":{
-				"result":"{{ n_4aZwI.outputs.redirectUrl }}"
-			},
+			"index":4,
+			"inputs":{},
 			"skip":false,
 			"subTitle":"Callable",
 			"title":"Respond to automation",
@@ -117,5 +153,5 @@
 	"tags":[
 		
 	],
-	"version":148
+	"version":149
 }
