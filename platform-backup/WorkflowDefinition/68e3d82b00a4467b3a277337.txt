@@ -5,16 +5,23 @@
 	"createdTime":1760199513839,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760600095965,
+		"deployedAt":1760600902701,
 		"deployedBy":33452,
-		"deployedDefinitionId":"68f0a01d75087a2a7af506ad",
+		"deployedDefinitionId":"68f0a34675087a2a7af52b9c",
 		"status":"DEPLOYED",
-		"version":10,
-		"workflowVersion":118
+		"version":11,
+		"workflowVersion":122
 	},
 	"edges":[
 		{
-			"fromNodeId":"n_mncUh",
+			"fromNodeId":"n_7P5rF",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_waGDH",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_waGDH",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_29BIY",
@@ -201,67 +208,70 @@
 	"id":"68e3d82b00a4467b3a277337",
 	"lastModifiedBy":33452,
 	"lcName":"lowes excel file processor (agent_formulaes) ",
-	"modifiedTime":1760600900591,
+	"modifiedTime":1760601119177,
 	"name":"Lowes Excel File Processor (Agent_Formulaes) ",
 	"nodes":[
 		{
 			"context":{
-				"appName":"callables",
-				"resourceVersion":159,
-				"resourceName":"callables_from_automation"
+				"appName":"webhooks",
+				"resourceVersion":833,
+				"resourceName":"webhooks_default"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
-			"id":"n_mncUh",
+			"id":"n_7P5rF",
 			"index":1,
 			"inputs":{
-				"result":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[
-						"url"
-					],
-					"properties":{
-						"url":{
-							"type":"string",
-							"title":"Url"
-						}
-					}
-				},
-				"setup":{
-					"type":"object",
-					"additionalProperties":false,
-					"required":[],
-					"properties":{
-						"caseId":{
-							"type":"string",
-							"title":"Case Id"
-						},
-						"file":{
-							"type":"string",
-							"format":"file-input",
-							"title":"File"
-						},
-						"businessPrompt":{
-							"type":"string",
-							"title":"Business Prompt"
-						},
-						"objectId":{
-							"type":"string",
-							"title":"Object Id"
-						}
-					}
+				"request":{
+					"contentType":"application/json"
 				}
 			},
 			"skip":false,
-			"subTitle":"Callable",
-			"title":"Trigger via automation",
+			"subTitle":"Webhook",
+			"title":"New event",
 			"trigger":{
-				"type":"CALLABLE"
+				"type":"WEBHOOK"
 			},
 			"type":"START"
+		},
+		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":4560,
+				"resourceName":"storage_by_unifyapps_fetch_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_t1UEx-1",
+			"id":"n_waGDH",
+			"index":2,
+			"inputs":{
+				"object_type":"lowes_file_url",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"sortBy":[
+					{
+						"field":"cTm",
+						"order":"DESC"
+					}
+				],
+				"translationsOption":"DEFAULT",
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":20
+				},
+				"numberOfRecordsToFetch":"SINGLE",
+				"readThroughSessionVariables":false,
+				"includeTotalCount":false
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch records",
+			"type":"ACTION"
 		},
 		{
 			"context":{
@@ -271,11 +281,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_29BIY",
-			"index":2,
+			"index":3,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -326,7 +336,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_ceV2l",
-			"index":3,
+			"index":4,
 			"inputs":{
 				"fileDetails":"{{ n_mncUh.outputs.file }}",
 				"use_excelize":true,
@@ -349,7 +359,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_1vAhm",
-			"index":4,
+			"index":5,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -628,11 +638,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"_qVb29",
-			"index":5,
+			"index":6,
 			"inputs":{
 				"automationId":"66dfd76eb70dad256986b784",
 				"runtimeConnections":{},
@@ -664,7 +674,7 @@
 			"fallbackMode":"MANUAL",
 			"groupId":"_t1UEx-1",
 			"id":"n_v7rrM",
-			"index":6,
+			"index":7,
 			"inputs":{
 				"jsonSchema":{
 					"type":"object",
@@ -869,7 +879,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_v7rrM@_t1UEx-1@error",
 			"id":"n_90QlP",
-			"index":7,
+			"index":8,
 			"inputs":{
 				"callableInterfaceId":"__ua__publish_response_interface",
 				"defaultFallbackWorkflowId":"66fbed229edc4e0b6303cefd",
@@ -900,7 +910,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_v7rrM@_t1UEx-1@error",
 			"id":"n_r733J",
-			"index":8,
+			"index":9,
 			"inputs":{
 				"result":{
 					"url":"400"
@@ -923,7 +933,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_JF5uZ",
-			"index":9,
+			"index":10,
 			"inputs":{
 				"repeatMode":"SINGLE",
 				"listSource":"{{ n_v7rrM.outputs.result }}",
@@ -946,7 +956,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_JF5uZ@_t1UEx-1@l",
 			"id":"n_tPvIP",
-			"index":10,
+			"index":11,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -998,7 +1008,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_JF5uZ@_t1UEx-1@l",
 			"id":"n_zxnKE",
-			"index":11,
+			"index":12,
 			"inputs":{
 				"itemToAdd":{
 					"formula":"{{ n_tPvIP.outputs.result.formula }}",
@@ -1030,7 +1040,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_yQ3iS",
-			"index":12,
+			"index":13,
 			"inputs":{
 				"evaluateFormulas":true,
 				"fileDetails":"{{ n_mncUh.outputs.file }}",
@@ -1058,11 +1068,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"_pixyS",
-			"index":13,
+			"index":14,
 			"inputs":{
 				"file":"{{ n_yQ3iS.outputs.fileDetails }}",
 				"expiryTime":1
@@ -1084,7 +1094,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"_JGuHE",
-			"index":14,
+			"index":15,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1191,7 +1201,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"_YhUFh",
-			"index":15,
+			"index":16,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1225,7 +1235,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"_qWAYC",
-			"index":16,
+			"index":17,
 			"inputs":{
 				"base64Content":"{{ _JGuHE.outputs.result.b64_encoded }}",
 				"fileName":"{{ _YhUFh.outputs.result.uuid }}.xlsx",
@@ -1249,7 +1259,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_jZ83L",
-			"index":17,
+			"index":18,
 			"inputs":{
 				"startFromRow":1,
 				"consumptionBehaviour":"string",
@@ -1286,7 +1296,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"n_jZ83L@_t1UEx-1@l",
 			"id":"n_Bqc8R",
-			"index":18,
+			"index":19,
 			"inputs":{
 				"output":{
 					"type":"object",
@@ -1664,11 +1674,11 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_jZ83L@_t1UEx-1@l",
 			"id":"n_FhdKk",
-			"index":19,
+			"index":20,
 			"inputs":{
 				"object_type":"lowes_llm_1",
 				"skipIfBlank":false,
@@ -1755,18 +1765,18 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_nMokn",
-			"index":20,
+			"index":21,
 			"inputs":{
 				"automationId":"6793913478118e27332f4620",
 				"runtimeConnections":{},
 				"synchronous":true,
 				"version":"-1",
 				"parameters":{
-					"caseId":"{{ n_mncUh.outputs.caseId }}",
+					"caseId":"e_68f0a1cd0d84f114da88f562",
 					"file":"{{ _qWAYC.outputs.fileDetails }}",
 					"metadataIndexing":true
 				}
@@ -1788,7 +1798,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_AoUWZ",
-			"index":21,
+			"index":22,
 			"inputs":{
 				"triggerInputCondition":{
 					"filters":[
@@ -1831,7 +1841,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_JgWjo",
-			"index":22,
+			"index":23,
 			"inputSchema":{
 				"type":"SCHEMA_AND_LAYOUT",
 				"dynamic":false,
@@ -1880,7 +1890,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_sFhON",
-			"index":23,
+			"index":24,
 			"inputs":{
 				"automationId":"68de82126b6ce77165c61665",
 				"runtimeConnections":{},
@@ -1913,7 +1923,7 @@
 			"fallbackMode":"STOP",
 			"groupId":"_t1UEx-1",
 			"id":"n_8YozE",
-			"index":24,
+			"index":25,
 			"inputs":{
 				"result":{
 					"url":"Excel file is being processed. "
@@ -1940,5 +1950,5 @@
 		}
 	},
 	"standard":false,
-	"version":122
+	"version":123
 }
