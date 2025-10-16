@@ -8,12 +8,12 @@
 	"createdTime":1760033604120,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760531641976,
+		"deployedAt":1760615263511,
 		"deployedBy":164544,
-		"deployedDefinitionId":"68ef94b21ff997436ed1f561",
-		"status":"PAUSED",
-		"version":42,
-		"workflowVersion":186
+		"deployedDefinitionId":"68f0db5fc6b9b1336fea0974",
+		"status":"DEPLOYED",
+		"version":43,
+		"workflowVersion":303
 	},
 	"description":"To Scan Images",
 	"edges":[
@@ -193,7 +193,7 @@
 	"id":"68e7fb4450c30c5009b3bca6",
 	"lastModifiedBy":164544,
 	"lcName":"image scans",
-	"modifiedTime":1760614940347,
+	"modifiedTime":1760616133787,
 	"name":"Image Scans",
 	"nodes":[
 		{
@@ -204,7 +204,7 @@
 				"resourceName":"slack_on_new_message"
 			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_fFQyR-1",
 			"id":"n_toDPU",
@@ -227,17 +227,31 @@
 							}
 						},
 						{
-							"property":"{{ n_toDPU.outputs.event.type }}",
+							"property":"{{ n_toDPU.outputs.event.blocks[0].elements[0].elements[0].text }}",
 							"filter":{
-								"operator":"CONTAINS",
-								"value":"message"
+								"operator":"NOT_CONTAINS",
+								"value":"Image Scan done for test"
+							}
+						},
+						{
+							"property":"{{ n_toDPU.outputs.authorizations[0].is_bot }}",
+							"filter":{
+								"operator":"NOT_EQUAL",
+								"value":"true"
 							}
 						},
 						{
 							"property":"{{ n_toDPU.outputs.event.text }}",
 							"filter":{
 								"operator":"NOT_CONTAINS",
-								"value":"Image Scan done for test"
+								"value":"Image Scan done for"
+							}
+						},
+						{
+							"property":"{{ n_toDPU.outputs.event.blocks[0].text.text }}",
+							"filter":{
+								"operator":"NOT_CONTAINS",
+								"value":"Image Scan done for"
 							}
 						}
 					],
@@ -2940,7 +2954,7 @@
 				"type":"APPLICATION"
 			},
 			"debug":false,
-			"dirty":true,
+			"dirty":false,
 			"fallbackMode":"STOP",
 			"groupId":"n_cN9FJ@_fFQyR-1@l",
 			"id":"n_jVzkr",
@@ -3017,5 +3031,5 @@
 		"enableVariableLogging":true
 	},
 	"standard":false,
-	"version":303
+	"version":304
 }
