@@ -4,6 +4,14 @@
 	],
 	"createdTime":1760609434523,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760609435627,
+		"deployedBy":1,
+		"deployedDefinitionId":"68f0c49a9c92151f483b6c40",
+		"status":"DEPLOYED",
+		"version":1,
+		"workflowVersion":6
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_SyAUp",
@@ -68,7 +76,7 @@
 	"id":"68efb7671ff997436ed32c21",
 	"lastModifiedBy":1,
 	"lcName":"[dt] bulk index groups",
-	"modifiedTime":1760609434523,
+	"modifiedTime":1760618243721,
 	"name":"[DT] Bulk Index Groups",
 	"nodes":[
 		{
@@ -166,7 +174,7 @@
 			"id":"n_DYv1F",
 			"index":2,
 			"inputs":{
-				"repeatMode":"SINGLE",
+				"repeatMode":"BATCH",
 				"listSource":"{{ n_SyAUp.outputs.body.groups.name }}",
 				"captureIterations":true,
 				"batchSize":20
@@ -198,10 +206,62 @@
 					"ua:type":"mappedArray",
 					"items":{
 						"datasource":"{{ n_SyAUp.outputs.body.datasource }}",
-						"name":"{{ n_DYv1F.outputs.item }}"
-					}
+						"name":"{{ n_DYv1F.outputs.item[0] }}"
+					},
+					"source":"{{ n_DYv1F.outputs.item }}"
 				},
 				"version":"-1"
+			},
+			"options":{
+				"bulkheadConfig":{
+					"enabled":false,
+					"maxLeaseTimeUnit":"SECONDS",
+					"maxWaitDurationUnit":"SECONDS"
+				},
+				"businessHoursConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"cacheConfig":{
+					"enabled":false,
+					"usagePolicy":"ALWAYS"
+				},
+				"circuitBreakerConfig":{
+					"enabled":false
+				},
+				"disableLogging":false,
+				"enabledForReExecution":false,
+				"hookConfig":{
+					"enabled":false,
+					"postHooks":[
+						
+					],
+					"preHooks":[
+						
+					]
+				},
+				"logConfig":{
+					"enabled":false,
+					"logPolicies":[
+						
+					]
+				},
+				"rateLimitConfig":{
+					"enabled":false,
+					"waitForNextWindow":false
+				},
+				"retryConfig":{
+					"backOffFactor":null,
+					"captureRetries":false,
+					"enabled":false
+				},
+				"stepError":"STOP",
+				"telemetryConfig":{
+					"enableTelemetry":false,
+					"metricConfigs":[
+						
+					]
+				}
 			},
 			"skip":false,
 			"subTitle":"Callable",
@@ -364,5 +424,5 @@
 	"tags":[
 		
 	],
-	"version":6
+	"version":7
 }
