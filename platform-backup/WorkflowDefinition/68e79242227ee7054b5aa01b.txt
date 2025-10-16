@@ -5,12 +5,12 @@
 	"createdTime":1760213352330,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760378561702,
+		"deployedAt":1760550740028,
 		"deployedBy":1,
-		"deployedDefinitionId":"68ed3ec1f5eb8345dac801fe",
+		"deployedDefinitionId":"68efdf53e09fb733aee42281",
 		"status":"DEPLOYED",
-		"version":4,
-		"workflowVersion":54
+		"version":8,
+		"workflowVersion":59
 	},
 	"edges":[
 		{
@@ -157,6 +157,7 @@
 		"configs":[
 			{
 				"permissions":[
+					"VIEW_RUNS",
 					"V"
 				],
 				"principalType":"GLOBAL"
@@ -164,9 +165,9 @@
 		]
 	},
 	"id":"68e79242227ee7054b5aa01b",
-	"lastModifiedBy":0,
+	"lastModifiedBy":1,
 	"lcName":"[dt] api to trigger ai agent (streaming)",
-	"modifiedTime":1760465638328,
+	"modifiedTime":1760599701904,
 	"name":"[DT] API To Trigger AI Agent (Streaming)",
 	"nodes":[
 		{
@@ -210,6 +211,36 @@
 							"stream":{
 								"type":"boolean",
 								"title":"Stream"
+							},
+							"inclusions":{
+								"type":"object",
+								"properties":{
+									"documentSpecs":{
+										"type":"array",
+										"items":{
+											"type":"object",
+											"properties":{
+												"id":{
+													"type":"string",
+													"title":"Id"
+												}
+											},
+											"additionalProperties":false,
+											"required":[]
+										},
+										"title":"Document Specs"
+									},
+									"datasourceInstances":{
+										"type":"array",
+										"items":{
+											"type":"string"
+										},
+										"title":"Datasource Instances"
+									}
+								},
+								"additionalProperties":false,
+								"title":"Inclusions",
+								"required":[]
 							}
 						},
 						"additionalProperties":false,
@@ -299,7 +330,9 @@
 		{
 			"additional":{
 				"visibleOptionalFields":[
-					"root.parameters.messages.items"
+					"root.parameters.messages.items",
+					"root.parameters.inclusions.documentSpecs.items.id",
+					"root.parameters.inclusions.datasourceInstances.items"
 				]
 			},
 			"context":{
@@ -345,6 +378,13 @@
 								"type":"string"
 							},
 							"title":"Attachment Ids"
+						},
+						"knowledgeIds":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Knowledge Ids"
 						}
 					}
 				},
@@ -369,10 +409,40 @@
 						"agentId":{
 							"type":"string",
 							"title":"Agent Id"
+						},
+						"inclusions":{
+							"type":"object",
+							"properties":{
+								"documentSpecs":{
+									"type":"array",
+									"items":{
+										"type":"object",
+										"properties":{
+											"id":{
+												"type":"string",
+												"title":"Id"
+											}
+										},
+										"additionalProperties":false,
+										"required":[]
+									},
+									"title":"Document Specs"
+								},
+								"datasourceInstances":{
+									"type":"array",
+									"items":{
+										"type":"string"
+									},
+									"title":"Datasource Instances"
+								}
+							},
+							"additionalProperties":false,
+							"title":"Inclusions",
+							"required":[]
 						}
 					}
 				},
-				"code":"def messages = binding.hasVariable(\"messages\") ? messages : []\n\nreturn [\n  \"sessionId\" : binding.hasVariable(\"chatId\") ? chatId : null,\n  \"userQuery\" : messages[0]?.fragments?[0].text,\n  \"aiAgentId\" : binding.hasVariable(\"agentId\") ? agentId : null,\n  \"attachmentIds\" : messages[0]?.uploadedFileIds\n]",
+				"code":"def messages = binding.hasVariable(\"messages\") ? messages : []\ndef knowledgeIds = []\ndef knowledgeSetIds = []\n\nknowledgeIds = (binding.hasVariable('inclusions') && inclusions?.documentSpecs) ? inclusions.documentSpecs.collect { it?.id } : []\nknowledgeSetIds = (binding.hasVariable('inclusions') && inclusions?.datasourceInstances) ? inclusions.datasourceInstances : []\n\nreturn [\n  \"sessionId\" : binding.hasVariable(\"chatId\") ? chatId : null,\n  \"userQuery\" : messages[0]?.fragments?[0].text,\n  \"aiAgentId\" : binding.hasVariable(\"agentId\") ? agentId : null,\n  \"attachmentIds\" : messages[0]?.uploadedFileIds,\n  \"knowledgeIds\" : !knowledgeIds.isEmpty() ? knowledgeIds : null,\n  \"knowledgeSetIds\" : !knowledgeSetIds.isEmpty() ? knowledgeSetIds : null\n]",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -382,6 +452,20 @@
 						"source":"{{ DugAy.outputs.body.messages }}",
 						"ua:type":"mappedArray",
 						"items":"{{ DugAy.outputs.body.messages[0] }}"
+					},
+					"inclusions":{
+						"documentSpecs":{
+							"source":"{{ DugAy.outputs.body.inclusions.documentSpecs }}",
+							"ua:type":"mappedArray",
+							"items":{
+								"id":"{{ DugAy.outputs.body.inclusions.documentSpecs[0].id }}"
+							}
+						},
+						"datasourceInstances":{
+							"source":"{{ DugAy.outputs.body.inclusions.datasourceInstances }}",
+							"ua:type":"mappedArray",
+							"items":"{{ DugAy.outputs.body.inclusions.datasourceInstances[0] }}"
+						}
 					}
 				}
 			},
@@ -518,6 +602,11 @@
 							"sourceType":"{{ n_HtG74.outputs.objects[0].properties.fileDetails.sourceType }}",
 							"source":"{{ n_HtG74.outputs.objects[0].properties.fileDetails.source }}"
 						}
+					},
+					"knowledgeIds":{
+						"source":"{{ n_Xekkh.outputs.result.knowledgeIds }}",
+						"ua:type":"mappedArray",
+						"items":"{{ n_Xekkh.outputs.result.knowledgeIds[0] }}"
 					}
 				}
 			},
@@ -941,9 +1030,9 @@
 			"tierName":"global"
 		}
 	},
-	"standard":true,
+	"standard":false,
 	"tags":[
 		
 	],
-	"version":55
+	"version":61
 }
