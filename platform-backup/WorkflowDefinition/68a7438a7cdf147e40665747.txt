@@ -5,12 +5,12 @@
 	"createdTime":1757312079947,
 	"deleted":false,
 	"deploymentState":{
-		"deployedAt":1760117539559,
-		"deployedBy":-1,
-		"deployedDefinitionId":"68e9432364af142a5db30060",
+		"deployedAt":1760551302307,
+		"deployedBy":1,
+		"deployedDefinitionId":"68efe185e09fb733aee43625",
 		"status":"DEPLOYED",
-		"version":53,
-		"workflowVersion":96
+		"version":60,
+		"workflowVersion":106
 	},
 	"edges":[
 		{
@@ -505,6 +505,7 @@
 		"configs":[
 			{
 				"permissions":[
+					"VIEW_RUNS",
 					"V"
 				],
 				"principalType":"GLOBAL"
@@ -514,7 +515,7 @@
 	"id":"68a7438a7cdf147e40665747",
 	"lastModifiedBy":1,
 	"lcName":"trigger ai agent (streaming)",
-	"modifiedTime":1760213352088,
+	"modifiedTime":1760599701129,
 	"name":"Trigger AI Agent (Streaming)",
 	"nodes":[
 		{
@@ -651,6 +652,13 @@
 								"required":[]
 							},
 							"title":"Attachments"
+						},
+						"knowledgeIds":{
+							"type":"array",
+							"items":{
+								"type":"string"
+							},
+							"title":"Knowledge Ids"
 						}
 					}
 				}
@@ -1189,7 +1197,7 @@
 				"parameters":{
 					"channelName":"WORKFLOW",
 					"text":"{{ DugAy.outputs.userQuery }}",
-					"caseAssociationType":"NEW_CASE_ON_EVERY_MESSAGE",
+					"caseAssociationType":"PREVIOUS_FAN_MESSAGE",
 					"messageType":"FAN",
 					"caseId":"{{ DugAy.outputs.sessionId }}",
 					"triggeredFromAutomationId":"{{ __RUN__.outputs.workflowId }}",
@@ -1236,7 +1244,6 @@
 				"record":{
 					"waitingInstanceId":"{{ __RUN__.outputs.executionId }}",
 					"aiAgentId":"{{ DugAy.outputs.aiAgentId }}",
-					"currentMessageId":"{{ EI4Z9.outputs.messageId }}",
 					"streamingInProgress":true,
 					"userId_caseId":"{{ __RUN__.outputs.userId }}_{{ EI4Z9.outputs.caseId }}",
 					"instanceType":"ACCUMULATOR",
@@ -1416,6 +1423,9 @@
 				"triggerWorkflowWithRuntimeType":"IN_MEMORY",
 				"version":"-1",
 				"parameters":{
+					"aiAgentId":"{{ DugAy.outputs.aiAgentId }}",
+					"userQuery":"{{ DugAy.outputs.userQuery }}",
+					"userEmailAddress":"{{ DugAy.outputs.userEmailAddress }}",
 					"caseId":"{{ EI4Z9.outputs.caseId }}",
 					"messageId":"{{ EI4Z9.outputs.messageId }}",
 					"externalKnowledgeSets":{
@@ -1423,9 +1433,11 @@
 						"source":"{{ DugAy.outputs.knowledgeSetIds }}",
 						"items":"{{ DugAy.outputs.knowledgeSetIds[0] }}"
 					},
-					"aiAgentId":"{{ DugAy.outputs.aiAgentId }}",
-					"userQuery":"{{ DugAy.outputs.userQuery }}",
-					"userEmailAddress":"{{ DugAy.outputs.userEmailAddress }}"
+					"externalKnowledges":{
+						"source":"{{ DugAy.outputs.knowledgeIds }}",
+						"ua:type":"mappedArray",
+						"items":"{{ DugAy.outputs.knowledgeIds[0] }}"
+					}
 				}
 			},
 			"skip":false,
@@ -2216,7 +2228,7 @@
 						}
 					}
 				},
-				"code":"import java.net.URLEncoder\n\ndef PLATFORM_URL = \"https://aiagentdev.qa.unifyapps.com\"\n\ndef transformCitationBlock(block, platformUrl) {\n    if (block?.blockType == \"Citation\" && block?.data?.citations instanceof List) {\n        block.data.citations.each { citation ->\n            if (citation?.referenceUrl) {\n                def refUrl = citation.referenceUrl\n                if (refUrl.startsWith(\"/api/file/download\")) {\n                    def encodedPath = URLEncoder.encode(refUrl, \"UTF-8\")\n                    citation.referenceUrl = platformUrl + \"/api-endpoint/ai-agent/sources?filePath=\" + encodedPath\n                }\n            }\n        }\n    }\n    return block\n}\n\n\n\nif (!binding.hasVariable('completeMessage')) {\n    return [\"skip\": true]\n}\ndef messageId = completeMessage?.messageId\nif (binding.hasVariable('streamedMessageIds') && streamedMessageIds.contains(messageId)) {\n    return [\"skip\": true]\n}\n\ndef coPilotBlocks = completeMessage?.message;\ndef messageType = completeMessage?.additional?.internalMessageType;\nif (messageType == null || messageType.isBlank()) {\n    messageType = \"ANSWER\"\n}\n\nif (!binding.hasVariable(\"supportsCopilotBlocks\") || !supportsCopilotBlocks) {\n    if (coPilotBlocks?.size() == 1) {\n        for (def block : coPilotBlocks) {\n            if (block?.blockType == \"Typography\" && block?.data?.text) {\n                return [\"messageType\": messageType, \"delta\": block?.data?.text, \"messageId\": messageId, \"messageCreatedTime\": completeMessage?.messageCreatedTime, \"additional\": completeMessage?.additional]\n            }\n        }\n    } else {\n        def readingBlock = [:]\n        def searchingBlock = false;\n        def searchingContent = \"\";\n        if (completeMessage?.additional?.internalMessageType == \"THOUGHT\") {\n            searchingBlock = (completeMessage?.additional?.messageSubType == \"SEARCHING\");\n            for (def block : coPilotBlocks) {\n                if (block?.blockType == \"Citation\") {\n                    readingBlock = transformCitationBlock(block,PLATFORM_URL);\n                }\n                if(searchingBlock && block?.blockType == \"Stack\") {\n                    searchingContent = block?.data?.\"1\"?.data?.label\n                }\n            }\n\n        }\n        if (!readingBlock.isEmpty()) {\n            return [\"messageType\": \"SOURCES\", \"coPilotBlocks\": [readingBlock], \"messageId\": messageId, \"messageCreatedTime\": completeMessage?.messageCreatedTime, \"additional\": completeMessage?.additional]\n\n        }\n        if(searchingContent != null && !searchingContent.isBlank()) {\n            return [\"messageType\": \"SEARCHING\", \"delta\": searchingContent, \"messageId\": messageId, \"messageCreatedTime\": completeMessage?.messageCreatedTime, \"additional\": completeMessage?.additional]\n        }\n        return [\"skip\": true]\n    }\n}\n\ndef transformedBlocks = coPilotBlocks.collect { block ->\n    transformCitationBlock(block, PLATFORM_URL)\n}\n\nreturn [\"coPilotBlocks\": transformedBlocks, \"messageType\": messageType, \"messageId\": messageId, \"messageCreatedTime\": completeMessage?.messageCreatedTime, \"additional\": completeMessage?.additional, \"interfaceDetails\": completeMessage?.interfaceDetails]\n\n\n\n",
+				"code":"import java.net.URLEncoder\n\ndef PLATFORM_URL = \"https://aiagentdev.qa.unifyapps.com\"\n\ndef transformCitationBlock(block, platformUrl) {\n    if (block?.blockType == \"Citation\" && block?.data?.citations instanceof List) {\n        block.data.citations.each { citation ->\n            if (citation?.referenceUrl) {\n                def refUrl = citation.referenceUrl\n                if (refUrl.startsWith(\"/api/file/download\")) {\n                    def encodedPath = URLEncoder.encode(refUrl, \"UTF-8\")\n                    citation.referenceUrl = platformUrl + \"/api-endpoint/ai-agent/sources?filePath=\" + encodedPath\n                }\n            }\n        }\n    }\n    return block\n}\n\n\n\nif (!binding.hasVariable('completeMessage')) {\n    return [\"skip\": true]\n}\ndef messageId = completeMessage?.messageId\nif (binding.hasVariable('streamedMessageIds') && streamedMessageIds.contains(messageId)) {\n    return [\"skip\": true]\n}\n\ndef coPilotBlocks = completeMessage?.message;\ndef messageType = completeMessage?.additional?.internalMessageType;\nif (messageType == null || messageType.isBlank()) {\n    messageType = \"ANSWER\"\n}\n\nif (!binding.hasVariable(\"supportsCopilotBlocks\") || !supportsCopilotBlocks) {\n    if (coPilotBlocks?.size() == 1) {\n        for (def block : coPilotBlocks) {\n            if (block?.blockType == \"Typography\" && block?.data?.text) {\n                return [\"messageType\": messageType, \"delta\": block?.data?.text, \"messageId\": messageId, \"messageCreatedTime\": completeMessage?.messageCreatedTime, \"additional\": completeMessage?.additional]\n            }\n        }\n    } else {\n        def readingBlock = [:]\n        def searchingBlock = false;\n        def searchingContent = \"\";\n        if (completeMessage?.additional?.internalMessageType == \"THOUGHT\") {\n            searchingBlock = (completeMessage?.additional?.messageSubType == \"SEARCHING\");\n            for (def block : coPilotBlocks) {\n                if (block?.blockType == \"Typography\") {\n                    searchingBlock = searchingBlock || (block?.data?.text == \"Searching\")\n                }\n                if (block?.blockType == \"Citation\") {\n                    readingBlock = transformCitationBlock(block,PLATFORM_URL);\n                }\n                if(searchingBlock && block?.blockType == \"Stack\") {\n                    searchingContent = block?.data?.\"1\"?.data?.label\n                }\n            }\n\n        }\n        if (!readingBlock.isEmpty()) {\n            return [\"messageType\": \"SOURCES\", \"coPilotBlocks\": [readingBlock], \"messageId\": messageId, \"messageCreatedTime\": completeMessage?.messageCreatedTime, \"additional\": completeMessage?.additional]\n\n        }\n        if(searchingContent != null && !searchingContent.isBlank()) {\n            return [\"messageType\": \"SEARCHING\", \"delta\": searchingContent, \"messageId\": messageId, \"messageCreatedTime\": completeMessage?.messageCreatedTime, \"additional\": completeMessage?.additional]\n        }\n        return [\"skip\": true]\n    }\n}\n\ndef transformedBlocks = coPilotBlocks.collect { block ->\n    transformCitationBlock(block, PLATFORM_URL)\n}\n\nreturn [\"coPilotBlocks\": transformedBlocks, \"messageType\": messageType, \"messageId\": messageId, \"messageCreatedTime\": completeMessage?.messageCreatedTime, \"additional\": completeMessage?.additional, \"interfaceDetails\": completeMessage?.interfaceDetails]\n\n\n\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -3031,5 +3043,5 @@
 		}
 	},
 	"standard":false,
-	"version":97
+	"version":107
 }
