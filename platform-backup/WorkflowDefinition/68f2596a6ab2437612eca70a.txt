@@ -6,46 +6,150 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_6hZ6g",
+			"fromNodeId":"n_aMBQe",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_i7J8x",
+			"toNodeId":"n_T5zJ7",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_T5zJ7",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_N7Zeg",
 			"type":"next"
 		}
 	],
 	"id":"68f2596a6ab2437612eca70a",
 	"lastModifiedBy":1,
 	"lcName":"rest_calling_call_automation",
-	"modifiedTime":1760713066901,
+	"modifiedTime":1760713385902,
 	"name":"REST_CALLING_CALL_AUTOMATION",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2695,
+				"resourceName":"callables_from_api"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_6hZ6g-1",
-			"id":"_6hZ6g",
-			"index":0,
+			"id":"n_aMBQe",
+			"index":1,
+			"inputs":{
+				"request":{
+					"contentType":"application/json",
+					"body":{
+						"type":"object",
+						"properties":{
+							"num1":{
+								"type":"integer",
+								"title":"num1"
+							},
+							"num2":{
+								"type":"integer",
+								"title":"num2"
+							}
+						},
+						"additionalProperties":false,
+						"required":[]
+					}
+				},
+				"endpointType":"REST",
+				"response":[
+					{
+						"name":"200",
+						"status":200,
+						"contentType":"application/json",
+						"textBody":{
+							"type":"string"
+						},
+						"body":{
+							"type":"object",
+							"properties":{
+								"data":{
+									"type":"object",
+									"properties":{},
+									"additionalProperties":false,
+									"title":"Data"
+								}
+							},
+							"additionalProperties":false,
+							"required":[]
+						}
+					}
+				],
+				"streamingResponse":false
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via API",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":910,
+				"resourceName":"callables_call_automation",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_6hZ6g-1",
-			"id":"_i7J8x",
-			"index":0,
+			"id":"n_T5zJ7",
+			"index":2,
+			"inputs":{
+				"automationId":"68f259886ab2437612eca7c5",
+				"runtimeConnections":{},
+				"synchronous":true,
+				"version":"-1",
+				"parameters":{
+					"num1":"{{ n_aMBQe.outputs.body.num1 }}",
+					"num2":"{{ n_aMBQe.outputs.body.num2 }}"
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
-			"type":"ACTION"
+			"subTitle":"Callable",
+			"title":"Call automation",
+			"type":"CALL_WORKFLOW"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2697,
+				"resourceName":"callables_return_response_to_api",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_6hZ6g-1",
+			"id":"n_N7Zeg",
+			"index":3,
+			"inputs":{
+				"streamingCompleted":true,
+				"responseName":"200_200",
+				"body":{
+					"data":"{{ n_T5zJ7.outputs.output }}"
+				},
+				"status":200
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to API request",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +163,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
