@@ -6,46 +6,213 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_aIx1n",
+			"fromNodeId":"n_cqxUV",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_piDcO",
+			"toNodeId":"n_bPNQ5",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_bPNQ5",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_VUVoC",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_VUVoC",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_HKCyl",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_HKCyl",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_2FCqs",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_bPNQ5",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_2FCqs",
 			"type":"next"
 		}
 	],
 	"id":"68f240e69155c3657366490e",
 	"lastModifiedBy":4130,
 	"lcName":"subscriber3",
-	"modifiedTime":1760706790718,
+	"modifiedTime":1760706832692,
 	"name":"Subscriber3",
 	"nodes":[
 		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":1680,
+				"resourceName":"streams_by_unifyapps_on_event"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_aIx1n-1",
-			"id":"_aIx1n",
-			"index":0,
+			"id":"n_cqxUV",
+			"index":1,
+			"inputs":{
+				"triggerAfterCompletion":false,
+				"messageLimit":1,
+				"streamId":"e_68f22e9dd71c185cb8309c8a"
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Streams by UnifyApps",
+			"title":"Triggers on new event from stream",
 			"trigger":{
 				"type":"EVENT"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":791,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_aIx1n-1",
-			"id":"_piDcO",
-			"index":0,
+			"id":"n_bPNQ5",
+			"index":2,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_cqxUV.outputs.headers.__UA_STREAM_HEADER__GROUP }}",
+						"filter":{
+							"operator":"EQUAL",
+							"value":"DLQTest2"
+						}
+					},
+					{
+						"property":"{{ n_cqxUV.outputs.headers.__UA_STREAM_HEADER__GROUP }}",
+						"filter":{
+							"operator":"MISSING"
+						}
+					}
+				],
+				"operator":"OR"
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1062,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_bPNQ5@_aIx1n-1@y",
+			"id":"n_VUVoC",
+			"index":3,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"test":{
+							"type":"string",
+							"title":"Test"
+						}
+					},
+					"required":[
+						"test"
+					]
+				}
+			},
+			"inputs":{
+				"test":"Sunscriber2"
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"test":{
+							"type":"string",
+							"title":"Test"
+						}
+					},
+					"required":[
+						"test"
+					]
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"streams_by_unifyapps",
+				"resourceVersion":1658,
+				"resourceName":"streams_by_unifyapps_publish_event",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_bPNQ5@_aIx1n-1@y",
+			"id":"n_HKCyl",
+			"index":4,
+			"inputs":{
+				"streamId":"e_68f231abccb9d561dc29b4ff",
+				"skipInputValidation":false,
+				"event":{
+					"group":"DLQTest2",
+					"dlqReason":"qwfewgre",
+					"description":"qfwgre",
+					"event":"{{ n_rWIGl.outputs.event }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Streams by UnifyApps",
+			"title":"Publish event to stream",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"stop"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_aIx1n-1",
+			"id":"n_2FCqs",
+			"index":5,
+			"skip":false,
+			"subTitle":"Stop",
+			"title":"Stop",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":4130,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +226,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
