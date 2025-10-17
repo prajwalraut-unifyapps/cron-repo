@@ -6,46 +6,239 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_XNTz5",
+			"fromNodeId":"n_bLPkf",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_jXRgD",
+			"toNodeId":"n_nabtV",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_nabtV",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_XiWLY",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_XiWLY",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_fx5tL",
+			"type":"loop"
+		},
+		{
+			"fromNodeId":"n_fx5tL",
+			"name":"loopback",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_XiWLY",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_XiWLY",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_c7K5D",
 			"type":"next"
 		}
 	],
 	"id":"68f225aa6ab2437612ebec97",
 	"lastModifiedBy":1,
 	"lcName":"loopsqa2zbdescwzcy",
-	"modifiedTime":1760699818504,
+	"modifiedTime":1760699879269,
 	"name":"loopsQA2zbDesCWZCy",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2692,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_XNTz5-1",
-			"id":"_XNTz5",
-			"index":0,
+			"id":"n_bLPkf",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"string",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"num":{
+							"type":"integer",
+							"title":"num"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2562,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_XNTz5-1",
-			"id":"_jXRgD",
-			"index":0,
+			"id":"n_nabtV",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"Sum":{
+							"type":"integer",
+							"title":"Sum"
+						},
+						"I":{
+							"type":"integer",
+							"title":"I"
+						}
+					}
+				}
+			},
+			"inputs":{
+				"I":"{{ n_bLPkf.outputs.num }}",
+				"Sum":0
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"Sum":{
+							"type":"integer",
+							"title":"Sum"
+						},
+						"I":{
+							"type":"integer",
+							"title":"I"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"loop",
+				"resourceVersion":148,
+				"resourceName":"loop_while",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_XNTz5-1",
+			"id":"n_XiWLY",
+			"index":3,
+			"inputs":{
+				"condition":{
+					"filters":[
+						{
+							"property":"{{ n_nabtV.outputs.I }}",
+							"filter":{
+								"operator":"GT",
+								"value":"0"
+							}
+						}
+					],
+					"operator":"AND"
+				},
+				"captureIterations":false
+			},
+			"skip":false,
+			"subTitle":"Loop",
+			"title":"While loop",
+			"type":"LOOP"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2559,
+				"resourceName":"variable_by_unifyapps_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_XiWLY@_XNTz5-1@l",
+			"id":"n_fx5tL",
+			"index":4,
+			"inputs":{
+				"variables":[
+					{
+						"source":"{{ n_nabtV.outputs.Sum }}",
+						"value":"=SUM({{ n_nabtV.outputs.Sum }},{{ n_nabtV.outputs.I }})"
+					},
+					{
+						"source":"{{ n_nabtV.outputs.I }}",
+						"value":"=SUM({{ n_nabtV.outputs.I }},-1)"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Update variables",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2695,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_XNTz5-1",
+			"id":"n_c7K5D",
+			"index":5,
+			"inputs":{
+				"result":{
+					"result":"{{ n_nabtV.outputs.Sum }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +252,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
