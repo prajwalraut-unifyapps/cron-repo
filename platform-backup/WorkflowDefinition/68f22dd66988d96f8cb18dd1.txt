@@ -4,9 +4,24 @@
 	],
 	"createdTime":1760701910387,
 	"deleted":false,
+	"deploymentState":{
+		"deployedAt":1760703902495,
+		"deployedBy":4130,
+		"deployedDefinitionId":"68f2359e9155c36573662eee",
+		"status":"PAUSED",
+		"version":1,
+		"workflowVersion":7
+	},
 	"edges":[
 		{
 			"fromNodeId":"n_KwAP0",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_zx8Zf",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_zx8Zf",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_sGF8N",
@@ -16,7 +31,7 @@
 	"id":"68f22dd66988d96f8cb18dd1",
 	"lastModifiedBy":4130,
 	"lcName":"streampublisher",
-	"modifiedTime":1760703900788,
+	"modifiedTime":1760704180804,
 	"name":"StreamPublisher",
 	"nodes":[
 		{
@@ -46,6 +61,105 @@
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":1062,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_Gombt-1",
+			"id":"n_zx8Zf",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"event":{
+							"type":"object",
+							"properties":{
+								"field1":{
+									"type":"string",
+									"title":"field1"
+								},
+								"variable":{
+									"type":"object",
+									"properties":{
+										"Value":{
+											"type":"string",
+											"title":"Value"
+										},
+										"name":{
+											"type":"string",
+											"title":"name"
+										}
+									},
+									"title":"variable",
+									"additionalProperties":false
+								}
+							},
+							"title":"event",
+							"additionalProperties":false
+						}
+					}
+				}
+			},
+			"inputs":{
+				"event":{
+					"field1":"{{ __RUN__.outputs.executionId }}",
+					"variable":{
+						"Value":"NewValue",
+						"name":"Test"
+					}
+				}
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"event":{
+							"type":"object",
+							"properties":{
+								"field1":{
+									"type":"string",
+									"title":"field1"
+								},
+								"variable":{
+									"type":"object",
+									"properties":{
+										"Value":{
+											"type":"string",
+											"title":"Value"
+										},
+										"name":{
+											"type":"string",
+											"title":"name"
+										}
+									},
+									"title":"variable",
+									"additionalProperties":false
+								}
+							},
+							"title":"event",
+							"additionalProperties":false
+						}
+					}
+				}
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
+			"type":"ACTION"
+		},
+		{
 			"additional":{
 				"visibleOptionalFields":[
 					"root.headers.items.key",
@@ -65,11 +179,15 @@
 			"fallbackMode":"STOP",
 			"groupId":"_Gombt-1",
 			"id":"n_sGF8N",
-			"index":2,
+			"index":3,
 			"inputs":{
-				"streamId":"e_68f22e9dd71c185cb8309c8a",
+				"streamId":"e_68f231abccb9d561dc29b4ff",
 				"skipInputValidation":false,
 				"event":{
+					"group":"DLQTest",
+					"dlqReason":"Final",
+					"description":"Test",
+					"event":"{{ n_zx8Zf.outputs.event }}",
 					"field1":"{{ __RUN__.outputs.executionId }}",
 					"variable":{
 						"Value":"Newfinal",
@@ -100,5 +218,5 @@
 	"tags":[
 		
 	],
-	"version":7
+	"version":8
 }
