@@ -6,46 +6,224 @@
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_TOIJU",
+			"fromNodeId":"n_vmtsE",
 			"priority":0,
 			"skip":false,
-			"toNodeId":"_JAREF",
+			"toNodeId":"n_cbuEE",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_cbuEE",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_emQtd",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_emQtd",
+			"name":"yes",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_OPkJz",
+			"type":"if"
+		},
+		{
+			"fromNodeId":"n_OPkJz",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_qmXFd",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_emQtd",
+			"name":"no",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"n_qmXFd",
 			"type":"next"
 		}
 	],
 	"id":"68f225e96ab2437612ebed20",
 	"lastModifiedBy":1,
 	"lcName":"loopsqa2cwnsxarhuq",
-	"modifiedTime":1760699881275,
+	"modifiedTime":1760699935128,
 	"name":"loopsQA2CWNsXARhuq",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2692,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_TOIJU-1",
-			"id":"_TOIJU",
-			"index":0,
+			"id":"n_vmtsE",
+			"index":1,
+			"inputs":{
+				"result":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"result":{
+							"type":"number",
+							"title":"result"
+						}
+					}
+				},
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"properties":{
+						"num":{
+							"type":"number",
+							"title":"num"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
 		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2562,
+				"resourceName":"variable_by_unifyapps_create_variables",
+				"type":"APPLICATION"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_TOIJU-1",
-			"id":"_JAREF",
-			"index":0,
+			"id":"n_cbuEE",
+			"index":2,
+			"inputSchema":{
+				"type":"SCHEMA_AND_LAYOUT",
+				"dynamic":false,
+				"layout":{},
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"number",
+							"title":"i"
+						}
+					}
+				}
+			},
+			"inputs":{
+				"i":6
+			},
+			"outputSchema":{
+				"dynamic":false,
+				"schema":{
+					"additionalProperties":false,
+					"type":"object",
+					"properties":{
+						"i":{
+							"type":"number",
+							"title":"i"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select an app and action",
+			"subTitle":"Variable by UnifyApps",
+			"title":"Create variables",
 			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"if_else",
+				"resourceVersion":144,
+				"resourceName":"if_else_condition",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_TOIJU-1",
+			"id":"n_emQtd",
+			"index":3,
+			"inputs":{
+				"filters":[
+					{
+						"property":"{{ n_cbuEE.outputs.i }}",
+						"filter":{
+							"operator":"NOT_EQUAL",
+							"value":"{{ n_vmtsE.outputs.num }}"
+						}
+					}
+				],
+				"operator":"AND"
+			},
+			"skip":false,
+			"subTitle":"Condition",
+			"title":"Condition",
+			"type":"IF_ELSE"
+		},
+		{
+			"context":{
+				"appName":"variable_by_unifyapps",
+				"resourceVersion":2557,
+				"resourceName":"variable_by_unifyapps_find_and_update_variables",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"n_emQtd@_TOIJU-1@y",
+			"id":"n_OPkJz",
+			"index":4,
+			"inputs":{
+				"variables":[
+					{
+						"source":"i",
+						"value":"=SUM({{ n_cbuEE.outputs.i }},1)"
+					}
+				]
+			},
+			"skip":false,
+			"subTitle":"Variable by UnifyApps",
+			"title":"Find and update variable",
+			"type":"ACTION"
+		},
+		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":2695,
+				"resourceName":"callables_return_to_automation",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_TOIJU-1",
+			"id":"n_qmXFd",
+			"index":5,
+			"inputs":{
+				"result":{
+					"result":"{{ n_cbuEE.outputs.i }}"
+				}
+			},
+			"skip":false,
+			"subTitle":"Callable",
+			"title":"Respond to automation",
+			"type":"STOP"
 		}
 	],
 	"ownerUserId":1,
+	"schemaReferences":[
+		
+	],
 	"settings":{
 		"enableNodeLevelLogging":true,
 		"enableRunLogging":true,
@@ -59,5 +237,5 @@
 	"tags":[
 		
 	],
-	"version":0
+	"version":1
 }
