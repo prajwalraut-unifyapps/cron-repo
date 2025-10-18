@@ -1,12 +1,12 @@
 {
 	"appsUsed":[
-		
+		"storage_by_unifyapps"
 	],
 	"createdTime":1760820078086,
 	"deleted":false,
 	"edges":[
 		{
-			"fromNodeId":"_fMhH8",
+			"fromNodeId":"n_Fhpcf",
 			"priority":0,
 			"skip":false,
 			"toNodeId":"n_BvDzV",
@@ -16,27 +16,62 @@
 			"fromNodeId":"n_BvDzV",
 			"priority":0,
 			"skip":false,
+			"toNodeId":"n_iyxSX",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_iyxSX",
+			"priority":0,
+			"skip":false,
 			"toNodeId":"n_LFUUI",
+			"type":"next"
+		},
+		{
+			"fromNodeId":"n_LFUUI",
+			"priority":0,
+			"skip":false,
+			"toNodeId":"_oqFAF",
 			"type":"next"
 		}
 	],
 	"id":"68f3fb6e3ae04f0f21c4fcea",
 	"lastModifiedBy":24420,
 	"lcName":"excel",
-	"modifiedTime":1760820295660,
+	"modifiedTime":1760821999665,
 	"name":"excel",
 	"nodes":[
 		{
+			"context":{
+				"appName":"callables",
+				"resourceVersion":1045,
+				"resourceName":"callables_from_automation"
+			},
 			"debug":false,
-			"dirty":false,
+			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_fMhH8-1",
-			"id":"_fMhH8",
+			"id":"n_Fhpcf",
 			"index":1,
+			"inputs":{
+				"setup":{
+					"type":"object",
+					"additionalProperties":false,
+					"required":[
+						"a"
+					],
+					"properties":{
+						"a":{
+							"type":"string",
+							"title":"A"
+						}
+					}
+				}
+			},
 			"skip":false,
-			"title":"Select a trigger event",
+			"subTitle":"Callable",
+			"title":"Trigger via automation",
 			"trigger":{
-				"type":"EVENT"
+				"type":"CALLABLE"
 			},
 			"type":"START"
 		},
@@ -78,6 +113,84 @@
 			"type":"ACTION"
 		},
 		{
+			"context":{
+				"appName":"storage_by_unifyapps",
+				"resourceVersion":4565,
+				"resourceName":"storage_by_unifyapps_fetch_records",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_fMhH8-1",
+			"id":"n_iyxSX",
+			"index":3,
+			"inputs":{
+				"object_type":"model_pricing",
+				"includeRoleMappings":false,
+				"includeCurrentUserPermissions":false,
+				"translationsOption":"DEFAULT",
+				"page":{
+					"paginateBy":"OFFSET",
+					"limit":20
+				},
+				"numberOfRecordsToFetch":"MULTIPLE",
+				"readThroughSessionVariables":false,
+				"includeTotalCount":false
+			},
+			"skip":false,
+			"subTitle":"Storage by UnifyApps",
+			"title":"Fetch records",
+			"type":"ACTION"
+		},
+		{
+			"additional":{
+				"visibleOptionalFields":[
+					"root.dropDownDetails.items.beginRow",
+					"root.dropDownDetails.items.endRow",
+					"root.dropDownDetails.items.beginColumn",
+					"root.dropDownDetails.items.endColumn",
+					"root.dropDownDetails.items.options.items",
+					"root.headerFormatMapping.items.headerName",
+					"root.headerFormatMapping.items.formatType"
+				]
+			},
+			"context":{
+				"appName":"excel_by_unifyapps",
+				"resourceVersion":853,
+				"resourceName":"excel_by_unifyapps_write_list_to_sheet",
+				"type":"APPLICATION"
+			},
+			"debug":false,
+			"dirty":true,
+			"fallbackMode":"STOP",
+			"groupId":"_fMhH8-1",
+			"id":"n_LFUUI",
+			"index":4,
+			"inputs":{
+				"fileDetails":"{{ n_BvDzV.outputs.fileDetails }}",
+				"sheetName":"Sheet 1",
+				"staticHeaders":[
+					{
+						"key":"A",
+						"value":"{{ n_iyxSX.outputs.objects[0].properties.pricing.input }}"
+					},
+					{
+						"key":"B",
+						"value":"{{ n_iyxSX.outputs.objects[0].properties.pricing.cache_input }}"
+					}
+				],
+				"headerType":"STATIC",
+				"skipHeader":false,
+				"dataSource":"{{ n_iyxSX.outputs.objects }}",
+				"fileType":"xlsx"
+			},
+			"skip":false,
+			"subTitle":"Excel by UnifyApps",
+			"title":"Write data to sheet of Excel file",
+			"type":"ACTION"
+		},
+		{
 			"additional":{
 				"visibleOptionalFields":[
 					"root.dropDownDetails.items.beginRow",
@@ -99,8 +212,8 @@
 			"dirty":true,
 			"fallbackMode":"STOP",
 			"groupId":"_fMhH8-1",
-			"id":"n_LFUUI",
-			"index":3,
+			"id":"_oqFAF",
+			"index":5,
 			"inputs":{
 				"fileName":"{{ n_BvDzV.outputs.fileDetails.name }}",
 				"skipHeaderRow":false,
@@ -131,5 +244,5 @@
 	"tags":[
 		
 	],
-	"version":1
+	"version":2
 }
