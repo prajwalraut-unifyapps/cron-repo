@@ -37,7 +37,7 @@
 	"id":"68f4a2943ae04f0f21c5d566",
 	"lastModifiedBy":21,
 	"lcName":"groovy",
-	"modifiedTime":1760863559839,
+	"modifiedTime":1760863669363,
 	"name":"groovy",
 	"nodes":[
 		{
@@ -458,7 +458,7 @@
 						}
 					}
 				},
-				"code":"if (!binding.hasVariable('records')) {\n  return \"\";\n}\n\nString joinStrings(List<String> list, String delimiter) {\n    if (list == null || list.isEmpty()) {\n        return \"\"\n    }\n    return list.join(delimiter)\n}\n\ndef projecNumbers = [];\ndef tiers = [];\nfor (def record: records) {\n  if (record.category == \"xxxern_projectnumber\") {\n    projecNumbers.add(record.categoryId);\n  }\n  if (record.category == \"xxxern_segmentid\") {\n    tiers.add(record.categoryId);\n  }\n}\n\ndef filters = [];\n\nif (projecNumbers.size() > 0) {\n  filters.add(\"_pr_xxxern_projectnumber in (\" + joinStrings(projecNumbers, \",\") + \")\");\n}\n\nif (tiers.size() > 0) {\n  filters.add(\"_pr_xxxern_tier in (\" + joinStrings(tiers, \",\") + \")\");\n}\n\nreturn [\"sqlFilter\" : joinStrings(filters, \"OR\")];\n",
+				"code":"if (!binding.hasVariable('records')) {\n  return \"\";\n}\n\nString joinStrings(List<String> list, String delimiter) {\n    if (list == null || list.isEmpty()) {\n        return \"\"\n    }\n    return list.join(delimiter)\n}\n\nString wrapWithQuotes(def abc) {\n  return \"\\\"\" + abc + \"\\\"\";\n}\n\ndef projecNumbers = [];\ndef tiers = [];\nfor (def record: records) {\n  if (record.category == \"xxxern_projectnumber\") {\n    projecNumbers.add(wrapWithQuotes(record.categoryId));\n  }\n  if (record.category == \"xxxern_tier\") {\n    tiers.add(wrapWithQuotes(record.categoryId));\n  }\n}\n\ndef filters = [];\n\nif (projecNumbers.size() > 0) {\n  filters.add(\"_pr_xxxern_projectnumber in (\" + joinStrings(projecNumbers, \",\") + \")\");\n}\n\nif (tiers.size() > 0) {\n  filters.add(\"_pr_xxxern_tier in (\" + joinStrings(tiers, \",\") + \")\");\n}\n\nreturn [\"sqlFilter\" : joinStrings(filters, \"OR\")];\n",
 				"compile_static":false,
 				"captureStdOutput":false,
 				"parameters":{
@@ -495,5 +495,5 @@
 	"tags":[
 		
 	],
-	"version":3
+	"version":4
 }
